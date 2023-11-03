@@ -1,0 +1,91 @@
+//
+// gallery.scss
+//
+@import "ngx-lightbox/lightbox.css";
+
+.portfolioFilter {
+    a {
+        transition: all 0.3s ease-out;
+        color: #{map-get($grays, "900")};
+        border-radius: 3px;
+        padding: 5px 10px;
+        display: inline-block;
+        font-weight: $font-weight-medium;
+        &:hover {
+            color: $primary !important;
+        }
+    }
+    a.current {
+        color: $primary !important;
+    }
+}
+
+.portfolioContainer {
+    position: relative;
+    column-count: 4;
+    // column-gap: 1em;
+    .grid-item {
+        display: inline-block;
+        transition: transform 0.3s ease-in-out;
+        // box-sizing: border-box;
+        // break-inside: avoid;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1200px) {
+    .portfolioContainer {
+        column-count: 3;
+    }
+}
+
+@media (min-width: 581px) and (max-width: 991px) {
+    .portfolioContainer {
+        column-count: 2;
+    }
+}
+
+@media (max-width: 580px) {
+    .portfolioContainer {
+        column-count: 1;
+    }
+}
+
+.thumb {
+    background-color: $card-bg;
+    border-radius: 3px;
+    box-shadow: $box-shadow-sm;
+    margin-top: 24px;
+    padding: 10px;
+}
+
+.thumb-img {
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.gal-detail {
+    h4 {
+        margin-top: 16px;
+        font-size: 16px;
+    }
+}
+
+// angular gallery css
+
+.masonry-item {
+    width: 200px;
+}
+
+.lb-prev,
+.lb-next {
+    opacity: 1 !important;
+}
+
+// dark mode
+body[data-layout-color="dark"] {
+    .portfolioFilter {
+        a {
+            color: #{map-get($dark-grays, "800")};
+        }
+    }
+}

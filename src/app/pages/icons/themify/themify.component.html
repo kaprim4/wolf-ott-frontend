@@ -1,0 +1,73 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">Arrows & Direction Icons</h4>
+                <p class="text-muted font-13">
+                    Use <code>&lt;i class="ti-arrow-up"&gt;&lt;/i&gt;</code>.
+                </p>
+                <div class="row icons-list-demo">
+                    <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let icon of filterIcons('arrows-direction')">
+                        <i [class]="icon.name"></i> {{icon.name}}
+                    </div>
+                </div>
+                <!-- End row -->
+
+                <h4 class="header-title my-3">Web App Icons</h4>
+                <div class="row icons-list-demo">
+                    <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let icon of filterIcons('web-app')">
+                        <i [class]="icon.name"></i> {{icon.name}}
+                    </div>
+
+                </div>
+                <!-- End row -->
+
+                <h4 class="header-title my-3">Control Icons</h4>
+
+                <div class="row icons-list-demo">
+
+                    <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let icon of filterIcons('control')">
+                        <i [class]="icon.name"></i> {{icon.name}}
+                    </div>
+
+                </div>
+                <!-- End row -->
+
+                <h4 class="header-title my-3">Text Editor</h4>
+
+                <div class="row icons-list-demo">
+                    <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let icon of filterIcons('text-editor')">
+                        <i [class]="icon.name"></i> {{icon.name}}
+                    </div>
+
+                </div>
+                <!-- End row -->
+
+                <h4 class="header-title my-3">Layout Icons</h4>
+
+                <div class="row icons-list-demo">
+
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <i class="ti-layout-width-full"></i> ti-layout-width-full
+                    </div>
+
+                    <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let icon of filterIcons('layout')">
+                        <i [class]="icon.name"></i> {{icon.name}}
+                    </div>
+
+                </div>
+                <!-- End row -->
+
+                <h4 class="header-title my-3">Brand Icons</h4>
+
+                <div class="row icons-list-demo">
+                    <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let icon of filterIcons('brand')">
+                        <i [class]="icon.name"></i> {{icon.name}}
+                    </div>
+                </div>
+                <!-- End row -->
+            </div>
+        </div> <!-- end crad-box-->
+    </div> <!-- end col -->
+</div>
+<!-- end row-->

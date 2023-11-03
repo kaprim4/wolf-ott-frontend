@@ -1,0 +1,207 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">Select2</h4>
+                <p class="text-muted font-14">Select2 gives you a customizable select box with support for searching,
+                    tagging, remote data sets, infinite scrolling, and many other highly used options.</p>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <p class="mb-1 fw-bold text-muted">Single Select</p>
+                        <p class="text-muted font-14">
+                            Select2 can take a regular select box like this...
+                        </p>
+
+                        <select2 [data]="countries" placeholder="Select Country" id="selec2-2" #country1>
+                        </select2>
+                    </div> <!-- end col -->
+
+                    <div class="col-lg-6">
+                        <p class="mb-1 mt-3 mt-xl-0 fw-bold text-muted">Multiple Select</p>
+                        <p class="text-muted font-14">
+                            Select2 can take a regular select box like this...
+                        </p>
+
+                        <select2 [data]="countries" placeholder="Select Country" id="selec2-2" multiple="true"
+                            #country2>
+                        </select2>
+                    </div> <!-- end col -->
+                </div> <!-- end row -->
+
+            </div> <!-- end card-body-->
+        </div> <!-- end card-->
+    </div> <!-- end col-->
+</div>
+<!-- end row-->
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">Date and Date Range Picker</h4>
+                <p class="text-muted font-14">
+                    A component for choosing date ranges, dates and times.
+                </p>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="mb-3 position-relative" id="datepicker1">
+                            <label class="form-label">Date Picker</label>
+                            <input type="text" class="form-control" name="datepicker1" [(ngModel)]="model1"
+                                ngbDatepicker #datepicker1="ngbDatepicker" [footerTemplate]="footerTemplate"
+                                (click)="datepicker1.toggle()" autoClose="'outside'">
+                        </div>
+
+                        <ng-template #footerTemplate>
+                            <hr class="my-0">
+                            <div class="ngb-footer-button d-flex justify-content-end">
+                                <button class="btn btn-primary btn-sm me-1">Apply</button>
+                                <button class="btn btn-secondary btn-sm " (click)="datepicker1.close()">Cancel</button>
+                            </div>
+                        </ng-template>
+
+                        <ng-template #t let-date let-focused="focused">
+                            <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                                [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                                (mouseleave)="hoveredDate = null">
+                                {{ date.day }}
+                            </span>
+                        </ng-template>
+
+                        <div class="my-4 position-relative" id="datepicker2">
+                            <label class="form-label">Date Range</label>
+
+                            <input type="text" class="form-control date" id="dash-daterange" style="min-width: 210px;"
+                                [value]="selectedDateRange" ngbDatepicker #datepicker8="ngbDatepicker"
+                                (dateSelect)="onDateSelection($event)" [dayTemplate]="t" (click)="datepicker8.toggle()"
+                                autoClose="'outside'">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label">Inline Datepicker</label>
+                            <div>
+                                <ngb-datepicker #datepicker7 [(ngModel)]="model2"></ngb-datepicker>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div> <!-- end card-body -->
+        </div> <!-- end card-->
+    </div> <!-- end col -->
+</div>
+<!-- end row -->
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">Typeahead</h4>
+                <p class="text-muted font-14">
+                    Typeahead is a directive providing a simple way of creating powerful typeaheads from any text input.
+                </p>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label">The Basics</label>
+                            <input id="typeahead-basic" type="text" class="form-control position-relative"
+                                [ngbTypeahead]="search1" />
+                        </div>
+                    </div> <!-- end col -->
+
+
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label">Custom Templates</label>
+                            <input id="typeahead-custom" type="text" class="form-control" placement="auto"
+                                placeholder="States of USA" [(ngModel)]="typeaheadModel" [ngbTypeahead]="search1"
+                                [resultFormatter]="formatter" />
+                        </div>
+                    </div> <!-- end col -->
+
+                    <div class="col-lg-6 mt-3 mt-lg-0">
+                        <div class="mb-3">
+                            <label class="form-label">Open on focus</label>
+                            <input id="typeahead-focus" type="text" class="form-control position-relative"
+                                [ngbTypeahead]="search" (focus)="focus$.next($any($event).target.value)"
+                                (click)="click$.next($any($event).target.value)" #instance="ngbTypeahead" />
+
+                        </div>
+                    </div> <!-- end col -->
+                </div>
+                <!-- end row -->
+
+            </div> <!-- end card-body -->
+        </div> <!-- end card-->
+    </div> <!-- end col -->
+</div>
+<!-- end row -->
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">Timepicker</h4>
+                <p class="text-muted font-14">
+                    It is a directive that helps with wth picking hours, minutes and seconds. You can easily select a
+                    time for a text input using your mouse or keyboards arrow keys.
+                </p>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label">Default Time Picker</label>
+                            <div id="timepicker-input-group1">
+                                <ngb-timepicker [(ngModel)]="time1"></ngb-timepicker>
+                            </div>
+
+                        </div>
+
+                        <div class="mb-0">
+                            <label class="form-label">24 Hour Mode Time Picker </label>
+                            <div id="timepicker-input-group2">
+                                <ngb-timepicker [(ngModel)]="time2" [meridian]="meridian"></ngb-timepicker>
+                            </div>
+                            <button class="btn btn-sm btn-outline-{{meridian ? 'success' : 'danger'}}"
+                                (click)="toggleMeridian()">
+                                Meridian - {{meridian ? "ON" : "OFF"}}
+                            </button>
+
+                        </div>
+                    </div> <!-- end col -->
+
+                    <div class="col-lg-6 mt-3 mt-lg-0">
+                        <div class="mb-0">
+                            <label class="form-label">Specify a step for the seconds</label>
+                            <div id="timepicker-input-group3">
+                                <ngb-timepicker [(ngModel)]="time3" [seconds]="true"></ngb-timepicker>
+                            </div>
+                        </div>
+
+                        <div class="mb-0">
+                            <label class="form-label">Spinners</label>
+                            <div id="timepicker-input-group2">
+                                <ngb-timepicker [(ngModel)]="time4" [spinners]="spinners"></ngb-timepicker>
+                            </div>
+                            <button class="mt-1 btn btn-sm btn-outline-{{spinners ? 'success' : 'danger'}}"
+                                (click)="toggleSpinners()">
+                                Spinners - {{spinners ? "ON" : "OFF"}}
+                            </button>
+
+                        </div>
+                    </div> <!-- end col -->
+                </div>
+                <!-- end row -->
+
+            </div> <!-- end card-body -->
+        </div> <!-- end card-->
+    </div> <!-- end col -->
+</div>
+<!-- end row -->

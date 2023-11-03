@@ -1,0 +1,60 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title m-t-0">Dropzone File Upload</h4>
+                <p class="text-muted font-14">
+                    DropzoneJS is an open source library that provides drag’n’drop file uploads with image previews.
+                </p>
+
+                <form #fileUpload="ngForm">
+
+                    <ngx-dropzone (change)="onSelect($event)" class="dropzone" style="height: auto !important;"
+                        accept="image/jpeg,image/jpg,image/png,image/gif">
+                        <ngx-dropzone-label>
+                            <i class="h1 text-muted dripicons-cloud-upload"></i>
+                            <h3>Drop files here or click to upload.</h3>
+                            <span class="text-muted font-13">(This is just a demo dropzone. Selected files are
+                                <strong>not</strong> actually uploaded.)</span>
+                        </ngx-dropzone-label>
+
+                    </ngx-dropzone>
+
+                    <!-- Preview -->
+                    <div class="dropzone-previews mt-3" id="file-previews">
+
+                        <!-- file preview template -->
+                        <div id="uploadPreviewTemplate" *ngFor="let f of files">
+                            <div class="card mt-1 mb-0 shadow-none border">
+                                <div class="p-2">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <img class="avatar-sm rounded bg-light" [alt]="f.name"
+                                                [src]="getPreviewUrl(f)">
+                                        </div>
+                                        <div class="col ps-0">
+                                            <a href="javascript:void(0);" class="text-muted fw-bold">{{f.name}}</a>
+                                            <p class="mb-0">{{getSize(f)}}</p>
+                                        </div>
+                                        <div class="col-auto">
+                                            <!-- Button -->
+                                            <a href="javascript:void(0)" class="btn btn-link btn-lg text-muted"
+                                                (click)="onRemove($event)">
+                                                <i class="dripicons-cross"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end file preview template -->
+                    </div>
+                </form>
+
+            </div>
+            <!-- end card-body -->
+        </div>
+        <!-- end card-->
+    </div>
+    <!-- end col-->
+</div>

@@ -1,0 +1,35 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title mt-0 mb-1">Snow Editor</h4>
+                <p class="sub-header">Snow is a clean, flat toolbar theme.</p>
+                <div id="snow-editor">
+                    <!-- quill editor -->
+                    <quill-editor [(ngModel)]="editorText1" #quillEditor [sanitize]="true" [styles]="{height:'300px'}"
+                        [modules]="quillConfig">
+                    </quill-editor>
+                </div> <!-- end Snow-editor-->
+            </div>
+        </div> <!-- end card-->
+    </div> <!-- end col-->
+</div>
+<!-- end row-->
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title mt-0 mb-1">Bubble Editor</h4>
+                <p class="sub-header">Bubble is a simple tooltip based theme.</p>
+                <div id="bubble-editor">
+                    <!-- quill editor -->
+                    <quill-editor [(ngModel)]="editorText2" #quillEditor [sanitize]="true" theme="bubble"
+                        [styles]="{height:'300px'}">
+                    </quill-editor>
+                </div> <!-- end Snow-editor-->
+            </div>
+        </div> <!-- end card-->
+    </div> <!-- end col-->
+</div>
+<!-- end row-->

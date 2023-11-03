@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col-sm-8">
+        <!-- user box -->
+        <app-profile-user-box></app-profile-user-box>
+        <!-- post box -->
+        <app-profile-post-box></app-profile-post-box>
+        <!-- comment box -->
+        <app-profile-comment-box [posts]="posts"></app-profile-comment-box>
+    </div>
+
+    <div class="col-sm-4">
+        <!-- team members -->
+        <app-widget-team-members [teamMembers]="teamMembers" cardTitle="My Team Members"></app-widget-team-members>
+
+        <!-- remainders -->
+        <app-widget-remainders [remainders]="remainders"></app-widget-remainders>
+    </div>
+</div>

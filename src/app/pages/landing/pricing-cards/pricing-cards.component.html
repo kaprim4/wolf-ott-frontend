@@ -1,0 +1,37 @@
+<section class="section bg-light" id="pricing">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="title text-center mb-4">
+                    <h6 class="text-primary small-title">Pricing</h6>
+                    <h4>Our Pricing plans</h4>
+                    <p class="text-muted">At solmen va esser far uniform grammatica.</p>
+                </div>
+            </div>
+        </div>
+        <!-- end row -->
+        <div class="row">
+            <div class="col-lg-4" *ngFor="let plan of pricingPlans">
+                <div class="pricing-plans bg-white text-center p-4 mt-4">
+                    <h5 class="plan-title mt-2 mb-4">{{plan.name}}</h5>
+
+                    <div class="plan-price">
+                        <h4 class="mb-3 price"><sup><small>$</small></sup>{{plan.price}}</h4>
+                        <h5 class="plan-duration text-muted font-18">Per {{plan.duration}}</h5>
+                    </div>
+
+                    <div class="pricing-content p-4 text-muted mb-2">
+                        <p *ngFor="let feature of plan.features">{{feature}}</p>
+
+                    </div>
+
+                    <div class="pt-4">
+                        <a [routerLink]="['.']" class="btn btn-custom d-block">Purchase Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end row -->
+    </div>
+    <!-- end container-fluid -->
+</section>

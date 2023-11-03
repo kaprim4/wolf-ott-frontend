@@ -1,0 +1,193 @@
+<div class="row">
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="float-end" ngbDropdown placement="bottom-end">
+                    <a href="javascript:void(0);" class="arrow-none card-drop" ngbDropdownToggle>
+                        <i class="mdi mdi-dots-vertical"></i>
+                    </a>
+                    <div ngbDropdownMenu>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Action</a>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Another action</a>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Something else</a>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Separated link</a>
+                    </div>
+                </div>
+
+                <h4 class="header-title mt-0 mb-3">Line Chart</h4>
+
+                <div class="chartjs-chart" style="height: 300px;">
+                    <canvas id="lineChart" #chart1 baseChart [data]="lineChartOptions.data!"
+                        [type]="lineChartOptions.type!" [options]="lineChartOptions.chartOptions!"></canvas>
+                </div>
+
+            </div>
+        </div>
+
+    </div><!-- end col-->
+
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="float-end" ngbDropdown placement="bottom-end">
+                    <a href="javascript:void(0);" class="arrow-none card-drop" ngbDropdownToggle>
+                        <i class="mdi mdi-dots-vertical"></i>
+                    </a>
+                    <div ngbDropdownMenu>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Action</a>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Another action</a>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Something else</a>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Separated link</a>
+                    </div>
+                </div>
+
+                <h4 class="header-title mt-0 mb-3">Bar Chart</h4>
+
+                <div class="chartjs-chart" style="height: 300px;">
+                    <canvas id="bar-chart" #barChart baseChart [data]="barChartOptions.data!"
+                        [type]="barChartOptions.type!" [options]="barChartOptions.chartOptions!"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- end col-->
+
+</div>
+<!-- end row -->
+
+
+<div class="row">
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="float-end" ngbDropdown placement="bottom-end">
+                    <a href="javascript:void(0);" class="arrow-none card-drop" ngbDropdownToggle>
+                        <i class="mdi mdi-dots-vertical"></i>
+                    </a>
+                    <div ngbDropdownMenu>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Action</a>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Another action</a>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Something else</a>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Separated link</a>
+                    </div>
+                </div>
+
+                <h4 class="header-title mt-0 mb-3">Pie Chart</h4>
+
+                <div class="chartjs-chart" style="height: 300px;">
+                    <canvas id="pie-chart" #pieChart baseChart [data]="pieChartOptions.data!"
+                        [type]="pieChartOptions.type!" [options]="pieChartOptions.chartOptions!"></canvas>
+                </div>
+
+            </div>
+        </div>
+
+    </div><!-- end col-->
+
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="float-end" ngbDropdown placement="bottom-end">
+                    <a href="javascript:void(0);" class="arrow-none card-drop" ngbDropdownToggle>
+                        <i class="mdi mdi-dots-vertical"></i>
+                    </a>
+                    <div ngbDropdownMenu>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Action</a>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Another action</a>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Something else</a>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Separated link</a>
+                    </div>
+                </div>
+                <h4 class="header-title mt-0 mb-3">Donut Chart</h4>
+
+                <div class="chartjs-chart" style="height: 300px;">
+                    <canvas id="donut-chart" #donutChart baseChart [data]="donutChartOptions.data!"
+                        [type]="donutChartOptions.type!" [options]="donutChartOptions.chartOptions!"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- end col-->
+
+</div>
+<!-- end row -->
+
+<div class="row">
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="float-end" ngbDropdown placement="bottom-end">
+                    <a href="javascript:void(0);" class="arrow-none card-drop" ngbDropdownToggle>
+                        <i class="mdi mdi-dots-vertical"></i>
+                    </a>
+                    <div ngbDropdownMenu>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Action</a>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Another action</a>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Something else</a>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Separated link</a>
+                    </div>
+                </div>
+
+                <h4 class="header-title mt-0 mb-3">Polar area Chart</h4>
+
+                <div class="chartjs-chart" style="height: 300px;">
+                    <canvas id="polar-chart" #polarChart baseChart [data]="polarChartOptions.data!"
+                        [type]="polarChartOptions.type!" [options]="polarChartOptions.chartOptions!"></canvas>
+                </div>
+
+            </div>
+        </div>
+
+    </div><!-- end col-->
+
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="float-end" ngbDropdown placement="bottom-end">
+                    <a href="javascript:void(0);" class="arrow-none card-drop" ngbDropdownToggle>
+                        <i class="mdi mdi-dots-vertical"></i>
+                    </a>
+                    <div ngbDropdownMenu>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Action</a>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Another action</a>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Something else</a>
+                        <!-- item-->
+                        <a href="javascript:void(0);" ngbDropdownItem>Separated link</a>
+                    </div>
+                </div>
+
+                <h4 class="header-title mt-0 mb-3"> Radar Chart</h4>
+
+                <div class="chartjs-chart" style="height: 300px;">
+                    <canvas id="radar-chart" #radarChart baseChart [data]="radarChartOptions.data!"
+                        [type]="radarChartOptions.type!" [options]="radarChartOptions.chartOptions!"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- end col-->
+</div>
+<!-- end row -->

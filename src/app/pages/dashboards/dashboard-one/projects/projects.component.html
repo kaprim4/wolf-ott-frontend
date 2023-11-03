@@ -1,0 +1,46 @@
+<div class="card">
+    <div class="card-body">
+        <div class="float-end" ngbDropdown placement="bottom-end">
+            <a href="javascript:void(0);" class="arrow-none card-drop" ngbDropdownToggle>
+                <i class="mdi mdi-dots-vertical"></i>
+            </a>
+            <div ngbDropdownMenu>
+                <!-- item-->
+                <a href="javascript:void(0);" ngbDropdownItem>Action</a>
+                <!-- item-->
+                <a href="javascript:void(0);" ngbDropdownItem>Another action</a>
+                <!-- item-->
+                <a href="javascript:void(0);" ngbDropdownItem>Something else</a>
+                <!-- item-->
+                <a href="javascript:void(0);" ngbDropdownItem>Separated link</a>
+            </div>
+        </div>
+        <h4 class="header-title mt-0 mb-3">Latest Projects</h4>
+
+
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Project Name</th>
+                        <th>Start Date</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Assign</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let project of recentProjects">
+                        <td>{{project.id}}</td>
+                        <td>{{project.name}}</td>
+                        <td>{{project.startDate}}</td>
+                        <td>{{project.dueDate}}</td>
+                        <td><span class="badge bg-{{project.variant}}">{{project.status}}</span></td>
+                        <td>{{project.assignee}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+<div class="account-pages my-5">
+    <div class="container">
+
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6 col-xl-4">
+                <div class="text-center" *ngIf="hasLogo">
+                    <div class="auth-logo">
+                        <a [routerLink]="'/'" class="logo logo-dark ">
+                            <span class="logo-lg">
+                                <img src="assets/images/logo-small-2.png" alt="" height="77">
+                            </span>
+                        </a>
+
+                        <a [routerLink]="'/'" class="logo logo-light ">
+                            <span class="logo-lg">
+                                <img src="assets/images/logo-small-2.png" alt="" height="77">
+                            </span>
+                        </a>
+                    </div>
+                    <p class="text-muted mt-2 mb-4">PORTAIL ENELP dédié aux gérants de station-services</p>
+
+                </div>
+                <div class="card" [class]="cardClass">
+                    <div class="card-body p-4">
+                        <ng-content></ng-content>
+                    </div> <!-- end card-body -->
+                </div>
+                <ng-content select="[footerLink]"></ng-content>
+            </div> <!-- end col -->
+        </div>
+        <!-- end row -->
+    </div>
+    <!-- end container -->
+</div>
+<!-- end page -->

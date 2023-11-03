@@ -1,0 +1,63 @@
+<div class="row">
+
+    <div class="col-xl-3 col-md-6">
+        <app-statistics-widget1 title="Total Revenue" [stats]="256" subTitle="Revenue today" color="#f05050"
+            [progress]="58"></app-statistics-widget1>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-statistics-widget2 title="Sales Analytics" [stats]="8451" subTitle="Revenue today" [trendStats]="32"
+            trendIcon="up" variant="success" [progress]="77"></app-statistics-widget2>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-statistics-widget1 title="Statistics" [stats]="4569" subTitle="Revenue today" color="#ffbd4a"
+            [progress]="80">
+        </app-statistics-widget1>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-statistics-widget2 title="Daily Sales" [stats]="158" subTitle="Revenue today" [trendStats]="32"
+            trendIcon="up" variant="pink" [progress]="77"></app-statistics-widget2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-4">
+        <app-sales-chart></app-sales-chart>
+    </div>
+    <div class="col-xl-4">
+        <app-statistics-chart></app-statistics-chart>
+    </div>
+    <div class="col-xl-4">
+        <app-revenue-chart></app-revenue-chart>
+    </div>
+</div>
+
+
+
+<div class="row">
+
+    <div class="col-xl-3 col-md-6">
+        <app-widget-user-card name="Chadengle" email="coderthemes@gmail.com" avatar="assets/images/users/user-3.jpg"
+            designation="Admin" variant="warning"></app-widget-user-card>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-widget-user-card name="Michael Zenaty" email="coderthemes@gmail.com"
+            avatar="assets/images/users/user-2.jpg" designation="Support Lead" variant="pink"></app-widget-user-card>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-widget-user-card name="Stillnotdavid" email="coderthemes@gmail.com" avatar="assets/images/users/user-1.jpg"
+            designation="Designer" variant="success"></app-widget-user-card>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-widget-user-card name="Tomaslau" email="coderthemes@gmail.com" avatar="assets/images/users/user-10.jpg"
+            designation="Developer" variant="info"></app-widget-user-card>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-4">
+        <app-dashboard-inbox [messages]="messages"></app-dashboard-inbox>
+    </div>
+    <div class="col-xl-8">
+        <app-dashboard-projects [recentProjects]="recentProjects"></app-dashboard-projects>
+    </div>
+</div>

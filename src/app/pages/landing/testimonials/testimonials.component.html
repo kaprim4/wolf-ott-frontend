@@ -1,0 +1,42 @@
+<section class="section bg-light" id="clients">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="title text-center mb-4">
+                    <h6 class="text-primary small-title">Clients</h6>
+                    <h4>What our Users Says</h4>
+                    <p class="text-muted">At solmen va esser far uniform grammatica.</p>
+                </div>
+            </div>
+        </div>
+        <!-- end row -->
+        <div class="row">
+            <div class="col-lg-4" *ngFor="let testimonial of testimonials">
+                <div class="testi-box p-4 bg-white mt-4 text-center">
+                    <p class="text-muted mb-4">"{{testimonial.message}}"</p>
+                    <div class="testi-img mb-4">
+                        <img [src]="testimonial.avatar" alt="" class="rounded-circle img-thumbnail">
+                    </div>
+                    <p class="text-muted mb-1"> - {{testimonial.title}}</p>
+                    <h5 class="font-18">{{testimonial.clientName}}</h5>
+
+                    <div class="testi-icon">
+                        <i class="mdi mdi-format-quote-open display-2"></i>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- end row -->
+
+        <div class="row mt-5 pt-5">
+            <div class="col-lg-3 col-sm-6" *ngFor="let item of [1,2,3,4]">
+                <div class="client-images">
+                    <img [src]="'assets/images/landing/clients/'+item+'.png'" alt="logo-img"
+                        class="mx-auto img-fluid d-block">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end container-fluid -->
+</section>

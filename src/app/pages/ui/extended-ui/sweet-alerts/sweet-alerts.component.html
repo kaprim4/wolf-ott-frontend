@@ -1,0 +1,214 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">Examples</h4>
+
+                <p class="sub-header">
+                    A beautiful, responsive, customizable, accessible (WAI-ARIA) replacement for JavaScript's popup
+                    boxes
+                </p>
+
+                <table class="table table-borderless table-centered mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width:50%;">Alert Type</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>A basic message</td>
+                            <td>
+                                <button type="button" class="btn btn-info btn-xs" id="sa-basic"
+                                    [swal]="{title: 'Any fool can use a computer!'}">Click me</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>A title with a text under</td>
+                            <td>
+                                <button type="button" class="btn btn-info btn-xs" id="sa-title" [swal]="{ title: 'The Internet?',
+                                    text: 'That thing is still around?',
+                                    icon: 'question'}">Click
+                                    me</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>A success message!</td>
+                            <td>
+                                <button type="button" class="btn btn-info btn-xs" id="sa-success" [swal]="{ title: 'Good job!', 
+                                    text: 'You clicked the button!', 
+                                    icon: 'success'}">Click
+                                    me</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>A modal window with a long content inside:</td>
+                            <td>
+                                <button type="button" class="btn btn-info btn-xs" id="sa-long-content" [swal]="{
+                            imageUrl: 'https://placeholder.pics/svg/300x1500',
+                            imageHeight: 1500,imageAlt: 'A tall image'
+                            }">Click me</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>A custom positioned dialog</td>
+                            <td>
+                                <button type="button" class="btn btn-info btn-xs" id="sa-custom-position" [swal]="{ position: 'top-end',
+                                icon: 'success',
+                                title: 'Your work has been saved',
+                                showConfirmButton: false,
+                                timer: 1500}">Click
+                                    me</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>A modal with a title, an error icon, a text, and a footer</td>
+                            <td>
+                                <button type="button" class="btn btn-info btn-xs" id="sa-error" [swal]="{
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Something went wrong!',
+                                footer: '<a href>Why do I have this issue?</a>'
+                            }">Click me</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>A confirm dialog, with a function attached to the "Confirm"-button...</td>
+                            <td>
+                                <button type="button" class="btn btn-info btn-xs" id="sa-warning" [swal]="{
+                                title: 'Are you sure?',
+                                text: 'You won\'t be able to revert this!',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#28bb4b',
+                                cancelButtonColor: '#f34e4e',
+                                confirmButtonText: 'Yes, delete it!'
+                                }" (confirm)="deleteSwal.fire()">Click me</button>
+
+                                <swal #deleteSwal title="Deleted!" text="Your file has been deleted." icon="success"
+                                    confirmButtonColor="#4a4fea">
+                                </swal>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>By passing a parameter, you can execute something else for "Cancel".</td>
+                            <td>
+                                <button type="button" class="btn btn-info btn-xs" id="sa-params" [swal]="{
+                                    title: 'Are you sure?',
+                                    text: 'You won\t be able to revert this!',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Yes, delete it!',
+                                    cancelButtonText: 'No, cancel!',
+                                    confirmButtonColor: '#28bb4b',
+                                    cancelButtonColor: '#f34e4e'
+                                }" (confirm)="confirmSwal.fire()" (dismiss)="cancelSwal.fire()">Click me</button>
+
+                                <swal #confirmSwal title="Deleted!" text="Your file has been deleted." icon="success"
+                                    confirmButtonColor="#4a4fea">
+                                </swal>
+
+                                <swal #cancelSwal title="Cancelled!" text="Your imaginary file is safe :)" icon="error"
+                                    confirmButtonColor="#4a4fea">
+                                </swal>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>A message with custom Image Header</td>
+                            <td>
+                                <button type="button" class="btn btn-info btn-xs" id="sa-image" [swal]="{
+                                    title: 'Adminto',
+                                    text: 'Responsive Bootstrap 5 Admin Dashboard',
+                                    imageUrl: 'assets/images/logo-sm.png',
+                                    imageHeight: 50,
+                                    confirmButtonColor: '#4a4fea'
+                                }">Click me</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>A message with auto close timer</td>
+                            <td>
+                                <button type="button" class="btn btn-info btn-xs" id="sa-close"
+                                    (click)="timerSwal.fire()">Click me</button>
+
+                                <swal #timerSwal [swalOptions]="{
+                                     title: 'Auto close alert!',
+                                     html: 'I will close in <strong>5000</strong> seconds.',
+                                     timer:5000
+                                }"></swal>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Custom HTML description and buttons</td>
+                            <td>
+                                <button type="button" class="btn btn-info btn-xs" id="custom-html-alert"
+                                    (click)="customSwal.fire()">Click
+                                    me</button>
+
+                                <swal #customSwal [swalOptions]="{
+                                        title: '<i>HTML</i> <u>example</u>',
+                                        icon: 'info',
+                                        html:'You can use <b>bold text</b> <a>links</a> and other HTML tags',
+                                        showCloseButton: true,
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#28bb4b',
+                                        cancelButtonColor: '#f34e4e',
+                                        confirmButtonText: '<i class=\'mdi mdi-thumb-up-outline\'></i> Great!',
+                                        cancelButtonText: '<i class=\'mdi mdi-thumb-down-outline\'></i>'
+                                    }"></swal>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>A message with custom width, padding and background</td>
+                            <td>
+                                <button type="button" class="btn btn-info btn-xs" id="custom-padding-width-alert"
+                                    [swal]="{
+                                    title: 'Custom width, padding, background.',
+                                    width: 600,
+                                    padding: 100,
+                                    background: '#fff'
+                                }">Click
+                                    me</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ajax request example</td>
+                            <td>
+                                <button type="button" class="btn btn-info btn-xs" id="ajax-alert"
+                                    (click)="ajaxSwal.fire()">Click me</button>
+
+                                <swal #ajaxSwal [swalOptions]="{
+                                    title: 'Submit email to run ajax request',
+                                    input: 'email',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Submit',
+                                    showLoaderOnConfirm: true,
+                                    confirmButtonColor: '#4a4fea',
+                                    cancelButtonColor: '#f34e4e',
+                                    allowOutsideClick: false,
+                                    preConfirm: preConfirm
+                                }" (confirm)="handleConfirm($event)"></swal>
+
+                                <swal #ajaxRequest [swalOptions]="{
+                                    icon: 'success',
+                                    title: 'Ajax request finished!',
+                                    confirmButtonColor: '#4a4fea',
+                                    text: 'Email Submitted'
+                                }"></swal>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div> <!-- end card-body -->
+        </div> <!-- end card-->
+    </div>
+    <!-- end col -->
+</div>
+<!-- end row -->

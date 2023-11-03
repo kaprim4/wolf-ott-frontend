@@ -1,0 +1,138 @@
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">Slides only</h4>
+                <p class="sub-header">Here’s a carousel with slides only.
+                    Note the presence of the <code>.d-block</code>
+                    and <code>.img-fluid</code> on carousel images
+                    to prevent browser default image alignment.</p>
+
+                <ngb-carousel *ngIf="carouselImages" [interval]="5000" [showNavigationArrows]="false"
+                    [showNavigationIndicators]="false">
+                    <ng-template ngbSlide *ngFor="let image of carouselImages">
+                        <img [src]="image" alt="Random first slide" class="d-block img-fluid">
+                    </ng-template>
+                </ngb-carousel>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">With controls</h4>
+                <p class="sub-header">Adding in the previous and next controls:</p>
+                <ngb-carousel *ngIf="carouselImages" [showNavigationIndicators]="false">
+                    <ng-template ngbSlide *ngFor="let image of carouselImages">
+                        <img [src]="image" alt="Random first slide" class="d-block img-fluid">
+                    </ng-template>
+                </ngb-carousel>
+            </div>
+        </div>
+        <!-- END carousel-->
+    </div>
+</div>
+<!-- end row -->
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">With indicators</h4>
+                <p class="sub-header">You can also add the indicators to the
+                    carousel, alongside the controls, too.</p>
+
+                <ngb-carousel *ngIf="carouselImages" [showNavigationArrows]="false">
+                    <ng-template ngbSlide *ngFor="let image of carouselImages">
+                        <img [src]="image" alt="Random first slide" class="d-block img-fluid">
+                    </ng-template>
+                </ngb-carousel>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">With captions</h4>
+                <p class="sub-header">Add captions to your slides easily with the <code>.carousel-caption</code>
+                    element within any
+                    carousel-item.</p>
+                <ngb-carousel *ngIf="caroselCaptionSlides" [animation]="true">
+                    <ng-template ngbSlide *ngFor="let slide of caroselCaptionSlides">
+                        <img [src]="slide.image" alt="Random slide" class="d-block img-fluid">
+                        <div class="carousel-caption  d-none d-md-block">
+                            <h3 class="text-white">{{slide.slideTitle}}</h3>
+                            <p>{{slide.subTitle}}</p>
+                        </div>
+                    </ng-template>
+                </ngb-carousel>
+            </div>
+        </div>
+        <!-- END carousel-->
+    </div>
+</div>
+<!-- end row -->
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">Chnage with keyboard</h4>
+                <p class="sub-header">You can change carousel slides using keyboard arrow keys.</p>
+
+                <ngb-carousel *ngIf="carouselImages" [keyboard]="true">
+                    <ng-template ngbSlide *ngFor="let image of carouselImages">
+                        <img [src]="image" alt="Random first slide" class="d-block img-fluid">
+                    </ng-template>
+                </ngb-carousel>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">Pause/cycle</h4>
+
+                <div class="my-3">
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input" id="pauseOnHover" [(ngModel)]="pauseOnHover">
+                        <label class="form-check-label" for="pauseOnHover">Pause on hover</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input" id="pauseOnFocus" [(ngModel)]="pauseOnFocus">
+                        <label class="form-check-label" for="pauseOnFocus">Pause on focus</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input" id="unpauseOnArrow"
+                            [(ngModel)]="unpauseOnArrow">
+                        <label class="form-check-label" for="unpauseOnArrow">Unpause on arrows click</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input" id="pauseOnIndicator"
+                            [(ngModel)]="pauseOnIndicator">
+                        <label class="form-check-label" for="pauseOnIndicator">Pause on
+                            indicator click</label>
+                    </div>
+                </div>
+
+                <ngb-carousel #carousel [interval]="3000" [pauseOnHover]="pauseOnHover" [pauseOnFocus]="pauseOnFocus"
+                    (slide)="onSlide($event)">
+                    <ng-template ngbSlide *ngFor="let slide of caroselCaptionSlides">
+                        <img [src]="slide.image" alt="Random slide" class="d-block img-fluid">
+                        <div class="carousel-caption">
+                            <h3 class="text-white">{{slide.slideTitle}}</h3>
+                            <p>{{slide.subTitle}}</p>
+                        </div>
+                    </ng-template>
+                </ngb-carousel>
+
+            </div>
+        </div>
+        <!-- END carousel-->
+    </div>
+</div>
+<!-- end row -->

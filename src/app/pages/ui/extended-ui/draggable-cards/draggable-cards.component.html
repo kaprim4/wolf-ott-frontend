@@ -1,0 +1,83 @@
+<div class="sortable">
+    <div class="row">
+        <div class="col-md-4" [sortablejs]="movableCardGroup1" [sortablejsOptions]="options1">
+            <ng-container *ngFor="let card of movableCardGroup1">
+                <ng-container *ngIf="card.image;else elseCard">
+                    <ng-container *ngTemplateOutlet="DragabbleCard1;context:{image: card.image}">
+                    </ng-container>
+                </ng-container>
+                <ng-template #elseCard>
+                    <ng-container *ngIf="card.bgVariant;else DragabbleCard2">
+                        <ng-container *ngTemplateOutlet="DragabbleCard3;context:{variant: card.bgVariant}">
+                        </ng-container>
+                    </ng-container>
+                </ng-template>
+            </ng-container>
+        </div>
+        <div class="col-md-4" [sortablejs]="movableCardGroup2" [sortablejsOptions]="options1">
+            <ng-container *ngFor="let card of movableCardGroup2">
+                <ng-container *ngIf="card.image;else elseCard">
+                    <ng-container *ngTemplateOutlet="DragabbleCard1;context:{image: card.image}">
+                    </ng-container>
+                </ng-container>
+                <ng-template #elseCard>
+                    <ng-container *ngIf="card.bgVariant;else DragabbleCard2">
+                        <ng-container *ngTemplateOutlet="DragabbleCard3;context:{variant: card.bgVariant}">
+                        </ng-container>
+                    </ng-container>
+                </ng-template>
+            </ng-container>
+        </div>
+        <div class="col-md-4" [sortablejs]="movableCardGroup3" [sortablejsOptions]="options1">
+            <ng-container *ngFor="let card of movableCardGroup3">
+                <ng-container *ngIf="card.image;else elseCard">
+                    <ng-container *ngTemplateOutlet="DragabbleCard1;context:{image: card.image}">
+                    </ng-container>
+                </ng-container>
+                <ng-template #elseCard>
+                    <ng-container *ngIf="card.bgVariant;else DragabbleCard2">
+                        <ng-container *ngTemplateOutlet="DragabbleCard3;context:{variant: card.bgVariant}">
+                        </ng-container>
+                    </ng-container>
+                </ng-template>
+            </ng-container>
+        </div>
+
+    </div><!-- Row -->
+</div><!-- Sortable -->
+
+
+<ng-template #DragabbleCard1 let-image="image">
+    <div class="card card-draggable">
+        <img class="card-img-top img-fluid" [src]="image" alt="Card image cap">
+        <div class="card-body">
+            <h4 class="card-title">Card title</h4>
+            <p class="card-text">Some quick example text to build on the card title and make
+                up the bulk of the card's content.</p>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #DragabbleCard2>
+    <div class="card card-draggable">
+        <div class="card-body">
+            <h4 class="card-title">Card title</h4>
+            <p class="card-text">Some quick example text to build on the card title and make
+                up the bulk of the card's content.</p>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #DragabbleCard3 let-variant="variant">
+    <div class="card text-white bg-{{variant}} card-draggable">
+        <div class="card-body">
+            <blockquote class="card-bodyquote mb-0">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere
+                    erat a ante.</p>
+                <footer class="blockquote-footer text-white-50">Someone famous in <cite title="Source Title">Source
+                        Title</cite>
+                </footer>
+            </blockquote>
+        </div>
+    </div>
+</ng-template>

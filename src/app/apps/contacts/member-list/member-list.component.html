@@ -1,0 +1,104 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row justify-content-between">
+                    <div class="col-md-4">
+                        <div class="mt-3 mt-md-0">
+                            <button type="button" class="btn btn-success waves-effect waves-light"
+                                (click)="openModal()"><i class="mdi mdi-plus-circle me-1"></i> Add contact</button>
+                        </div>
+                    </div><!-- end col-->
+                    <div class="col-md-8">
+                        <form class="d-flex flex-wrap align-items-center justify-content-sm-end">
+                            <label for="status-select" class="me-2">Sort By</label>
+                            <div class="me-sm-2">
+                                <select class="form-select my-1 my-md-0" id="status-select">
+                                    <option selected="">All</option>
+                                    <option value="1">Name</option>
+                                    <option value="2">Post</option>
+                                    <option value="3">Followers</option>
+                                    <option value="4">Followings</option>
+                                </select>
+                            </div>
+                            <label for="inputPassword2" class="visually-hidden">Search</label>
+                            <div>
+                                <input type="search" class="form-control my-1 my-md-0" id="inputPassword2"
+                                    placeholder="Search...">
+                            </div>
+                        </form>
+                    </div>
+                </div> <!-- end row -->
+            </div>
+        </div> <!-- end card -->
+    </div><!-- end col-->
+</div>
+<!-- end row -->
+<div class="row">
+    <div class="col-xl-4" *ngFor="let member of members">
+        <app-widget-member-card [member]="member"></app-widget-member-card>
+    </div>
+</div>
+
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="myCenterModalLabel">Add Contact</h4>
+        <button type="button" class="btn-close float-end" aria-label="Close" (click)="modal.dismiss('')">
+        </button>
+    </div>
+    <div class="modal-body">
+        <form name="contact-form" [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" placeholder="Enter name" required
+                    formControlName="name" [ngClass]="{'is-invalid':formSubmitted && formValues['name'].invalid}">
+                <div *ngIf="formSubmitted && formValues['name'].invalid" class="invalid-feedback">
+                    <div *ngIf="formValues['name'].errors?.['required']">
+                        Please enter name
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="position" class="form-label">Position</label>
+                <input type="text" class="form-control" id="position" placeholder="Enter position" required
+                    formControlName="position"
+                    [ngClass]="{'is-invalid':formSubmitted && formValues['position'].invalid}">
+                <div *ngIf="formSubmitted && formValues['position'].invalid" class="invalid-feedback">
+                    <div *ngIf="formValues['position'].errors?.['required']">
+                        Please enter position
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="company" class="form-label">Company</label>
+                <input type="text" class="form-control" id="company" placeholder="Enter company" required
+                    formControlName="company" [ngClass]="{'is-invalid':formSubmitted && formValues['company'].invalid}">
+                <div *ngIf="formSubmitted && formValues['company'].invalid" class="invalid-feedback">
+                    <div *ngIf="formValues['company'].errors?.['required']">
+                        Please enter company
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" required
+                    formControlName="email" [ngClass]="{'is-invalid':formSubmitted && formValues['email'].invalid}">
+                <div *ngIf="formSubmitted && formValues['email'].invalid" class="invalid-feedback">
+
+                    <div *ngIf="formValues['email'].errors?.['required']">
+                        Please enter email
+                    </div>
+                    <div *ngIf="formValues['email'].errors?.['email']">
+                        Email must be a valid Email Address
+                    </div>
+
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success waves-effect waves-light me-1">Save</button>
+            <button type="button" class="btn btn-danger waves-effect waves-light"
+                (click)="modal.dismiss('')">Cancel</button>
+        </form>
+    </div>
+</ng-template>

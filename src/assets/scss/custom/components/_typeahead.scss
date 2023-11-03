@@ -1,0 +1,10 @@
+//
+// typeahead.scss
+//
+
+ngb-typeahead-window.dropdown-menu{
+    &.show{
+        top: auto !important;
+        left: auto !important;
+    }
+}

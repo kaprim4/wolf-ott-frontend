@@ -1,0 +1,33 @@
+<app-default-layout>
+    <div class="text-center mb-4">
+        <h4 class="text-uppercase mt-0 mb-4" i18n>Welcome Back</h4>
+        <img src="assets/images/users/user-1.jpg" width="88" alt="user-image" class="rounded-circle img-thumbnail">
+        <p class="text-muted my-4" i18n>Enter your password to access the admin.</p>
+    </div>
+
+    <form [formGroup]="lockScreenForm" (ngSubmit)="onSubmit()">
+        <ngb-alert type="danger" *ngIf="error" [dismissible]="false">{{ error }}</ngb-alert>
+        <div class="mb-3">
+            <label for="password" class="form-label" i18n>Password</label>
+            <input class="form-control" type="password" required id="password" i18n-placeholder
+                placeholder="Enter your password" formControlName="password"
+                [ngClass]="{'is-invalid':formSubmitted && formValues['password'].invalid}" />
+            <div *ngIf="formSubmitted && formValues['password'].invalid " class="invalid-feedback">
+                <div *ngIf="formValues['password'].errors?.['required']" i18n>
+                    Password is required.
+                </div>
+            </div>
+        </div>
+        <div class="mb-0 text-center d-grid">
+            <button class="btn btn-primary" type="submit" i18n> Log In </button>
+        </div>
+    </form>
+
+    <div class="row mt-3" footerLink>
+        <div class="col-12 text-center">
+            <p class="text-muted" i18n>
+                Not you? return <a routerLink="../login" class="text-dark ms-1"><b>Sign In</b></a>
+            </p>
+        </div>
+    </div>
+</app-default-layout>

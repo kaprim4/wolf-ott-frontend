@@ -1,0 +1,199 @@
+<div class="row">
+    <div class="col-xl-4">
+        <div class="card">
+            <div class="card-body taskboard-box">
+                <div class="float-end" ngbDropdown placement="bottom-end">
+                    <a href="javascript:void(0)" class="arrow-none card-drop" ngbDropdownToggle>
+                        <i class="mdi mdi-dots-vertical"></i>
+                    </a>
+                    <div ngbDropdownMenu>
+                        <a href="javascript:void(0);" ngbDropdownItem>Action</a>
+                        <a href="javascript:void(0);" ngbDropdownItem>Another action</a>
+                        <a href="javascript:void(0);" ngbDropdownItem>Something else</a>
+                        <a href="javascript:void(0);" ngbDropdownItem>Separated link</a>
+                    </div>
+                </div>
+
+                <h4 class="header-title mt-0 mb-3 text-primary">Upcoming</h4>
+                <ul class="sortable-list list-unstyled taskList" id="upcoming" [sortablejs]="upcomingTasks"
+                    [sortablejsOptions]="options">
+
+                    <li *ngFor="let task of upcomingTasks">
+                        <ng-template [ngTemplateOutlet]="KanbanTask" [ngTemplateOutletContext]="{task:task}">
+                        </ng-template>
+                    </li>
+
+                </ul>
+
+                <a href="javascript: void(0);" class="btn btn-primary w-100 mt-3 waves-effect waves-light"
+                    (click)="openModal('Upcoming')"><i class="mdi mdi-plus-circle"></i> Add New</a>
+
+            </div>
+        </div>
+
+    </div><!-- end col -->
+
+
+    <div class="col-xl-4">
+        <div class="card">
+            <div class="card-body taskboard-box">
+                <div class="float-end" ngbDropdown placement="bottom-end">
+                    <a href="javascript:void(0)" class="arrow-none card-drop" ngbDropdownToggle>
+                        <i class="mdi mdi-dots-vertical"></i>
+                    </a>
+                    <div ngbDropdownMenu>
+                        <a href="javascript:void(0);" ngbDropdownItem>Action</a>
+                        <a href="javascript:void(0);" ngbDropdownItem>Another action</a>
+                        <a href="javascript:void(0);" ngbDropdownItem>Something else</a>
+                        <a href="javascript:void(0);" ngbDropdownItem>Separated link</a>
+                    </div>
+                </div>
+
+                <h4 class="header-title mt-0 mb-3 text-warning">In Progress</h4>
+
+                <ul class="sortable-list list-unstyled taskList" id="inprogress" [sortablejs]="inprogressTasks"
+                    [sortablejsOptions]="options">
+
+                    <li *ngFor="let task of inprogressTasks">
+                        <ng-template [ngTemplateOutlet]="KanbanTask" [ngTemplateOutletContext]="{task:task}">
+                        </ng-template>
+                    </li>
+
+                </ul>
+                <a href="javascript: void(0);" class="btn btn-primary w-100 mt-3 waves-effect waves-light"
+                    (click)="openModal('Inprogress')"><i class="mdi mdi-plus-circle"></i> Add New</a>
+            </div>
+        </div>
+    </div><!-- end col -->
+
+
+    <div class="col-xl-4">
+        <div class="card">
+            <div class="card-body taskboard-box">
+                <div class="float-end" ngbDropdown placement="bottom-end">
+                    <a href="javascript:void(0)" class="arrow-none card-drop" ngbDropdownToggle>
+                        <i class="mdi mdi-dots-vertical"></i>
+                    </a>
+                    <div ngbDropdownMenu>
+                        <a href="javascript:void(0);" ngbDropdownItem>Action</a>
+                        <a href="javascript:void(0);" ngbDropdownItem>Another action</a>
+                        <a href="javascript:void(0);" ngbDropdownItem>Something else</a>
+                        <a href="javascript:void(0);" ngbDropdownItem>Separated link</a>
+                    </div>
+                </div>
+
+                <h4 class="header-title mt-0 mb-3 text-success">Complete</h4>
+
+                <ul class="sortable-list list-unstyled taskList" id="completed" [sortablejs]="completedTasks"
+                    [sortablejsOptions]="options">
+
+                    <li *ngFor="let task of completedTasks">
+                        <ng-template [ngTemplateOutlet]="KanbanTask" [ngTemplateOutletContext]="{task:task}">
+                        </ng-template>
+                    </li>
+
+                </ul>
+                <a href="javascript: void(0);" class="btn btn-primary w-100 mt-3 waves-effect waves-light"
+                    (click)="openModal('Completed')"><i class="mdi mdi-plus-circle"></i> Add New</a>
+            </div>
+        </div>
+
+    </div><!-- end col -->
+
+</div><!-- end row -->
+
+
+<ng-template #KanbanTask let-task="task">
+
+    <div class="kanban-box">
+        <div class="checkbox-wrapper float-start">
+            <div class="form-check form-check-success ">
+                <input class="form-check-input" type="checkbox" id="singleCheckbox{{task.id}}" value="option{{task.id}}"
+                    aria-label="Single checkbox Two">
+                <label></label>
+            </div>
+        </div>
+
+        <div class="kanban-detail">
+            <span class="badge bg-danger float-end" *ngIf="task.priority==='Urgent'">Urgent</span>
+            <span class="badge bg-warning float-end" *ngIf="task.priority==='High'">High</span>
+            <h5 class="mt-0"><a [routerLink]="['../details']" class="text-dark">{{task.title}}</a> </h5>
+            <ul class="list-inline">
+                <li class="list-inline-item">
+                    <a href="javascript:void(0)" placement="top" [ngbTooltip]="task.username">
+                        <img [src]="task.avatar" alt="img" class="avatar-sm rounded-circle">
+                    </a>
+                </li>
+                <li class="list-inline-item">
+                    <a href="javascript:void(0)" placement="top" [ngbTooltip]="task.totalTasks+' Tasks'">
+                        <i class="mdi mdi-format-align-left"></i>
+                    </a>
+                </li>
+                <li class="list-inline-item">
+                    <a href="javascript:void(0)" placement="top" [ngbTooltip]="task.totalComments+' Comments'">
+                        <i class="mdi mdi-comment-outline"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</ng-template>
+
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+
+        <h4 class="modal-title" id="myCenterModalLabel">Add New</h4>
+        <button type="button" class="btn-close float-end" aria-label="Close" (click)="modal.dismiss('')">
+        </button>
+    </div>
+    <div class="modal-body">
+        <form name="newTask-form" [formGroup]="newTask" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+                <label class="form-label" for="name">Task Name</label>
+                <input type="text" class="form-control" id="name" placeholder="" required formControlName="name"
+                    [ngClass]="{'is-invalid':formSubmitted && formValues['name'].invalid}">
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label" for="assign">Assign to</label>
+                        <input type="text" class="form-control" id="assign" placeholder="" formControlName="assignTo">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label" for="priority">Priority</label>
+                        <select formControlName="priority" class="form-select">
+                            <option value="">Select an option</option>
+                            <option value="Urgent">Urgent</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label" for="Sdate">Start Date</label>
+                        <input type="text" class="form-control" id="Sdate" placeholder="" formControlName="startDate">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label" for="Ddate">Due Date</label>
+                        <input type="text" class="form-control" id="Ddate" placeholder="" formControlName="dueDate">
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success waves-effect waves-light me-1">Save</button>
+            <button type="button" class="btn btn-danger waves-effect waves-light"
+                (click)="modal.dismiss('')">Cancel</button>
+        </form>
+    </div>
+</ng-template>

@@ -1,0 +1,41 @@
+<app-default-layout cardClass="bg-pattern" [hasLogo]="false">
+    <div class="text-center w-75 m-auto">
+        <div class="auth-logo">
+            <a [routerLink]="['/']" class="logo logo-dark text-center">
+                <span class="logo-lg">
+                    <img src="assets/images/logo-small-2.png" alt="" height="77">
+                </span>
+            </a>
+
+            <a [routerLink]="['/']" class="logo logo-light text-center">
+                <span class="logo-lg">
+                    <img src="assets/images/logo-small-2.png" alt="" height="77">
+                </span>
+            </a>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <div class="mt-4">
+            <div class="logout-checkmark">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                    <circle class="path circle" fill="none" stroke="#4bd396" stroke-width="6" stroke-miterlimit="10"
+                        cx="65.1" cy="65.1" r="62.1" />
+                    <polyline class="path check" fill="none" stroke="#4bd396" stroke-width="6" stroke-linecap="round"
+                        stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 " />
+                </svg>
+            </div>
+        </div>
+        <h3 i18n>À la prochaine !</h3>
+        <p class="text-muted" i18n> Vous êtes maintenant déconnecté avec succès. </p>
+    </div>
+
+
+    <div class="row mt-3" footerLink>
+        <div class="col-12 text-center">
+            <p class="text-muted" i18n>Retour à <a [routerLink]="['../login']" class="text-dark ms-1"><b>la connexion</b></a>
+            </p>
+        </div> <!-- end col -->
+    </div>
+
+</app-default-layout>

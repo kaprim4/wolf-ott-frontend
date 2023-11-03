@@ -1,0 +1,138 @@
+<section class="section" id="contact">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="title text-center mb-5">
+                    <h6 class="text-primary small-title">Contact</h6>
+                    <h4>Have any Questions ?</h4>
+                    <p class="text-muted">At solmen va esser far uniform grammatica.</p>
+                </div>
+            </div>
+        </div>
+        <!-- end row -->
+
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="get-in-touch">
+                    <h5>Get in touch</h5>
+                    <p class="text-muted mb-5">At solmen va esser necessi far</p>
+
+                    <div class="mb-3">
+                        <div class="get-touch-icon float-start me-3">
+                            <h2><i class="pe-7s-mail text-primary"></i></h2>
+                        </div>
+                        <div class="overflow-hidden">
+                            <h5 class="font-16 mb-0">E-mail</h5>
+                            <p class="text-muted">example@abc.com</p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="get-touch-icon float-start me-3">
+                            <h2><i class="pe-7s-phone text-primary"></i></h2>
+                        </div>
+                        <div class="overflow-hidden">
+                            <h5 class="font-16 mb-0">Phone</h5>
+                            <p class="text-muted">012-345-6789</p>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="get-touch-icon float-start me-3">
+                            <h2> <i class="pe-7s-map-marker text-primary"></i></h2>
+                        </div>
+                        <div class="overflow-hidden">
+                            <h5 class="font-16 mb-0">Address</h5>
+                            <p class="text-muted">20 Rollins Road Cotesfield, NE 68829</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="custom-form bg-white">
+                    <span id="error-msg"></span>
+                    <form [formGroup]="contactForm" (ngSubmit)="submitted=true">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Name</label>
+                                    <input name="name" id="name" type="text" class="form-control"
+                                        placeholder="Enter your name..." formControlName="name" required
+                                        [ngClass]="{ 'is-invalid': submitted && form1['name'].invalid }">
+                                    <div *ngIf=" submitted && form1['name'].invalid" class="invalid-feedback">
+
+                                        <div *ngIf="form1['name'].errors?.['required']">
+                                            Please enter name
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email address</label>
+                                    <input name="email" id="email" type="email" class="form-control"
+                                        placeholder="Enter your email..." required formControlName="email"
+                                        [ngClass]="{ 'is-invalid': submitted && form1['email'].invalid }">
+                                    <div *ngIf=" submitted && form1['email'].invalid" class="invalid-feedback">
+
+                                        <div *ngIf="form1['email'].errors?.['required']">
+                                            Please enter email
+                                        </div>
+                                        <div *ngIf="form1['email'].errors?.['email']">
+                                            Email must be a valid Email Address
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end row -->
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="mb-3">
+                                    <label for="subject" class="form-label">Subject</label>
+                                    <input name="subject" id="subject" type="text" class="form-control"
+                                        placeholder="Enter Subject..." formControlName="subject"
+                                        [ngClass]="{ 'is-invalid': submitted && form1['subject'].invalid }">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end row -->
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="mb-3">
+                                    <label for="comments" class="form-label">Message</label>
+                                    <textarea name="comments" id="comments" rows="4" class="form-control"
+                                        placeholder="Enter your message..." formControlName="message"
+                                        [ngClass]="{ 'is-invalid': submitted && form1['message'].invalid }"></textarea>
+                                    <div *ngIf=" submitted && form1['message'].invalid" class="invalid-feedback">
+
+                                        <div *ngIf="form1['message'].errors?.['required']">
+                                            Please enter message
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end row -->
+
+                        <div class="row">
+                            <div class="col-lg-12 text-end">
+                                <input type="submit" id="submit" name="send" class="submitBnt btn btn-custom"
+                                    value="Send Message" />
+                            </div>
+                        </div>
+                        <!-- end row -->
+                    </form>
+                </div>
+                <!-- end custom-form -->
+
+            </div>
+        </div>
+        <!-- end row -->
+    </div>
+    <!-- end container-fluid -->
+</section>

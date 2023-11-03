@@ -1,0 +1,33 @@
+//
+// rangeslider.scss
+//
+
+.ngx-slider {
+  .ngx-slider-pointer {
+    background-color: $primary !important;
+    width: 18px !important;
+    height: 18px !important;
+    top: -7px !important;
+    outline: none !important;
+    margin: 0 7px;
+
+    &:after {
+      top: 5px !important;
+      left: 5px !important;
+    }
+  }
+
+  .ngx-slider-bubble {
+    margin: 0 7px;
+  }
+
+  .ngx-slider-selection {
+    background: $primary !important;
+  }
+
+  .ngx-slider-active {
+    &:after {
+      background-color: $white !important;
+    }
+  }
+}

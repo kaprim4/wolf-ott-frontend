@@ -1,0 +1,475 @@
+<div class="row">
+    <div class="col-md-6 col-xl-3">
+        <!-- Simple card -->
+        <ng-template [ngTemplateOutlet]="SimpleCard"></ng-template>
+    </div><!-- end col -->
+
+    <div class="col-md-6 col-xl-3">
+        <!-- card with links -->
+        <ng-template [ngTemplateOutlet]="CardWithLinks"></ng-template>
+    </div><!-- end col -->
+
+    <div class="col-md-6 col-xl-3">
+        <!-- card without title -->
+        <ng-template [ngTemplateOutlet]="CardWithoutTitle"></ng-template>
+    </div><!-- end col -->
+
+    <div class="col-md-6 col-xl-3">
+        <!-- card with centered image -->
+        <ng-template [ngTemplateOutlet]="CardWithCenteredImage"></ng-template>
+    </div><!-- end col -->
+</div>
+<!-- end row -->
+
+<div class="row">
+    <div class="col-sm-6">
+        <ng-template [ngTemplateOutlet]="CardWithSpecialTitle" [ngTemplateOutletContext]="{cardClass:''}"></ng-template>
+    </div>
+    <div class="col-sm-6">
+        <ng-template [ngTemplateOutlet]="CardWithSpecialTitle" [ngTemplateOutletContext]="{cardClass:''}"></ng-template>
+    </div>
+</div>
+<!-- end row -->
+
+<div class="row">
+    <div class="col-md-4">
+        <ng-template [ngTemplateOutlet]="CardWithSpecialTitle" [ngTemplateOutletContext]="{cardClass:''}"></ng-template>
+    </div>
+    <div class="col-md-4">
+        <ng-template [ngTemplateOutlet]="CardWithSpecialTitle" [ngTemplateOutletContext]="{cardClass:'text-center'}">
+        </ng-template>
+    </div>
+    <div class="col-md-4">
+        <ng-template [ngTemplateOutlet]="CardWithSpecialTitle" [ngTemplateOutletContext]="{cardClass:'text-end'}">
+        </ng-template>
+    </div>
+</div>
+<!-- end row -->
+
+<div class="row">
+    <div class="col-md-4">
+        <!-- card with header -->
+        <ng-template [ngTemplateOutlet]="CardWithHeader" [ngTemplateOutletContext]="{header:'Featured'}"></ng-template>
+    </div> <!-- end col -->
+    <div class="col-md-4">
+        <!-- card with quote -->
+        <ng-template [ngTemplateOutlet]="CardWithQuote"></ng-template>
+    </div> <!-- end col -->
+    <div class="col-md-4">
+        <!-- card with header footer -->
+        <ng-template [ngTemplateOutlet]="CardWithHeaderFooter"
+            [ngTemplateOutletContext]="{header:'Featured',footer:'2 days ago'}"></ng-template>
+    </div> <!-- end col -->
+</div>
+<!-- end row -->
+
+<div class="row">
+    <div class="col-md-4">
+        <!-- card with image -->
+        <ng-template [ngTemplateOutlet]="CardWithImage" [ngTemplateOutletContext]="{title:'Card title',image:'assets/images/gallery/5.jpg',text:'This is a wider card with supporting text below as a
+                                            natural lead-in to additional content. This content is a little bit
+                                            longer.',subtext:'Last updated 3 mins ago',position:'top',cardClass:''}">
+        </ng-template>
+    </div> <!-- end col -->
+    <div class="col-md-4">
+        <!-- card with image -->
+        <ng-template [ngTemplateOutlet]="CardWithImage"
+            [ngTemplateOutletContext]="{title:'Card title',image:'assets/images/gallery/7.jpg',text:'This is a wider card with supporting text below as a
+                                            natural lead-in to additional content. This content is a little bit
+                                            longer.',subtext:'Last updated 3 mins ago',position:'bottom',cardClass:''}">
+        </ng-template>
+    </div> <!-- end col -->
+    <div class="col-md-4">
+        <!-- card with image overlay -->
+        <ng-template [ngTemplateOutlet]="CardWithImageOverlay"></ng-template>
+    </div> <!-- end col -->
+</div>
+<!-- end row -->
+
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card card-inverse text-white" style="background-color: #333; border-color: #333;">
+            <div class="card-body">
+                <h4 class="card-title text-white">Special title treatment</h4>
+                <p class="card-text">With supporting text below as a natural lead-in to
+                    additional content.</p>
+                <a [routerLink]="['.']" class="btn btn-primary">Button</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4" *ngFor="let color of coloredCards">
+        <ng-container *ngTemplateOutlet="ColoredCard;context:{variant:color}"></ng-container>
+    </div> <!-- end col-->
+    <div class="col-md-4">
+        <div class="card card-body">
+            <blockquote class="card-bodyquote mb-0">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere
+                    erat a ante.</p>
+                <footer class="blockquote-footer text-muted">
+                    Someone famous in <cite title="Source Title">Source Title</cite>
+                </footer>
+            </blockquote>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4" *ngFor="let variant of borderedCards">
+        <ng-container *ngTemplateOutlet="BorderedCard;context:{variant:variant}"></ng-container>
+    </div> <!-- end col-->
+</div>
+<!-- end row -->
+
+<div class="row">
+    <div class="col-12">
+        <h4 class="mt-2 mb-3">Card Group</h4>
+        <div class="card-group">
+            <ng-container *ngFor="let card of cardGroup">
+                <ng-template [ngTemplateOutlet]="CardWithImage"
+                    [ngTemplateOutletContext]="{title:card.title,image:card.image,text:card.text,subtext:card.subtext,position:'top',cardClass:'mb-4'}">
+                </ng-template>
+            </ng-container>
+        </div> <!-- end card-group-->
+    </div> <!-- end col-->
+</div>
+<!-- end row -->
+
+<div class="row">
+    <div class="col-12">
+        <h4 class="mt-2 mb-4">Navigation</h4>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card text-center">
+                    <div class="card-header bg-transparent border-bottom">
+                        <ul ngbNav #nav="ngbNav" class="nav-tabs card-header-tabs">
+                            <li ngbNavItem>
+                                <a ngbNavLink>Active</a>
+                                <ng-template ngbNavContent>
+                                    <div class="card-body">
+                                        <h4 class="mb-1">Special title treatment</h4>
+                                        <p class="mb-3">With supporting text below as a natural lead-in to additional
+                                            content.</p>
+                                        <a href="javascript:void(0);" class="btn btn-primary">Go somewhere</a>
+                                    </div>
+                                </ng-template>
+                            </li>
+                            <li ngbNavItem>
+                                <a ngbNavLink>Link</a>
+                                <ng-template ngbNavContent>
+                                    <div class="card-body">
+                                        <h4 class="mb-1">Special title treatment</h4>
+                                        <p class="mb-3">With supporting text below as a natural lead-in to additional
+                                            content.</p>
+                                        <a href="javascript:void(0);" class="btn btn-primary">Go somewhere</a>
+                                    </div>
+                                </ng-template>
+                            </li>
+                            <li ngbNavItem [disabled]="true">
+                                <a ngbNavLink>Disabled</a>
+                                <ng-template ngbNavContent>
+                                    <div class="card-body">
+                                        <h4 class="mb-1">Special title treatment</h4>
+                                        <p class="mb-3">With supporting text below as a natural lead-in to additional
+                                            content.</p>
+                                        <a href="javascript:void(0);" class="btn btn-primary">Go somewhere</a>
+                                    </div>
+                                </ng-template>
+                            </li>
+                        </ul>
+                    </div>
+                    <div [ngbNavOutlet]="nav"></div>
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+
+            <div class="col-md-6">
+                <div class="card text-center">
+                    <div class="card-header bg-transparent border-bottom">
+                        <ul ngbNav #nav="ngbNav" class=" nav-pills card-header-pills">
+                            <li ngbNavItem>
+                                <a ngbNavLink>Active</a>
+                                <ng-template ngbNavContent>
+                                    <div class="card-body">
+                                        <h4 class="mb-1">Special title treatment</h4>
+                                        <p class="mb-3">With supporting text below as a natural lead-in to additional
+                                            content.</p>
+                                        <a href="javascript:void(0);" class="btn btn-primary">Go somewhere</a>
+                                    </div>
+                                </ng-template>
+                            </li>
+                            <li ngbNavItem>
+                                <a ngbNavLink>Link</a>
+                                <ng-template ngbNavContent>
+                                    <div class="card-body">
+                                        <h4 class="mb-1">Special title treatment</h4>
+                                        <p class="mb-3">With supporting text below as a natural lead-in to additional
+                                            content.</p>
+                                        <a href="javascript:void(0);" class="btn btn-primary">Go somewhere</a>
+                                    </div>
+                                </ng-template>
+                            </li>
+                            <li ngbNavItem [disabled]="true">
+                                <a ngbNavLink>Disabled</a>
+                                <ng-template ngbNavContent>
+                                    <div class="card-body">
+                                        <h4 class="mb-1">Special title treatment</h4>
+                                        <p class="mb-3">With supporting text below as a natural lead-in to additional
+                                            content.</p>
+                                        <a href="javascript:void(0);" class="btn btn-primary">Go somewhere</a>
+                                    </div>
+                                </ng-template>
+                            </li>
+                        </ul>
+                    </div>
+                    <div [ngbNavOutlet]="nav"></div>
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div> <!-- end col -->
+</div>
+<!-- end row -->
+
+<div class="row">
+    <div class="col-12">
+        <h4 class="mt-0 mb-3">Columns</h4>
+        <div class="row">
+            <div class="col-md-4 col-12">
+                <ng-template [ngTemplateOutlet]="CardWithImage"
+                    [ngTemplateOutletContext]="{title:'Card title that wraps to a new line',image:'assets/images/gallery/2.jpg',text:'This is a longer card with supporting text below as a
+                      natural lead-in to additional content. This content is a little bit longer.',subtext:'',position:'top'}">
+                </ng-template>
+
+                <div class="card card-body">
+                    <blockquote class="card-bodyquote mb-0">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere
+                            erat a ante.</p>
+                        <footer class="blockquote-footer text-muted">
+                            Someone famous in <cite title="Source Title">Source Title</cite>
+                        </footer>
+                    </blockquote>
+                </div>
+            </div>
+            <div class="col-md-4 col-12">
+                <ng-template [ngTemplateOutlet]="CardWithImage" [ngTemplateOutletContext]="{title:'Card title',
+                    image:'assets/images/gallery/3.jpg',text:'This card has supporting text below as a natural lead-in to additional content',
+                    subtext:'Last updated 3 mins ago',position:'top'}">
+                </ng-template>
+
+                <div class="card card-body text-center">
+                    <blockquote class="card-bodyquote mb-0">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere
+                            erat.</p>
+                        <footer class="blockquote-footer text-muted">
+                            Someone famous in <cite title="Source Title">Source Title</cite>
+                        </footer>
+                    </blockquote>
+                </div>
+                <div class="card card-body">
+                    <h4 class="card-title">Card title</h4>
+                    <p class="card-text">This card has supporting text below as a natural lead-in to
+                        additional content.</p>
+                    <p class="card-text">
+                        <small class="text-muted">Last updated 3 mins ago</small>
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4 col-12">
+                <div class="card">
+                    <img class="card-img img-fluid" src="assets/images/gallery/4.jpg" alt="Card image cap">
+                </div>
+                <div class="card card-body text-end">
+                    <blockquote class="card-bodyquote mb-0">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere
+                            erat a ante.</p>
+                        <footer class="blockquote-footer text-muted">
+                            Someone famous in <cite title="Source Title">Source Title</cite>
+                        </footer>
+                    </blockquote>
+                </div>
+                <div class="card card-body">
+                    <h4 class="card-title">Card title</h4>
+
+                    <p class="card-text">This is a wider card with supporting text below as a
+                        natural lead-in to additional content. This card has even longer content
+                        than the first to show that equal height action.</p>
+                    <p class="card-text">
+                        <small class="text-muted">Last updated 3 mins ago</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- reusable templates -->
+<ng-template #SimpleCard>
+    <div class="card">
+        <img class="card-img-top img-fluid" src="assets/images/gallery/1.jpg" alt="Card image cap">
+        <div class="card-body">
+            <h4 class="card-title">Card title</h4>
+            <p class="card-text">Some quick example text to build on the card title and make
+                up the bulk of the card's content.</p>
+            <a [routerLink]="['.']" class="btn btn-primary">Button</a>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #CardWithLinks>
+    <div class="card">
+        <img class="card-img-top img-fluid" src="assets/images/gallery/2.jpg" alt="Card image cap">
+        <div class="card-body">
+            <h4 class="card-title">Card title</h4>
+            <p class="card-text">Some quick example text to build on the card title and make
+                up the bulk of the card's content.</p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Cras justo odio</li>
+            <li class="list-group-item">Dapibus ac facilisis in</li>
+        </ul>
+        <div class="card-body">
+            <a [routerLink]="['.']" class="card-link">Card link</a>
+            <a [routerLink]="['.']" class="card-link">Another link</a>
+        </div>
+    </div>
+
+</ng-template>
+
+<ng-template #CardWithoutTitle>
+    <div class="card">
+        <img class="card-img-top img-fluid" src="assets/images/gallery/3.jpg" alt="Card image cap">
+        <div class="card-body">
+            <p class="card-text">Some quick example text to build on the card title and make
+                up the bulk of the card's content.</p>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #CardWithCenteredImage>
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Card title</h4>
+            <h6 class="card-subtitle text-muted">Support card subtitle</h6>
+        </div>
+        <img class="img-fluid" src="assets/images/gallery/4.jpg" alt="Card image cap">
+        <div class="card-body">
+            <p class="card-text">Some quick example text to build on the card title and make
+                up the bulk of the card's content.</p>
+            <a [routerLink]="['.']" class="card-link">Card link</a>
+            <a [routerLink]="['.']" class="card-link">Another link</a>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #CardWithImage let-title="title" let-image="image" let-text="text" let-subtext="subtext"
+    let-position="position" let-cardClass="cardClass">
+    <div class="card" [class]="cardClass">
+        <img class="card-img-top img-fluid" [src]="image" alt="Card image cap" *ngIf="position==='top'">
+        <div class="card-body">
+            <h5 class="card-title">{{title}}</h5>
+            <p class="card-text">{{text}}</p>
+            <p class="card-text">
+                <small class="text-muted">{{subtext}}</small>
+            </p>
+        </div>
+        <img class="card-img-bottom img-fluid" [src]="image" alt="Card image cap" *ngIf="position==='bottom'">
+    </div> <!-- end card-->
+</ng-template>
+
+<ng-template #CardWithSpecialTitle let-cardClass="cardClass">
+    <div class="card card-body" [class]="cardClass">
+        <h4 class="card-title">Special title treatment</h4>
+        <p class="card-text">With supporting text below as a natural lead-in to additional
+            content.</p>
+        <a [routerLink]="['.']" class="btn btn-primary">Go somewhere</a>
+    </div>
+</ng-template>
+
+<ng-template #CardWithHeader let-header="header">
+    <div class="card">
+        <h5 class="card-header">{{header}}</h5>
+        <div class="card-body">
+            <h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to
+                additional content.</p>
+            <a [routerLink]="['.']" class="btn btn-primary">Go somewhere</a>
+        </div>
+    </div> <!-- end card-->
+</ng-template>
+
+<ng-template #CardWithQuote>
+    <div class="card">
+        <div class="card-header">
+            Quote
+        </div>
+        <div class="card-body">
+            <blockquote class="card-bodyquote">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere
+                    erat a ante.</p>
+                <footer class="blockquote-footer text-muted">Someone famous in <cite title="Source Title">Source
+                        Title</cite>
+                </footer>
+            </blockquote>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #CardWithHeaderFooter let-header="header" let-footer="footer">
+    <div class="card text-center">
+        <div class="card-header">
+            {{header}}
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to
+                additional content.</p>
+            <a [routerLink]="['.']" class="btn btn-primary">Go somewhere</a>
+        </div>
+        <div class="card-footer text-muted">
+            {{footer}}
+        </div>
+    </div> <!-- end card-->
+</ng-template>
+
+<ng-template #CardWithImageOverlay>
+    <div class="card card-inverse text-white">
+        <img class="card-img img-fluid" src="assets/images/gallery/6.jpg" alt="Card image">
+        <div class="card-img-overlay">
+            <h4 class="card-title text-white">Card title</h4>
+            <p class="card-text">This is a wider card with supporting text below as a
+                natural lead-in to additional content. This content is a little bit
+                longer.</p>
+            <p class="card-text">
+                <small class="">Last updated 3 mins ago</small>
+            </p>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #ColoredCard let-variant="variant">
+    <div class="card bg-{{variant}}" [ngClass]="{'text-white': variant!=='white','text-dark':variant==='white'}">
+        <div class="card-body">
+            <blockquote class="card-bodyquote mb-0">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere
+                    erat a ante.</p>
+                <footer class="blockquote-footer" [class]="variant==='white' ? 'text-muted' : 'text-white-50'">Someone
+                    famous in <cite title="Source Title">Source
+                        Title</cite>
+                </footer>
+            </blockquote>
+        </div>
+    </div> <!-- end card-->
+</ng-template>
+
+<ng-template #BorderedCard let-variant="variant">
+    <div class="card border border-{{variant}}">
+        <div class="card-body text-{{variant}}">
+            <h5 class="card-title  text-{{variant}}">{{variant | titlecase}} card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+                content.</p>
+        </div>
+    </div> <!-- end card-->
+</ng-template>

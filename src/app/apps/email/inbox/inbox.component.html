@@ -1,0 +1,100 @@
+<div class="row">
+
+    <div class="col-sm-12">
+        <div class="inbox-app-main">
+            <div class="row">
+                <div class="col-md-3">
+                    <aside id="sidebar">
+                        <ngx-simplebar class="h-100">
+
+                            <div class="text-center">
+                                <a id="email-left-content"
+                                    class="btn btn-danger rounded-pill width-lg waves-effect waves-light mb-2 mt-3"
+                                    (click)="openComposeModal()">Compose</a>
+                            </div>
+                            <app-email-leftbar [totalUnread]="43"></app-email-leftbar>
+                            <div class="bottom-padding"></div>
+                        </ngx-simplebar>
+                    </aside>
+                </div> <!-- end col -->
+
+                <div class="col-md-9">
+                    <main id="main">
+                        <div class="overlay" (click)="handleOverlayClick()"></div>
+                        <header class="header">
+
+                            <h1 class="page-title">
+                                <a class="sidebar-toggle-btn trigger-toggle-sidebar" (click)="toggleSidebar()">
+                                    <span class="line"></span>
+                                    <span class="line"></span>
+                                    <span class="line"></span>
+                                    <span class="line line-angle1"></span>
+                                    <span class="line line-angle2"></span>
+                                </a>
+                            </h1>
+                            <div class="action-bar float-start">
+                                <ul class="list-inline mb-0">
+                                    <li class="list-inline-item">
+                                        <a class="icon circle-icon"><i class="mdi mdi-refresh text-muted"></i></a>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a class="icon circle-icon"><i class="mdi mdi-share text-muted"></i></a>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a class="icon circle-icon red"><i class="mdi mdi-close text-danger"></i></a>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a class="icon circle-icon red"><i class="mdi mdi-flag text-danger"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="search-box float-end">
+                                <input placeholder="Search..."><span class="icon fa fa-search"></span>
+                            </div>
+
+                            <div class="clearfix"></div>
+
+                        </header>
+
+                        <div id="main-nano-wrapper" class="nano">
+                            <ngx-simplebar class="nano-content h-100">
+                                <ul class="message-list">
+                                    <li *ngFor="let email of emailList;let i=index" [ngClass]="{'blue-dot': email.label==='bills',
+                                        'green-dot':email.label==='roommates',
+                                        'orange-dot':email.label==='recharge',
+                                        'unread':!email.is_read,
+                                        'active':activeIndex===i
+                                    }" (click)="handleMessageClick(i)">
+                                        <div class="mail-col mail-col-1"><span class="dot"></span>
+                                            <div class="checkbox-wrapper-mail">
+                                                <input type="checkbox" id="chk{{email.id}}">
+                                                <label for="chk{{email.id}}" class="toggle"></label>
+                                            </div>
+                                            <p class="title">{{email.from_name}}</p><span
+                                                class="star-toggle far fa-star"></span>
+                                        </div>
+                                        <div class="mail-col mail-col-2">
+                                            <div class="subject">{{email.subject}} &nbsp;&ndash;&nbsp;
+                                                <span class="teaser">{{email.teaser}}</span>
+                                            </div>
+                                            <div class="date">{{email.time}}</div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <a href="javascript:void(0)" class="load-more-link" (click)="showMoreMessages()"
+                                    *ngIf="emailList.length !== totalEmails ">Show more messages</a>
+                            </ngx-simplebar>
+                        </div>
+                    </main>
+
+                    <app-email-message (closeMessage)="handleMessageClose()"></app-email-message>
+
+                </div>
+            </div> <!-- end col -->
+        </div><!-- end row -->
+    </div>
+
+</div>
+
+<app-compose-mail #composeModal>
+</app-compose-mail>

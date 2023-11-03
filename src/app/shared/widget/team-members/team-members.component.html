@@ -1,0 +1,35 @@
+<div class="card">
+    <div class="card-body">
+        <div class="float-end" ngbDropdown placement="bottom-end">
+            <a href="javascript:void(0);" class="arrow-none card-drop" ngbDropdownToggle>
+                <i class="mdi mdi-dots-vertical"></i>
+            </a>
+            <div ngbDropdownMenu>
+                <!-- item-->
+                <a href="javascript:void(0);" ngbDropdownItem>Action</a>
+                <!-- item-->
+                <a href="javascript:void(0);" ngbDropdownItem>Another action</a>
+                <!-- item-->
+                <a href="javascript:void(0);" ngbDropdownItem>Something else</a>
+                <!-- item-->
+                <a href="javascript:void(0);" ngbDropdownItem>Separated link</a>
+            </div>
+        </div>
+
+        <h4 class="header-title mt-0 mb-3">{{cardTitle}}</h4>
+
+        <ul class="list-group mb-0 user-list">
+            <li class="list-group-item" *ngFor="let member of teamMembers">
+                <a [routerLink]="['.']" class="user-list-item">
+                    <div class="user avatar-sm float-start me-2">
+                        <img [src]="member.avatar" alt="" class="img-fluid rounded-circle">
+                    </div>
+                    <div class="user-desc">
+                        <h5 class="name mt-0 mb-1">{{member.name}}</h5>
+                        <p class="desc text-muted mb-0 font-12">{{member.designation}}</p>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

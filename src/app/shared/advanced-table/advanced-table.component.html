@@ -1,0 +1,88 @@
+<form #displayForm="ngForm" class="my-2" *ngIf="isSearchable">
+    <div class="row mb-2">
+        <div class="col-12 col-md-6" *ngIf="pageSizeOptions.length">
+            <div class="text--start">
+                <label class="form-label me-1">Show
+                    <select class="form-select form-select-sm  w-auto ms-1 me-1 d-inline" name="pageSize"
+                        id="event-category" required [(ngModel)]="service.pageSize" (ngModelChange)="paginate()">
+                        <option *ngFor="let option of pageSizeOptions" [value]="option">{{option}}</option>
+                    </select>
+                    entries</label>
+            </div>
+        </div><!-- end col-->
+        <div class="col-12" [class.col-md-6]="pageSizeOptions.length">
+            <div class="d-flex align-items-center justify-content-start justify-content-sm-end">
+                <label class="d-inline">Search:
+                    <input type="text" name="searchTerm" class="form-control form-control-sm d-inline w-auto ms-1"
+                        aria-controls="advanced-table" [(ngModel)]="service.searchTerm" (ngModelChange)="searchData()">
+                </label>
+            </div>
+        </div><!-- end col-->
+    </div>
+    <!-- end row -->
+</form>
+
+<div class="table-responsive">
+    <table id="advancd-table" class="table advanced-table table-nowrap mb-0" [class]="tableClasses" #advancedTable>
+        <thead [class]="theadClasses">
+            <tr *ngIf="isSortable">
+                <th *ngIf="hasRowSelection" class="row_select" style="width: 20px;">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate"
+                            [checked]="selectAll" [indeterminate]="checkIntermediate()" (change)="selectAllRow($event)">
+                    </div>
+                </th>
+
+                <ng-container *ngFor="let column of columns">
+                    <th class="text-capitalize sortable pe-3 pe-lg-auto" [style.width.px]="column.width"
+                        [sortable]="column.name" (sort)="onSort($event)" *ngIf="column.sort!=false">
+                        {{column.label}}</th>
+                    <th class="text-capitalize" [style.width.px]="column.width" *ngIf="column.sort===false">
+                        {{column.label}}</th>
+                </ng-container>
+            </tr>
+            <tr *ngIf="!isSortable">
+                <th *ngIf="hasRowSelection" class="row_select" style="width: 20px;">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate"
+                            [checked]="selectAll" [indeterminate]="checkIntermediate()" (change)="selectAllRow($event)">
+                    </div>
+                </th>
+                <th *ngFor="let column of columns" [style.width.px]="column.width" class="text-capitalize">
+                    {{column.label}}</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            <tr *ngFor="let record of tableData | slice: (service.page-1) * service.pageSize : service.page * service.pageSize;let i=index"
+                [class.selected]="isSelected[i+((service.page-1) * service.pageSize)]">
+
+                <td *ngIf="hasRowSelection">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox"
+                            [checked]="isSelected[i+((service.page-1) * service.pageSize)]" value=""
+                            id="flexCheckIndeterminate" (change)="selectRow(i+((service.page-1) * service.pageSize))">
+                    </div>
+                </td>
+                <td *ngFor="let column of columns">
+                    <div [innerHtml]="callFormatter(column,record)"></div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <div class="d-flex flex-wrap justify-content-center align-items-center justify-content-sm-between mt-2"
+        *ngIf="pagination">
+        <div>
+            Showing {{service.startIndex }} to
+            {{service.endIndex}} of {{service.totalRecords}} entries
+        </div>
+        <ngb-pagination class="custom-pagination" [collectionSize]="service.totalRecords" [(page)]="service.page"
+            [maxSize]="3" [rotate]="true" [pageSize]="service.pageSize" (pageChange)="paginate()">
+            <ng-template ngbPaginationPrevious>Prev</ng-template>
+            <ng-template ngbPaginationNext>Next</ng-template>
+        </ngb-pagination>
+    </div>
+
+</div>

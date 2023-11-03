@@ -1,0 +1,89 @@
+<div class="row">
+    <div class="col-sm-4">
+        <a [routerLink]="['.']" class="btn btn-purple rounded-pill w-md waves-effect waves-light mb-3"><i
+                class="mdi mdi-plus"></i>
+            Create Project</a>
+    </div>
+    <div class="col-sm-8">
+        <div class="float-end">
+            <form class="row g-2 align-items-center mb-2 mb-sm-0">
+                <div class="col-auto">
+                    <div class="d-flex">
+                        <label class="d-flex align-items-center">Phase
+                            <select class="form-select form-select-sm d-inline-block ms-2">
+                                <option>All Projects(6)</option>
+                                <option>Complated</option>
+                                <option>Progress</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="d-flex">
+                        <label class="d-flex align-items-center">Sort
+                            <select class="form-select form-select-sm d-inline-block ms-2">
+                                <option>Date</option>
+                                <option>Name</option>
+                                <option>End date</option>
+                                <option>Start Date</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div><!-- end col-->
+</div>
+<!-- end row -->
+
+
+<div class="row">
+    <div class="col-xl-4" *ngFor="let project of projects">
+        <div class="card">
+            <div class="card-body project-box">
+                <div class="badge bg-{{project.variant}} float-end">{{project.state}}</div>
+                <h4 class="mt-0"><a [routerLink]="['.']" class="text-dark">{{project.title}}</a></h4>
+                <p class="text-{{project.variant}} text-uppercase font-13">{{project.category}}</p>
+                <p class="text-muted font-13">{{project.shortDesc}}<a [routerLink]="['.']" class="text-primary">View
+                        more</a>
+                </p>
+
+                <ul class="list-inline">
+                    <li class="list-inline-item me-4">
+                        <h4 class="mb-0">{{project.totalQuestions}}</h4>
+                        <p class="text-muted">Questions</p>
+                    </li>
+                    <li class="list-inline-item">
+                        <h4 class="mb-0">{{project.totalComments}}</h4>
+                        <p class="text-muted">Comments</p>
+                    </li>
+                </ul>
+
+                <div class="project-members mb-2">
+                    <h5 class="float-start me-3">Team :</h5>
+                    <div class="avatar-group">
+                        <a [routerLink]="['.']" class="avatar-group-item" *ngFor="let member of project.teamMembers"
+                            placement="top" [ngbTooltip]="member.name">
+                            <img [src]="member.image" class="rounded-circle avatar-sm" alt="friend" />
+                        </a>
+
+
+                    </div>
+                </div>
+
+                <h5>Progress <span class="text-{{project.variant}} float-end">{{project.progress}}%</span></h5>
+                <div class="progress progress-bar-alt-{{project.variant}} progress-sm">
+                    <div class="progress-bar bg-{{project.variant}} progress-animated wow animated animated"
+                        role="progressbar" [attr.aria-valuenow]="project.progress" aria-valuemin="0" aria-valuemax="100"
+                        [style.width.%]="project.progress"
+                        style="visibility: visible; animation-name: animationProgress;">
+                    </div><!-- /.progress-bar .progress-bar-danger -->
+                </div><!-- /.progress .no-rounded -->
+
+            </div>
+        </div>
+
+    </div><!-- end col-->
+
+</div>
+<!-- end row -->

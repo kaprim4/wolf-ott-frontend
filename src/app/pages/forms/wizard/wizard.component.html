@@ -1,0 +1,611 @@
+<div class="row">
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="header-title mb-3"> Basic Wizard</h4>
+
+                <form [formGroup]="basicWizardForm" #basicForm="ngForm">
+                    <div id="basicwizard">
+
+                        <ul ngbNav #basicWizard="ngbNav" [(activeId)]="activeWizard1"
+                            class="nav-pills bg-light nav-justified form-wizard-header mb-4">
+                            <li [ngbNavItem]="1">
+                                <a ngbNavLink class="rounded-0 pt-2 pb-2">
+                                    <i class="mdi mdi-account-circle me-1"></i>
+                                    <span class="d-none d-sm-inline">Account</span>
+                                </a>
+                                <ng-template ngbNavContent>
+                                    <div class="row" formGroupName="account">
+                                        <div class="col-12">
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="userName1">User name</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" class="form-control" id="userName1"
+                                                        name="userName" value="hyper" formControlName="userName">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="password1"> Password</label>
+                                                <div class="col-md-9">
+                                                    <input type="password" id="password1" name="password"
+                                                        class="form-control" value="123456789"
+                                                        formControlName="password">
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="confirm1">Re
+                                                    Password</label>
+                                                <div class="col-md-9">
+                                                    <input type="password" id="confirm1" name="confirm"
+                                                        class="form-control" value="123456789"
+                                                        formControlName="rePassword">
+                                                </div>
+                                            </div>
+                                        </div> <!-- end col -->
+                                    </div> <!-- end row -->
+                                </ng-template>
+                            </li>
+                            <li [ngbNavItem]="2">
+                                <a ngbNavLink class="rounded-0 pt-2 pb-2">
+                                    <i class="mdi mdi-face-profile me-1"></i>
+                                    <span class="d-none d-sm-inline">Profile</span>
+                                </a>
+                                <ng-template ngbNavContent>
+                                    <div class="row" formGroupName="profile">
+                                        <div class="col-12">
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="name"> First name</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" id="name" name="name" class="form-control"
+                                                        value="Francis" formControlName="firstName">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="surname"> Last name</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" id="surname" name="surname" class="form-control"
+                                                        value="Brinkman" formControlName="lastName">
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="email">Email</label>
+                                                <div class="col-md-9">
+                                                    <input type="email" id="email" name="email" class="form-control"
+                                                        value="cory1979@hotmail.com" formControlName="email">
+                                                </div>
+                                            </div>
+                                        </div> <!-- end col -->
+                                    </div> <!-- end row -->
+
+                                </ng-template>
+                            </li>
+                            <li [ngbNavItem]="3">
+                                <a ngbNavLink class="rounded-0 pt-2 pb-2">
+                                    <i class="mdi mdi-checkbox-marked-circle-outline me-1"></i>
+                                    <span class="d-none d-sm-inline">Finish</span>
+                                </a>
+                                <ng-template ngbNavContent>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="text-center">
+                                                <h2 class="mt-0"><i class="mdi mdi-check-all"></i></h2>
+                                                <h3 class="mt-0">Thank you !</h3>
+
+                                                <p class="w-75 mb-2 mx-auto">Quisque nec turpis at urna dictum luctus.
+                                                    Suspendisse convallis dignissim eros
+                                                    at volutpat. In egestas mattis dui. Aliquam
+                                                    mattis dictum aliquet.</p>
+
+                                                <div class="mb-3">
+                                                    <div class="form-check d-inline-block">
+                                                        <input type="checkbox" class="form-check-input"
+                                                            id="customCheck1" formControlName="acceptTerms">
+                                                        <label class="form-check-label" for="customCheck1">I agree with
+                                                            the Terms and Conditions</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> <!-- end col -->
+                                    </div> <!-- end row -->
+
+                                </ng-template>
+                            </li>
+                        </ul>
+
+                        <div [ngbNavOutlet]="basicWizard" class="b-0 mb-0 pt-0"></div>
+                        <ul class="list-inline mb-0 wizard">
+                            <li class="previous list-inline-item">
+                                <button class="btn btn-secondary" (click)="activeWizard1=activeWizard1-1"
+                                    [disabled]="activeWizard1===1">Previous</button>
+                            </li>
+                            <li class="next list-inline-item float-end">
+                                <button type="button" (click)="activeWizard1=activeWizard1+1" class="btn btn-secondary"
+                                    *ngIf="activeWizard1<3">Next</button>
+                                <button type="button" class="btn btn-secondary"
+                                    *ngIf="activeWizard1===3">Submit</button>
+                            </li>
+                        </ul>
+
+
+
+                    </div> <!-- end #basicwizard-->
+                </form>
+
+            </div> <!-- end card-body -->
+        </div> <!-- end card-->
+    </div> <!-- end col -->
+
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="header-title mb-3"> Button Wizard</h4>
+                <form [formGroup]="btnWizardForm" #btnForm="ngForm">
+                    <div id="btnWizard">
+
+                        <ul ngbNav #btnWizard="ngbNav" [(activeId)]="activeWizard2"
+                            class="nav-pills nav-justified bg-light form-wizard-header mb-4">
+                            <li [ngbNavItem]="1">
+                                <a ngbNavLink class="rounded-0 pt-2 pb-2">
+                                    <i class="mdi mdi-account-circle me-1"></i>
+                                    <span class="d-none d-sm-inline">Account</span>
+                                </a>
+                                <ng-template ngbNavContent>
+                                    <div class="row" formGroupName="account">
+                                        <div class="col-12">
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="userName2">User name</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" class="form-control" id="userName2"
+                                                        name="userName" value="hyper" formControlName="userName">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="password2"> Password</label>
+                                                <div class="col-md-9">
+                                                    <input type="password" id="password2" name="password"
+                                                        class="form-control" value="123456789"
+                                                        formControlName="password">
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="confirm2">Re
+                                                    Password</label>
+                                                <div class="col-md-9">
+                                                    <input type="password" id="confirm2" name="confirm"
+                                                        class="form-control" value="123456789"
+                                                        formControlName="rePassword">
+                                                </div>
+                                            </div>
+                                        </div> <!-- end col -->
+                                    </div> <!-- end row -->
+                                </ng-template>
+                            </li>
+                            <li [ngbNavItem]="2">
+                                <a ngbNavLink class="rounded-0 pt-2 pb-2">
+                                    <i class="mdi mdi-face-profile me-1"></i>
+                                    <span class="d-none d-sm-inline">Profile</span>
+                                </a>
+                                <ng-template ngbNavContent>
+                                    <div class="row" formGroupName="profile">
+                                        <div class="col-12">
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="name"> First name</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" id="name" name="name" class="form-control"
+                                                        value="Francis" formControlName="firstName">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="surname"> Last name</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" id="surname" name="surname" class="form-control"
+                                                        value="Brinkman" formControlName="lastName">
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="email">Email</label>
+                                                <div class="col-md-9">
+                                                    <input type="email" id="email" name="email" class="form-control"
+                                                        value="cory1979@hotmail.com" formControlName="email">
+                                                </div>
+                                            </div>
+                                        </div> <!-- end col -->
+                                    </div> <!-- end row -->
+
+
+                                </ng-template>
+                            </li>
+                            <li [ngbNavItem]="3">
+                                <a ngbNavLink class="rounded-0 pt-2 pb-2">
+                                    <i class="mdi mdi-checkbox-marked-circle-outline me-1"></i>
+                                    <span class="d-none d-sm-inline">Finish</span>
+                                </a>
+                                <ng-template ngbNavContent>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="text-center">
+                                                <h2 class="mt-0"><i class="mdi mdi-check-all"></i></h2>
+                                                <h3 class="mt-0">Thank you !</h3>
+
+                                                <p class="w-75 mb-2 mx-auto">Quisque nec turpis at urna dictum luctus.
+                                                    Suspendisse convallis dignissim eros
+                                                    at volutpat. In egestas mattis dui. Aliquam
+                                                    mattis dictum aliquet.</p>
+
+                                                <div class="mb-3">
+                                                    <div class="form-check d-inline-block">
+                                                        <input type="checkbox" class="form-check-input"
+                                                            id="customCheck2" formControlName="acceptTerms">
+                                                        <label class="form-check-label" for="customCheck2">I agree with
+                                                            the Terms and Conditions</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> <!-- end col -->
+                                    </div> <!-- end row -->
+                                </ng-template>
+                            </li>
+
+                        </ul>
+
+                        <div [ngbNavOutlet]="btnWizard" class="mb-0 b-0 pt-0"></div>
+                        <div class="float-end">
+                            <button type="button" class='btn btn-secondary button-next me-1'
+                                (click)="activeWizard2= activeWizard2+1" name='next' value='Next'
+                                *ngIf="activeWizard2<3">Next</button>
+                            <button type="button" class="btn btn-secondary me-1"
+                                *ngIf="activeWizard2===3">Submit</button>
+                            <input type='button' class='btn btn-secondary button-last' (click)="activeWizard2=3"
+                                name='last' value='Last' />
+                        </div>
+                        <div class="float-start">
+                            <input type='button' class='btn btn-secondary button-first me-1' (click)="activeWizard2=1"
+                                name='first' value='First' />
+                            <input type='button' class='btn btn-secondary button-previous'
+                                (click)="activeWizard2=activeWizard2-1" name='previous' value='Previous'
+                                [disabled]="activeWizard2===1" />
+                        </div>
+
+                        <div class="clearfix"></div>
+
+
+                    </div> <!-- end #btnWizard-->
+                </form>
+
+            </div> <!-- end card-body -->
+        </div> <!-- end card-->
+    </div> <!-- end col -->
+</div>
+<!-- end row -->
+
+<div class="row">
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="header-title mb-3">Wizard With Progress Bar</h4>
+
+
+                <form [formGroup]="progressWizardForm" #progressForm="ngForm">
+                    <div id="progressWizard">
+
+                        <ul ngbNav #progressWizard="ngbNav" [(activeId)]="activeWizard3"
+                            class="nav-pills nav-justified bg-light form-wizard-header mb-3">
+                            <li [ngbNavItem]="1">
+                                <a ngbNavLink class="rounded-0 pt-2 pb-2">
+                                    <i class="mdi mdi-account-circle me-1"></i>
+                                    <span class="d-none d-sm-inline">Account</span>
+                                </a>
+                                <ng-template ngbNavContent>
+                                    <p>
+                                        <ngb-progressbar type="success" [value]="33.3" [striped]="true"
+                                            [animated]="true" class="mb-3" height="7px"></ngb-progressbar>
+                                    </p>
+                                    <div class="row" formGroupName="account">
+                                        <div class="col-12">
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="userName3">User name</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" class="form-control" id="userName3"
+                                                        name="userName" value="hyper" formControlName="userName">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="password3"> Password</label>
+                                                <div class="col-md-9">
+                                                    <input type="password" id="password3" name="password"
+                                                        class="form-control" value="123456789"
+                                                        formControlName="password">
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="confirm3">Re
+                                                    Password</label>
+                                                <div class="col-md-9">
+                                                    <input type="password" id="confirm3" name="confirm"
+                                                        class="form-control" value="123456789"
+                                                        formControlName="rePassword">
+                                                </div>
+                                            </div>
+                                        </div> <!-- end col -->
+                                    </div> <!-- end row -->
+
+                                </ng-template>
+                            </li>
+                            <li [ngbNavItem]="2">
+                                <a ngbNavLink class="rounded-0 pt-2 pb-2">
+                                    <i class="mdi mdi-face-profile me-1"></i>
+                                    <span class="d-none d-sm-inline">Profile</span>
+                                </a>
+                                <ng-template ngbNavContent>
+                                    <p>
+                                        <ngb-progressbar type="success" [value]="66.6" [striped]="true"
+                                            [animated]="true" class="mb-3" height="7px">
+                                        </ngb-progressbar>
+                                    </p>
+                                    <div class="row" formGroupName="profile">
+                                        <div class="col-12">
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="name"> First name</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" id="name" name="name" class="form-control"
+                                                        value="Francis" formControlName="firstName">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="surname"> Last name</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" id="surname" name="surname" class="form-control"
+                                                        value="Brinkman" formControlName="lastName">
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="email">Email</label>
+                                                <div class="col-md-9">
+                                                    <input type="email" id="email" name="email" class="form-control"
+                                                        value="cory1979@hotmail.com" formControlName="email">
+                                                </div>
+                                            </div>
+                                        </div> <!-- end col -->
+                                    </div> <!-- end row -->
+
+                                </ng-template>
+                            </li>
+                            <li [ngbNavItem]="3">
+                                <a ngbNavLink class="rounded-0 pt-2 pb-2">
+                                    <i class="mdi mdi-checkbox-marked-circle-outline me-1"></i>
+                                    <span class="d-none d-sm-inline">Finish</span>
+                                </a>
+                                <ng-template ngbNavContent>
+                                    <p>
+                                        <ngb-progressbar type="success" [value]="100" [striped]="true" [animated]="true"
+                                            class="mb-3" height="7px">
+                                        </ngb-progressbar>
+                                    </p>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="text-center">
+                                                <h2 class="mt-0"><i class="mdi mdi-check-all"></i></h2>
+                                                <h3 class="mt-0">Thank you !</h3>
+
+                                                <p class="w-75 mb-2 mx-auto">Quisque nec turpis at urna dictum luctus.
+                                                    Suspendisse convallis dignissim eros
+                                                    at volutpat. In egestas mattis dui. Aliquam
+                                                    mattis dictum aliquet.</p>
+
+                                                <div class="mb-3">
+                                                    <div class="form-check d-inline-block">
+                                                        <input type="checkbox" class="form-check-input"
+                                                            id="customCheck3" formControlName="acceptTerms">
+                                                        <label class="form-check-label" for="customCheck3">I agree with
+                                                            the Terms and Conditions</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> <!-- end col -->
+                                    </div> <!-- end row -->
+                                </ng-template>
+                            </li>
+                        </ul>
+
+                        <div [ngbNavOutlet]="progressWizard" class="b-0 mb-0 pt-0"></div>
+                        <ul class="list-inline mb-0 wizard">
+                            <li class="previous list-inline-item">
+                                <button class="btn btn-secondary" [disabled]="activeWizard3===1"
+                                    (click)="activeWizard3=activeWizard3-1">Previous</button>
+                            </li>
+                            <li class="next list-inline-item float-end">
+                                <button type="button" (click)="activeWizard3=activeWizard3+1" class="btn btn-secondary"
+                                    *ngIf="activeWizard3<3">Next</button>
+                                <button type="button" class="btn btn-secondary"
+                                    *ngIf="activeWizard3===3">Submit</button>
+                            </li>
+                        </ul>
+
+
+                    </div> <!-- end #basicwizard-->
+                </form>
+
+            </div> <!-- end card-body -->
+        </div> <!-- end card-->
+    </div> <!-- end col -->
+
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+
+                <h4 class="header-title mb-3"> Wizard With Form Validation</h4>
+
+
+                <div id="validationWizard">
+
+                    <ul ngbNav #validationWizard="ngbNav" [(activeId)]="activeWizard4"
+                        class="nav-pills nav-justified bg-light form-wizard-header mb-4">
+                        <li [ngbNavItem]="1">
+                            <a ngbNavLink class="rounded-0 pt-2 pb-2">
+                                <i class="mdi mdi-account-circle me-1"></i>
+                                <span class="d-none d-sm-inline">Account</span>
+                            </a>
+                            <ng-template ngbNavContent>
+                                <form class="form-horizontal" [formGroup]="accountForm" #accountWizard="ngForm"
+                                    (ngSubmit)="gotoNext()">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="userName4">User
+                                                    name</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" class="form-control" id="userName4" value="hyper"
+                                                        formControlName="userName" required
+                                                        [ngClass]="{ 'is-invalid': accountWizard.submitted && form1['userName'].invalid}">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="password4">
+                                                    Password</label>
+                                                <div class="col-md-9">
+                                                    <input type="password" id="password4" name="password"
+                                                        class="form-control" value="123456789"
+                                                        formControlName="password"
+                                                        [ngClass]="{ 'is-invalid': accountWizard.submitted && form1['password'].invalid }">
+
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="confirm4">Re
+                                                    Password</label>
+                                                <div class="col-md-9">
+                                                    <input type="password" id="confirm4" name="confirm"
+                                                        class="form-control" value="123456789"
+                                                        formControlName="rePassword"
+                                                        [ngClass]="{ 'is-invalid': accountWizard.submitted && form1['rePassword'].invalid }">
+                                                </div>
+                                            </div>
+                                        </div> <!-- end col -->
+                                    </div> <!-- end row -->
+                                    <ul class="list-inline mb-0 wizard">
+
+                                        <li class="next list-inline-item float-end">
+                                            <button type="submit" class="btn btn-secondary">Next</button>
+                                        </li>
+                                    </ul>
+
+                                </form>
+
+                            </ng-template>
+                        </li>
+                        <li [ngbNavItem]="2">
+                            <a ngbNavLink class="rounded-0 pt-2 pb-2">
+                                <i class="mdi mdi-face-profile me-1"></i>
+                                <span class="d-none d-sm-inline">Profile</span>
+                            </a>
+                            <ng-template ngbNavContent>
+                                <form class="form-horizontal needs-validation" [formGroup]="profileForm"
+                                    #profileWizard="ngForm" (ngSubmit)="gotoNext()">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="name"> First name</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" id="name" name="name" class="form-control"
+                                                        formControlName="firstName"
+                                                        [ngClass]="{ 'is-invalid': profileWizard.submitted && form2['firstName'].invalid }">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="surname"> Last name</label>
+                                                <div class="col-md-9">
+                                                    <input type="text" id="surname" name="surname" class="form-control"
+                                                        formControlName="lastName"
+                                                        [ngClass]="{ 'is-invalid': profileWizard.submitted && form2['lastName'].invalid }">
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <label class="col-md-3 col-form-label" for="email">Email</label>
+                                                <div class="col-md-9">
+                                                    <input type="email" id="email" name="email" class="form-control"
+                                                        formControlName="email"
+                                                        [ngClass]="{ 'is-invalid': profileWizard.submitted && form2['email'].invalid }">
+                                                </div>
+                                            </div>
+                                        </div> <!-- end col -->
+                                    </div> <!-- end row -->
+
+                                    <ul class="list-inline mb-0 wizard">
+                                        <li class="previous list-inline-item">
+                                            <button class="btn btn-secondary"
+                                                (click)="activeWizard4=activeWizard4-1">Previous</button>
+                                        </li>
+                                        <li class="next list-inline-item float-end">
+                                            <button type="submit" class="btn btn-secondary">Next</button>
+                                        </li>
+                                    </ul>
+
+                                </form>
+                            </ng-template>
+                        </li>
+                        <li [ngbNavItem]="3">
+                            <a ngbNavLink class="rounded-0 pt-2 pb-2">
+                                <i class="mdi mdi-checkbox-marked-circle-outline me-1"></i>
+                                <span class="d-none d-sm-inline">Finish</span>
+                            </a>
+                            <ng-template ngbNavContent>
+                                <form class="form-horizontal" [formGroup]="validationWizardForm"
+                                    #validationWizard="ngForm">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="text-center">
+                                                <h2 class="mt-0"><i class="mdi mdi-check-all"></i></h2>
+                                                <h3 class="mt-0">Thank you !</h3>
+
+                                                <p class="w-75 mb-2 mx-auto">Quisque nec turpis at urna dictum luctus.
+                                                    Suspendisse convallis dignissim eros
+                                                    at volutpat. In egestas mattis dui. Aliquam
+                                                    mattis dictum aliquet.</p>
+
+                                                <div class="mb-3">
+                                                    <div class="form-check d-inline-block">
+                                                        <input type="checkbox" class="form-check-input"
+                                                            id="customCheck4" formControlName="acceptTerms"
+                                                            [ngClass]="{ 'is-invalid': validationWizard.submitted && form3['acceptTerms'].invalid }">
+                                                        <label class="form-check-label" for="customCheck4">I agree with
+                                                            the Terms and Conditions</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> <!-- end col -->
+                                    </div> <!-- end row -->
+
+                                    <ul class="list-inline mb-0 wizard">
+                                        <li class="previous list-inline-item">
+                                            <button class="btn btn-secondary"
+                                                (click)="activeWizard4=activeWizard4-1">Previous</button>
+                                        </li>
+                                        <li class="next list-inline-item float-end">
+                                            <button type="submit" class="btn btn-secondary">Submit</button>
+                                        </li>
+                                    </ul>
+
+                                </form>
+                            </ng-template>
+                        </li>
+                    </ul>
+
+                    <div [ngbNavOutlet]="validationWizard"></div>
+
+                </div> <!-- end #validationWizard-->
+            </div> <!-- end card-body -->
+        </div> <!-- end card-->
+    </div> <!-- end col -->
+</div>
+<!-- end row -->

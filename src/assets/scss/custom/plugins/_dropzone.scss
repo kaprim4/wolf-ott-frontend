@@ -1,0 +1,29 @@
+//
+// dropzone.scss
+//
+
+ngx-dropzone {
+    border: 2px dashed $input-border-color !important;
+    background: $input-bg !important;
+    border-radius: 6px !important;
+    cursor: pointer;
+    min-height: 150px !important;
+    padding: 20px !important;
+    box-shadow: $components-shadow-sm;
+
+    ngx-dropzone-label {
+        z-index: 9 !important;
+        margin: 2rem auto !important;
+        text-align: center;
+    }
+
+    .dz-message {
+        text-align: center;
+        margin: 2rem 0 !important;
+    }
+    &.dz-started {
+        .dz-message {
+            display: none;
+        }
+    }
+}

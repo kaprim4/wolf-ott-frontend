@@ -1,0 +1,75 @@
+<app-default-layout>
+
+    <div class="text-center mb-4">
+        <h4 class="text-uppercase mt-0" i18n>Register</h4>
+    </div>
+
+    <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
+        <app-ui-preloader [display]="loading"></app-ui-preloader>
+        <ngb-alert [dismissible]="false" type="danger" *ngIf="error">
+            {{ error }}
+        </ngb-alert>
+        <div class="mb-3">
+            <label for="fullname" class="form-label" i18n>Full Name</label>
+            <input class="form-control" type="text" id="fullname" i18n-placeholder placeholder="Enter your name"
+                formControlName="name" required
+                [ngClass]="{'is-invalid':formSubmitted && formValues['name'].invalid}" />
+            <div *ngIf="formSubmitted && formValues['name'].invalid" class="invalid-feedback">
+
+                <div *ngIf="formValues['name'].errors?.['required']" i18n>
+                    Name is required.
+                </div>
+
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="emailaddress" class="form-label" i18n>Email address</label>
+            <input class="form-control" type="email" id="emailaddress" i18n-placeholder placeholder="Enter your email"
+                formControlName="email" required
+                [ngClass]="{'is-invalid':formSubmitted && formValues['email'].invalid}" />
+            <div *ngIf="formSubmitted && formValues['email'].invalid" class="invalid-feedback">
+
+                <div *ngIf="formValues['email'].errors?.['required']" i18n>
+                    Please enter email
+                </div>
+                <div *ngIf="formValues['email'].errors?.['email']" i18n>
+                    Email must be a valid Email Address
+                </div>
+
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label" i18n>Password</label>
+            <input class="form-control" type="password" id="password" i18n-placeholder placeholder="Enter your password"
+                formControlName="password" [ngClass]="{'is-invalid':formSubmitted && formValues['password'].invalid}"
+                required />
+            <div *ngIf="formSubmitted && formValues['password'].invalid " class="invalid-feedback">
+
+                <div *ngIf="formValues['password'].errors?.['required']" i18n>
+                    Password is required.
+                </div>
+
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="checkbox-signup">
+                <label class="form-check-label" for="checkbox-signup" i18n>I accept <a href="javascript: void(0);"
+                        class="text-dark">Terms and Conditions</a></label>
+            </div>
+        </div>
+        <div class="mb-3 text-center d-grid">
+            <button class="btn btn-primary" type="submit" i18n> Sign Up </button>
+        </div>
+
+    </form>
+
+    <div class="row mt-3" footerLink>
+        <div class="col-12 text-center">
+            <p class="text-muted" i18n>Already have account? <a routerLink="../login" class="text-dark ms-1"><b>Sign
+                        In</b></a>
+            </p>
+        </div>
+    </div>
+
+</app-default-layout>

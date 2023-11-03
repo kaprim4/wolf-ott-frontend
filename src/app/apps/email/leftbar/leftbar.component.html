@@ -1,0 +1,43 @@
+<menu class="menu-segment">
+    <ul class="list-unstyled">
+        <li class="active"><a [routerLink]="['.']">Inbox<span> ({{totalUnread}})</span></a>
+        </li>
+        <li><a [routerLink]="['.']">Important</a></li>
+        <li><a [routerLink]="['.']">Sent</a></li>
+        <li><a [routerLink]="['.']">Drafts</a></li>
+        <li><a [routerLink]="['.']">Trash</a></li>
+    </ul>
+</menu>
+
+<div class="separator"></div>
+
+<div class="menu-segment">
+    <ul class="labels list-unstyled">
+        <li class="title">Labels <span class="icon">+</span></li>
+        <li><a [routerLink]="['.']">Dribbble <span class="ball pink"></span></a>
+        </li>
+        <li><a [routerLink]="['.']">Roommates <span class="ball green"></span></a></li>
+        <li><a [routerLink]="['.']">Bills <span class="ball blue"></span></a>
+        </li>
+    </ul>
+</div>
+
+<div class="separator"></div>
+
+<div class="menu-segment">
+    <ul class="chat list-unstyled">
+        <li class="title">Chat <span class="icon">+</span></li>
+        <li><a [routerLink]="['.']"><span class="ball green"></span>Laura Turner</a>
+        </li>
+        <li><a [routerLink]="['.']"><span class="ball green"></span>Kevin Jones</a>
+        </li>
+        <li><a [routerLink]="['.']"><span class="ball blue"></span>John King</a>
+        </li>
+        <li><a [routerLink]="['.']"><span class="ball blue"></span>Jenny Parker</a>
+        </li>
+        <li><a [routerLink]="['.']"><span class="ball blue"></span>Paul
+                Green</a></li>
+        <li><a [routerLink]="['.']" class="italic-link">See offline list</a>
+        </li>
+    </ul>
+</div>

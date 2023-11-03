@@ -1,0 +1,47 @@
+<div id="wrapper">
+    <!-- topbar -->
+    <app-topbar (mobileMenuButtonClicked)="onToggleMobileMenu()" layoutType="horizontal" containerClass="container-fluid"></app-topbar>
+    <!-- topnav-->
+    <app-horizontal-topnav [showMobileMenu]="showMobileMenu"></app-horizontal-topnav>
+    <div class="content-page">
+        <div class="content">
+            <!-- content -->
+            <div class="container-fluid" *ngIf="reRender">
+                <!-- start page title -->
+                <div class="row" *ngIf="pageTitle">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="javascript: void(0);">Adminto</a>
+                                    </li>
+                                    <ng-container *ngFor="let item of pageTitle.breadCrumbItems">
+                                        <li class="breadcrumb-item" *ngIf="!item.active">
+                                            <a href="javascript: void(0);">{{item.label}}</a>
+                                        </li>
+                                        <li class="breadcrumb-item active" *ngIf="item.active">
+                                            <a>{{item.label}}</a>
+                                        </li>
+                                    </ng-container>
+                                </ol>
+                            </div>
+                            <h4 class="page-title">{{pageTitle.title}}</h4>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+        <!-- footer -->
+        <app-footer></app-footer>
+    </div>
+</div>
+<!-- END wrapper -->
+
+<!-- right sidebar -->
+<app-right-sidebar layoutType="horizontal" [layoutColor]="layoutColor" [layoutWidth]="layoutWidth"
+    [leftbarPosition]="leftbarPosition" [leftbarColor]="leftbarColor" [leftbarSize]="leftbarSize"
+    [topbarColor]="topbarColor" [showSidebarUserInfo]="showSidebarUserInfo">
+</app-right-sidebar>

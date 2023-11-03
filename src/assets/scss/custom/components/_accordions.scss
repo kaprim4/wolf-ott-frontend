@@ -1,0 +1,84 @@
+//
+// accordions.scss
+//
+
+.custom-accordion {
+    .accordion-item {
+        box-shadow: none;
+        border: 1px solid $border-color !important;
+        .accordion-arrow {
+            font-size: 1.2rem;
+            position: absolute;
+            right: 10px;
+        }
+        .accordion-button {
+            &.collapsed {
+                i.accordion-arrow {
+                    &:before {
+                        content: "\F0142";
+                    }
+                }
+            }
+        }
+    }
+}
+
+.custom-accordion {
+    .card {
+        box-shadow: none;
+        border: 1px solid $border-color !important;
+        &.accordion-item {
+            .accordion-header {
+                margin-bottom: auto !important;
+                background-color: #{map-get($grays, "100")} !important;
+                .accordion-button {
+                    background-color: #{map-get($grays, "100")} !important;
+                }
+            }
+        }
+    }
+}
+
+.accordion {
+    .accordion-item {
+        border: none;
+        box-shadow: $box-shadow;
+        .accordion-header {
+            background-color: $card-cap-bg !important;
+            border-radius: 0;
+            border-bottom: none !important;
+            margin-bottom: -1px;
+            .accordion-button {
+                box-shadow: none !important;
+                background-color: $card-cap-bg !important;
+                &:after {
+                    background-image: none;
+                }
+                &:not(.collapsed) {
+                    color: inherit;
+                    background-color: inherit;
+                }
+            }
+        }
+        .accordion-body {
+            padding: 0 !important;
+            background-color: $card-bg !important;
+        }
+    }
+}
+
+// dark mode
+body[data-layout-color="dark"] {
+    .custom-accordion {
+        .card {
+            &.accordion-item {
+                .accordion-header {
+                    background-color: #{map-get($dark-grays, "300")} !important;
+                    .accordion-button {
+                        background-color: #{map-get($dark-grays, "300")} !important;
+                    }
+                }
+            }
+        }
+    }
+}

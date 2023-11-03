@@ -1,0 +1,171 @@
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body task-detail">
+                <div class="float-end" ngbDropdown placement="bottom-end">
+                    <a href="javascript:void(0)" class="arrow-none card-drop" ngbDropdownToggle>
+                        <i class="mdi mdi-dots-vertical"></i>
+                    </a>
+                    <div ngbDropdownMenu>
+                        <a href="javascript:void(0);" ngbDropdownItem>Action</a>
+                        <a href="javascript:void(0);" ngbDropdownItem>Another action</a>
+                        <a href="javascript:void(0);" ngbDropdownItem>Something else</a>
+                        <a href="javascript:void(0);" ngbDropdownItem>Separated link</a>
+                    </div>
+                </div>
+                <div class="d-flex mb-3">
+                    <img class="flex-shrink-0 me-3 rounded-circle avatar-md" alt="64x64"
+                        src="assets/images/users/user-2.jpg">
+                    <div class="flex-grow-1">
+                        <h4 class="media-heading mt-0">Michael Zenaty</h4>
+                        <span class="badge bg-danger">Urgent</span>
+                    </div>
+                </div>
+
+                <h4>Code HTML email template for welcome email</h4>
+
+                <p class="text-muted">
+                    At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+                    deleniti atque corrupti quos dolores et quas molestias excepturi sint cupiditate non sunt in culpa
+                    qui officia deserunt animi est laborum et
+                </p>
+
+                <p class="text-muted">
+                    Consectetur adipisicing elit. Voluptates, illo, iste
+                    itaque voluptas corrupti ratione reprehenderit magni similique Tempore quos
+                    delectus asperiores libero voluptas quod perferendis erum ipsum dolor sit.
+                </p>
+
+                <div class="row task-dates mb-0 mt-2">
+                    <div class="col-lg-6">
+                        <h5 class="font-600 m-b-5">Start Date</h5>
+                        <p> 22 March 2016 <small class="text-muted">1:00 PM</small></p>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <h5 class="font-600 m-b-5">Due Date</h5>
+                        <p> 17 April 2016 <small class="text-muted">12:00 PM</small></p>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="task-tags mt-2">
+                    <h5>Tags</h5>
+                    <select2 [data]="tags" [value]="selectedTags" placeholder="add tags" id="selec2-2" multiple="true">
+                    </select2>
+                </div>
+
+                <div class="assign-team mt-3">
+                    <h5>Assign to</h5>
+                    <div>
+                        <a [routerLink]="['.']"> <img class="rounded-circle avatar-sm" alt="64x64"
+                                src="assets/images/users/user-2.jpg"> </a>
+                        <a [routerLink]="['.']"> <img class="rounded-circle avatar-sm" alt="64x64"
+                                src="assets/images/users/user-3.jpg"> </a>
+                        <a [routerLink]="['.']"> <img class="rounded-circle avatar-sm" alt="64x64"
+                                src="assets/images/users/user-5.jpg"> </a>
+                        <a [routerLink]="['.']"> <img class="rounded-circle avatar-sm" alt="64x64"
+                                src="assets/images/users/user-8.jpg"> </a>
+                        <a [routerLink]="['.']"><span class="add-new-plus"><i class="mdi mdi-plus"></i> </span></a>
+                    </div>
+                </div>
+
+                <div class="attached-files mt-3">
+                    <h5>Attached Files </h5>
+                    <ul class="list-inline files-list">
+                        <li class="list-inline-item file-box">
+                            <a [routerLink]="['.']"><img src="assets/images/attached-files/img-1.jpg"
+                                    class="img-fluid img-thumbnail" alt="attached-img" width="80"></a>
+                            <p class="font-13 mb-1 text-muted"><small>File one</small></p>
+                        </li>
+                        <li class="list-inline-item file-box">
+                            <a [routerLink]="['.']"><img src="assets/images/attached-files/img-2.jpg"
+                                    class="img-fluid img-thumbnail" alt="attached-img" width="80"></a>
+                            <p class="font-13 mb-1 text-muted"><small>Attached-2</small></p>
+                        </li>
+                        <li class="list-inline-item file-box">
+                            <a [routerLink]="['.']"><img src="assets/images/attached-files/img-3.jpg"
+                                    class="img-fluid img-thumbnail" alt="attached-img" width="80"></a>
+                            <p class="font-13 mb-1 text-muted"><small>Dribbble shot</small></p>
+                        </li>
+                        <li class="list-inline-item file-box ms-2">
+                            <div class="fileupload add-new-plus">
+                                <span><i class="mdi-plus mdi"></i></span>
+                                <input type="file" class="upload">
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-success waves-effect waves-light me-1">
+                                    Save
+                                </button>
+                                <button type="button" class="btn btn-light waves-effect">Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div><!-- end col -->
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="float-end" ngbDropdown placement="bottom-end">
+                    <a href="javascript:void(0)" class="arrow-none card-drop" ngbDropdownToggle>
+                        <i class="mdi mdi-dots-vertical"></i>
+                    </a>
+                    <div ngbDropdownMenu>
+                        <a href="javascript:void(0);" ngbDropdownItem>Action</a>
+                        <a href="javascript:void(0);" ngbDropdownItem>Another action</a>
+                        <a href="javascript:void(0);" ngbDropdownItem>Something else</a>
+                        <a href="javascript:void(0);" ngbDropdownItem>Separated link</a>
+                    </div>
+                </div>
+                <h4 class="header-title mt-0 mb-3">Comments ({{comments.length}})</h4>
+
+                <div>
+                    <ng-container *ngFor="let comment of comments">
+                        <ng-container *ngTemplateOutlet="CommentBox;context:{comment:comment,class:'mb-3'}">
+                        </ng-container>
+                    </ng-container>
+                    <div class="d-flex mb-3">
+                        <div class=" me-3">
+                            <a [routerLink]="['.']"> <img class="rounded-circle avatar-sm" alt="64x64"
+                                    src="assets/images/users/user-1.jpg"> </a>
+                        </div>
+                        <div class="flex-grow-1">
+                            <input type="text" class="form-control" placeholder="Some text value...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- end col -->
+</div>
+
+<ng-template #CommentBox let-comment="comment" let-class="class">
+    <div class="d-flex" [class]="class">
+        <div class="flex-shrink-0 me-3">
+            <a [routerLink]="['.']"> <img class="rounded-circle avatar-sm" alt="64x64" [src]="comment.avatar"> </a>
+        </div>
+        <div class="flex-grow-1">
+            <h5 class="mt-0">{{comment.username}}</h5>
+            <p class="font-13 text-muted mb-0">
+                <a [routerLink]="['.']" class="text-primary">@{{comment.username.split(' ')[0]}}</a>
+                {{comment.text}}
+            </p>
+            <a [routerLink]="['.']" class="text-success font-13">Reply</a>
+            <ng-container *ngFor="let reply of comment.replies">
+                <ng-container *ngTemplateOutlet="CommentBox;context:{comment:reply,class:'my-2'}">
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+</ng-template>

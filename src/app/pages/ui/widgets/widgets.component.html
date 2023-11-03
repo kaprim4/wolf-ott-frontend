@@ -1,0 +1,98 @@
+<div class="row">
+
+    <div class="col-xl-3 col-md-6">
+        <app-statistics-widget1 title="Total Revenue" [stats]="256" subTitle="Revenue today" color="#f05050"
+            [progress]="58"></app-statistics-widget1>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-statistics-widget1 title="Statistics" [stats]="4569" subTitle="Revenue today" color="#ffbd4a"
+            [progress]="80"></app-statistics-widget1>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-statistics-widget1 title="Total Revenue" [stats]="8545" subTitle="Revenue today" color="#35b8e0"
+            [progress]="77"></app-statistics-widget1>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-statistics-widget1 title="Statistics" [stats]="3562" subTitle="Revenue today" color="#10c469"
+            [progress]="65"></app-statistics-widget1>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-xl-3 col-md-6">
+        <app-statistics-widget2 title="Daily Sales" [stats]="158" subTitle="Revenue today" [trendStats]="32"
+            trendIcon="up" variant="pink" [progress]="77"></app-statistics-widget2>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-statistics-widget2 title="Sales Analytics" [stats]="8451" subTitle="Revenue today" [trendStats]="32"
+            trendIcon="up" variant="success" [progress]="77"></app-statistics-widget2>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-statistics-widget2 title="Sales Analytics" [stats]="7540" subTitle="Revenue today" [trendStats]="32"
+            trendIcon="up" variant="primary" [progress]="77"></app-statistics-widget2>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-statistics-widget2 title="Daily Sales" [stats]="9841" subTitle="Revenue today" [trendStats]="32"
+            trendIcon="up" variant="warning" [progress]="77"></app-statistics-widget2>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-xl-3 col-md-6">
+        <app-widget-user-card name="Chadengle" email="coderthemes@gmail.com" avatar="assets/images/users/user-3.jpg"
+            designation="Admin" variant="warning"></app-widget-user-card>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-widget-user-card name="Michael Zenaty" email="coderthemes@gmail.com"
+            avatar="assets/images/users/user-2.jpg" designation="Support Lead" variant="pink"></app-widget-user-card>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-widget-user-card name="Stillnotdavid" email="coderthemes@gmail.com" avatar="assets/images/users/user-1.jpg"
+            designation="Designer" variant="success"></app-widget-user-card>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-widget-user-card name="Tomaslau" email="coderthemes@gmail.com" avatar="assets/images/users/user-10.jpg"
+            designation="Developer" variant="info"></app-widget-user-card>
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-xl-3 col-md-6">
+        <app-statistics-widget3 title="Statistics" [count]="6599" [startVal]="6000" variant="primary">
+        </app-statistics-widget3>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-statistics-widget3 title="Total Revenue" [count]="5894" [startVal]="5000" variant="pink">
+        </app-statistics-widget3>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-statistics-widget3 title="Sales Analytics" [count]="452" [startVal]="400" variant="warning">
+        </app-statistics-widget3>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-statistics-widget3 title="Daily Sales" [count]="1254" [startVal]="1200" variant="info">
+        </app-statistics-widget3>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-xl-3 col-md-6">
+        <app-widget-team-members [teamMembers]="teamMembers" cardTitle="Team Members"></app-widget-team-members>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-widget-member-card [member]="member1"></app-widget-member-card>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-widget-progressbars></app-widget-progressbars>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-widget-remainders [remainders]="remainders"></app-widget-remainders>
+    </div>
+
+</div>
