@@ -1,20 +1,11 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-
-// service
 import {AuthenticationService} from 'src/app/core/service/auth.service';
 import {EventService} from 'src/app/core/service/event.service';
-
-// constant
 import {EventType} from 'src/app/core/constants/events';
-
-// types
 import {User} from 'src/app/core/models/auth.models';
 import {NotificationItem} from '../models/notification.model';
 import {ProfileOptionItem} from '../models/profileoption.model';
 import {SearchResultItem, SearchUserItem} from '../models/search.model';
-
-// data
-import {NOTIFICATIONS, PROFILEOPTIONS} from './data';
 import {PageTitle} from '../models/page-title.model';
 
 @Component({
@@ -38,10 +29,9 @@ export class TopbarComponent implements OnInit {
     // output events
     @Output() mobileMenuButtonClicked = new EventEmitter<void>();
 
-    constructor(
-        private authService: AuthenticationService,
-        private eventService: EventService
-    ) {
+    no_profile_img = './assets/images/logo.png';
+
+    constructor(private authService: AuthenticationService, private eventService: EventService) {
         this.eventService.on(EventType.CHANGE_PAGE_TITLE).subscribe(({payload}) => {
             this.pageTitle = (payload as PageTitle).title;
         });
@@ -54,24 +44,72 @@ export class TopbarComponent implements OnInit {
         this.loggedInUser = this.authService.currentUser();
     }
 
-    /**
-     * Fetches notifications
-     */
     _fetchNotifications(): void {
-        this.notificationList = NOTIFICATIONS;
+        this.notificationList = [
+            /*{
+                id: 1,
+                isActive: true,
+                text: 'Cristina Pride',
+                subText: 'Hi, How are you? What about our next meeting',
+                avatar: 'assets/images/users/user-1.jpg',
+            },
+            {
+                id: 2,
+                text: 'Caleb Flakelar commented on Admin',
+                subText: '1 min ago',
+                icon: 'mdi mdi-comment-account-outline',
+                bgColor: 'primary',
+            },
+            {
+                id: 3,
+                text: 'Karen Robinson',
+                subText: 'Wow ! this admin looks good and awesome design',
+                avatar: 'assets/images/users/user-4.jpg',
+            },
+            {
+                id: 4,
+                text: 'New user registered.',
+                subText: '5 hours ago',
+                icon: 'mdi mdi-account-plus',
+                bgColor: 'warning',
+            },
+            {
+                id: 5,
+                text: 'Caleb Flakelar commented on Admin',
+                subText: '1 min ago',
+                icon: 'mdi mdi-comment-account-outline',
+                bgColor: 'info',
+            },
+            {
+                id: 6,
+                text: 'Carlos Crouch liked Admin',
+                subText: '13 days ago',
+                icon: 'mdi mdi-heart',
+                bgColor: 'secondary',
+            },*/
+        ];
     }
 
-    /**
-     * Fetches profile options
-     */
     _fetchProfileOptions(): void {
-        this.profileOptions = PROFILEOPTIONS;
+        this.profileOptions = [
+            {
+                label: 'Mon coumpte',
+                icon: 'fe-user',
+                redirectTo: '/apps/contacts/profile',
+            },
+            {
+                label: 'Écran verrouillé',
+                icon: 'fe-lock',
+                redirectTo: '/auth/lock-screen',
+            },
+            {
+                label: 'Se déconnecter',
+                icon: 'fe-log-out',
+                redirectTo: '/auth/logout',
+            }
+        ];
     }
 
-
-    /**
-     * Fetches search results
-     */
     _fetchSearchData(): void {
         this.searchResults = [{
             id: 1,
@@ -104,16 +142,10 @@ export class TopbarComponent implements OnInit {
 
     }
 
-    /**
-     * Toggles the right sidebar
-     */
     toggleRightSidebar() {
         this.eventService.broadcast(EventType.SHOW_RIGHT_SIDEBAR, true);
     }
 
-    /**
-     * Toggle the menu bar when having mobile screen
-     */
     toggleMobileMenu(event: any) {
 
         this.topnavCollapsed = !this.topnavCollapsed;

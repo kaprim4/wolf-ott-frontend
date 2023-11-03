@@ -6,7 +6,7 @@
                 <form class="app-search">
                     <div class="app-search-box">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search..." id="search-dropdown" ngbDropdownToggle>
+                            <input type="text" class="form-control" placeholder="Rechercher..." id="search-dropdown" ngbDropdownToggle>
                             <button class="btn input-group-text" type="submit">
                                 <i class="fe-search"></i>
                             </button>
@@ -54,8 +54,7 @@
                 </a>
                 <div class="dropdown-lg dropdown-menu-end p-0" ngbDropdownMenu>
                     <form class="p-3" ngbDropdownItem>
-                        <input type="text" class="form-control" placeholder="Search ..."
-                            aria-label="Recipient's username">
+                        <input type="text" class="form-control" placeholder="Rechercher ..." aria-label="Recipient's username">
                     </form>
                 </div>
             </li>
@@ -64,23 +63,21 @@
                 <a class="nav-link dropdown-toggle waves-effect waves-light" href="javascript:void(0)" role="button"
                     ngbDropdownToggle>
                     <i class="fe-bell noti-icon"></i>
-                    <span class="badge bg-danger rounded-circle noti-icon-badge">9</span>
+                    <span *ngIf="notificationList.length > 0" class="badge bg-danger rounded-circle noti-icon-badge">9</span>
                 </a>
                 <div class="dropdown-menu-end dropdown-lg" ngbDropdownMenu>
-
                     <!-- item-->
                     <div class="noti-title" ngbDropdownItem>
                         <h5 class="m-0">
                             <span class="float-end">
                                 <a [routerLink]="['.']" class="text-dark">
-                                    <small>Clear All</small>
+                                    <small>Tout effacer</small>
                                 </a>
-                            </span>Notification
+                            </span>Notifications
                         </h5>
                     </div>
 
                     <ngx-simplebar class="noti-scroll">
-
                         <!-- item -->
                         <a href="javascript:void(0);" class="notify-item" *ngFor="let item of notificationList"
                             [class.active]="item.isActive" ngbDropdownItem>
@@ -95,35 +92,30 @@
                             </p>
                             <ng-container *ngIf="item.avatar">
                                 <p class="notify-details">{{item.text}}</p>
-                                <p class="text-muted mb-0 user-msg">
-                                    <small>{{item.subText}}</small>
-                                </p>
+                                <p class="text-muted mb-0 user-msg"><small>{{item.subText}}</small></p>
                             </ng-container>
                         </a>
-
                     </ngx-simplebar>
-
                     <!-- All-->
                     <a href="javascript:void(0);" class="dropdown-item text-center text-primary notify-item notify-all">
-                        View all
+                        Voir tout
                         <i class="fe-arrow-right"></i>
                     </a>
-
                 </div>
             </li>
 
             <li class="notification-list topbar-dropdown" ngbDropdown>
                 <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light" href="javascript:void(0)"
                     role="button" ngbDropdownToggle>
-                    <img [src]="loggedInUser?.avatar" alt="user-image" class="rounded-circle">
+                    <img [src]="loggedInUser?.avatar ? loggedInUser?.avatar : no_profile_img" alt="user-image" class="rounded-circle">
                     <span class="pro-user-name ms-1">
-                        {{loggedInUser?.firstName}} <i class="mdi mdi-chevron-down"></i>
+                        {{loggedInUser?.firstName}} {{loggedInUser?.lastName}} <i class="mdi mdi-chevron-down"></i>
                     </span>
                 </a>
                 <div ngbDropdownMenu class="dropdown-menu-end profile-dropdown ">
                     <!-- item-->
                     <div class="dropdown-header noti-title" ngbDropdownItem>
-                        <h6 class="text-overflow m-0">Welcome !</h6>
+                        <h6 class="text-overflow m-0">Bienvenue !</h6>
                     </div>
 
                     <ng-container *ngFor="let option of profileOptions;let i=index">
@@ -137,12 +129,12 @@
                 </div>
             </li>
 
-            <li class="dropdown notification-list">
+            <!--<li class="dropdown notification-list">
                 <a href="javascript:void(0);" class="nav-link right-bar-toggle waves-effect waves-light"
                     (click)="toggleRightSidebar()">
                     <i class="fe-settings noti-icon"></i>
                 </a>
-            </li>
+            </li>-->
 
         </ul>
 

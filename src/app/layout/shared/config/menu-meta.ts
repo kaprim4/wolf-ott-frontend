@@ -1,18 +1,18 @@
-import { MenuItem } from '../models/menu.model';
+import {MenuItem} from '../models/menu.model';
 
 // menu items for vertcal and detached layout
 const MENU_ITEMS: MenuItem[] = [
-    { key: 'navigation', label: 'Navigation', isTitle: true },
+    {key: 'navigation', label: 'Navigation', isTitle: true},
     {
         key: 'dashboard',
         label: 'Dashboard',
         isTitle: false,
         icon: 'mdi mdi-view-dashboard-outline',
-        badge: { variant: 'success', text: '9+' },
+        badge: {variant: 'success', text: '9+'},
         url: '/dashboard',
     },
 
-    { key: 'apps', label: 'Apps', isTitle: true },
+    {key: 'apps', label: 'Apps', isTitle: true},
     {
         key: 'apps-calendar',
         label: 'Calendar',
@@ -91,7 +91,7 @@ const MENU_ITEMS: MenuItem[] = [
             },
         ],
     },
-    { key: 'custom', label: 'Custom', isTitle: true },
+    {key: 'custom', label: 'Custom', isTitle: true},
     {
         key: 'extra-pages',
         label: 'Extra Pages',
@@ -162,7 +162,7 @@ const MENU_ITEMS: MenuItem[] = [
             },
         ],
     },
-    { key: 'components', label: 'Components', isTitle: true },
+    {key: 'components', label: 'Components', isTitle: true},
     {
         key: 'base-ui',
         label: 'Base UI',
@@ -286,7 +286,7 @@ const MENU_ITEMS: MenuItem[] = [
         label: 'Extended UI',
         isTitle: false,
         icon: 'mdi mdi-layers-outline',
-        badge: { variant: 'info', text: 'Hot' },
+        badge: {variant: 'info', text: 'Hot'},
         collapsed: true,
         children: [
             {
@@ -1047,4 +1047,4 @@ const HORIZONTAL_MENU_ITEMS: MenuItem[] = [
     },
 ];
 
-export { MENU_ITEMS, HORIZONTAL_MENU_ITEMS };
+export {MENU_ITEMS, HORIZONTAL_MENU_ITEMS};

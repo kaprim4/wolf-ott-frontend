@@ -3,36 +3,36 @@
     <ngx-simplebar class="h-100">
         <!-- User box -->
         <div class="user-box text-center">
-            <img [src]="loggedInUser?.avatar != '' ? loggedInUser?.avatar : no_profile_img" alt="{{loggedInUser?.firstName }}" title="{{loggedInUser?.firstName }}" class="rounded-circle img-thumbnail avatar-md">
+            <img [src]="loggedInUser?.avatar ? loggedInUser?.avatar : no_profile_img"
+                 alt="{{loggedInUser?.firstName}} {{loggedInUser?.lastName}}"
+                 title="{{loggedInUser?.firstName}} {{loggedInUser?.lastName}}"
+                 class="rounded-circle img-thumbnail avatar-md" />
             <div ngbDropdown>
                 <a href="javascript: void(0);" class="user-name dropdown-toggle h5 mt-2 mb-1 d-block" id="profileMenu"
-                    ngbDropdownToggle>{{loggedInUser?.username}}</a>
+                    ngbDropdownToggle>
+                    {{loggedInUser?.firstName}} {{loggedInUser?.lastName}}
+                </a>
                 <div class="user-pro-dropdown" ngbDropdownMenu aria-labelledby="profileMenu">
-
                     <!-- item-->
                     <a [routerLink]="['/apps/contacts/profile']" class="notify-item" ngbDropdownItem>
                         <i class="fe-user me-1"></i>
-                        <span>My Account</span>
+                        <span>Mon compte</span>
                     </a>
-
                     <!-- item-->
                     <a href="javascript:void(0);" class="notify-item" ngbDropdownItem>
                         <i class="fe-settings me-1"></i>
-                        <span>Settings</span>
+                        <span>Paramètres</span>
                     </a>
-
                     <!-- item-->
                     <a [routerLink]="['/auth/lock-screen']" class="notify-item" ngbDropdownItem>
                         <i class="fe-lock me-1"></i>
-                        <span>Lock Screen</span>
+                        <span>Écran verrouillé</span>
                     </a>
-
                     <!-- item-->
                     <a [routerLink]="['/auth/logout']" class="notify-item" ngbDropdownItem>
                         <i class="fe-log-out me-1"></i>
-                        <span>Logout</span>
+                        <span>Se déconnecter</span>
                     </a>
-
                 </div>
             </div>
 
@@ -44,9 +44,8 @@
                         <i class="mdi mdi-cog"></i>
                     </a>
                 </li>
-
                 <li class="list-inline-item">
-                    <a href="javascript:void(0)">
+                    <a [routerLink]="['/auth/logout']">
                         <i class="mdi mdi-power"></i>
                     </a>
                 </li>

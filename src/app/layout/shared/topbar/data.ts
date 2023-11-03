@@ -47,17 +47,17 @@ const NOTIFICATIONS: NotificationItem[] = [
 
 const PROFILEOPTIONS: ProfileOptionItem[] = [
     {
-        label: 'My Account',
+        label: 'Mon coumpte',
         icon: 'fe-user',
         redirectTo: '/apps/contacts/profile',
     },
     {
-        label: 'Lock Screen',
+        label: 'Écran verrouillé',
         icon: 'fe-lock',
         redirectTo: '/auth/lock-screen',
     },
     {
-        label: 'Logout',
+        label: 'Se déconnecter',
         icon: 'fe-log-out',
         redirectTo: '/auth/logout',
     }
