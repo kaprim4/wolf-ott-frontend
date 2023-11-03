@@ -1,7 +1,7 @@
 import {MenuItem} from '../models/menu.model';
 
 // menu items for vertcal and detached layout
-const MENU_ITEMS: MenuItem[] = [
+/*const MENU_ITEMS: MenuItem[] = [
     {key: 'navigation', label: 'Navigation', isTitle: true},
     {
         key: 'dashboard',
@@ -519,7 +519,20 @@ const MENU_ITEMS: MenuItem[] = [
             },
         ],
     },
-];
+];*/
+
+
+const MENU_ITEMS: MenuItem[] = [
+    {key: 'module', label: 'Modules', isTitle: true},
+    {
+        key: 'voucher',
+        label: 'Gestion bons',
+        isTitle: false,
+        icon: 'fa fa-ticket',
+        badge: {variant: 'success', text: '9+'},
+        url: '/dashboard',
+    },
+]
 
 const HORIZONTAL_MENU_ITEMS: MenuItem[] = [
     {
