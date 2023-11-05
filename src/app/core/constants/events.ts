@@ -1,5 +1,13 @@
-import { LayoutType, LayoutColor, LayoutWidth, MenuPositions, SideBarTheme, SideBarSize, TopbarTheme } from "src/app/layout/shared/config/layout.model";
-import { PageTitle } from "src/app/layout/shared/models/page-title.model";
+import {
+    LayoutType,
+    LayoutColor,
+    LayoutWidth,
+    MenuPositions,
+    SideBarTheme,
+    SideBarSize,
+    TopbarTheme
+} from "src/app/layout/shared/config/layout.model";
+import {PageTitle} from "src/app/layout/shared/models/page-title.model";
 
 // list of events
 export enum EventType {
@@ -17,4 +25,13 @@ export enum EventType {
 }
 
 // payload type
-export type Payload = PageTitle | LayoutType | LayoutColor | LayoutWidth | MenuPositions | SideBarTheme | SideBarSize | TopbarTheme | boolean;
+export type Payload =
+    PageTitle
+    | LayoutType
+    | LayoutColor
+    | LayoutWidth
+    | MenuPositions
+    | SideBarTheme
+    | SideBarSize
+    | TopbarTheme
+    | boolean;

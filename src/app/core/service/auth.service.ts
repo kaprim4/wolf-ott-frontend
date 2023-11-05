@@ -3,9 +3,10 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {loggedInUser} from '../helpers/utils';
-import {AuthResponse, TokenDecoded, User} from '../models/auth.models';
+import {AuthResponse, TokenDecoded} from '../models/auth.models';
 import {environment} from "../../../environments/environment";
 import {jwtDecode} from "jwt-decode";
+import {User} from "../models/user.models";
 
 
 @Injectable({providedIn: 'root'})

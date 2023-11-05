@@ -10,7 +10,7 @@ import {EventService} from 'src/app/core/service/event.service';
 import {changeBodyAttribute, findAllParent, findMenuItem} from '../helper/utils';
 
 // types
-import {User} from 'src/app/core/models/auth.models';
+import {User} from 'src/app/core/models/user.models';
 import {MenuItem} from '../models/menu.model';
 
 // data

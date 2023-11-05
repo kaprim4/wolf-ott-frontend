@@ -7,7 +7,7 @@ import {first} from 'rxjs';
 import {AuthenticationService} from 'src/app/core/service/auth.service';
 
 // types
-import {User} from 'src/app/core/models/auth.models';
+import {User} from 'src/app/core/models/user.models';
 import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
     }
 
     loginForm: FormGroup = this.fb.group({
-        username: ['adminENELP', [Validators.required]],
+        username: ['root', [Validators.required]],
         password: ['000000', Validators.required]
     });
     formSubmitted: boolean = false;

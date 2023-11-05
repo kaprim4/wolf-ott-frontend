@@ -1,15 +1,130 @@
 import {MenuItem} from '../models/menu.model';
 
 // menu items for vertcal and detached layout
-/*const MENU_ITEMS: MenuItem[] = [
+const MENU_ITEMS: MenuItem[] = [
     {key: 'navigation', label: 'Navigation', isTitle: true},
     {
         key: 'dashboard',
-        label: 'Dashboard',
+        label: 'Tableau de bord',
         isTitle: false,
         icon: 'mdi mdi-view-dashboard-outline',
-        badge: {variant: 'success', text: '9+'},
+        //badge: {variant: 'success', text: '9+'},
         url: '/dashboard',
+    },
+    {key: 'module', label: 'Modules', isTitle: true},
+    {
+        key: 'voucher',
+        label: 'Gestion bons',
+        icon: 'fa fa-money-bill-wave',
+        //badge: {variant: 'success', text: '9+'},
+        isTitle: false,
+        children: [
+            {
+                key: 'base-ui-buttons',
+                label: 'Type des bons',
+                url: '/base-ui/buttons',
+                parentKey: 'voucher',
+            },
+            {
+                key: 'base-ui-buttons',
+                label: 'Consulter les bons',
+                url: '/base-ui/buttons',
+                parentKey: 'voucher',
+            },
+            {
+                key: 'base-ui-buttons',
+                label: 'Clôturer la journée',
+                url: '/base-ui/buttons',
+                parentKey: 'voucher',
+            },
+            {
+                key: 'base-ui-buttons',
+                label: 'Génération PDF',
+                url: '/base-ui/buttons',
+                parentKey: 'voucher',
+            },
+        ]
+    },
+    {
+        key: 'expense-funds',
+        label: 'Caisses de dépense',
+        icon: 'fa fa-money-bill',
+        //badge: {variant: 'success', text: '9+'},
+        isTitle: false,
+        children: [
+            {
+                key: 'expense-funds-buttons',
+                label: 'Alimenter caisses',
+                url: '/base-ui/buttons',
+                parentKey: 'expense-funds',
+            },
+            {
+                key: 'expense-funds-buttons',
+                label: 'Saisir les dépenses',
+                url: '/base-ui/buttons',
+                parentKey: 'expense-funds',
+            },
+            {
+                key: 'expense-funds-buttons',
+                label: 'Journal de caisse',
+                url: '/base-ui/buttons',
+                parentKey: 'expense-funds',
+            },
+            {
+                key: 'expense-funds-buttons',
+                label: 'Consulter alimentations',
+                url: '/base-ui/buttons',
+                parentKey: 'expense-funds',
+            },
+            {
+                key: 'expense-funds-buttons',
+                label: 'Consulter dépenses',
+                url: '/base-ui/buttons',
+                parentKey: 'expense-funds',
+            },
+        ]
+    },
+    {
+        key: 'human-resources',
+        label: 'Ressources humaines',
+        icon: 'fa fa-address-card',
+        //badge: {variant: 'success', text: '9+'},
+        isTitle: false,
+        children: [
+            {
+                key: 'human-resources-buttons',
+                label: 'Saisir les présences',
+                url: '/base-ui/buttons',
+                parentKey: 'human-resources',
+            },
+            {
+                key: 'human-resources-buttons',
+                label: 'Journal de présence',
+                url: '/base-ui/buttons',
+                parentKey: 'human-resources',
+            },
+            {
+                key: 'human-resources-buttons',
+                label: 'Procédures',
+                url: '/base-ui/buttons',
+                parentKey: 'human-resources',
+            },
+        ]
+    },
+    {
+        key: 'prepaid-cards',
+        label: 'Cartes prépayées',
+        icon: 'ti-credit-card',
+        //badge: {variant: 'success', text: '9+'},
+        isTitle: false,
+        children: [
+            {
+                key: 'human-resources-buttons',
+                label: 'Formulaire d\'adhésion des Cartes PP',
+                url: '/base-ui/buttons',
+                parentKey: 'prepaid-cards',
+            },
+        ]
     },
 
     {key: 'apps', label: 'Apps', isTitle: true},
@@ -519,20 +634,90 @@ import {MenuItem} from '../models/menu.model';
             },
         ],
     },
-];*/
+];
 
-
+/*
 const MENU_ITEMS: MenuItem[] = [
     {key: 'module', label: 'Modules', isTitle: true},
     {
         key: 'voucher',
         label: 'Gestion bons',
+        icon: 'fa fa-money-bill-wave',
+        //badge: {variant: 'success', text: '9+'},
         isTitle: false,
-        icon: 'fa fa-ticket',
-        badge: {variant: 'success', text: '9+'},
-        url: '/dashboard',
+        children: [
+            {
+                key: 'base-ui-buttons',
+                label: 'Type des bons',
+                url: '/base-ui/buttons',
+                parentKey: 'voucher',
+            },
+            {
+                key: 'base-ui-buttons',
+                label: 'Consulter les bons',
+                url: '/base-ui/buttons',
+                parentKey: 'voucher',
+            },
+            {
+                key: 'base-ui-buttons',
+                label: 'Clôturer la journée',
+                url: '/base-ui/buttons',
+                parentKey: 'voucher',
+            },
+            {
+                key: 'base-ui-buttons',
+                label: 'Génération PDF',
+                url: '/base-ui/buttons',
+                parentKey: 'voucher',
+            },
+        ]
     },
-]
+    {
+        key: 'expense-funds',
+        label: 'Caisses de dépense',
+        icon: 'fa fa-money-bill',
+        //badge: {variant: 'success', text: '9+'},
+        isTitle: false,
+        children: [
+            {
+                key: 'expense-funds-buttons',
+                label: 'Buttons',
+                url: '/base-ui/buttons',
+                parentKey: 'expense-funds',
+            },
+        ]
+    },
+    {
+        key: 'human-resources',
+        label: 'Ressources humaines',
+        icon: 'fa fa-address-card',
+        //badge: {variant: 'success', text: '9+'},
+        isTitle: false,
+        children: [
+            {
+                key: 'human-resources-buttons',
+                label: 'Buttons',
+                url: '/base-ui/buttons',
+                parentKey: 'human-resources',
+            },
+        ]
+    },
+    {
+        key: 'human-resources',
+        label: 'Cartes prépayées',
+        icon: 'ti-credit-card',
+        //badge: {variant: 'success', text: '9+'},
+        isTitle: false,
+        children: [
+            {
+                key: 'human-resources-buttons',
+                label: 'Buttons',
+                url: '/base-ui/buttons',
+                parentKey: 'human-resources',
+            },
+        ]
+    },
+]*/
 
 const HORIZONTAL_MENU_ITEMS: MenuItem[] = [
     {

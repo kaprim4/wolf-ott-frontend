@@ -5,7 +5,7 @@ import {first} from 'rxjs/operators';
 // service
 import {AuthenticationService} from 'src/app/core/service/auth.service';
 // types
-import {User} from 'src/app/core/models/auth.models';
+import {User} from 'src/app/core/models/user.models';
 
 
 @Component({

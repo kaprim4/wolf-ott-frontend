@@ -7,7 +7,7 @@ import {first} from 'rxjs';
 import {AuthenticationService} from 'src/app/core/service/auth.service';
 
 // types
-import {User} from 'src/app/core/models/auth.models';
+import {User} from 'src/app/core/models/user.models';
 
 @Component({
     selector: 'app-auth-register',

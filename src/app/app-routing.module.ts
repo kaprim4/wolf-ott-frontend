@@ -9,54 +9,54 @@ import { Error500Component } from './pages/extra-pages/error500/error500.compone
 import { MaintenanceComponent } from './pages/extra-pages/maintenance/maintenance.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'dashboard',
-    pathMatch: 'full'
-  },
-  {
-    path: '',
-    component: LayoutContainerComponent,
-    canActivate: [AuthGuard],
-    children: [
-      {
+    {
         path: '',
-        loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule)
-      },
-      {
-        path: 'apps',
-        loadChildren: () => import('./apps/apps.module').then(m => m.AppsModule)
-      }
-    ]
-  },
-  {
-    path: '',
-    component: PublicLayoutComponent,
-    children: [
-      { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
-      {
-        path: 'error-404',
-        component: Error404Component
-      },
-      {
-        path: 'error-500',
-        component: Error500Component
-      },
-      {
-        path: 'maintenance',
-        component: MaintenanceComponent
-      },
-      {
-        path: 'coming-soon',
-        component: ComingSoonComponent
-      },
-      { path: 'landing', loadChildren: () => import('./pages/landing/landing.module').then(m => m.LandingModule) }
-    ]
-  }
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+    },
+    {
+        path: '',
+        component: LayoutContainerComponent,
+        canActivate: [AuthGuard],
+        children: [
+            {
+                path: '',
+                loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule)
+            },
+            {
+                path: 'apps',
+                loadChildren: () => import('./apps/apps.module').then(m => m.AppsModule)
+            }
+        ]
+    },
+    {
+        path: '',
+        component: PublicLayoutComponent,
+        children: [
+            { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
+            {
+                path: 'error-404',
+                component: Error404Component
+            },
+            {
+                path: 'error-500',
+                component: Error500Component
+            },
+            {
+                path: 'maintenance',
+                component: MaintenanceComponent
+            },
+            {
+                path: 'coming-soon',
+                component: ComingSoonComponent
+            },
+            { path: 'landing', loadChildren: () => import('./pages/landing/landing.module').then(m => m.LandingModule) }
+        ]
+    }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' })],
-  exports: [RouterModule],
+    imports: [RouterModule.forRoot(routes, { anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' })],
+    exports: [RouterModule],
 })
 export class AppRoutingModule { }
