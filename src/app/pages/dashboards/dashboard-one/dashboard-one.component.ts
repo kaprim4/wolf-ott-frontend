@@ -11,6 +11,11 @@ import {Message, Project} from './dashboard.model';
 
 // data
 import {MESSAGES, PROJECTS} from './data';
+import {AuthenticationService} from "../../../core/service/auth.service";
+import {GasStationService} from "../../../core/service/gas-station.service";
+import {first} from "rxjs";
+import {User} from "../../../core/models/user.models";
+import {GasStation} from "../../../core/models/gas_station.models";
 
 @Component({
     selector: 'app-dashboard-1',
@@ -22,7 +27,10 @@ export class DashboardOneComponent implements OnInit {
     messages: Message[] = [];
     recentProjects: Project[] = [];
 
-    constructor(private eventService: EventService) {
+    constructor(
+        private eventService: EventService,
+        private gasStationService: GasStationService
+    ) {
     }
 
     ngOnInit(): void {
@@ -36,6 +44,20 @@ export class DashboardOneComponent implements OnInit {
             }
         );
         this._fetchData();
+        this.fetch_gas_station_list();
+    }
+
+    fetch_gas_station_list(): void {
+        // @ts-ignore
+        this.gasStationService.getGasStations().pipe(first()).subscribe(
+            (data: GasStation[]) => {
+                if (data.length > 0)
+                    console.table(data);
+            },
+            (error: string) => {
+                console.log(error);
+            }
+        );
     }
 
     /**
