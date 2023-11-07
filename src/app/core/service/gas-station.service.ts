@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {GasStation} from "../models/gas_station.models";
-import {AuthUser} from "../models/auth.models";
+import {IUser} from "../interfaces/user";
+import {GasStation} from "../interfaces/gas_station";
+import {AuthenticationService} from "./auth.service";
+import {TokenService} from "./token.service";
 
 @Injectable({
   providedIn: 'root'
@@ -11,27 +13,21 @@ import {AuthUser} from "../models/auth.models";
 export class GasStationService {
 
     private apiServerUrl = environment.apiBaseUrl;
-    user: AuthUser | null = null;
-    logged_user = JSON.parse(sessionStorage.getItem('currentUser')!);
 
-    constructor(private http: HttpClient) {
+    constructor(
+        private http: HttpClient,
+        private tokenService: TokenService
+    ) {
 
-    }
-
-    public currentUser(): AuthUser | null {
-        if (!this.user) {
-            this.user = this.logged_user;
-        }
-        return this.user;
     }
 
     public getGasStations(): Observable<GasStation[]> | null {
-            if (this.currentUser() && this.currentUser()?.token) {
+            if (this.tokenService.isLogged() && this.tokenService.getToken()) {
                 return this.http.get<GasStation[]>(
                     `${this.apiServerUrl}/api/v1/gas_stations/all`,
                     {
                         headers:{
-                            Authorization: `Bearer ${this.currentUser()?.token}`
+                            Authorization: `Bearer ${this.tokenService.getToken()}`
                         }
                     }
                 );

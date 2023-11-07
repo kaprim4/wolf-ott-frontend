@@ -14,7 +14,7 @@ import {MenuItem} from '../models/menu.model';
 
 // data
 import {MENU_ITEMS} from '../config/menu-meta';
-import {AuthUser} from "../../../core/models/auth.models";
+import {TokenService} from "../../../core/service/token.service";
 
 @Component({
     selector: 'app-left-sidebar',
@@ -27,7 +27,7 @@ export class LeftSidebarComponent implements OnInit {
 
     leftSidebarClass = 'sidebar-enable';
     activeMenuItems: string[] = [];
-    loggedInUser: AuthUser | null = {};
+    loggedInUser: any;
     menuItems: MenuItem[] = [];
 
     no_profile_img:string= "./assets/images/logo.png";
@@ -35,6 +35,7 @@ export class LeftSidebarComponent implements OnInit {
     constructor(
         router: Router,
         private authService: AuthenticationService,
+        private tokenService: TokenService,
         private eventService: EventService) {
         router.events.forEach((event) => {
             if (event instanceof NavigationEnd) {
@@ -48,7 +49,7 @@ export class LeftSidebarComponent implements OnInit {
 
     ngOnInit(): void {
         this.initMenu();
-        this.loggedInUser = this.authService.currentUser();
+        this.loggedInUser = this.tokenService.getPayload();
     }
 
     ngOnChanges(): void {

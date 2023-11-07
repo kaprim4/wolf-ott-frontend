@@ -4,7 +4,8 @@ import {Router} from '@angular/router';
 import {first} from 'rxjs/operators';
 // service
 import {AuthenticationService} from 'src/app/core/service/auth.service';
-import {AuthUser} from "../../core/models/auth.models";
+import {IUser} from "../../core/interfaces/user";
+import {TokenService} from "../../core/service/token.service";
 // types
 
 
@@ -21,7 +22,8 @@ export class LockScreenComponent implements OnInit {
 
     constructor(
         private router: Router,
-        private authenticationService: AuthenticationService,
+        private authService: AuthenticationService,
+        private tokenService: TokenService,
         private fb: FormBuilder,
     ) {
     }
@@ -46,15 +48,16 @@ export class LockScreenComponent implements OnInit {
         this.formSubmitted = true;
         if (this.lockScreenForm.valid) {
             // @ts-ignore
-            this.authenticationService.login(this.authenticationService.currentUser()?.username!, this.formValues['password'].value)
-                .pipe(first())
-                .subscribe(
-                    (data: AuthUser) => {
-                        this.router.navigate(['/']);
-                    },
-                    (error: string) => {
-                        this.error = error;
-                    });
+            this.authService.login(this.tokenService.getPayload().username, this.formValues['password'].value).subscribe(
+                data => {
+                    console.log(data.access_token)
+                    this.tokenService.saveToken(data.access_token)
+                },
+                (error: string) => {
+                    this.error = error;
+                    console.log(error)
+                }
+            )
         }
     }
 

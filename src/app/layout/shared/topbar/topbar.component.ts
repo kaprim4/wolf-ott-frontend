@@ -6,7 +6,7 @@ import {NotificationItem} from '../models/notification.model';
 import {ProfileOptionItem} from '../models/profileoption.model';
 import {SearchResultItem, SearchUserItem} from '../models/search.model';
 import {PageTitle} from '../models/page-title.model';
-import {AuthUser} from "../../../core/models/auth.models";
+import {TokenService} from "../../../core/service/token.service";
 
 @Component({
     selector: 'app-topbar',
@@ -20,7 +20,7 @@ export class TopbarComponent implements OnInit {
     searchResults: SearchResultItem[] = [];
     searchUsers: SearchUserItem[] = [];
     pageTitle: string = '';
-    loggedInUser: AuthUser | null = null;
+    loggedInUser: any;
     topnavCollapsed: boolean = false;
 
     @Input() layoutType: string = 'vertical';
@@ -31,7 +31,10 @@ export class TopbarComponent implements OnInit {
 
     no_profile_img = './assets/images/logo.png';
 
-    constructor(private authService: AuthenticationService, private eventService: EventService) {
+    constructor(
+        private authService: AuthenticationService,
+        private tokenService: TokenService,
+        private eventService: EventService) {
         this.eventService.on(EventType.CHANGE_PAGE_TITLE).subscribe(({payload}) => {
             this.pageTitle = (payload as PageTitle).title;
         });
@@ -41,7 +44,7 @@ export class TopbarComponent implements OnInit {
         this._fetchSearchData();
         this._fetchNotifications();
         this._fetchProfileOptions();
-        this.loggedInUser = this.authService.currentUser();
+        this.loggedInUser = this.tokenService.getPayload();
     }
 
     _fetchNotifications(): void {

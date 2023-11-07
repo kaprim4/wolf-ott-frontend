@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {AuthenticationService} from 'src/app/core/service/auth.service';
-import {AuthUser} from "../../../core/models/auth.models";
+import {TokenService} from "../../../core/service/token.service";
 
 @Component({
     selector: 'app-landing-navbar',
@@ -11,18 +11,19 @@ import {AuthUser} from "../../../core/models/auth.models";
 export class NavbarComponent implements OnInit {
 
     mobileMenuOpen: boolean = false;
-    loggedInUser: AuthUser | null = null;
+    loggedInUser: any;
 
     constructor(
         private route: ActivatedRoute,
-        private authService: AuthenticationService
+        private authService: AuthenticationService,
+        private tokenService: TokenService,
     ) {
     }
 
 
     ngOnInit(): void {
 
-        this.loggedInUser = this.authService.currentUser();
+        this.loggedInUser = this.tokenService.getPayload();
 
         window.addEventListener('scroll', (e) => {
             e.preventDefault();

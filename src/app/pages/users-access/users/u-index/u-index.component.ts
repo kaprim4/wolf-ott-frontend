@@ -9,9 +9,7 @@ import {UserService} from "../../../../core/service/user.service";
 // types
 import {SortEvent} from 'src/app/shared/advanced-table/sortable.directive';
 import {Column} from 'src/app/shared/advanced-table/advanced-table.component';
-import {User} from "../../../../core/models/user.models";
-import {first} from "rxjs";
-import {map} from "rxjs/operators";
+import {IUser} from "../../../../core/interfaces/user";
 
 @Component({
     selector: 'app-u-index',
@@ -20,7 +18,7 @@ import {map} from "rxjs/operators";
 })
 export class UIndexComponent implements OnInit {
 
-    records: User[] = [];
+    records: IUser[] = [];
     columns: Column[] = [];
     pageSizeOptions: number[] = [10, 25, 50, 100];
 
@@ -47,7 +45,7 @@ export class UIndexComponent implements OnInit {
      */
     _fetchData(): void {
         this.userService.getUsers()?.subscribe(
-            (data: User[]) => {
+            (data: IUser[]) => {
                 console.log("data", data);
                 if (data && data.length > 0) {
                     this.records = data
@@ -61,16 +59,16 @@ export class UIndexComponent implements OnInit {
      */
     initTableConfig(): void {
         this.columns = [
-            {name: 'id', label: '#', formatter: (record: User) => record.id},
-            {name: 'firstName', label: 'Nom', formatter: (record: User) => record.firstName,},
-            {name: 'lastName', label: 'Prénom', formatter: (record: User) => record.lastName, width: 180},
-            {name: 'username', label: 'Identifiant', formatter: (record: User) => record.username,},
-            {name: 'email', label: 'E-mail', formatter: (record: User) => record.email,},
-            {name: 'role', label: 'Rôle', formatter: (record: User) => record.role,},
-            {name: 'gasStation', label: 'Station', formatter: (record: User) => record.gasStation.libelle,},
-            {name: 'isActivated', label: 'Activé ?', formatter: (record: User) => record.isActivated,},
-            {name: 'isDeleted', label: 'Supprimé ?', formatter: (record: User) => record.isDeleted,},
-            {name: 'createdAt', label: 'Créé le', formatter: (record: User) => record.createdAt,}
+            {name: 'id', label: '#', formatter: (record: IUser) => record.id},
+            {name: 'firstName', label: 'Nom', formatter: (record: IUser) => record.firstName,},
+            {name: 'lastName', label: 'Prénom', formatter: (record: IUser) => record.lastName, width: 180},
+            {name: 'username', label: 'Identifiant', formatter: (record: IUser) => record.username,},
+            {name: 'email', label: 'E-mail', formatter: (record: IUser) => record.email,},
+            {name: 'role', label: 'Rôle', formatter: (record: IUser) => record.role,},
+            {name: 'gasStation', label: 'Station', formatter: (record: IUser) => record.gasStation.libelle,},
+            {name: 'isActivated', label: 'Activé ?', formatter: (record: IUser) => record.isActivated,},
+            {name: 'isDeleted', label: 'Supprimé ?', formatter: (record: IUser) => record.isDeleted,},
+            {name: 'createdAt', label: 'Créé le', formatter: (record: IUser) => record.createdAt,}
         ];
     }
 
@@ -99,7 +97,7 @@ export class UIndexComponent implements OnInit {
      * @param row Table row
      * @param term Search the value
      */
-    matches(row: User, term: string) {
+    matches(row: IUser, term: string) {
         return row.firstName.toLowerCase().includes(term)
             || row.lastName.toLowerCase().includes(term)
             || row.email.toLowerCase().includes(term)

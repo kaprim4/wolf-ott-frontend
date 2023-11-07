@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from './core/guards/auth.guard';
+import { AuthGuard } from './core/helpers/auth.guard';
 import { LayoutContainerComponent } from './layout/layout-container/layout-container.component';
 import { PublicLayoutComponent } from './layout/public-layout/public-layout.component';
 import { ComingSoonComponent } from './pages/extra-pages/coming-soon/coming-soon.component';

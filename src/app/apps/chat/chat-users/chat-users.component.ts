@@ -7,6 +7,7 @@ import { ChatUser } from '../chat.model';
 
 // data
 import { USERS } from '../data';
+import {TokenService} from "../../../core/service/token.service";
 
 @Component({
   selector: 'app-chat-users',
@@ -23,10 +24,13 @@ export class ChatUsersComponent implements OnInit {
   //On selecting new user
   @Output() selectUser: EventEmitter<ChatUser> = new EventEmitter();
 
-  constructor (private authService: AuthenticationService) { }
+  constructor (
+      private authService: AuthenticationService,
+      private tokenService: TokenService
+  ) { }
 
   ngOnInit(): void {
-    this.loggedInUser = this.authService.currentUser();
+    this.loggedInUser = this.tokenService.getPayload();
 
     // Get users for chat
     this._fetchUsers();

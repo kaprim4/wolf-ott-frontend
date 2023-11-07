@@ -5,7 +5,7 @@ import {first} from 'rxjs';
 
 // service
 import {AuthenticationService} from 'src/app/core/service/auth.service';
-import {AuthUser} from "../../core/models/auth.models";
+import {IUser} from "../../core/interfaces/user";
 
 // types
 
@@ -56,7 +56,7 @@ export class RegisterComponent implements OnInit {
             this.authenticationService.signup(this.formValues['name'].value, this.formValues['email'].value, this.formValues['password'].value)
                 .pipe(first())
                 .subscribe(
-                    (data: AuthUser) => {
+                    (data: IUser) => {
                         // navigates to confirm mail screen
                         this.router.navigate(['/auth/confirm-mail']);
                     },

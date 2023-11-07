@@ -11,11 +11,9 @@ import {Message, Project} from './dashboard.model';
 
 // data
 import {MESSAGES, PROJECTS} from './data';
-import {AuthenticationService} from "../../../core/service/auth.service";
 import {GasStationService} from "../../../core/service/gas-station.service";
-import {first} from "rxjs";
-import {User} from "../../../core/models/user.models";
-import {GasStation} from "../../../core/models/gas_station.models";
+import {AuthenticationService} from "../../../core/service/auth.service";
+import {TokenService} from "../../../core/service/token.service";
 
 @Component({
     selector: 'app-dashboard-1',
@@ -29,7 +27,8 @@ export class DashboardOneComponent implements OnInit {
 
     constructor(
         private eventService: EventService,
-        private gasStationService: GasStationService
+        private authService: AuthenticationService,
+        private tokenService: TokenService
     ) {
     }
 
