@@ -21,7 +21,7 @@ export class UserService {
 
     public getUsers(): Observable<IUser[]> | null {
         if (this.tokenService.isLogged() && this.tokenService.getToken()) {
-            //console.log(this.currentUser()?.token)
+            //console.log(this.tokenService.getToken())
             return this.http.get<IUser[]>(
                 `${this.apiServerUrl}/api/v1/users/all`,
                 {

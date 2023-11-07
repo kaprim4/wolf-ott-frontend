@@ -23,45 +23,20 @@ export class TokenService {
 
     clearToken(): void {
         localStorage.removeItem('token')
-        this.router.navigate(['/'])
+        this.router.navigate(['/auth/login'])
     }
 
     clearTokenExpired(): void {
         localStorage.removeItem('token')
-        this.router.navigate(['auth/login'])
+        this.router.navigate(['/auth/login'])
     }
 
-    getToken(): string | null {
-        return localStorage.getItem('token')
+    getToken(): string {
+        let token = localStorage.getItem('token');
+        return <string>token
     }
 
     getPayload() {
-        let user: ITokenUser = {
-            id: 0,
-            firstName: '',
-            lastName: '',
-            username: '',
-            email: '',
-            gas_station_id: 0,
-            gas_station_code_sap: '',
-            role: '',
-            exp: 0,
-            iat: 0
-        }
-        let token = localStorage.getItem('token')
-        if (token) {
-            const decode: ITokenUser = jwtDecode<ITokenUser>(token)
-            user.id = decode.id;
-            user.firstName = decode.firstName;
-            user.lastName = decode.lastName;
-            user.username = decode.username;
-            user.email = decode.email;
-            user.gas_station_id = decode.gas_station_id;
-            user.gas_station_code_sap = decode.gas_station_code_sap;
-            user.role = decode.role;
-            user.exp = decode.exp;
-            user.iat = decode.iat;
-        }
-        return user
+        return jwtDecode<ITokenUser>(this.getToken());
     }
 }

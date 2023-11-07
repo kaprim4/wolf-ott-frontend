@@ -50,8 +50,7 @@ export class LockScreenComponent implements OnInit {
             // @ts-ignore
             this.authService.login(this.tokenService.getPayload().username, this.formValues['password'].value).subscribe(
                 data => {
-                    console.log(data.access_token)
-                    this.tokenService.saveToken(data.access_token)
+                    this.tokenService.saveToken(data.token)
                 },
                 (error: string) => {
                     this.error = error;

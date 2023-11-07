@@ -19,31 +19,25 @@ export class TokenInterceptor implements HttpInterceptor {
     ) {}
 
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-        console.log(request)
-
+        //console.log(request)
         const token = this.tokenService.getToken()
-
         // SI token à insérer dans le header
         if(token !== null){
             let clone = request.clone({
                 headers: request.headers.set('Authorization', 'bearer '+token)
             })
-            console.log(clone)
+            //console.log("clone:", clone)
             return next.handle(clone).pipe(
                 catchError(error => {
                     console.log(error)
-
                     if(error.status === 401){
                         this.tokenService.clearTokenExpired()
                     }
-
                     this.apiErrorService.sendError(error.error.message)
                     return throwError('Session Expired')
                 })
             )
         }
-
-
         return next.handle(request);
     }
 }
