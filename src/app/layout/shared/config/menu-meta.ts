@@ -11,7 +11,7 @@ const MENU_ITEMS: MenuItem[] = [
         //badge: {variant: 'success', text: '9+'},
         url: '/dashboard',
     },
-    {key: 'module', label: 'Modules', isTitle: true},
+    {key: 'modules', label: 'Modules', isTitle: true},
     {
         key: 'voucher',
         label: 'Gestion bons',
@@ -48,7 +48,7 @@ const MENU_ITEMS: MenuItem[] = [
     {
         key: 'expense-funds',
         label: 'Caisses de dépense',
-        icon: 'fa fa-money-bill',
+        icon: 'fas fa-cash-register',
         //badge: {variant: 'success', text: '9+'},
         isTitle: false,
         children: [
@@ -125,6 +125,45 @@ const MENU_ITEMS: MenuItem[] = [
                 parentKey: 'prepaid-cards',
             },
         ]
+    },
+    {key: 'manage', label: 'Gestion', isTitle: true},
+    {
+        key: 'manage',
+        label: 'Modules',
+        icon: 'fas fa-cogs',
+        isTitle: false,
+        url: '/base-ui/buttons',
+        children: [
+
+        ]
+    },
+    {
+        key: 'dictionnary',
+        label: 'Dictionnaire',
+        icon: 'fas fa-book',
+        isTitle: false,
+        url: '/base-ui/buttons',
+        children: [
+
+        ]
+    },
+    {
+        key: 'parameters',
+        label: 'Paramètres',
+        icon: 'fas fa-cog',
+        isTitle: false,
+        url: '/base-ui/buttons',
+        children: [
+
+        ]
+    },
+    {key: 'users_access', label: 'Utilisateurs & Accès', isTitle: true},
+    {
+        key: 'users',
+        label: 'Utilisateurs',
+        icon: 'fas fa-users',
+        isTitle: false,
+        url: '/users-access/user-index'
     },
 
     {key: 'apps', label: 'Apps', isTitle: true},

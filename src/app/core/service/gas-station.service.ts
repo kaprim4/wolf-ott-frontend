@@ -3,8 +3,7 @@ import {environment} from "../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {GasStation} from "../models/gas_station.models";
-import {User} from "../models/user.models";
-import {loggedInUser} from "../helpers/utils";
+import {AuthUser} from "../models/auth.models";
 
 @Injectable({
   providedIn: 'root'
@@ -12,15 +11,16 @@ import {loggedInUser} from "../helpers/utils";
 export class GasStationService {
 
     private apiServerUrl = environment.apiBaseUrl;
-    user: User | null = null;
+    user: AuthUser | null = null;
+    logged_user = JSON.parse(sessionStorage.getItem('currentUser')!);
 
     constructor(private http: HttpClient) {
 
     }
 
-    public currentUser(): User | null {
+    public currentUser(): AuthUser | null {
         if (!this.user) {
-            this.user = loggedInUser();
+            this.user = this.logged_user;
         }
         return this.user;
     }

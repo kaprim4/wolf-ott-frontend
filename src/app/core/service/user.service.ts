@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 // types
-import {User} from '../models/user.models';
 import {Observable} from "rxjs";
 import {environment} from "../../../environments/environment";
+import {User} from "../models/user.models";
 
 @Injectable({providedIn: 'root'})
-export class UserProfileService {
+export class UserService {
 
     private apiServerUrl = environment.apiBaseUrl;
 

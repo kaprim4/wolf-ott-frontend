@@ -4,8 +4,8 @@ import {Router} from '@angular/router';
 import {first} from 'rxjs/operators';
 // service
 import {AuthenticationService} from 'src/app/core/service/auth.service';
+import {AuthUser} from "../../core/models/auth.models";
 // types
-import {User} from 'src/app/core/models/user.models';
 
 
 @Component({
@@ -49,7 +49,7 @@ export class LockScreenComponent implements OnInit {
             this.authenticationService.login(this.authenticationService.currentUser()?.username!, this.formValues['password'].value)
                 .pipe(first())
                 .subscribe(
-                    (data: User) => {
+                    (data: AuthUser) => {
                         this.router.navigate(['/']);
                     },
                     (error: string) => {

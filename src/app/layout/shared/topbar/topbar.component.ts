@@ -2,11 +2,11 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AuthenticationService} from 'src/app/core/service/auth.service';
 import {EventService} from 'src/app/core/service/event.service';
 import {EventType} from 'src/app/core/constants/events';
-import {User} from 'src/app/core/models/user.models';
 import {NotificationItem} from '../models/notification.model';
 import {ProfileOptionItem} from '../models/profileoption.model';
 import {SearchResultItem, SearchUserItem} from '../models/search.model';
 import {PageTitle} from '../models/page-title.model';
+import {AuthUser} from "../../../core/models/auth.models";
 
 @Component({
     selector: 'app-topbar',
@@ -20,7 +20,7 @@ export class TopbarComponent implements OnInit {
     searchResults: SearchResultItem[] = [];
     searchUsers: SearchUserItem[] = [];
     pageTitle: string = '';
-    loggedInUser: User | null = null;
+    loggedInUser: AuthUser | null = null;
     topnavCollapsed: boolean = false;
 
     @Input() layoutType: string = 'vertical';

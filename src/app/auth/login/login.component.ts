@@ -7,8 +7,7 @@ import {first} from 'rxjs';
 import {AuthenticationService} from 'src/app/core/service/auth.service';
 
 // types
-import {User} from 'src/app/core/models/user.models';
-import {HttpErrorResponse} from "@angular/common/http";
+import {AuthUser} from "../../core/models/auth.models";
 
 @Component({
     selector: 'app-auth-login',
@@ -24,7 +23,7 @@ export class LoginComponent implements OnInit {
     }
 
     loginForm: FormGroup = this.fb.group({
-        username: ['root', [Validators.required]],
+        username: ['adminENELP', [Validators.required]],
         password: ['000000', Validators.required]
     });
     formSubmitted: boolean = false;
@@ -32,8 +31,8 @@ export class LoginComponent implements OnInit {
     returnUrl: string = '/';
     loading: boolean = false;
 
-    users: User[] = [];
-    loggedUser:User | null = null;
+    users: AuthUser[] = [];
+    loggedUser:AuthUser | null = null;
 
 
     ngOnInit(): void {
@@ -51,7 +50,7 @@ export class LoginComponent implements OnInit {
             // @ts-ignore
             this.authenticationService.login(this.formValues['username'].value, this.formValues['password'].value).pipe(first())
                 .subscribe(
-                    (data: User) => {
+                    (data: AuthUser) => {
                         if(data.token)
                             this.router.navigate([this.returnUrl]);
                     },

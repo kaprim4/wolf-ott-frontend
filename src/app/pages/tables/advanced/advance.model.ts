@@ -6,6 +6,5 @@ export interface Employee {
     age: number;
     date: string;
     salary: string;
-
     [key: string]: string | number;
 }

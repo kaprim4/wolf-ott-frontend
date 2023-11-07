@@ -10,11 +10,11 @@ import {EventService} from 'src/app/core/service/event.service';
 import {changeBodyAttribute, findAllParent, findMenuItem} from '../helper/utils';
 
 // types
-import {User} from 'src/app/core/models/user.models';
 import {MenuItem} from '../models/menu.model';
 
 // data
 import {MENU_ITEMS} from '../config/menu-meta';
+import {AuthUser} from "../../../core/models/auth.models";
 
 @Component({
     selector: 'app-left-sidebar',
@@ -27,7 +27,7 @@ export class LeftSidebarComponent implements OnInit {
 
     leftSidebarClass = 'sidebar-enable';
     activeMenuItems: string[] = [];
-    loggedInUser: User | null = {};
+    loggedInUser: AuthUser | null = {};
     menuItems: MenuItem[] = [];
 
     no_profile_img:string= "./assets/images/logo.png";
