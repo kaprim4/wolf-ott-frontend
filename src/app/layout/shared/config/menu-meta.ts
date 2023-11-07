@@ -163,7 +163,7 @@ const MENU_ITEMS: MenuItem[] = [
         label: 'Utilisateurs',
         icon: 'fas fa-users',
         isTitle: false,
-        url: '/users-access/user-index'
+        url: '/users-access/users'
     },
 
     {key: 'apps', label: 'Apps', isTitle: true},

@@ -2,17 +2,17 @@
     <div class="row mb-2">
         <div class="col-12 col-md-6" *ngIf="pageSizeOptions.length">
             <div class="text--start">
-                <label class="form-label me-1">Show
+                <label class="form-label me-1">Afficher
                     <select class="form-select form-select-sm  w-auto ms-1 me-1 d-inline" name="pageSize"
                         id="event-category" required [(ngModel)]="service.pageSize" (ngModelChange)="paginate()">
                         <option *ngFor="let option of pageSizeOptions" [value]="option">{{option}}</option>
                     </select>
-                    entries</label>
+                    entrées</label>
             </div>
         </div><!-- end col-->
         <div class="col-12" [class.col-md-6]="pageSizeOptions.length">
             <div class="d-flex align-items-center justify-content-start justify-content-sm-end">
-                <label class="d-inline">Search:
+                <label class="d-inline">Rechercher:
                     <input type="text" name="searchTerm" class="form-control form-control-sm d-inline w-auto ms-1"
                         aria-controls="advanced-table" [(ngModel)]="service.searchTerm" (ngModelChange)="searchData()">
                 </label>
@@ -75,13 +75,13 @@
     <div class="d-flex flex-wrap justify-content-center align-items-center justify-content-sm-between mt-2"
         *ngIf="pagination">
         <div>
-            Showing {{service.startIndex }} to
-            {{service.endIndex}} of {{service.totalRecords}} entries
+            Affichage de {{service.startIndex }} à
+            {{service.endIndex}} of {{service.totalRecords}} entrées
         </div>
         <ngb-pagination class="custom-pagination" [collectionSize]="service.totalRecords" [(page)]="service.page"
             [maxSize]="3" [rotate]="true" [pageSize]="service.pageSize" (pageChange)="paginate()">
-            <ng-template ngbPaginationPrevious>Prev</ng-template>
-            <ng-template ngbPaginationNext>Next</ng-template>
+            <ng-template ngbPaginationPrevious>Précédent</ng-template>
+            <ng-template ngbPaginationNext>Suivant</ng-template>
         </ngb-pagination>
     </div>
 

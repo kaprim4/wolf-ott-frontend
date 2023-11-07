@@ -1,11 +1,17 @@
 import {Component, OnInit} from '@angular/core';
-import {first} from "rxjs";
-import {User} from "../../../../core/models/user.models";
-import {Column} from "../../../../shared/advanced-table/advanced-table.component";
-import {EventService} from "../../../../core/service/event.service";
+// constants
+import {EventType} from 'src/app/core/constants/events';
+
+// service
+import {EventService} from 'src/app/core/service/event.service';
 import {UserService} from "../../../../core/service/user.service";
-import {EventType} from "../../../../core/constants/events";
-import {SortEvent} from "../../../../shared/advanced-table/sortable.directive";
+
+// types
+import {SortEvent} from 'src/app/shared/advanced-table/sortable.directive';
+import {Column} from 'src/app/shared/advanced-table/advanced-table.component';
+import {User} from "../../../../core/models/user.models";
+import {first} from "rxjs";
+import {map} from "rxjs/operators";
 
 @Component({
     selector: 'app-u-index',
@@ -21,7 +27,8 @@ export class UIndexComponent implements OnInit {
     constructor(
         private eventService: EventService,
         private userService: UserService
-    ) { }
+    ) {
+    }
 
     ngOnInit(): void {
         this.eventService.broadcast(EventType.CHANGE_PAGE_TITLE, {
@@ -39,16 +46,12 @@ export class UIndexComponent implements OnInit {
      * fetches table records
      */
     _fetchData(): void {
-        // @ts-ignore
-        this.userService.getUsers().pipe(first()).subscribe(
+        this.userService.getUsers()?.subscribe(
             (data: User[]) => {
-                if (data.length > 0){
-                    console.table(data);
+                console.log("data", data);
+                if (data && data.length > 0) {
                     this.records = data
                 }
-            },
-            (error: string) => {
-                console.log(error);
             }
         );
     }
@@ -58,62 +61,16 @@ export class UIndexComponent implements OnInit {
      */
     initTableConfig(): void {
         this.columns = [
-            {
-                name: 'id',
-                label: 'id',
-                formatter: (record: User) => record.id,
-            },
-            {
-                name: 'firstName',
-                label: 'firstName',
-                formatter: (record: User) => record.firstName,
-            },
-            {
-                name: 'lastName',
-                label: 'lastName',
-                formatter: (record: User) => record.lastName,
-                width: 180
-            },
-            {
-                name: 'username',
-                label: 'username',
-                formatter: (record: User) => record.username,
-            },
-            {
-                name: 'email',
-                label: 'email',
-                formatter: (record: User) => record.email,
-            },
-            {
-                name: 'role',
-                label: 'role',
-                formatter: (record: User) => record.role,
-
-            },
-            {
-                name: 'gasStation',
-                label: 'gasStation',
-                formatter: (record: User) => record.gasStation.libelle,
-
-            },
-            {
-                name: 'isActivated',
-                label: 'isActivated',
-                formatter: (record: User) => record.isActivated,
-
-            },
-            {
-                name: 'isDeleted',
-                label: 'isDeleted',
-                formatter: (record: User) => record.isDeleted,
-
-            },
-            {
-                name: 'createdAt',
-                label: 'createdAt',
-                formatter: (record: User) => record.createdAt,
-
-            }
+            {name: 'id', label: '#', formatter: (record: User) => record.id},
+            {name: 'firstName', label: 'Nom', formatter: (record: User) => record.firstName,},
+            {name: 'lastName', label: 'Prénom', formatter: (record: User) => record.lastName, width: 180},
+            {name: 'username', label: 'Identifiant', formatter: (record: User) => record.username,},
+            {name: 'email', label: 'E-mail', formatter: (record: User) => record.email,},
+            {name: 'role', label: 'Rôle', formatter: (record: User) => record.role,},
+            {name: 'gasStation', label: 'Station', formatter: (record: User) => record.gasStation.libelle,},
+            {name: 'isActivated', label: 'Activé ?', formatter: (record: User) => record.isActivated,},
+            {name: 'isDeleted', label: 'Supprimé ?', formatter: (record: User) => record.isDeleted,},
+            {name: 'createdAt', label: 'Créé le', formatter: (record: User) => record.createdAt,}
         ];
     }
 

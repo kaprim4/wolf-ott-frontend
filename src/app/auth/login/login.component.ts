@@ -23,8 +23,8 @@ export class LoginComponent implements OnInit {
     }
 
     loginForm: FormGroup = this.fb.group({
-        username: ['adminENELP', [Validators.required]],
-        password: ['000000', Validators.required]
+        username: ['', [Validators.required]],
+        password: ['', Validators.required]
     });
     formSubmitted: boolean = false;
     error: string = '';

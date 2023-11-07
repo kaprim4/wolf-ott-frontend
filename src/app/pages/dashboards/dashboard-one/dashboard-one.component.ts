@@ -44,20 +44,6 @@ export class DashboardOneComponent implements OnInit {
             }
         );
         this._fetchData();
-        this.fetch_gas_station_list();
-    }
-
-    fetch_gas_station_list(): void {
-        // @ts-ignore
-        this.gasStationService.getGasStations().pipe(first()).subscribe(
-            (data: GasStation[]) => {
-                if (data.length > 0)
-                    console.table(data);
-            },
-            (error: string) => {
-                console.log(error);
-            }
-        );
     }
 
     /**

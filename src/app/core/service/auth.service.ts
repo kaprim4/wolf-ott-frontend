@@ -38,7 +38,7 @@ export class AuthenticationService {
         return this.http.post<AuthResponse>(`${this.apiServerUrl}/api/v1/auth/signin`, {username, password})
             .pipe(map(response => {
                 if (response && response.token) {
-                    console.log(response.token);
+                    //console.log(response.token);
                     this.subscribeLoggedUser(response.token);
                 }
                 return response;
@@ -67,7 +67,7 @@ export class AuthenticationService {
 
     subscribeLoggedUser(_token: string): void {
         let token: TokenDecoded = this.getDecodedAccessToken(_token);
-        console.log("login token:", token);
+        //console.log("login token:", token);
         let authUser: AuthUser = {
             id: token.id,
             username: token.username,

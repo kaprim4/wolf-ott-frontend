@@ -1,17 +1,16 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import {ButtonsComponent} from "../ui/base-ui/buttons/buttons.component";
-import {UIndexComponent} from "./users/u-index/u-index.component";
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 
 const routes: Routes = [
     {
-        path: 'user-index',
-        component: UIndexComponent
+        path: 'users', loadChildren: () => import('./users/users.module')
+            .then(m => m.UsersModule)
     },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule]
 })
-export class UsersAccessRoutingModule { }
+export class UsersAccessRoutingModule {
+}
