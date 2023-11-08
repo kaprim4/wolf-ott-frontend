@@ -1,18 +1,35 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">
+                    <i class="fas fa-user bg-soft-primary rounded-circle fs-4 p-1"></i> Liste ({{entityElm.label}})
+                    <p class="text-muted mb-0 mt-1 fs-6">
+                        ({{records.length}} entrée{{records.length > 1 ? "s" : ""}})
+                    </p>
+                </h4>
+                <div class="flex-shrink-0">
+                    <a [routerLink]="['add']" class="btn btn-success btn-md">
+                        <i class="fas fa-plus-circle"></i>
+                        <span class="kt-hidden-mobile ms-1">Nouvelle entrée ({{entityElm.label}})</span>
+                    </a>
+                </div>
+            </div>
             <div class="card-body">
-                <h4 class="header-title">Advanced table</h4>
-                <p class="text-muted font-14 mb-3">
-                    This table provides advance functionalities like search and filtering, sorting and pagination on
-                    table.
-                </p>
+                <app-ui-preloader [display]="loading"></app-ui-preloader>
+                <ngb-alert [dismissible]="false" type="danger" *ngIf="error">
+                    {{ error }}
+                </ngb-alert>
                 <!-- table start -->
                 <app-advanced-table [tableData]="records" [columns]="columns" [pagination]="true"
                              [pageSizeOptions]="pageSizeOptions" [hasRowSelection]="true" [isSearchable]="true"
-                             (search)="searchData($event)" [isSortable]="true" (sort)="onSort($event)"></app-advanced-table>
-            </div> <!-- end card body-->
-        </div> <!-- end card -->
-    </div><!-- end col-->
+                             (search)="searchData($event)" [isSortable]="true" (sort)="onSort($event)" [entity]="entityElm.entity">
+                </app-advanced-table>
+            </div>
+            <!-- end card body-->
+        </div>
+        <!-- end card -->
+    </div>
+    <!-- end col-->
 </div>
 <!-- end row-->

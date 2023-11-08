@@ -16,6 +16,7 @@ import {
 import {DomSanitizer} from '@angular/platform-browser';
 import {AdvancedTableService} from './advanced-table.service';
 import {NgbSortableHeaderDirective, SortEvent} from './sortable.directive';
+import {TokenService} from "../../core/service/token.service";
 
 
 export interface Column {
@@ -32,8 +33,7 @@ export interface Column {
     styleUrls: ['./advanced-table.component.scss'],
     providers: [AdvancedTableService]
 })
-export class AdvancedTableComponent implements OnInit, AfterViewChecked
-{
+export class AdvancedTableComponent implements OnInit, AfterViewChecked {
     @Input() pagination: boolean = false;
     @Input() isSearchable: boolean = false;
     @Input() isSortable: boolean = false;
@@ -46,6 +46,8 @@ export class AdvancedTableComponent implements OnInit, AfterViewChecked
     collectionSize: number = this.tableData.length;
     selectAll: boolean = false;
     isSelected: boolean[] = [];
+    token: string = ''
+    @Input() entity: string = '';
 
     @Output() search = new EventEmitter<string>();
     @Output() sort = new EventEmitter<SortEvent>();
@@ -56,30 +58,29 @@ export class AdvancedTableComponent implements OnInit, AfterViewChecked
 
     constructor(
         public service: AdvancedTableService,
+        private tokenService: TokenService,
         private sanitizer: DomSanitizer,
         private componentFactoryResolver: ComponentFactoryResolver
-    ) { }
+    ) {
+        this.token = this.tokenService.getToken();
+    }
 
     ngAfterViewChecked(): void {
         this.handleTableLoad.emit();
-
     }
 
     ngOnInit(): void {
         for (let i = 0; i < this.tableData.length; i++) {
             this.isSelected[i] = false;
         }
+        console.log("entity: ",this.entity)
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         this.paginate();
     }
 
-    /**
-     * sets pagination configurations
-     */
     paginate(): void {
-        // paginate
         this.service.totalRecords = this.tableData.length;
         if (this.service.totalRecords === 0) {
             this.service.startIndex = 0;
@@ -92,58 +93,30 @@ export class AdvancedTableComponent implements OnInit, AfterViewChecked
         }
     }
 
-
-    /**
-     * Search Method
-     */
     searchData(): void {
         this.search.emit(this.service.searchTerm);
     }
 
-
-    /**
-     * sorts column
-     * @param param0 column name,sort direction
-     */
     onSort({column, direction}: SortEvent): void {
-        // resetting other headers
         this.headers.forEach(header => {
             if (header.sortable !== column) {
                 header.direction = '';
             }
         });
-
         this.service.sortColumn = column;
         this.service.sortDirection = direction;
-
         this.sort.emit({column, direction});
     }
 
-    /**
-     *  calls formatter function for table cells
-     * @param column column name
-     * @param data data of column
-     */
     callFormatter(column: Column, data: any): any {
         return (column.formatter(data));
     }
 
-    /**
-     * @returns intermediate status of selectAll checkbox
-     */
     checkIntermediate(): boolean {
-        let selectedRowCount = this.isSelected.filter(x => x === true).length;
-        if (!this.selectAll && selectedRowCount > 0 && selectedRowCount < this.tableData.length) {
-            return true;
-        } else {
-            return false;
-        }
+        let selectedRowCount = this.isSelected.filter(x => x).length;
+        return !this.selectAll && selectedRowCount > 0 && selectedRowCount < this.tableData.length;
     }
 
-    /**
-     * select all row
-     * @param event event
-     */
     selectAllRow(event: any): void {
         this.selectAll = !this.selectAll;
         if (this.selectAll) {
@@ -157,13 +130,12 @@ export class AdvancedTableComponent implements OnInit, AfterViewChecked
         }
     }
 
-    /**
-     * selects row
-     * @param index row index
-     */
     selectRow(index: number): void {
         this.isSelected[index] = !this.isSelected[index];
-        this.selectAll = (this.isSelected.filter(x => x === true).length === this.tableData.length);
+        this.selectAll = (this.isSelected.filter(x => x).length === this.tableData.length);
+    }
+
+    onSubmit() {
+        return confirm('Voulez vous procèder à la suppression de cet entrée ?');
     }
 }
-

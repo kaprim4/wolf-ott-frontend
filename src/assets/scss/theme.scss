@@ -5,3 +5,8 @@
 
 // adminto Icons
 @import "./icons.scss";
+
+
+.card-header {
+    border-bottom: 1px solid var(--ct-border-color);
+}

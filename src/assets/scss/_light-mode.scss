@@ -1,6 +1,6 @@
-// 
+//
 // light-mode.scss
-// 
+//
 
 
 :root {
@@ -10,7 +10,7 @@
     // <=============================================>
 
     // Link Variable
-    --#{$variable-prefix}link-color:                                    #{$primary};
+    --#{$variable-prefix}link-color:                                    #f44406;
     --#{$variable-prefix}link-hover-color:                              #{shade-color($primary, $link-shade-percentage)};
 
     // Border Variable
@@ -116,7 +116,7 @@
     --#{$variable-prefix}nav-tabs-link-active-color:                     #{map-get($grays, "700")};
     --#{$variable-prefix}nav-tabs-link-active-bg:                        #{$white};
     --#{$variable-prefix}nav-tabs-link-active-border-color:              #{map-get($grays, "300") map-get($grays, "300") $nav-tabs-link-active-bg};
-   
+
     // scss-docs-start navbar-theme-variables
     --#{$variable-prefix}navbar-dark-color:                              #{rgba($white, .55)};
     --#{$variable-prefix}navbar-dark-hover-color:                        #{rgba($white, .75)};
@@ -261,7 +261,7 @@
     --#{$variable-prefix}pre-color:                                      #{null};
 
 
-    
+
     // <=============================================>
     // Custome variable
     // <=============================================>
@@ -298,9 +298,9 @@
     --#{$variable-prefix}bg-topbar-dark:                                  #38414a;
 
     // Leftbar item shadow (Condensed item)
-    --#{$variable-prefix}box-shadow-condensed:                            3px 5px 10px 0 rgba(154,161,171,.2); 
+    --#{$variable-prefix}box-shadow-condensed:                            3px 5px 10px 0 rgba(154,161,171,.2);
 
-    // Page title 
+    // Page title
     --#{$variable-prefix}page-title-color:                                #{map-get($grays, "100")};
 
     // Topbar Search
@@ -312,7 +312,7 @@
     --#{$variable-prefix}footer-color:                                   #{map-get($grays, "700")};
     --#{$variable-prefix}footer-link-hover-color:                        #636b72;
 
-    // Logo box 
+    // Logo box
     --#{$variable-prefix}logo-box-background:                           #{$white};
 
     // User authentication Background
@@ -323,7 +323,7 @@
     --#{$variable-prefix}chat-primary-user-bg:                           #fef5e4;
     --#{$variable-prefix}chat-secondary-user-bg:                         #f1f3fa;
 
-    // Card overlay 
+    // Card overlay
     --#{$variable-prefix}card-overlay-bg:                                #{rgba($white, 0.8)};
 
     // Input light gray

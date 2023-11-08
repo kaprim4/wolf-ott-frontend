@@ -5,6 +5,7 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AdvancedTableComponent } from './advanced-table.component';
 import { NgbSortableHeaderDirective } from './sortable.directive';
+import {RouterModule} from "@angular/router";
 
 
 
@@ -13,11 +14,12 @@ import { NgbSortableHeaderDirective } from './sortable.directive';
     AdvancedTableComponent,
     NgbSortableHeaderDirective
   ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    NgbPaginationModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        NgbPaginationModule,
+        RouterModule
+    ],
   exports: [AdvancedTableComponent]
 })
 export class AdvancedTableModule { }

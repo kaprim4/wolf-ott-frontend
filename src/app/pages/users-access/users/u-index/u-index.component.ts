@@ -10,6 +10,10 @@ import {UserService} from "../../../../core/service/user.service";
 import {SortEvent} from 'src/app/shared/advanced-table/sortable.directive';
 import {Column} from 'src/app/shared/advanced-table/advanced-table.component';
 import {IUser} from "../../../../core/interfaces/user";
+import * as moment from 'moment';
+import {IFormType} from "../../../../core/interfaces/formType";
+
+moment.locale('fr');
 
 @Component({
     selector: 'app-u-index',
@@ -21,6 +25,12 @@ export class UIndexComponent implements OnInit {
     records: IUser[] = [];
     columns: Column[] = [];
     pageSizeOptions: number[] = [10, 25, 50, 100];
+    loading: boolean = false;
+    error: string = '';
+    entityElm: IFormType = {
+        label: 'Utilisateur',
+        entity: 'user'
+    }
 
     constructor(
         private eventService: EventService,
@@ -36,51 +46,56 @@ export class UIndexComponent implements OnInit {
                 {label: 'Liste des utilisateurs', path: '.', active: true}
             ]
         });
+        this.loading = true;
         this._fetchData();
         this.initTableConfig();
     }
 
-    /**
-     * fetches table records
-     */
     _fetchData(): void {
         this.userService.getUsers()?.subscribe(
             (data: IUser[]) => {
                 console.log("data", data);
                 if (data && data.length > 0) {
-                    this.records = data
+                    this.records = data;
+                    this.loading = false;
+                } else {
+                    this.error = "La liste est vide.";
                 }
             }
         );
     }
 
-    /**
-     * initialize advanced table columns
-     */
     initTableConfig(): void {
         this.columns = [
             {name: 'id', label: '#', formatter: (record: IUser) => record.id},
-            {name: 'firstName', label: 'Nom', formatter: (record: IUser) => record.firstName,},
-            {name: 'lastName', label: 'Prénom', formatter: (record: IUser) => record.lastName, width: 180},
-            {name: 'username', label: 'Identifiant', formatter: (record: IUser) => record.username,},
-            {name: 'email', label: 'E-mail', formatter: (record: IUser) => record.email,},
-            {name: 'role', label: 'Rôle', formatter: (record: IUser) => record.role,},
-            {name: 'gasStation', label: 'Station', formatter: (record: IUser) => record.gasStation.libelle,},
-            {name: 'isActivated', label: 'Activé ?', formatter: (record: IUser) => record.isActivated,},
-            {name: 'isDeleted', label: 'Supprimé ?', formatter: (record: IUser) => record.isDeleted,},
-            {name: 'createdAt', label: 'Créé le', formatter: (record: IUser) => record.createdAt,}
+            {name: 'firstName', label: 'Nom', formatter: (record: IUser) => record.firstName},
+            {name: 'lastName', label: 'Prénom', formatter: (record: IUser) => record.lastName},
+            {name: 'username', label: 'Identifiant', formatter: (record: IUser) => record.username},
+            {name: 'email', label: 'E-mail', formatter: (record: IUser) => record.email},
+            {name: 'role', label: 'Rôle', formatter: (record: IUser) => record.role},
+            {name: 'gasStation', label: 'Station', formatter: (record: IUser) => record.gasStation.libelle},
+            {
+                name: 'isActivated', label: 'Activé ?', formatter: (record: IUser) => {
+                    return record.isActivated
+                }
+            },
+            {
+                name: 'isDeleted', label: 'Supprimé ?', formatter: (record: IUser) => {
+                    return record.isDeleted
+                }
+            },
+            {
+                name: 'createdAt', label: 'Créé le', formatter: (record: IUser) => {
+                    return moment(record.createdAt).format('d MMM YYYY')
+                }
+            }
         ];
     }
 
-    // compares two cell values
     compare(v1: string | number, v2: string | number): any {
         return v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
     }
 
-    /**
-     * Sort the table data
-     * @param event column name, sort direction
-     */
     onSort(event: SortEvent): void {
         if (event.direction === '') {
             this._fetchData();
@@ -92,11 +107,6 @@ export class UIndexComponent implements OnInit {
         }
     }
 
-    /**
-     * Match table data with search input
-     * @param row Table row
-     * @param term Search the value
-     */
     matches(row: IUser, term: string) {
         return row.firstName.toLowerCase().includes(term)
             || row.lastName.toLowerCase().includes(term)
@@ -119,6 +129,5 @@ export class UIndexComponent implements OnInit {
             updatedData = updatedData.filter(record => this.matches(record, searchTerm));
             this.records = updatedData;
         }
-
     }
 }

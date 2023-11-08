@@ -32,14 +32,18 @@
                             [checked]="selectAll" [indeterminate]="checkIntermediate()" (change)="selectAllRow($event)">
                     </div>
                 </th>
-
                 <ng-container *ngFor="let column of columns">
                     <th class="text-capitalize sortable pe-3 pe-lg-auto" [style.width.px]="column.width"
                         [sortable]="column.name" (sort)="onSort($event)" *ngIf="column.sort!=false">
-                        {{column.label}}</th>
+                        {{column.label}}
+                    </th>
                     <th class="text-capitalize" [style.width.px]="column.width" *ngIf="column.sort===false">
-                        {{column.label}}</th>
+                        {{column.label}}
+                    </th>
                 </ng-container>
+                <th class="text-capitalize">
+                    Actions
+                </th>
             </tr>
             <tr *ngIf="!isSortable">
                 <th *ngIf="hasRowSelection" class="row_select" style="width: 20px;">
@@ -49,14 +53,13 @@
                     </div>
                 </th>
                 <th *ngFor="let column of columns" [style.width.px]="column.width" class="text-capitalize">
-                    {{column.label}}</th>
+                    {{column.label}}
+                </th>
             </tr>
-
         </thead>
         <tbody>
             <tr *ngFor="let record of tableData | slice: (service.page-1) * service.pageSize : service.page * service.pageSize;let i=index"
                 [class.selected]="isSelected[i+((service.page-1) * service.pageSize)]">
-
                 <td *ngIf="hasRowSelection">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox"
@@ -66,6 +69,24 @@
                 </td>
                 <td *ngFor="let column of columns">
                     <div [innerHtml]="callFormatter(column,record)"></div>
+                </td>
+                <td>
+                    <div class="align-content-center">
+                        <div class="hstack gap-2">
+                            <div class="p-1 ps-1">
+                                <a [routerLink]="['edit', record.id]" class="btn btn-secondary btn-sm waves-effect waves-light ms-1 fs-6" title="Modifier">
+                                    <i class="fas fa-edit fs-6"></i> Modifier
+                                </a>
+                                <form class="d-inline" method="post" [action]="['delete', record.id]" (ngSubmit)="onSubmit()">
+                                    <input type="hidden" name="_entity" value="{{entity}}">
+                                    <input type="hidden" name="_token" value="{{token}}">
+                                    <button class="submit btn btn-danger btn-sm waves-effect waves-light ms-1 fs-6">
+                                        <i class="fas fa-trash fs-6"></i> Supprimer
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             </tr>
         </tbody>

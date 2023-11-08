@@ -1,0 +1,47 @@
+<ngb-alert [dismissible]="false" type="danger" *ngIf="error">
+    {{ error }}
+</ngb-alert>
+
+<form #f="ngForm" name="form" (ngSubmit)="f.form.valid && onSubmit()">
+    <div class="card">
+        <!-- start card header -->
+        <div class="card-header align-items-center d-flex">
+            <h4 class="card-title mb-0 flex-grow-1">
+                <i class="fas fa-user-plus bg-soft-primary rounded-circle fs-4 p-1"></i> {{title}}
+            </h4>
+        </div>
+        <!-- end card header -->
+
+        <!-- start card body -->
+        <div class="card-body">
+            <p class="text-muted"></p>
+            <div class="live-preview">
+                <div class="form-group">
+                    <label for="firstName">Nom</label>
+                    <input type="text" id="firstName" name="firstName" [(ngModel)]="user?.firstName" #nom="ngModel"/>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Prénom</label>
+                    <input type="text" id="lastName" name="lastName" [(ngModel)]="user?.lastName" #prenom="ngModel"/>
+                </div>
+                <div class="form-group">
+                    <label for="email">email</label>
+                    <input type="text" id="email" name="email" [(ngModel)]="user?.email" #email="ngModel"/>
+                </div>
+            </div>
+        </div>
+        <!-- end card body -->
+        <!-- start card footer -->
+        <div class="card-footer overflow-hidden">
+            <button class="btn btn-success float-start" type="submit">
+                <i class="las la-edit"></i>
+                <span class="kt-hidden-mobile"> Enregistrer</span>
+            </button>
+            <a [routerLink]="['../']" class="btn btn-info float-end">
+                <i class="las la-arrow-left"></i>
+                <span class="kt-hidden-mobile">Retour à la liste</span>
+            </a>
+        </div>
+        <!-- end card footer -->
+    </div>
+</form>

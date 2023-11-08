@@ -23,12 +23,12 @@ export class TokenService {
 
     clearToken(): void {
         localStorage.removeItem('token')
-        this.router.navigate(['/auth/login'])
+        this.router.navigate(['/auth/logout'])
     }
 
     clearTokenExpired(): void {
         localStorage.removeItem('token')
-        this.router.navigate(['/auth/login'])
+        this.router.navigate(['/auth/logout'])
     }
 
     getToken(): string {
