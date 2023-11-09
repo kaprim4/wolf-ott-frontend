@@ -1,6 +1,7 @@
-export interface Company {
+export interface Role {
     id: number;
     libelle: string;
+    alias: string;
     isActivated: boolean;
     isDeleted: boolean;
     createdAt: string;

@@ -72,8 +72,8 @@ export class UIndexComponent implements OnInit {
             {name: 'lastName', label: 'Prénom', formatter: (record: IUser) => record.lastName},
             {name: 'username', label: 'Identifiant', formatter: (record: IUser) => record.username},
             {name: 'email', label: 'E-mail', formatter: (record: IUser) => record.email},
-            {name: 'role', label: 'Rôle', formatter: (record: IUser) => record.role},
-            {name: 'gasStation', label: 'Station', formatter: (record: IUser) => record.gasStation.libelle},
+            {name: 'role', label: 'Rôle', formatter: (record: IUser) => record.role?.libelle},
+            {name: 'gasStation', label: 'Station', formatter: (record: IUser) => record.gasStation?.libelle},
             {
                 name: 'isActivated', label: 'Activé ?', formatter: (record: IUser) => {
                     return record.isActivated
@@ -111,8 +111,7 @@ export class UIndexComponent implements OnInit {
         return row.firstName.toLowerCase().includes(term)
             || row.lastName.toLowerCase().includes(term)
             || row.email.toLowerCase().includes(term)
-            || row.role.toLowerCase().includes(term)
-            || row.gasStation.libelle.toLowerCase().includes(term)
+            || row.role?.libelle.toLowerCase().includes(term)
             || row.username.toLowerCase().includes(term);
     }
 

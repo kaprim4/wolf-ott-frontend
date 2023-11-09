@@ -35,19 +35,19 @@ export class GasStationService {
         return null;
     }
 
-    public getGasStation(id_gasStation: number): Observable<GasStation> {
-        return this.http.get<GasStation>(`${this.apiServerUrl}/api/v1/gas_stations/find/${id_gasStation}`);
+    public getGasStation(id: number): Observable<GasStation> {
+        return this.http.get<GasStation>(`${this.apiServerUrl}/api/v1/gas_stations/find/${id}`);
     }
 
-    public addGasStation(gasStation1: GasStation): Observable<GasStation> {
-        return this.http.post<GasStation>(`${this.apiServerUrl}/api/v1/gas_stations/add`, gasStation1);
+    public addGasStation(gasStation: GasStation): Observable<GasStation> {
+        return this.http.post<GasStation>(`${this.apiServerUrl}/api/v1/gas_stations/add`, gasStation);
     }
 
-    public updateGasStation(gasStation1: GasStation): Observable<GasStation> {
-        return this.http.put<GasStation>(`${this.apiServerUrl}/api/v1/gas_stations/update`, gasStation1);
+    public updateGasStation(gasStation: GasStation): Observable<GasStation> {
+        return this.http.put<GasStation>(`${this.apiServerUrl}/api/v1/gas_stations/update`, gasStation);
     }
 
-    public deleteGasStation(id_gasStation: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiServerUrl}/api/v1/gas_stations/delete/${id_gasStation}`);
+    public deleteGasStation(id: number): Observable<void> {
+        return this.http.delete<void>(`${this.apiServerUrl}/api/v1/gas_stations/delete/${id}`);
     }
 }

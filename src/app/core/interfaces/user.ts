@@ -1,4 +1,5 @@
 import {GasStation} from "./gas_station";
+import {Role} from "./role";
 
 export interface IUser {
     id: number;
@@ -7,37 +8,26 @@ export interface IUser {
     username: string;
     password: string;
     email: string;
-    role: string;
-    gasStation: GasStation;
+    role: Role | null;
+    gasStation: GasStation | null;
     isActivated: boolean;
     isDeleted: boolean;
     createdAt: string;
     updatedAt: string;
-    enabled: boolean;
-    accountNonLocked: boolean;
-    accountNonExpired: boolean;
-    credentialsNonExpired: boolean;
 
-    [key: string]: number | string | GasStation | boolean;
+    [key: string]: number | string | GasStation | Role | null | boolean;
 }
 
-export interface ISingleUser{
-    data: IUser
-}
-
-export interface IDataUser{
-    data: IUser[]
-}
-
-export interface ITokenUser{
-    id?: number;
-    firstName?: string;
-    lastName?: string;
-    username?: string;
-    email?: string;
-    gas_station_id?: number;
-    gas_station_code_sap?: string;
-    role?: string;
-    exp?: number;
-    iat?: number;
+export interface ITokenUser {
+    id: number;
+    firstName: string;
+    lastName: string;
+    username: string;
+    email: string;
+    gas_station_id: number;
+    gas_station_code_sap: string;
+    role_id: number;
+    role_name: string;
+    exp: number;
+    iat: number;
 }

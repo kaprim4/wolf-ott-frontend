@@ -2,7 +2,7 @@
     {{ error }}
 </ngb-alert>
 
-<form #f="ngForm" name="form" (ngSubmit)="f.form.valid && onSubmit()">
+<form #form="ngForm" name="form" (ngSubmit)="form.form.valid && onSubmit()">
     <div class="card">
         <!-- start card header -->
         <div class="card-header align-items-center d-flex">
@@ -16,17 +16,30 @@
         <div class="card-body">
             <p class="text-muted"></p>
             <div class="live-preview">
-                <div class="form-group">
-                    <label for="firstName">Nom</label>
-                    <input type="text" id="firstName" name="firstName" [(ngModel)]="user?.firstName" #nom="ngModel"/>
-                </div>
-                <div class="form-group">
-                    <label for="lastName">Prénom</label>
-                    <input type="text" id="lastName" name="lastName" [(ngModel)]="user?.lastName" #prenom="ngModel"/>
-                </div>
-                <div class="form-group">
-                    <label for="email">email</label>
-                    <input type="text" id="email" name="email" [(ngModel)]="user?.email" #email="ngModel"/>
+
+                <div id="{{entityElm.entity}}" class="row">
+
+                    <div class="col-md-6 col-lg-4 mb-5" *ngFor="let prop of userprops">
+                        <label for="user_{{prop.input}}" class="form-label">{{prop.label}}</label>
+                        <input *ngIf="['text','email','password','hidden'].includes(prop.type)" type="{{prop.type}}" id="user_{{prop.input}}" name="user[{{prop.input}}]" placeholder="" class="form-control form-control" [(ngModel)]="prop.value" #{{prop.input}}="ngModel">
+
+                        <div *ngIf="['checkbox'].includes(prop.type)" class="form-switch">
+                            <div class="form-check">
+                                <input type="checkbox" id="user_{{prop.input}}" name="user[{{prop.input}}]" class="form-check-input form-check-input" [(ngModel)]="prop.value" #{{prop.input}}="ngModel">
+                                <label class="form-check-label form-check-label" for="user_{{prop.input}}">{{prop.label}}</label>
+                            </div>
+                            <div id="user_{{prop.input}}_help" class="form-text mb-0 help-text">* cette option est
+                                facultative.
+                            </div>
+                        </div>
+
+                        <select *ngIf="['select'].includes(prop.type)" id="user_{{prop.input}}" name="user[{{prop.input}}]" class="form-control select2-basic form-select select2-hidden-accessible" [(ngModel)]="prop.value" #{{prop.input}}="ngModel">
+                            <option value="">Choisissez une option</option>
+                            <option *ngFor="let child of prop.joinTable" value="{{child.id}}">
+                                #{{child.id}} - {{child.libelle}}
+                            </option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>

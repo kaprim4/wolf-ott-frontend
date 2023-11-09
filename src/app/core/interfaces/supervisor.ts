@@ -7,4 +7,6 @@ export interface Supervisor {
     isDeleted: boolean;
     createdAt: string;
     updatedAt: string;
+
+    [key: string]: number | string | boolean;
 }
