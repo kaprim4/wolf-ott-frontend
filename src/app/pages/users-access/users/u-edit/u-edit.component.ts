@@ -1,15 +1,17 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {IFormType} from "../../../../core/interfaces/formType";
-import {IUser} from "../../../../core/interfaces/user";
+import {IUser, IUserSubmit} from "../../../../core/interfaces/user";
 import {EventService} from "../../../../core/service/event.service";
 import {UserService} from "../../../../core/service/user.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {EventType} from "../../../../core/constants/events";
 import {GasStation} from "../../../../core/interfaces/gas_station";
 import {Role} from "../../../../core/interfaces/role";
 import {InputProps, InputPropsTypesEnum} from "../../../../core/interfaces/input_props";
 import {GasStationService} from "../../../../core/service/gas-station.service";
 import {RoleService} from "../../../../core/service/role.service";
+import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-u-edit',
@@ -18,60 +20,80 @@ import {RoleService} from "../../../../core/service/role.service";
 })
 export class UEditComponent implements OnInit {
 
-    entityElm: IFormType = {
-        label: 'Utilisateur',
-        entity: 'user'
-    }
-    loading: boolean = false;
-    error: string = '';
-    title: string = 'Nouvelle entrée' + (this.entityElm.entity ? ' (' + this.entityElm.label + ')' : '');
-
     @Input()
-    user: IUser = {
+    user: IUserSubmit = {
         id: 0,
-        role: null,
-        gasStation: null,
+        role: {
+            id: 0
+        },
+        gasStation: {
+            id: 0
+        },
         firstName: "",
         lastName: "",
         email: "",
         username: "",
         password: "",
         isActivated: false,
-        isDeleted: false,
-        createdAt: "",
-        updatedAt: ""
     }
 
-    gasStationList: GasStation[] = [];
-    roleList: Role[] = [];
+    @ViewChild('successSwal')
+    public readonly successSwal!: SwalComponent;
 
-    userprops: InputProps[] = [];
+    @ViewChild('errorSwal')
+    public readonly errorSwal!: SwalComponent;
 
     constructor(
         private eventService: EventService,
         private userService: UserService,
         private gasStationService: GasStationService,
         private roleService: RoleService,
-        private activated: ActivatedRoute
+        private router: Router,
+        private activated :ActivatedRoute,
+        private fb: FormBuilder
     ) {
     }
+
+    entityElm: IFormType = {
+        label: 'Utilisateur',
+        entity: 'user'
+    }
+    title: string = 'Modifier cette entrée' + (this.entityElm.entity ? ' (' + this.entityElm.label + ')' : '');
+    gasStationList: GasStation[] = [];
+    roleList: Role[] = [];
+    userprops: InputProps[] = [];
+
+    editForm: FormGroup = this.fb.group({
+        id: [this.user.id],
+        role_id: ['', [Validators.required]],
+        gas_station_id: ['', Validators.required],
+        firstName: ['', Validators.required],
+        lastName: ['', Validators.required],
+        email: ['', Validators.required],
+        username: ['', Validators.required],
+        password: ['', Validators.required],
+        isActivated: [false]
+    });
+    formSubmitted: boolean = false;
+    error: string = '';
+    loading: boolean = false;
 
     initFieldsConfig(): void {
         this.userprops = [
             {
-                input: 'role',
+                input: 'role_id',
                 label: 'Rôle',
                 type: InputPropsTypesEnum.S,
-                value:this.user.role?.id,
+                value: this.user.role.id,
                 joinTable: this.roleList,
                 joinTableId: 'id',
                 joinTableIdLabel: 'libelle'
             },
             {
-                input: 'gasStation',
+                input: 'gas_station_id',
                 label: 'Station',
                 type: InputPropsTypesEnum.S,
-                value:this.user.gasStation?.id,
+                value: this.user.gasStation.id,
                 joinTable: this.gasStationList,
                 joinTableId: 'id',
                 joinTableIdLabel: 'libelle'
@@ -80,7 +102,7 @@ export class UEditComponent implements OnInit {
                 input: 'firstName',
                 label: 'Nom',
                 type: InputPropsTypesEnum.T,
-                value:this.user.firstName,
+                value: this.user.firstName,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
@@ -89,7 +111,7 @@ export class UEditComponent implements OnInit {
                 input: 'lastName',
                 label: 'Prénom',
                 type: InputPropsTypesEnum.T,
-                value:this.user.lastName,
+                value: this.user.lastName,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
@@ -98,7 +120,7 @@ export class UEditComponent implements OnInit {
                 input: 'email',
                 label: 'E-mail',
                 type: InputPropsTypesEnum.E,
-                value:this.user.email,
+                value: this.user.email,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
@@ -107,7 +129,7 @@ export class UEditComponent implements OnInit {
                 input: 'username',
                 label: 'Identifiant',
                 type: InputPropsTypesEnum.T,
-                value:this.user.username,
+                value: this.user.username,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
@@ -116,7 +138,7 @@ export class UEditComponent implements OnInit {
                 input: 'password',
                 label: 'Mot de passe',
                 type: InputPropsTypesEnum.P,
-                value:this.user.password,
+                value: this.user.password,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
@@ -125,40 +147,34 @@ export class UEditComponent implements OnInit {
                 input: 'isActivated',
                 label: 'Est-t-il activé ?',
                 type: InputPropsTypesEnum.C,
-                value:this.user.isActivated,
+                value: this.user.isActivated,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
             },
-        ]
-    }
-
-    ngOnInit(): void {
-        this.eventService.broadcast(EventType.CHANGE_PAGE_TITLE, {
-            title: "Liste des utilisateurs",
-            breadCrumbItems: [
-                {label: 'Utilisateurs & Accès', path: '.'},
-                {label: 'Liste des utilisateurs', path: '.', active: true}
-            ]
+        ];
+        this.editForm= this.fb.group({
+            id: [this.user.id],
+            role_id: [this.user.role.id, [Validators.required]],
+            gas_station_id: [this.user.gasStation.id, Validators.required],
+            firstName: [this.user.firstName, Validators.required],
+            lastName: [this.user.lastName, Validators.required],
+            email: [this.user.email, Validators.required],
+            username: [this.user.username, Validators.required],
+            password: ['', Validators.required],
+            isActivated: [this.user.isActivated]
         });
-        this.loading = true;
-        this._fetchData();
-        this._fetchGasStationData();
-        this._fetchRoleData();
-    }
-
-    onSubmit() {
-        return false;
     }
 
     private _fetchData() {
         let id = Number(this.activated.snapshot.paramMap.get('id'));
         if(id){
             this.userService.getUser(id)?.subscribe(
-                (data: IUser) => {
+                (data: IUserSubmit) => {
                     if (data) {
                         this.user = data;
                         this.loading = false;
+                        this.initFieldsConfig();
                     }
                 }
             );
@@ -188,5 +204,75 @@ export class UEditComponent implements OnInit {
                 }
             }
         );
+    }
+
+    private updateFormValues() {
+        this.user = {
+            id: this.editForm.controls['id'].value,
+            role: {
+                id: this.editForm.controls['role_id'].value
+            },
+            gasStation: {
+                id: this.editForm.controls['gas_station_id'].value
+            },
+            firstName: this.editForm.controls['firstName'].value,
+            lastName: this.editForm.controls['lastName'].value,
+            email: this.editForm.controls['email'].value,
+            username: this.editForm.controls['username'].value,
+            password: this.editForm.controls['password'].value,
+            isActivated: this.editForm.controls['isActivated'].value,
+        }
+    }
+
+    get formValues() {
+        return this.editForm.controls;
+    }
+
+    ngOnInit(): void {
+        this.eventService.broadcast(EventType.CHANGE_PAGE_TITLE, {
+            title: "Liste des utilisateurs",
+            breadCrumbItems: [
+                {label: 'Utilisateurs & Accès', path: '.'},
+                {label: 'Liste des utilisateurs', path: '.'},
+                {label: 'Modifier un utilisateur', path: '.', active: true}
+            ]
+        });
+        this.loading = true;
+        this._fetchGasStationData();
+        this._fetchRoleData();
+        this._fetchData();
+    }
+
+    async onSubmit() {
+        this.formSubmitted = true;
+        if (this.editForm.valid) {
+            this.loading = true;
+            this.updateFormValues();
+            console.log(this.user);
+            if (this.user) {
+                this.userService.updateUser(this.user).subscribe(
+                    (data) => {
+                        if (data) {
+                            console.log(data);
+                            this.successSwal.fire().then(()=>{
+                                this.router.navigate(['users-access/users'])
+                            });
+                        }
+                    },
+                    (error: string) => {
+
+                        this.errorSwal.fire().then((r) => {
+                            this.error = error;
+                            console.log(error);
+                        });
+                    },
+                    (): void => {
+                        this.loading = false;
+                    }
+                )
+            } else {
+                this.errorSwal.fire().then(r => this.loading = false);
+            }
+        }
     }
 }

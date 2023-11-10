@@ -18,6 +18,22 @@ export interface IUser {
     [key: string]: number | string | GasStation | Role | null | boolean;
 }
 
+export interface IUserSubmit {
+    id: any,
+    gasStation: {
+        id: number,
+    },
+    role: {
+        id: number,
+    },
+    firstName: string;
+    lastName: string;
+    email: string;
+    username: string;
+    password: string;
+    isActivated: boolean;
+}
+
 export interface ITokenUser {
     id: number;
     firstName: string;

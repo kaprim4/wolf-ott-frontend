@@ -5,8 +5,8 @@ import {CoreModule} from './core/core.module';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {LayoutModule} from './layout/layout.module';
-import {SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2';
 import {JoyrideModule} from 'ngx-joyride';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 @NgModule({
     declarations: [

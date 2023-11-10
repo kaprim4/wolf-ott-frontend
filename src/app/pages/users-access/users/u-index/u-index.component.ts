@@ -76,12 +76,12 @@ export class UIndexComponent implements OnInit {
             {name: 'gasStation', label: 'Station', formatter: (record: IUser) => record.gasStation?.libelle},
             {
                 name: 'isActivated', label: 'Activé ?', formatter: (record: IUser) => {
-                    return record.isActivated
+                    return (record.isActivated ? '<span class="badge bg-success me-1">Oui</span>' : '<span class="badge bg-danger me-1">Non</span>')
                 }
             },
             {
                 name: 'isDeleted', label: 'Supprimé ?', formatter: (record: IUser) => {
-                    return record.isDeleted
+                    return (record.isDeleted ? '<span class="badge bg-success me-1">Oui</span>' : '<span class="badge bg-danger me-1">Non</span>')
                 }
             },
             {

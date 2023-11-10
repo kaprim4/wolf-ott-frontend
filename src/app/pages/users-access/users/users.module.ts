@@ -9,7 +9,8 @@ import {NgbAlertModule} from "@ng-bootstrap/ng-bootstrap";
 import { UAddComponent } from './u-add/u-add.component';
 import { UDeleteComponent } from './u-delete/u-delete.component';
 import { UEditComponent } from './u-edit/u-edit.component';
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";
 
 
 @NgModule({
@@ -25,7 +26,9 @@ import {FormsModule} from "@angular/forms";
         AdvancedTableModule,
         UiModule,
         NgbAlertModule,
-        FormsModule
+        FormsModule,
+        ReactiveFormsModule,
+        SweetAlert2Module
     ]
 })
 export class UsersModule {

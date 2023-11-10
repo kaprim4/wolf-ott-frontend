@@ -1,16 +1,17 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {IFormType} from "../../../../core/interfaces/formType";
-import {IUser} from "../../../../core/interfaces/user";
+import {IUserSubmit} from "../../../../core/interfaces/user";
 import {EventType} from "../../../../core/constants/events";
 import {EventService} from "../../../../core/service/event.service";
 import {UserService} from "../../../../core/service/user.service";
-import {ActivatedRoute} from "@angular/router";
+import {Router} from "@angular/router";
 import {InputProps, InputPropsTypesEnum} from "../../../../core/interfaces/input_props";
 import {GasStation} from "../../../../core/interfaces/gas_station";
 import {GasStationService} from "../../../../core/service/gas-station.service";
 import {RoleService} from "../../../../core/service/role.service";
 import {Role} from "../../../../core/interfaces/role";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
 
 @Component({
     selector: 'app-u-add',
@@ -20,72 +21,78 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 export class UAddComponent implements OnInit {
 
     @Input()
-    user: IUser = {
+    user: IUserSubmit = {
         id: 0,
-        role: null,
-        gasStation: null,
+        role: {
+            id: 0
+        },
+        gasStation: {
+            id: 0
+        },
         firstName: "",
         lastName: "",
         email: "",
         username: "",
         password: "",
         isActivated: false,
-        isDeleted: false,
-        createdAt: "",
-        updatedAt: ""
     }
+
+    @ViewChild('successSwal')
+    public readonly successSwal!: SwalComponent;
+
+    @ViewChild('errorSwal')
+    public readonly errorSwal!: SwalComponent;
 
     constructor(
         private eventService: EventService,
         private userService: UserService,
         private gasStationService: GasStationService,
         private roleService: RoleService,
-        private activated: ActivatedRoute,
+        private router: Router,
         private fb: FormBuilder
     ) {
     }
-
 
     entityElm: IFormType = {
         label: 'Utilisateur',
         entity: 'user'
     }
-    formSubmitted: boolean = false;
-    error: string = '';
-    returnUrl: string = '/';
-    loading: boolean = false;
     title: string = 'Nouvelle entrée' + (this.entityElm.entity ? ' (' + this.entityElm.label + ')' : '');
     gasStationList: GasStation[] = [];
     roleList: Role[] = [];
     userprops: InputProps[] = [];
 
-    loginForm: FormGroup = this.fb.group({
-        role: ['', [Validators.required]],
-        gasStation: ['', Validators.required],
+    addForm: FormGroup = this.fb.group({
+        id: [this.user.id],
+        role_id: ['', [Validators.required]],
+        gas_station_id: ['', Validators.required],
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
         email: ['', Validators.required],
         username: ['', Validators.required],
         password: ['', Validators.required],
-        isActivated: ['', Validators.required]
+        isActivated: [false]
     });
+    formSubmitted: boolean = false;
+    error: string = '';
+    loading: boolean = false;
 
     initFieldsConfig(): void {
         this.userprops = [
             {
-                input: 'role',
+                input: 'role_id',
                 label: 'Rôle',
                 type: InputPropsTypesEnum.S,
-                value:this.user.role?.id,
+                value: this.user.role.id,
                 joinTable: this.roleList,
                 joinTableId: 'id',
                 joinTableIdLabel: 'libelle'
             },
             {
-                input: 'gasStation',
+                input: 'gas_station_id',
                 label: 'Station',
                 type: InputPropsTypesEnum.S,
-                value:this.user.gasStation?.id,
+                value: this.user.gasStation.id,
                 joinTable: this.gasStationList,
                 joinTableId: 'id',
                 joinTableIdLabel: 'libelle'
@@ -94,7 +101,7 @@ export class UAddComponent implements OnInit {
                 input: 'firstName',
                 label: 'Nom',
                 type: InputPropsTypesEnum.T,
-                value:this.user.firstName,
+                value: this.user.firstName,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
@@ -103,7 +110,7 @@ export class UAddComponent implements OnInit {
                 input: 'lastName',
                 label: 'Prénom',
                 type: InputPropsTypesEnum.T,
-                value:this.user.lastName,
+                value: this.user.lastName,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
@@ -112,7 +119,7 @@ export class UAddComponent implements OnInit {
                 input: 'email',
                 label: 'E-mail',
                 type: InputPropsTypesEnum.E,
-                value:this.user.email,
+                value: this.user.email,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
@@ -121,7 +128,7 @@ export class UAddComponent implements OnInit {
                 input: 'username',
                 label: 'Identifiant',
                 type: InputPropsTypesEnum.T,
-                value:this.user.username,
+                value: this.user.username,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
@@ -130,7 +137,7 @@ export class UAddComponent implements OnInit {
                 input: 'password',
                 label: 'Mot de passe',
                 type: InputPropsTypesEnum.P,
-                value:this.user.password,
+                value: this.user.password,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
@@ -139,33 +146,12 @@ export class UAddComponent implements OnInit {
                 input: 'isActivated',
                 label: 'Est-t-il activé ?',
                 type: InputPropsTypesEnum.C,
-                value:this.user.isActivated,
+                value: this.user.isActivated,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
             },
         ]
-    }
-
-    ngOnInit(): void {
-        this.eventService.broadcast(EventType.CHANGE_PAGE_TITLE, {
-            title: "Liste des utilisateurs",
-            breadCrumbItems: [
-                {label: 'Utilisateurs & Accès', path: '.'},
-                {label: 'Liste des utilisateurs', path: '.', active: true}
-            ]
-        });
-        this._fetchGasStationData();
-        this._fetchRoleData();
-    }
-
-    get formValues() {
-        return this.loginForm.controls;
-    }
-
-    onSubmit() {
-        console.log(this.user);
-        return false;
     }
 
     private _fetchGasStationData() {
@@ -188,5 +174,72 @@ export class UAddComponent implements OnInit {
                 }
             }
         );
+    }
+
+    private updateFormValues() {
+        this.user = {
+            id: this.addForm.controls['id'].value,
+            role: {
+                id: this.addForm.controls['role_id'].value
+            },
+            gasStation: {
+                id: this.addForm.controls['gas_station_id'].value
+            },
+            firstName: this.addForm.controls['firstName'].value,
+            lastName: this.addForm.controls['lastName'].value,
+            email: this.addForm.controls['email'].value,
+            username: this.addForm.controls['username'].value,
+            password: this.addForm.controls['password'].value,
+            isActivated: this.addForm.controls['isActivated'].value,
+        }
+    }
+
+    get formValues() {
+        return this.addForm.controls;
+    }
+
+    ngOnInit(): void {
+        this.eventService.broadcast(EventType.CHANGE_PAGE_TITLE, {
+            title: "Liste des utilisateurs",
+            breadCrumbItems: [
+                {label: 'Utilisateurs & Accès', path: '.'},
+                {label: 'Liste des utilisateurs', path: '.', active: true}
+            ]
+        });
+        this._fetchGasStationData();
+        this._fetchRoleData();
+    }
+
+    async onSubmit() {
+        this.formSubmitted = true;
+        if (this.addForm.valid) {
+            this.loading = true;
+            this.updateFormValues();
+            console.log(this.user);
+            if (this.user) {
+                this.userService.addUser(this.user).subscribe(
+                    (data) => {
+                        if (data) {
+                            console.log(data);
+                            this.successSwal.fire().then(() => {
+                                this.router.navigate(['users-access/users'])
+                            });
+                        }
+                    },
+                    (error: string) => {
+
+                        this.errorSwal.fire().then((r) => {
+                            this.error = error;
+                            console.log(error);
+                        });
+                    },
+                    (): void => {
+                        this.loading = false;
+                    }
+                )
+            } else {
+                this.errorSwal.fire().then(r => this.loading = false);
+            }
+        }
     }
 }

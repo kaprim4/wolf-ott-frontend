@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
         this.formSubmitted = true;
         if (this.loginForm.valid) {
             this.loading = true;
-            this.authService.login(this.formValues['username'].value, this.formValues['password'].value).subscribe(
+            this.authService.login(this.formValues['username'].value, this.formValues['password'].value)?.subscribe(
                 (data: IToken) => {
                     console.log("login token:", data.token)
                     this.tokenService.saveToken(data.token)
