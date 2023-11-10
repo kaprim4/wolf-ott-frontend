@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 // types
 import {Observable} from "rxjs";
 import {environment} from "../../../environments/environment";
-import {IUser, IUserSubmit} from "../interfaces/user";
+import {IUser} from "../interfaces/user";
 import {AuthenticationService} from "./auth.service";
 import {TokenService} from "./token.service";
 
@@ -33,15 +33,15 @@ export class UserService {
         return null;
     }
 
-    public getUser(id_user: number): Observable<IUserSubmit> {
-        return this.http.get<IUserSubmit>(`${this.apiServerUrl}/api/v1/users/find/${id_user}`);
+    public getUser(id_user: number): Observable<IUser> {
+        return this.http.get<IUser>(`${this.apiServerUrl}/api/v1/users/find/${id_user}`);
     }
 
-    public addUser(user1: IUserSubmit): Observable<IUser> {
+    public addUser(user1: IUser): Observable<IUser> {
         return this.http.post<IUser>(`${this.apiServerUrl}/api/v1/users/add`, user1);
     }
 
-    public updateUser(user1: IUserSubmit): Observable<IUser> {
+    public updateUser(user1: IUser): Observable<IUser> {
         return this.http.put<IUser>(`${this.apiServerUrl}/api/v1/users/update`, user1);
     }
 

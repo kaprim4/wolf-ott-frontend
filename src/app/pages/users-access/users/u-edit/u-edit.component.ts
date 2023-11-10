@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {IFormType} from "../../../../core/interfaces/formType";
-import {IUser, IUserSubmit} from "../../../../core/interfaces/user";
+import {IUser} from "../../../../core/interfaces/user";
 import {EventService} from "../../../../core/service/event.service";
 import {UserService} from "../../../../core/service/user.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -12,29 +12,30 @@ import {GasStationService} from "../../../../core/service/gas-station.service";
 import {RoleService} from "../../../../core/service/role.service";
 import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import * as moment from "moment/moment";
+import {now} from "moment/moment";
 
 @Component({
-  selector: 'app-u-edit',
-  templateUrl: './u-edit.component.html',
-  styleUrls: ['./u-edit.component.scss']
+    selector: 'app-u-edit',
+    templateUrl: './u-edit.component.html',
+    styleUrls: ['./u-edit.component.scss']
 })
 export class UEditComponent implements OnInit {
 
     @Input()
-    user: IUserSubmit = {
+    user: IUser = {
         id: 0,
-        role: {
-            id: 0
-        },
-        gasStation: {
-            id: 0
-        },
+        role: null,
+        gasStation: null,
         firstName: "",
         lastName: "",
         email: "",
         username: "",
         password: "",
         isActivated: false,
+        isDeleted: false,
+        createdAt: "",
+        updatedAt: "",
     }
 
     @ViewChild('successSwal')
@@ -49,15 +50,12 @@ export class UEditComponent implements OnInit {
         private gasStationService: GasStationService,
         private roleService: RoleService,
         private router: Router,
-        private activated :ActivatedRoute,
+        private activated: ActivatedRoute,
         private fb: FormBuilder
     ) {
     }
 
-    entityElm: IFormType = {
-        label: 'Utilisateur',
-        entity: 'user'
-    }
+    entityElm: IFormType = {label: 'Utilisateur', entity: 'user'}
     title: string = 'Modifier cette entrée' + (this.entityElm.entity ? ' (' + this.entityElm.label + ')' : '');
     gasStationList: GasStation[] = [];
     roleList: Role[] = [];
@@ -84,7 +82,7 @@ export class UEditComponent implements OnInit {
                 input: 'role_id',
                 label: 'Rôle',
                 type: InputPropsTypesEnum.S,
-                value: this.user.role.id,
+                value: this.user.role?.id,
                 joinTable: this.roleList,
                 joinTableId: 'id',
                 joinTableIdLabel: 'libelle'
@@ -93,7 +91,7 @@ export class UEditComponent implements OnInit {
                 input: 'gas_station_id',
                 label: 'Station',
                 type: InputPropsTypesEnum.S,
-                value: this.user.gasStation.id,
+                value: this.user.gasStation?.id,
                 joinTable: this.gasStationList,
                 joinTableId: 'id',
                 joinTableIdLabel: 'libelle'
@@ -153,10 +151,10 @@ export class UEditComponent implements OnInit {
                 joinTableIdLabel: ''
             },
         ];
-        this.editForm= this.fb.group({
+        this.editForm = this.fb.group({
             id: [this.user.id],
-            role_id: [this.user.role.id, [Validators.required]],
-            gas_station_id: [this.user.gasStation.id, Validators.required],
+            role_id: [this.user.role?.id, [Validators.required]],
+            gas_station_id: [this.user.gasStation?.id, Validators.required],
             firstName: [this.user.firstName, Validators.required],
             lastName: [this.user.lastName, Validators.required],
             email: [this.user.email, Validators.required],
@@ -168,9 +166,9 @@ export class UEditComponent implements OnInit {
 
     private _fetchData() {
         let id = Number(this.activated.snapshot.paramMap.get('id'));
-        if(id){
+        if (id) {
             this.userService.getUser(id)?.subscribe(
-                (data: IUserSubmit) => {
+                (data: IUser) => {
                     if (data) {
                         this.user = data;
                         this.loading = false;
@@ -178,7 +176,7 @@ export class UEditComponent implements OnInit {
                     }
                 }
             );
-        }else{
+        } else {
             this.loading = false;
             this.error = "Utilisateur introuvable.";
         }
@@ -207,20 +205,27 @@ export class UEditComponent implements OnInit {
     }
 
     private updateFormValues() {
+        var role = null;
+        var gas_station = null;
+        this.roleService.getRole(this.editForm.controls['role_id'].value).subscribe((data)=>{
+            role = data;
+        });
+        this.gasStationService.getGasStation(this.editForm.controls['gas_station_id'].value).subscribe((data)=>{
+            gas_station = data;
+        });
         this.user = {
             id: this.editForm.controls['id'].value,
-            role: {
-                id: this.editForm.controls['role_id'].value
-            },
-            gasStation: {
-                id: this.editForm.controls['gas_station_id'].value
-            },
+            role: role,
+            gasStation:  gas_station,
             firstName: this.editForm.controls['firstName'].value,
             lastName: this.editForm.controls['lastName'].value,
             email: this.editForm.controls['email'].value,
             username: this.editForm.controls['username'].value,
             password: this.editForm.controls['password'].value,
             isActivated: this.editForm.controls['isActivated'].value,
+            isDeleted: false,
+            createdAt: moment(now()).format('Y-M-D H:mm:s'),
+            updatedAt: moment(now()).format('Y-M-D H:mm:s'),
         }
     }
 
@@ -248,19 +253,16 @@ export class UEditComponent implements OnInit {
         if (this.editForm.valid) {
             this.loading = true;
             this.updateFormValues();
-            console.log(this.user);
             if (this.user) {
                 this.userService.updateUser(this.user).subscribe(
                     (data) => {
                         if (data) {
-                            console.log(data);
-                            this.successSwal.fire().then(()=>{
+                            this.successSwal.fire().then(() => {
                                 this.router.navigate(['users-access/users'])
                             });
                         }
                     },
                     (error: string) => {
-
                         this.errorSwal.fire().then((r) => {
                             this.error = error;
                             console.log(error);

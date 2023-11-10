@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {IFormType} from "../../../../core/interfaces/formType";
-import {IUserSubmit} from "../../../../core/interfaces/user";
+import {IUser} from "../../../../core/interfaces/user";
 import {EventType} from "../../../../core/constants/events";
 import {EventService} from "../../../../core/service/event.service";
 import {UserService} from "../../../../core/service/user.service";
@@ -12,6 +12,8 @@ import {RoleService} from "../../../../core/service/role.service";
 import {Role} from "../../../../core/interfaces/role";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
+import * as moment from "moment";
+import {now} from "moment";
 
 @Component({
     selector: 'app-u-add',
@@ -21,20 +23,19 @@ import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
 export class UAddComponent implements OnInit {
 
     @Input()
-    user: IUserSubmit = {
+    user: IUser = {
         id: 0,
-        role: {
-            id: 0
-        },
-        gasStation: {
-            id: 0
-        },
+        role: null,
+        gasStation: null,
         firstName: "",
         lastName: "",
         email: "",
         username: "",
         password: "",
         isActivated: false,
+        isDeleted: false,
+        createdAt: "",
+        updatedAt: "",
     }
 
     @ViewChild('successSwal')
@@ -83,7 +84,7 @@ export class UAddComponent implements OnInit {
                 input: 'role_id',
                 label: 'Rôle',
                 type: InputPropsTypesEnum.S,
-                value: this.user.role.id,
+                value: this.user.role?.id,
                 joinTable: this.roleList,
                 joinTableId: 'id',
                 joinTableIdLabel: 'libelle'
@@ -92,7 +93,7 @@ export class UAddComponent implements OnInit {
                 input: 'gas_station_id',
                 label: 'Station',
                 type: InputPropsTypesEnum.S,
-                value: this.user.gasStation.id,
+                value: this.user.gasStation?.id,
                 joinTable: this.gasStationList,
                 joinTableId: 'id',
                 joinTableIdLabel: 'libelle'
@@ -179,18 +180,17 @@ export class UAddComponent implements OnInit {
     private updateFormValues() {
         this.user = {
             id: this.addForm.controls['id'].value,
-            role: {
-                id: this.addForm.controls['role_id'].value
-            },
-            gasStation: {
-                id: this.addForm.controls['gas_station_id'].value
-            },
+            role: this.addForm.controls['role_id'].value,
+            gasStation: this.addForm.controls['gas_station_id'].value,
             firstName: this.addForm.controls['firstName'].value,
             lastName: this.addForm.controls['lastName'].value,
             email: this.addForm.controls['email'].value,
             username: this.addForm.controls['username'].value,
             password: this.addForm.controls['password'].value,
             isActivated: this.addForm.controls['isActivated'].value,
+            isDeleted: false,
+            createdAt:moment(now()).format('d MMM YYYY'),
+            updatedAt:moment(now()).format('d MMM YYYY'),
         }
     }
 
