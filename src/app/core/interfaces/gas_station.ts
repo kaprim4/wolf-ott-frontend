@@ -4,9 +4,9 @@ import {City} from "./city";
 
 export interface GasStation {
     id: number;
-    company: Company | null;
-    supervisor: Supervisor | null;
-    city: City;
+    company: any;
+    supervisor: any;
+    city: any;
     code_sap: string;
     libelle: string;
     zip_code: string;
@@ -18,5 +18,5 @@ export interface GasStation {
     createdAt: string;
     updatedAt: string;
 
-    [key: string]: string | Company | Supervisor | City | number | boolean | null;
+    [key: string]: string | any | number | boolean;
 }

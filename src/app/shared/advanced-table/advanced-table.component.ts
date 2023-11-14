@@ -17,6 +17,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {AdvancedTableService} from './advanced-table.service';
 import {NgbSortableHeaderDirective, SortEvent} from './sortable.directive';
 import {TokenService} from "../../core/service/token.service";
+import {ActivatedRoute} from "@angular/router";
 
 
 export interface Column {
@@ -46,8 +47,6 @@ export class AdvancedTableComponent implements OnInit, AfterViewChecked {
     collectionSize: number = this.tableData.length;
     selectAll: boolean = false;
     isSelected: boolean[] = [];
-    token: string = ''
-    @Input() entity: string = '';
 
     @Output() search = new EventEmitter<string>();
     @Output() sort = new EventEmitter<SortEvent>();
@@ -58,11 +57,10 @@ export class AdvancedTableComponent implements OnInit, AfterViewChecked {
 
     constructor(
         public service: AdvancedTableService,
-        private tokenService: TokenService,
         private sanitizer: DomSanitizer,
-        private componentFactoryResolver: ComponentFactoryResolver
+        private componentFactoryResolver: ComponentFactoryResolver,
+        private activated: ActivatedRoute,
     ) {
-        this.token = this.tokenService.getToken();
     }
 
     ngAfterViewChecked(): void {
@@ -73,7 +71,6 @@ export class AdvancedTableComponent implements OnInit, AfterViewChecked {
         for (let i = 0; i < this.tableData.length; i++) {
             this.isSelected[i] = false;
         }
-        console.log("entity: ",this.entity)
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -133,9 +130,5 @@ export class AdvancedTableComponent implements OnInit, AfterViewChecked {
     selectRow(index: number): void {
         this.isSelected[index] = !this.isSelected[index];
         this.selectAll = (this.isSelected.filter(x => x).length === this.tableData.length);
-    }
-
-    onSubmit() {
-        return confirm('Voulez vous procèder à la suppression de cet entrée ?');
     }
 }

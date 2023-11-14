@@ -1,5 +1,23 @@
 <div class="row">
+    <div class="col-xl-3 col-md-6">
+        <app-statistics-widget3 title="Tendance globale" [count]="gasStationList.length" [startVal]="0" variant="primary" element="station" icon="fas fa-gas-pump">
+        </app-statistics-widget3>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-statistics-widget3 title="Total Bons saisis ce mois" [count]="8" [startVal]="0" variant="success" element="bon" icon="fas fa-money-bill-wave">
+        </app-statistics-widget3>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-statistics-widget3 title="KPI Bons" [count]="7200" [startVal]="0" variant="warning" element="DH" icon="fas fa-coins">
+        </app-statistics-widget3>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <app-statistics-widget3 title="Daily Sales" [count]="1254" [startVal]="1200" variant="purple" element="station" icon="fas fa-gas-pump">
+        </app-statistics-widget3>
+    </div>
+</div>
 
+<div class="row">
     <div class="col-xl-3 col-md-6">
         <app-statistics-widget1 title="Total Revenue" [stats]="256" subTitle="Revenue today" color="#f05050"
             [progress]="58"></app-statistics-widget1>

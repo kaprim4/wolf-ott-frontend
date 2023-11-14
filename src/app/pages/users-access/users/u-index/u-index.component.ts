@@ -12,6 +12,8 @@ import {Column} from 'src/app/shared/advanced-table/advanced-table.component';
 import {IUser} from "../../../../core/interfaces/user";
 import * as moment from 'moment';
 import {IFormType} from "../../../../core/interfaces/formType";
+import {GasStation} from "../../../../core/interfaces/gas_station";
+import {Role} from "../../../../core/interfaces/role";
 
 moment.locale('fr');
 
@@ -92,7 +94,7 @@ export class UIndexComponent implements OnInit {
         ];
     }
 
-    compare(v1: string | number, v2: string | number): any {
+    compare(v1: number | string | GasStation | Role | boolean, v2: number | string | GasStation | Role | boolean): any {
         return v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
     }
 
@@ -100,10 +102,10 @@ export class UIndexComponent implements OnInit {
         if (event.direction === '') {
             this._fetchData();
         } else {
-            /*this.records = [...this.records].sort((a, b) => {
+            this.records = [...this.records].sort((a, b) => {
                 const res = this.compare(a[event.column], b[event.column]);
                 return event.direction === 'asc' ? res : -res;
-            });*/
+            });
         }
     }
 

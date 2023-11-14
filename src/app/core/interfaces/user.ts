@@ -8,13 +8,13 @@ export interface IUser {
     username: string;
     password: string;
     email: string;
-    role: Role | null;
-    gasStation: GasStation | null;
+    role: any;
+    gasStation: any;
     isActivated: boolean;
     isDeleted: boolean;
     createdAt: string;
     updatedAt: string;
-    [key: string]: number | string | GasStation | Role | null | boolean;
+    [key: string]: number | string | any | boolean;
 }
 
 export interface ITokenUser {

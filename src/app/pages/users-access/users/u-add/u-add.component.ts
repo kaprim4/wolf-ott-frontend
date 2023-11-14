@@ -16,7 +16,7 @@ import * as moment from "moment";
 import {now} from "moment";
 
 @Component({
-    selector: 'app-u-add',
+    selector: 'app-r-add',
     templateUrl: './u-add.component.html',
     styleUrls: ['./u-add.component.scss']
 })
@@ -61,7 +61,7 @@ export class UAddComponent implements OnInit {
     title: string = 'Nouvelle entrée' + (this.entityElm.entity ? ' (' + this.entityElm.label + ')' : '');
     gasStationList: GasStation[] = [];
     roleList: Role[] = [];
-    userprops: InputProps[] = [];
+    objectProps: InputProps[] = [];
 
     addForm: FormGroup = this.fb.group({
         id: [this.user.id],
@@ -79,7 +79,7 @@ export class UAddComponent implements OnInit {
     loading: boolean = false;
 
     initFieldsConfig(): void {
-        this.userprops = [
+        this.objectProps = [
             {
                 input: 'role_id',
                 label: 'Rôle',
@@ -189,8 +189,8 @@ export class UAddComponent implements OnInit {
             password: this.addForm.controls['password'].value,
             isActivated: this.addForm.controls['isActivated'].value,
             isDeleted: false,
-            createdAt:moment(now()).format('d MMM YYYY'),
-            updatedAt:moment(now()).format('d MMM YYYY'),
+            createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
+            updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
         }
     }
 
@@ -203,7 +203,8 @@ export class UAddComponent implements OnInit {
             title: "Liste des utilisateurs",
             breadCrumbItems: [
                 {label: 'Utilisateurs & Accès', path: '.'},
-                {label: 'Liste des utilisateurs', path: '.', active: true}
+                {label: 'Liste des utilisateurs', path: '.', active: true},
+                {label: 'Ajouter un utilisateur', path: '.', active: true}
             ]
         });
         this._fetchGasStationData();
@@ -222,7 +223,7 @@ export class UAddComponent implements OnInit {
                         if (data) {
                             console.log(data);
                             this.successSwal.fire().then(() => {
-                                this.router.navigate(['users-access/users'])
+                                this.router.navigate(['users-access/' + this.entityElm.entity + 's'])
                             });
                         }
                     },

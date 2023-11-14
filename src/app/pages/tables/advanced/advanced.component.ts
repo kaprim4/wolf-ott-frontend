@@ -127,7 +127,6 @@ export class TableAdvancedComponent implements OnInit {
             this._fetchData();
         } else {
             let updatedData = EMPLOYEES;
-
             //  filter
             updatedData = updatedData.filter(record => this.matches(record, searchTerm));
             this.records = updatedData;

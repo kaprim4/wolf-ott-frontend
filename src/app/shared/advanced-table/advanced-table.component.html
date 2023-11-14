@@ -49,8 +49,7 @@
         <tr *ngIf="!isSortable">
             <th *ngIf="hasRowSelection" class="row_select" style="width: 20px;">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate"
-                           [checked]="selectAll" [indeterminate]="checkIntermediate()" (change)="selectAllRow($event)">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate" [checked]="selectAll" [indeterminate]="checkIntermediate()" (change)="selectAllRow($event)">
                 </div>
             </th>
             <th *ngFor="let column of columns" [style.width.px]="column.width" class="text-capitalize">
@@ -63,9 +62,7 @@
             [class.selected]="isSelected[i+((service.page-1) * service.pageSize)]">
             <td *ngIf="hasRowSelection">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox"
-                           [checked]="isSelected[i+((service.page-1) * service.pageSize)]" value=""
-                           id="flexCheckIndeterminate" (change)="selectRow(i+((service.page-1) * service.pageSize))">
+                    <input class="form-check-input" type="checkbox" [checked]="isSelected[i+((service.page-1) * service.pageSize)]" value="" id="flexCheckIndeterminate" (change)="selectRow(i+((service.page-1) * service.pageSize))" />
                 </div>
             </td>
             <td *ngFor="let column of columns">
@@ -74,17 +71,12 @@
             <td>
                 <div class="align-content-center">
                     <div class="hstack gap-2">
-                        <a [routerLink]="['edit', record.id]"
-                           class="btn btn-primary btn-xs waves-effect waves-light ms-1 fs-6" title="Modifier">
+                        <a [routerLink]="['edit', record.id]" class="btn btn-purple btn-xs waves-effect waves-light ms-1 fs-6" title="Modifier">
                             <i class="fas fa-edit fs-6 me-1"></i> Modifier
                         </a>
-                        <form class="d-inline" method="post" [action]="['delete', record.id]" (ngSubmit)="onSubmit()">
-                            <input type="hidden" name="_entity" value="{{entity}}">
-                            <input type="hidden" name="_token" value="{{token}}">
-                            <button class="submit btn btn-danger btn-xs waves-effect waves-light ms-1 fs-6">
-                                <i class="fas fa-trash-alt fs-6 me-1"></i> Supprimer
-                            </button>
-                        </form>
+                        <a [routerLink]="['delete', record.id]" class="btn btn-danger btn-xs waves-effect waves-light ms-1 fs-6" title="Modifier">
+                            <i class="fas fa-trash-alt fs-6 me-1"></i> Supprimer
+                        </a>
                     </div>
                 </div>
             </td>

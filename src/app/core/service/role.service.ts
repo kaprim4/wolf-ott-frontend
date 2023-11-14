@@ -1,36 +1,22 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {TokenService} from "./token.service";
 import {Role} from "../interfaces/role";
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class RoleService {
 
     private apiServerUrl = environment.apiBaseUrl;
 
     constructor(
-        private http: HttpClient,
-        private tokenService: TokenService
-    ) {
+        private http: HttpClient
+    ) { }
 
-    }
-
-    public getRoles(): Observable<Role[]> | null {
-            if (this.tokenService.isLogged() && this.tokenService.getToken()) {
-                return this.http.get<Role[]>(
-                    `${this.apiServerUrl}/api/v1/roles/all`,
-                    {
-                        headers:{
-                            Authorization: `Bearer ${this.tokenService.getToken()}`
-                        }
-                    }
-                );
-            }
-        return null;
+    public getRoles(): Observable<Role[]> {
+        return this.http.get<Role[]>(`${this.apiServerUrl}/api/v1/roles/all`);
     }
 
     public getRole(id: number): Observable<Role> {

@@ -1,13 +1,12 @@
-import {Region} from "./region";
 
 export interface City {
     id: number;
-    region: Region | null;
+    region: any;
     libelle: string;
     isActivated: boolean;
     isDeleted: boolean;
     createdAt: string;
     updatedAt: string;
 
-    [key: string]: string | Region | number | boolean | null;
+    [key: string]: string | any | number | boolean;
 }

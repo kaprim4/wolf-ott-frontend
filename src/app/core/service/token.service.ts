@@ -39,4 +39,12 @@ export class TokenService {
     getPayload() {
         return jwtDecode<ITokenUser>(this.getToken());
     }
+
+    tokenExpired() {
+        if(this.isLogged()){
+            const expiry = (JSON.parse(atob(this.getToken().split('.')[1]))).exp;
+            return (Math.floor((new Date).getTime() / 1000)) >= expiry;
+        }
+        return false;
+    }
 }

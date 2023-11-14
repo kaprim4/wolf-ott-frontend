@@ -17,14 +17,15 @@ export class UserService {
         private http: HttpClient,
         private authService: AuthenticationService,
         private tokenService: TokenService,
-    ) { }
+    ) {
+    }
 
     public getUsers(): Observable<IUser[]> | null {
         if (this.tokenService.isLogged() && this.tokenService.getToken()) {
             return this.http.get<IUser[]>(
                 `${this.apiServerUrl}/api/v1/users/all`,
                 {
-                    headers:{
+                    headers: {
                         Authorization: `Bearer ${this.tokenService.getToken()}`
                     }
                 }
@@ -45,7 +46,7 @@ export class UserService {
         return this.http.put<IUser>(`${this.apiServerUrl}/api/v1/users/update`, user1);
     }
 
-    public deleteUser(id_user: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiServerUrl}/api/v1/users/delete/${id_user}`);
+    public deleteUser(id: number): Observable<void> {
+        return this.http.delete<void>(`${this.apiServerUrl}/api/v1/users/delete/${id}`);
     }
 }

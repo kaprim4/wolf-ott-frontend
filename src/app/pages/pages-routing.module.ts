@@ -3,48 +3,69 @@ import {RouterModule, Routes} from '@angular/router';
 
 const routes: Routes = [
     {
-        path: 'users-access',
-        loadChildren: () => import('./users-access/users-access.module').then(m => m.UsersAccessModule)
+        path: 'dashboard',
+        loadChildren: () => import('./dashboards/dashboards.module')
+            .then(m => m.DashboardsModule)
     },
     {
-        path: 'dashboard',
-        loadChildren: () => import('./dashboards/dashboards.module').then(m => m.DashboardsModule)
+        path: 'vouchers',
+        loadChildren: () => import('./vouchers/vouchers.module')
+            .then(m => m.VouchersModule)
+    },
+    {
+        path: 'dictionnary',
+        loadChildren: () => import('./dictionnary/dictionnary.module')
+            .then(m => m.DictionnaryModule)
+    },
+    {
+        path: 'users-access',
+        loadChildren: () => import('./users-access/users-access.module')
+            .then(m => m.UsersAccessModule)
     },
     {
         path: 'pages',
-        loadChildren: () => import('./extra-pages/extra-pages.module').then(m => m.ExtraPagesModule)
+        loadChildren: () => import('./extra-pages/extra-pages.module')
+            .then(m => m.ExtraPagesModule)
     },
     {
         path: 'base-ui',
-        loadChildren: () => import('./ui/base-ui/base-ui.module').then(m => m.BaseUiModule)
+        loadChildren: () => import('./ui/base-ui/base-ui.module')
+            .then(m => m.BaseUiModule)
     },
     {
         path: 'extended-ui',
-        loadChildren: () => import('./ui/extended-ui/extended-ui.module').then(m => m.ExtendedUiModule)
+        loadChildren: () => import('./ui/extended-ui/extended-ui.module')
+            .then(m => m.ExtendedUiModule)
     },
     {
         path: 'forms',
-        loadChildren: () => import('./forms/forms.module').then(m => m.FormModule)
+        loadChildren: () => import('./forms/forms.module')
+            .then(m => m.FormModule)
     },
     {
         path: 'icons',
-        loadChildren: () => import('./icons/icons.module').then(m => m.IconsModule)
+        loadChildren: () => import('./icons/icons.module')
+            .then(m => m.IconsModule)
     },
     {
         path: 'tables',
-        loadChildren: () => import('./tables/tables.module').then(m => m.TablesModule)
+        loadChildren: () => import('./tables/tables.module')
+            .then(m => m.TablesModule)
     },
     {
         path: 'charts',
-        loadChildren: () => import('./charts/charts.module').then(m => m.ChartModule)
+        loadChildren: () => import('./charts/charts.module')
+            .then(m => m.ChartModule)
     },
     {
         path: 'maps',
-        loadChildren: () => import('./maps/maps.module').then(m => m.MapsModule)
+        loadChildren: () => import('./maps/maps.module')
+            .then(m => m.MapsModule)
     },
     {
         path: 'widgets',
-        loadChildren: () => import('./ui/widgets/widgets.module').then(m => m.WidgetsModule)
+        loadChildren: () => import('./ui/widgets/widgets.module')
+            .then(m => m.WidgetsModule)
     }
 ];
 

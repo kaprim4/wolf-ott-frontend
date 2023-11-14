@@ -23,7 +23,7 @@
                 <!-- table start -->
                 <app-advanced-table [tableData]="records" [columns]="columns" [pagination]="true"
                              [pageSizeOptions]="pageSizeOptions" [hasRowSelection]="true" [isSearchable]="true"
-                             (search)="searchData($event)" [isSortable]="true" (sort)="onSort($event)" [entity]="entityElm.entity">
+                             (search)="searchData($event)" [isSortable]="true" (sort)="onSort($event)">
                 </app-advanced-table>
             </div>
             <!-- end card body-->

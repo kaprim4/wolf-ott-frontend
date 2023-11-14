@@ -14,6 +14,8 @@ import {MESSAGES, PROJECTS} from './data';
 import {GasStationService} from "../../../core/service/gas-station.service";
 import {AuthenticationService} from "../../../core/service/auth.service";
 import {TokenService} from "../../../core/service/token.service";
+import {Region} from "../../../core/interfaces/region";
+import {GasStation} from "../../../core/interfaces/gas_station";
 
 @Component({
     selector: 'app-dashboard-1',
@@ -24,11 +26,13 @@ export class DashboardOneComponent implements OnInit {
 
     messages: Message[] = [];
     recentProjects: Project[] = [];
+    gasStationList: GasStation[] = [];
 
     constructor(
         private eventService: EventService,
         private authService: AuthenticationService,
-        private tokenService: TokenService
+        private tokenService: TokenService,
+        private gasStationService: GasStationService
     ) {
     }
 
@@ -42,15 +46,26 @@ export class DashboardOneComponent implements OnInit {
                 ]
             }
         );
+        this._fetchGasStationData();
         this._fetchData();
     }
 
-    /**
-     * fetches data
-     */
     _fetchData(): void {
         this.messages = MESSAGES;
         this.recentProjects = PROJECTS;
+    }
+
+    private _fetchGasStationData() {
+        this.gasStationService.getGasStations()?.subscribe(
+            (data) => {
+                if (data) {
+                    data.map((gasStation:GasStation, index:number)=>{
+                        if(gasStation.company.id == 2)
+                            this.gasStationList.push(gasStation);
+                    })
+                }
+            }
+        );
     }
 
 }

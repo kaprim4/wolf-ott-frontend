@@ -59,7 +59,7 @@ export class UEditComponent implements OnInit {
     title: string = 'Modifier cette entrée' + (this.entityElm.entity ? ' (' + this.entityElm.label + ')' : '');
     gasStationList: GasStation[] = [];
     roleList: Role[] = [];
-    userprops: InputProps[] = [];
+    objectProps: InputProps[] = [];
 
     editForm: FormGroup = this.fb.group({
         id: [this.user.id],
@@ -77,7 +77,7 @@ export class UEditComponent implements OnInit {
     loading: boolean = false;
 
     initFieldsConfig(): void {
-        this.userprops = [
+        this.objectProps = [
             {
                 input: 'role_id',
                 label: 'Rôle',
@@ -204,31 +204,6 @@ export class UEditComponent implements OnInit {
         );
     }
 
-    private updateFormValues() {
-        var role = null;
-        var gas_station = null;
-        this.roleService.getRole(this.editForm.controls['role_id'].value).subscribe((data)=>{
-            role = data;
-        });
-        this.gasStationService.getGasStation(this.editForm.controls['gas_station_id'].value).subscribe((data)=>{
-            gas_station = data;
-        });
-        this.user = {
-            id: this.editForm.controls['id'].value,
-            role: role,
-            gasStation:  gas_station,
-            firstName: this.editForm.controls['firstName'].value,
-            lastName: this.editForm.controls['lastName'].value,
-            email: this.editForm.controls['email'].value,
-            username: this.editForm.controls['username'].value,
-            password: this.editForm.controls['password'].value,
-            isActivated: this.editForm.controls['isActivated'].value,
-            isDeleted: false,
-            createdAt: moment(now()).format('Y-M-D H:mm:s'),
-            updatedAt: moment(now()).format('Y-M-D H:mm:s'),
-        }
-    }
-
     get formValues() {
         return this.editForm.controls;
     }
@@ -252,29 +227,53 @@ export class UEditComponent implements OnInit {
         this.formSubmitted = true;
         if (this.editForm.valid) {
             this.loading = true;
-            this.updateFormValues();
-            if (this.user) {
-                this.userService.updateUser(this.user).subscribe(
-                    (data) => {
-                        if (data) {
-                            this.successSwal.fire().then(() => {
-                                this.router.navigate(['users-access/users'])
-                            });
+            let role: Role | null = null;
+            let gas_station: GasStation | null = null;
+            this.roleService.getRole(this.editForm.controls['role_id'].value).subscribe((r) => {
+                role = r;
+                if (role) {
+                    this.gasStationService.getGasStation(this.editForm.controls['gas_station_id'].value).subscribe((g) => {
+                        gas_station = g;
+                        if (gas_station) {
+                            this.user = {
+                                id: this.editForm.controls['id'].value,
+                                role: role,
+                                gasStation: gas_station,
+                                firstName: this.editForm.controls['firstName'].value,
+                                lastName: this.editForm.controls['lastName'].value,
+                                email: this.editForm.controls['email'].value,
+                                username: this.editForm.controls['username'].value,
+                                password: this.editForm.controls['password'].value,
+                                isActivated: this.editForm.controls['isActivated'].value,
+                                isDeleted: false,
+                                createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
+                                updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
+                            }
+                            this.userService.updateUser(this.user).subscribe(
+                                (data) => {
+                                    if (data) {
+                                        this.successSwal.fire().then(() => {
+                                            this.router.navigate(['users-access/' + this.entityElm.entity + 's'])
+                                        });
+                                    }
+                                },
+                                (error: string) => {
+                                    this.errorSwal.fire().then((r) => {
+                                        this.error = error;
+                                        console.log(error);
+                                    });
+                                },
+                                (): void => {
+                                    this.loading = false;
+                                }
+                            )
+                            console.log(this.user)
+                        } else {
+                            this.errorSwal.fire().then(r => this.loading = false);
                         }
-                    },
-                    (error: string) => {
-                        this.errorSwal.fire().then((r) => {
-                            this.error = error;
-                            console.log(error);
-                        });
-                    },
-                    (): void => {
-                        this.loading = false;
-                    }
-                )
-            } else {
-                this.errorSwal.fire().then(r => this.loading = false);
-            }
+                    });
+                }
+            });
         }
     }
 }
