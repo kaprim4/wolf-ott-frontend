@@ -65,14 +65,12 @@
                         </h4>
                     </li>
                     <ng-container *ngIf="!menu.isTitle">
-
                         <!-- menu item without any child -->
                         <ng-container *ngIf="!hasSubmenu(menu)">
                             <ng-container
                                 *ngTemplateOutlet="MenuItem;context:{menu: menu, linkClassName: 'side-nav-link-ref'}">
                             </ng-container>
                         </ng-container>
-
                         <!-- menu item with child -->
                         <ng-container *ngIf="hasSubmenu(menu)">
                             <ng-container

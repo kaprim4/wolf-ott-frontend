@@ -9,6 +9,8 @@ import { PdfGenerationComponent } from './pdf-generation/pdf-generation.componen
 import {AdvancedTableModule} from "../../shared/advanced-table/advanced-table.module";
 import {NgbAlertModule} from "@ng-bootstrap/ng-bootstrap";
 import {UiModule} from "../../shared/ui/ui.module";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { GrabVouchersComponent } from './grab-vouchers/grab-vouchers.component';
 
 
 @NgModule({
@@ -16,14 +18,17 @@ import {UiModule} from "../../shared/ui/ui.module";
     VoucherTypeComponent,
     VoucherConsultComponent,
     EndDayComponent,
-    PdfGenerationComponent
+    PdfGenerationComponent,
+    GrabVouchersComponent
   ],
     imports: [
         CommonModule,
         VouchersRoutingModule,
         AdvancedTableModule,
         NgbAlertModule,
-        UiModule
+        UiModule,
+        FormsModule,
+        ReactiveFormsModule
     ]
 })
 export class VouchersModule { }

@@ -42,7 +42,7 @@
                     {{column.label}}
                 </th>
             </ng-container>
-            <th class="text-capitalize">
+            <th *ngIf="hasActions" class="text-capitalize">
                 Actions
             </th>
         </tr>
@@ -68,7 +68,7 @@
             <td *ngFor="let column of columns">
                 <div [innerHtml]="callFormatter(column,record)"></div>
             </td>
-            <td>
+            <td *ngIf="hasActions">
                 <div class="align-content-center">
                     <div class="hstack gap-2">
                         <a [routerLink]="['edit', record.id]" class="btn btn-purple btn-xs waves-effect waves-light ms-1 fs-6" title="Modifier">

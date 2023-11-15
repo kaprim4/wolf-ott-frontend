@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {EventService} from "../../../core/service/event.service";
 import {EventType} from "../../../core/constants/events";
-import {Role} from "../../../core/interfaces/role";
 import {Column} from "../../../shared/advanced-table/advanced-table.component";
 import {IFormType} from "../../../core/interfaces/formType";
 import * as moment from "moment/moment";
 import {SortEvent} from "../../../shared/advanced-table/sortable.directive";
 import {RoleService} from "../../../core/service/role.service";
+import {GasStationTempService} from "../../../core/service/gas-station-temp.service";
+import {GasStationTemp} from "../../../core/interfaces/gas_station_temp";
 
 @Component({
     selector: 'app-voucher-consult',
@@ -15,19 +16,20 @@ import {RoleService} from "../../../core/service/role.service";
 })
 export class VoucherConsultComponent implements OnInit {
 
-    records: Role[] = [];
+    records: GasStationTemp[] = [];
     columns: Column[] = [];
     pageSizeOptions: number[] = [10, 25, 50, 100];
     loading: boolean = false;
     error: string = '';
     entityElm: IFormType = {
-        label: 'Rôle',
-        entity: 'role'
+        label: 'Bon temporaire',
+        entity: 'gas-station-temp'
     }
 
     constructor(
         private eventService: EventService,
         private roleService: RoleService,
+        private gasStationTempService: GasStationTempService,
     ) {
     }
 
@@ -44,8 +46,8 @@ export class VoucherConsultComponent implements OnInit {
     }
 
     _fetchData(): void {
-        this.roleService.getRoles()?.subscribe(
-            (data: Role[]) => {
+        this.gasStationTempService.getGasStationTemps()?.subscribe(
+            (data: GasStationTemp[]) => {
                 console.log("data", data);
                 if (data && data.length > 0) {
                     this.records = data;
@@ -59,24 +61,32 @@ export class VoucherConsultComponent implements OnInit {
 
     initTableConfig(): void {
         this.columns = [
-            {name: 'id', label: '#', formatter: (record: Role) => record.id},
-            {name: 'libelle', label: 'Libelle', formatter: (record: Role) => record.libelle},
-            {name: 'alias', label: 'Alias', formatter: (record: Role) => record.alias},
-            {
-                name: 'isActivated', label: 'Activé ?', formatter: (record: Role) => {
+            {name: 'id_bordereau', label: '#', formatter: (record: GasStationTemp) => record.id_bordereau},
+            {name: 'zzclient_temp', label: 'Code Client', formatter: (record: GasStationTemp) => record.zzclient_temp},
+            {name: 'zztype_bon_temp', label: 'Type Bon', formatter: (record: GasStationTemp) => record.zztype_bon_temp},
+            {name: 'zznum_bord_temp', label: 'Numéro Bordereau', formatter: (record: GasStationTemp) => record.zznum_bord_temp},
+            {name: 'zznum_bon_temp', label: 'Numéro Bon', formatter: (record: GasStationTemp) => record.zznum_bon_temp},
+            {name: 'zzmnt_produit_temp', label: 'Valeur', formatter: (record: GasStationTemp) => record.zzmnt_produit_temp},
+            {name: 'zznum_vehicule_temp', label: 'Numéro Véhicule', formatter: (record: GasStationTemp) => record.zznum_vehicule_temp},
+            {name: 'zzdate_bon_temp', label: 'Date Journée', formatter: (record: GasStationTemp) => {
+                    return moment(record.zzdate_bon_temp).format('D MMM YYYY')
+                }},
+
+            /*{
+                name: 'isActivated', label: 'Activé ?', formatter: (record: GasStationTemp) => {
                     return (record.isActivated ? '<span class="badge bg-success me-1">Oui</span>' : '<span class="badge bg-danger me-1">Non</span>')
                 }
             },
             {
-                name: 'isDeleted', label: 'Supprimé ?', formatter: (record: Role) => {
+                name: 'isDeleted', label: 'Supprimé ?', formatter: (record: GasStationTemp) => {
                     return (record.isDeleted ? '<span class="badge bg-success me-1">Oui</span>' : '<span class="badge bg-danger me-1">Non</span>')
                 }
             },
             {
-                name: 'createdAt', label: 'Créé le', formatter: (record: Role) => {
+                name: 'createdAt', label: 'Créé le', formatter: (record: GasStationTemp) => {
                     return moment(record.createdAt).format('d MMM YYYY')
                 }
-            }
+            }*/
         ];
     }
 
@@ -95,9 +105,14 @@ export class VoucherConsultComponent implements OnInit {
         }
     }
 
-    matches(row: Role, term: string) {
-        return row.libelle.toLowerCase().includes(term)
-            || row.alias.toLowerCase().includes(term);
+    matches(row: GasStationTemp, term: string) {
+        return row.zztype_bon_temp.toLowerCase().includes(term)
+            || row.zznum_bon_temp.toLowerCase().includes(term)
+            || row.zznum_vehicule_temp.toLowerCase().includes(term)
+            || row.zzmnt_produit_temp.toLowerCase().includes(term)
+            || row.zzdate_bon_temp.toLowerCase().includes(term)
+            || row.zznum_bord_temp.toLowerCase().includes(term)
+            || row.zzclient_temp.toLowerCase().includes(term);
     }
 
     /**

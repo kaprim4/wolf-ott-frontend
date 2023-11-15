@@ -8,12 +8,6 @@
                         ({{records.length}} entrée{{records.length > 1 ? "s" : ""}})
                     </p>
                 </h4>
-                <div class="flex-shrink-0">
-                    <a [routerLink]="['add']" class="btn btn-success btn-md">
-                        <i class="fas fa-plus-circle"></i>
-                        <span class="kt-hidden-mobile ms-1">Nouvelle entrée ({{entityElm.label}})</span>
-                    </a>
-                </div>
             </div>
             <div class="card-body">
                 <app-ui-preloader [display]="loading"></app-ui-preloader>
@@ -21,7 +15,7 @@
                     {{ error }}
                 </ngb-alert>
                 <!-- table start -->
-                <app-advanced-table [tableData]="records" [columns]="columns" [pagination]="true" [pageSizeOptions]="pageSizeOptions" [hasRowSelection]="true" [isSearchable]="true" (search)="searchData($event)" [isSortable]="true" (sort)="onSort($event)">
+                <app-advanced-table [tableData]="records" [columns]="columns" [pagination]="true" [pageSizeOptions]="pageSizeOptions" [hasRowSelection]="true" [isSearchable]="true" (search)="searchData($event)" [isSortable]="true" (sort)="onSort($event)" [hasActions]="false">
                 </app-advanced-table>
             </div>
             <!-- end card body-->

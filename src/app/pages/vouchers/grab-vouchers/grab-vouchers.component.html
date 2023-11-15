@@ -19,12 +19,21 @@
                         </ngb-alert>
                         <div id="{{entityElm.entity}}" class="row">
                             <div class="position-relative col-md-6 col-lg-4 mb-3" *ngFor="let prop of objectProps">
-                                <label for="{{entityElm.entity}}_{{prop.input}}" class="form-label">{{prop.label}}</label>
+                                <label for="{{entityElm.entity}}_{{prop.input}}"
+                                       class="form-label">{{prop.label}}</label>
+
                                 <input *ngIf="['text','email','password','hidden','date'].includes(prop.type)"
                                        class="form-control" type="{{prop.type}}"
-                                       id="{{entityElm.entity}}_{{prop.input}}" required i18n-placeholder
+                                       id="{{entityElm.entity}}_{{prop.input}}" i18n-placeholder
                                        placeholder="Entrez votre identifiant" formControlName="{{prop.input}}"
                                        [ngClass]="{'is-invalid':formSubmitted && formValues[prop.input].invalid}"/>
+
+                                <div *ngIf="['hidden'].includes(prop.type)">
+                                    <span class="badge bg-danger rounded-pill fs-5 mt-1" id="{{entityElm.entity}}_{{prop.input}}">
+                                    {{prop.value}}
+                                </span>
+                                </div>
+
                                 <div *ngIf="['checkbox'].includes(prop.type)" class="form-switch">
                                     <div class="form-check">
                                         <input type="checkbox" id="{{entityElm.entity}}_{{prop.input}}"
@@ -39,12 +48,17 @@
                                         facultative.
                                     </div>
                                 </div>
-                                <select *ngIf="['select'].includes(prop.type)" id="{{entityElm.entity}}_{{prop.input}}" class="form-control select2-basic form-select select2-hidden-accessible" formControlName="{{prop.input}}" [ngClass]="{'is-invalid':formSubmitted && formValues[prop.input].invalid}">
+
+                                <select *ngIf="['select'].includes(prop.type)" id="{{entityElm.entity}}_{{prop.input}}"
+                                        class="form-control select2-basic form-select select2-hidden-accessible"
+                                        formControlName="{{prop.input}}"
+                                        [ngClass]="{'is-invalid':formSubmitted && formValues[prop.input].invalid}">
                                     <option value="">Choisissez une option</option>
                                     <option *ngFor="let child of prop.joinTable" value="{{child.id}}">
                                         #{{child.id}} - {{child.libelle}}
                                     </option>
                                 </select>
+
                                 <div *ngIf="formSubmitted && formValues[prop.input].valid" class="valid-tooltip">
                                     Cela semble bon!
                                 </div>
@@ -63,6 +77,10 @@
                         <i class="las la-edit"></i>
                         <span class="kt-hidden-mobile"> Valider</span>
                     </button>
+                    <a [routerLink]="['../voucher-type']" class="btn btn-info float-end">
+                        <i class="las la-arrow-left"></i>
+                        <span class="kt-hidden-mobile">Retour à l'écran précédente</span>
+                    </a>
                 </div>
                 <!-- end card footer -->
                 <!-- end card -->
@@ -72,3 +90,31 @@
     </div>
     <!-- end row-->
 </div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">
+                    <i class="fas fa-user bg-soft-primary rounded-circle fs-4 p-1"></i> Liste ({{entityElm.label}})
+                    <p class="text-muted mb-0 mt-1 fs-6">
+                        ({{records.length}} entrée{{records.length > 1 ? "s" : ""}})
+                    </p>
+                </h4>
+            </div>
+            <div class="card-body">
+                <app-ui-preloader [display]="loading"></app-ui-preloader>
+                <ngb-alert [dismissible]="false" type="danger" *ngIf="error">
+                    {{ error }}
+                </ngb-alert>
+                <!-- table start -->
+                <app-advanced-table [tableData]="records" [columns]="columns" [pagination]="true" [pageSizeOptions]="pageSizeOptions" [hasRowSelection]="true" [isSearchable]="true" (search)="searchData($event)" [isSortable]="true" (sort)="onSort($event)" [hasActions]="false">
+                </app-advanced-table>
+            </div>
+            <!-- end card body-->
+        </div>
+        <!-- end card -->
+    </div>
+    <!-- end col-->
+</div>
+<!-- end row-->

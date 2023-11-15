@@ -47,6 +47,7 @@ export class AdvancedTableComponent implements OnInit, AfterViewChecked {
     collectionSize: number = this.tableData.length;
     selectAll: boolean = false;
     isSelected: boolean[] = [];
+    @Input() hasActions: boolean = true;
 
     @Output() search = new EventEmitter<string>();
     @Output() sort = new EventEmitter<SortEvent>();

@@ -17,4 +17,5 @@ export enum InputPropsTypesEnum {
     H = 'hidden',
     S = 'select',
     C = 'checkbox',
+    D = 'date',
 }
