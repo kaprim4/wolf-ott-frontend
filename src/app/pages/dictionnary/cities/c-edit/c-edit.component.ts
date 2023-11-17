@@ -10,9 +10,7 @@ import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import * as moment from "moment/moment";
 import {now} from "moment/moment";
-import {Supervisor} from "../../../../core/interfaces/supervisor";
 import {Region} from "../../../../core/interfaces/region";
-import {SupervisorService} from "../../../../core/service/supervisor.service";
 import {RegionService} from "../../../../core/service/region.service";
 
 @Component({

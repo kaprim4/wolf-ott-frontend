@@ -1,5 +1,3 @@
-import {GasStationService} from "../service/gas-station.service";
-
 export interface InputProps {
     input: string,
     label: string,

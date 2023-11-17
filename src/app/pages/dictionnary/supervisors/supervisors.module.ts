@@ -8,7 +8,6 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";
 import {SupervisorsRoutingModule} from "./supervisors-routing.module";
 import {SpEditComponent} from "./sp-edit/sp-edit.component";
-import {SpDeleteComponent} from "./sp-delete/sp-delete.component";
 import {SpAddComponent} from "./sp-add/sp-add.component";
 import {SpIndexComponent} from "./sp-index/sp-index.component";
 
@@ -17,7 +16,6 @@ import {SpIndexComponent} from "./sp-index/sp-index.component";
     declarations: [
         SpIndexComponent,
         SpAddComponent,
-        SpDeleteComponent,
         SpEditComponent
     ],
     imports: [

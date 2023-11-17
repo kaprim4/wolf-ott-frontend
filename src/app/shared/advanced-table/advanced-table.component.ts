@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {AdvancedTableService} from './advanced-table.service';
-import {NgbSortableHeaderDirective, SortEvent} from './sortable.directive';
+import {NgbSortableHeaderDirective, SortDirection, SortEvent} from './sortable.directive';
 import {TokenService} from "../../core/service/token.service";
 import {ActivatedRoute} from "@angular/router";
 
@@ -26,6 +26,11 @@ export interface Column {
     formatter: (a: any) => any | string;
     sort?: boolean;
     width?: number;
+}
+
+export interface DeleteEvent {
+    index: number;
+    id: number;
 }
 
 @Component({
@@ -47,11 +52,13 @@ export class AdvancedTableComponent implements OnInit, AfterViewChecked {
     collectionSize: number = this.tableData.length;
     selectAll: boolean = false;
     isSelected: boolean[] = [];
-    @Input() hasActions: boolean = true;
+    @Input() canEdit: boolean = true;
+    @Input() canDelete: boolean = true;
 
     @Output() search = new EventEmitter<string>();
     @Output() sort = new EventEmitter<SortEvent>();
     @Output() handleTableLoad = new EventEmitter<any>();
+    @Output() deleteRowEvent = new EventEmitter<DeleteEvent>();
 
     @ViewChildren(NgbSortableHeaderDirective) headers!: QueryList<NgbSortableHeaderDirective>;
     @ViewChildren('advancedTable') advancedTable!: any;
@@ -131,5 +138,9 @@ export class AdvancedTableComponent implements OnInit, AfterViewChecked {
     selectRow(index: number): void {
         this.isSelected[index] = !this.isSelected[index];
         this.selectAll = (this.isSelected.filter(x => x).length === this.tableData.length);
+    }
+
+    deleteRow({index, id}: DeleteEvent) {
+        this.deleteRowEvent.emit({index, id});
     }
 }

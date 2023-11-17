@@ -5,7 +5,6 @@ import {GasStationsRoutingModule} from './gas-stations-routing.module';
 import {GsIndexComponent} from './gs-index/gs-index.component';
 import {GsEditComponent} from './gs-edit/gs-edit.component';
 import {GsAddComponent} from './gs-add/gs-add.component';
-import {GsDeleteComponent} from './gs-delete/gs-delete.component';
 import {AdvancedTableModule} from "../../../shared/advanced-table/advanced-table.module";
 import {UiModule} from "../../../shared/ui/ui.module";
 import {NgbAlertModule} from "@ng-bootstrap/ng-bootstrap";
@@ -17,8 +16,7 @@ import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";
     declarations: [
         GsIndexComponent,
         GsEditComponent,
-        GsAddComponent,
-        GsDeleteComponent
+        GsAddComponent
     ],
     imports: [
         CommonModule,

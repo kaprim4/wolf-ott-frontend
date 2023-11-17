@@ -8,12 +8,13 @@ import {UserService} from "../../../../core/service/user.service";
 
 // types
 import {SortEvent} from 'src/app/shared/advanced-table/sortable.directive';
-import {Column} from 'src/app/shared/advanced-table/advanced-table.component';
+import {Column, DeleteEvent} from 'src/app/shared/advanced-table/advanced-table.component';
 import {IUser} from "../../../../core/interfaces/user";
 import * as moment from 'moment';
 import {IFormType} from "../../../../core/interfaces/formType";
 import {GasStation} from "../../../../core/interfaces/gas_station";
 import {Role} from "../../../../core/interfaces/role";
+import Swal from "sweetalert2";
 
 moment.locale('fr');
 
@@ -130,5 +131,52 @@ export class UIndexComponent implements OnInit {
             updatedData = updatedData.filter(record => this.matches(record, searchTerm));
             this.records = updatedData;
         }
+    }
+
+    deleteRow(deleteEvent: DeleteEvent) {
+        Swal.fire({
+            title: "Etes-vous sûr?",
+            text: "Voulez vous procèder à la suppression de cet entrée ?",
+            icon: "error",
+            showCancelButton: true,
+            confirmButtonColor: "#28bb4b",
+            cancelButtonColor: "#f34e4e",
+            confirmButtonText: "Oui, supprimez-le !"
+        }).then((re) => {
+            this.loading = true;
+            if (re.isConfirmed) {
+                if (deleteEvent.id) {
+                    this.userService.getUser(deleteEvent.id)?.subscribe(
+                        (data: IUser) => {
+                            if (data) {
+                                this.userService.deleteUser(data.id).subscribe(
+                                    () => {
+                                        Swal.fire({
+                                            title: "Succès!",
+                                            text: "Cette entrée a été supprimée avec succès.",
+                                            icon: "success"
+                                        }).then();
+                                    },
+                                    (error: string) => {
+                                        Swal.fire({
+                                            title: "Erreur!",
+                                            text: error,
+                                            icon: "error"
+                                        }).then();
+                                    },
+                                    (): void => {
+                                        this.records.splice(deleteEvent.index, 1);
+                                        this.loading = false;
+                                    }
+                                )
+                            }
+                        }
+                    );
+                } else {
+                    this.loading = false;
+                    this.error = this.entityElm.label + " introuvable.";
+                }
+            }
+        });
     }
 }

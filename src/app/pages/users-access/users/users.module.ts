@@ -7,7 +7,6 @@ import {AdvancedTableModule} from "../../../shared/advanced-table/advanced-table
 import {UiModule} from "../../../shared/ui/ui.module";
 import {NgbAlertModule} from "@ng-bootstrap/ng-bootstrap";
 import { UAddComponent } from './u-add/u-add.component';
-import { UDeleteComponent } from './u-delete/u-delete.component';
 import { UEditComponent } from './u-edit/u-edit.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";
@@ -17,7 +16,6 @@ import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";
     declarations: [
         UIndexComponent,
         UAddComponent,
-        UDeleteComponent,
         UEditComponent
     ],
     imports: [

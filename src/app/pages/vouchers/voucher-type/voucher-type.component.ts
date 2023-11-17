@@ -33,7 +33,8 @@ export class VoucherTypeComponent implements OnInit {
 
     standardForm: FormGroup = this.fb.group({
         voucherTypes_id: ['', Validators.required],
-        date: ['', Validators.required]
+        voucherDate: ['', Validators.required],
+        slipNumber: ['', Validators.required]
     });
     formSubmitted: boolean = false;
     error: string = '';
@@ -51,9 +52,18 @@ export class VoucherTypeComponent implements OnInit {
                 joinTableIdLabel: 'libelle'
             },
             {
-                input: 'date',
+                input: 'voucherDate',
                 label: 'Date Journée',
                 type: InputPropsTypesEnum.D,
+                value: '',
+                joinTable: [],
+                joinTableId: '',
+                joinTableIdLabel: ''
+            },
+            {
+                input: 'slipNumber',
+                label: 'Numéro Bordereau',
+                type: InputPropsTypesEnum.T,
                 value: '',
                 joinTable: [],
                 joinTableId: '',
@@ -97,8 +107,9 @@ export class VoucherTypeComponent implements OnInit {
             this.loading = true;
             this.router.navigate([
                 'vouchers/grab-vouchers', {
-                    voucherTypes_id: this.standardForm.controls['voucherTypes_id'].value,
-                    date: this.standardForm.controls['date'].value,
+                    voucherType_id: this.standardForm.controls['voucherTypes_id'].value,
+                    voucherDate: this.standardForm.controls['voucherDate'].value,
+                    slipNumber: this.standardForm.controls['slipNumber'].value,
                 }
             ]);
         }

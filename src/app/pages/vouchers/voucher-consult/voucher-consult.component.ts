@@ -6,8 +6,8 @@ import {IFormType} from "../../../core/interfaces/formType";
 import * as moment from "moment/moment";
 import {SortEvent} from "../../../shared/advanced-table/sortable.directive";
 import {RoleService} from "../../../core/service/role.service";
-import {GasStationTempService} from "../../../core/service/gas-station-temp.service";
-import {GasStationTemp} from "../../../core/interfaces/gas_station_temp";
+import {VoucherTemp} from "../../../core/interfaces/voucher";
+import {VoucherTempService} from "../../../core/service/voucher-temp.service";
 
 @Component({
     selector: 'app-voucher-consult',
@@ -16,7 +16,7 @@ import {GasStationTemp} from "../../../core/interfaces/gas_station_temp";
 })
 export class VoucherConsultComponent implements OnInit {
 
-    records: GasStationTemp[] = [];
+    records: VoucherTemp[] = [];
     columns: Column[] = [];
     pageSizeOptions: number[] = [10, 25, 50, 100];
     loading: boolean = false;
@@ -29,7 +29,7 @@ export class VoucherConsultComponent implements OnInit {
     constructor(
         private eventService: EventService,
         private roleService: RoleService,
-        private gasStationTempService: GasStationTempService,
+        private voucherTempService: VoucherTempService,
     ) {
     }
 
@@ -41,13 +41,14 @@ export class VoucherConsultComponent implements OnInit {
                 {label: 'Consulter les bons', path: '.', active: true}
             ]
         });
+        this.loading = true;
         this._fetchData();
         this.initTableConfig();
     }
 
     _fetchData(): void {
-        this.gasStationTempService.getGasStationTemps()?.subscribe(
-            (data: GasStationTemp[]) => {
+        this.voucherTempService.getVoucherTemps()?.subscribe(
+            (data: VoucherTemp[]) => {
                 console.log("data", data);
                 if (data && data.length > 0) {
                     this.records = data;
@@ -61,32 +62,31 @@ export class VoucherConsultComponent implements OnInit {
 
     initTableConfig(): void {
         this.columns = [
-            {name: 'id_bordereau', label: '#', formatter: (record: GasStationTemp) => record.id_bordereau},
-            {name: 'zzclient_temp', label: 'Code Client', formatter: (record: GasStationTemp) => record.zzclient_temp},
-            {name: 'zztype_bon_temp', label: 'Type Bon', formatter: (record: GasStationTemp) => record.zztype_bon_temp},
-            {name: 'zznum_bord_temp', label: 'Numéro Bordereau', formatter: (record: GasStationTemp) => record.zznum_bord_temp},
-            {name: 'zznum_bon_temp', label: 'Numéro Bon', formatter: (record: GasStationTemp) => record.zznum_bon_temp},
-            {name: 'zzmnt_produit_temp', label: 'Valeur', formatter: (record: GasStationTemp) => record.zzmnt_produit_temp},
-            {name: 'zznum_vehicule_temp', label: 'Numéro Véhicule', formatter: (record: GasStationTemp) => record.zznum_vehicule_temp},
-            {name: 'zzdate_bon_temp', label: 'Date Journée', formatter: (record: GasStationTemp) => {
-                    return moment(record.zzdate_bon_temp).format('D MMM YYYY')
-                }},
-
-            /*{
-                name: 'isActivated', label: 'Activé ?', formatter: (record: GasStationTemp) => {
-                    return (record.isActivated ? '<span class="badge bg-success me-1">Oui</span>' : '<span class="badge bg-danger me-1">Non</span>')
+            {name: 'id', label: '#', formatter: (record: VoucherTemp) => record.id},
+            {name: 'gasStation', label: 'Code Client', formatter: (record: VoucherTemp) => record.gasStation.libelle},
+            {name: 'voucherType', label: 'Type Bon', formatter: (record: VoucherTemp) => record.voucherType.libelle},
+            {
+                name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherTemp) => {
+                    return '<span class="badge bg-purple text-light fs-5 m-0">' + record.slipNumber + '<span>'
+                }
+            },
+            {name: 'voucherNumber', label: 'Numéro Bon', formatter: (record: VoucherTemp) => record.voucherNumber},
+            {name: 'voucherAmount', label: 'Valeur', formatter: (record: VoucherTemp) => record.voucherAmount},
+            {
+                name: 'vehiculeNumber',
+                label: 'Numéro Véhicule',
+                formatter: (record: VoucherTemp) => record.vehiculeNumber
+            },
+            {
+                name: 'voucherDate', label: 'Date Journée', formatter: (record: VoucherTemp) => {
+                    return moment(record.voucherDate).format('D MMM YYYY')
                 }
             },
             {
-                name: 'isDeleted', label: 'Supprimé ?', formatter: (record: GasStationTemp) => {
-                    return (record.isDeleted ? '<span class="badge bg-success me-1">Oui</span>' : '<span class="badge bg-danger me-1">Non</span>')
+                name: 'createdAt', label: 'Créé le', formatter: (record: VoucherTemp) => {
+                    return moment(record.createdAt).format('D MMM YYYY')
                 }
-            },
-            {
-                name: 'createdAt', label: 'Créé le', formatter: (record: GasStationTemp) => {
-                    return moment(record.createdAt).format('d MMM YYYY')
-                }
-            }*/
+            }
         ];
     }
 
@@ -105,14 +105,14 @@ export class VoucherConsultComponent implements OnInit {
         }
     }
 
-    matches(row: GasStationTemp, term: string) {
-        return row.zztype_bon_temp.toLowerCase().includes(term)
-            || row.zznum_bon_temp.toLowerCase().includes(term)
-            || row.zznum_vehicule_temp.toLowerCase().includes(term)
-            || row.zzmnt_produit_temp.toLowerCase().includes(term)
-            || row.zzdate_bon_temp.toLowerCase().includes(term)
-            || row.zznum_bord_temp.toLowerCase().includes(term)
-            || row.zzclient_temp.toLowerCase().includes(term);
+    matches(row: VoucherTemp, term: string) {
+        return row.gasStation?.libelle.toLowerCase().includes(term)
+            || row.voucherType?.libelle.toLowerCase().includes(term)
+            || row.slipNumber.toLowerCase().includes(term)
+            || row.voucherNumber.toLowerCase().includes(term)
+            || row.voucherAmount.toString().toLowerCase().includes(term)
+            || row.vehiculeNumber.toLowerCase().includes(term)
+            || row.voucherDate.toLowerCase().includes(term);
     }
 
     /**

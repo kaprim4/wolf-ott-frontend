@@ -8,7 +8,6 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";
 import {CompaniesRoutingModule} from "./companies-routing.module";
 import {CpEditComponent} from "./cp-edit/cp-edit.component";
-import {CpDeleteComponent} from "./cp-delete/cp-delete.component";
 import {CpAddComponent} from "./cp-add/cp-add.component";
 import {CpIndexComponent} from "./cp-index/cp-index.component";
 
@@ -17,7 +16,6 @@ import {CpIndexComponent} from "./cp-index/cp-index.component";
     declarations: [
         CpIndexComponent,
         CpAddComponent,
-        CpDeleteComponent,
         CpEditComponent
     ],
     imports: [

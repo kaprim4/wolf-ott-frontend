@@ -11,6 +11,7 @@ import {NgbAlertModule} from "@ng-bootstrap/ng-bootstrap";
 import {UiModule} from "../../shared/ui/ui.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { GrabVouchersComponent } from './grab-vouchers/grab-vouchers.component';
+import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { GrabVouchersComponent } from './grab-vouchers/grab-vouchers.component';
         NgbAlertModule,
         UiModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        SweetAlert2Module
     ]
 })
 export class VouchersModule { }

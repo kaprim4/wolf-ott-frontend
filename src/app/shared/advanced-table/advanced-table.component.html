@@ -42,14 +42,15 @@
                     {{column.label}}
                 </th>
             </ng-container>
-            <th *ngIf="hasActions" class="text-capitalize">
+            <th *ngIf="canEdit || canDelete" class="text-capitalize">
                 Actions
             </th>
         </tr>
         <tr *ngIf="!isSortable">
             <th *ngIf="hasRowSelection" class="row_select" style="width: 20px;">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate" [checked]="selectAll" [indeterminate]="checkIntermediate()" (change)="selectAllRow($event)">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate"
+                           [checked]="selectAll" [indeterminate]="checkIntermediate()" (change)="selectAllRow($event)">
                 </div>
             </th>
             <th *ngFor="let column of columns" [style.width.px]="column.width" class="text-capitalize">
@@ -58,25 +59,31 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let record of tableData | slice: (service.page-1) * service.pageSize : service.page * service.pageSize;let i=index"
+        <tr *ngFor="let record of tableData.reverse() | slice: (service.page-1) * service.pageSize : service.page * service.pageSize; let i=index"
             [class.selected]="isSelected[i+((service.page-1) * service.pageSize)]">
             <td *ngIf="hasRowSelection">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" [checked]="isSelected[i+((service.page-1) * service.pageSize)]" value="" id="flexCheckIndeterminate" (change)="selectRow(i+((service.page-1) * service.pageSize))" />
+                    <input class="form-check-input" type="checkbox"
+                           [checked]="isSelected[i+((service.page-1) * service.pageSize)]" value=""
+                           id="flexCheckIndeterminate" (change)="selectRow(i+((service.page-1) * service.pageSize))"/>
                 </div>
             </td>
             <td *ngFor="let column of columns">
                 <div [innerHtml]="callFormatter(column,record)"></div>
             </td>
-            <td *ngIf="hasActions">
+            <td *ngIf="canEdit || canDelete">
                 <div class="align-content-center">
                     <div class="hstack gap-2">
-                        <a [routerLink]="['edit', record.id]" class="btn btn-purple btn-xs waves-effect waves-light ms-1 fs-6" title="Modifier">
-                            <i class="fas fa-edit fs-6 me-1"></i> Modifier
-                        </a>
-                        <a [routerLink]="['delete', record.id]" class="btn btn-danger btn-xs waves-effect waves-light ms-1 fs-6" title="Modifier">
-                            <i class="fas fa-trash-alt fs-6 me-1"></i> Supprimer
-                        </a>
+                        <button *ngIf="canEdit" [routerLink]="['edit', record.id]" type="button" class="btn btn-purple btn-xs rounded-pill waves-effect waves-light">
+                            <span class="btn-label">
+                                <i class="mdi mdi-circle-edit-outline"></i>
+                            </span>Modifier
+                        </button>
+                        <button *ngIf="canDelete" (click)="deleteRow({index: i, id: record.id})" type="button" class="btn btn-danger btn-xs rounded-pill waves-effect waves-light">
+                            <span class="btn-label">
+                                <i class="mdi mdi-close-circle-outline"></i>
+                            </span>Supprimer
+                        </button>
                     </div>
                 </div>
             </td>
@@ -84,15 +91,9 @@
         </tbody>
     </table>
 
-
-    <div class="d-flex flex-wrap justify-content-center align-items-center justify-content-sm-between mt-2"
-         *ngIf="pagination">
-        <div>
-            Affichage de {{service.startIndex }} à
-            {{service.endIndex}} of {{service.totalRecords}} entrées
-        </div>
-        <ngb-pagination class="custom-pagination" [collectionSize]="service.totalRecords" [(page)]="service.page"
-                        [maxSize]="3" [rotate]="true" [pageSize]="service.pageSize" (pageChange)="paginate()">
+    <div class="d-flex flex-wrap justify-content-center align-items-center justify-content-sm-between mt-2" *ngIf="pagination">
+        <div>Affichage de {{service.startIndex }} à {{service.endIndex}} de {{service.totalRecords}} entrées</div>
+        <ngb-pagination class="custom-pagination" [collectionSize]="service.totalRecords" [(page)]="service.page" [maxSize]="3" [rotate]="true" [pageSize]="service.pageSize" (pageChange)="paginate()">
             <ng-template ngbPaginationPrevious>Précédent</ng-template>
             <ng-template ngbPaginationNext>Suivant</ng-template>
         </ngb-pagination>

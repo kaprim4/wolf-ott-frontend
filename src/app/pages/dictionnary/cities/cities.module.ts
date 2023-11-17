@@ -8,7 +8,6 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";
 import {CitiesRoutingModule} from "./cities-routing.module";
 import {CEditComponent} from "./c-edit/c-edit.component";
-import {CDeleteComponent} from "./c-delete/c-delete.component";
 import {CAddComponent} from "./c-add/c-add.component";
 import {CIndexComponent} from "./c-index/c-index.component";
 
@@ -17,7 +16,6 @@ import {CIndexComponent} from "./c-index/c-index.component";
     declarations: [
         CIndexComponent,
         CAddComponent,
-        CDeleteComponent,
         CEditComponent
     ],
     imports: [

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Column} from "../../../../shared/advanced-table/advanced-table.component";
+import {Column, DeleteEvent} from "../../../../shared/advanced-table/advanced-table.component";
 import {IFormType} from "../../../../core/interfaces/formType";
 import {EventService} from "../../../../core/service/event.service";
 import {EventType} from "../../../../core/constants/events";
@@ -10,6 +10,7 @@ import {GasStationService} from "../../../../core/service/gas-station.service";
 import {Company} from "../../../../core/interfaces/company";
 import {Supervisor} from "../../../../core/interfaces/supervisor";
 import {City} from "../../../../core/interfaces/city";
+import Swal from "sweetalert2";
 
 @Component({
     selector: 'app-gs-index',
@@ -128,5 +129,52 @@ export class GsIndexComponent implements OnInit {
             updatedData = updatedData.filter(record => this.matches(record, searchTerm));
             this.records = updatedData;
         }
+    }
+
+    deleteRow(deleteEvent: DeleteEvent) {
+        Swal.fire({
+            title: "Etes-vous sûr?",
+            text: "Voulez vous procèder à la suppression de cet entrée ?",
+            icon: "error",
+            showCancelButton: true,
+            confirmButtonColor: "#28bb4b",
+            cancelButtonColor: "#f34e4e",
+            confirmButtonText: "Oui, supprimez-le !"
+        }).then((re) => {
+            this.loading = true;
+            if (re.isConfirmed) {
+                if (deleteEvent.id) {
+                    this.gasStationService.getGasStation(deleteEvent.id)?.subscribe(
+                        (data: GasStation) => {
+                            if (data) {
+                                this.gasStationService.deleteGasStation(data.id).subscribe(
+                                    () => {
+                                        Swal.fire({
+                                            title: "Succès!",
+                                            text: "Cette entrée a été supprimée avec succès.",
+                                            icon: "success"
+                                        }).then();
+                                    },
+                                    (error: string) => {
+                                        Swal.fire({
+                                            title: "Erreur!",
+                                            text: error,
+                                            icon: "error"
+                                        }).then();
+                                    },
+                                    (): void => {
+                                        this.records.splice(deleteEvent.index, 1);
+                                        this.loading = false;
+                                    }
+                                )
+                            }
+                        }
+                    );
+                } else {
+                    this.loading = false;
+                    this.error = this.entityElm.label + " introuvable.";
+                }
+            }
+        });
     }
 }

@@ -8,7 +8,6 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";
 import {RegionsRoutingModule} from "./regions-routing.module";
 import {RgEditComponent} from "./rg-edit/rg-edit.component";
-import {RgDeleteComponent} from "./rg-delete/rg-delete.component";
 import {RgAddComponent} from "./rg-add/rg-add.component";
 import {RgIndexComponent} from "./rg-index/rg-index.component";
 
@@ -17,7 +16,6 @@ import {RgIndexComponent} from "./rg-index/rg-index.component";
     declarations: [
         RgIndexComponent,
         RgAddComponent,
-        RgDeleteComponent,
         RgEditComponent
     ],
     imports: [

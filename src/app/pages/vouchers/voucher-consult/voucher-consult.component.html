@@ -15,7 +15,7 @@
                     {{ error }}
                 </ngb-alert>
                 <!-- table start -->
-                <app-advanced-table [tableData]="records" [columns]="columns" [pagination]="true" [pageSizeOptions]="pageSizeOptions" [hasRowSelection]="true" [isSearchable]="true" (search)="searchData($event)" [isSortable]="true" (sort)="onSort($event)" [hasActions]="false">
+                <app-advanced-table [tableData]="records" [columns]="columns" [pagination]="true" [pageSizeOptions]="pageSizeOptions" [hasRowSelection]="true" [isSearchable]="true" (search)="searchData($event)" [isSortable]="true" (sort)="onSort($event)" [canEdit]="false" [canDelete]="false">
                 </app-advanced-table>
             </div>
             <!-- end card body-->
