@@ -9,6 +9,8 @@ import {RoleService} from "../../../core/service/role.service";
 import {VoucherTemp} from "../../../core/interfaces/voucher";
 import {VoucherTempService} from "../../../core/service/voucher-temp.service";
 
+moment.locale('fr');
+
 @Component({
     selector: 'app-voucher-consult',
     templateUrl: './voucher-consult.component.html',
@@ -79,12 +81,12 @@ export class VoucherConsultComponent implements OnInit {
             },
             {
                 name: 'voucherDate', label: 'Date Journée', formatter: (record: VoucherTemp) => {
-                    return moment(record.voucherDate).format('D MMM YYYY')
+                    return moment(record.voucherDate).format('D MMMM YYYY')
                 }
             },
             {
                 name: 'createdAt', label: 'Créé le', formatter: (record: VoucherTemp) => {
-                    return moment(record.createdAt).format('D MMM YYYY')
+                    return moment(record.createdAt).format('D MMMM YYYY')
                 }
             }
         ];

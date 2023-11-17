@@ -17,6 +17,8 @@ import {GasStationService} from "../../../core/service/gas-station.service";
 import Swal from "sweetalert2";
 import {GasStation} from "../../../core/interfaces/gas_station";
 
+moment.locale('fr');
+
 @Component({
     selector: 'app-grab-vouchers',
     templateUrl: './grab-vouchers.component.html',
@@ -264,7 +266,7 @@ export class GrabVouchersComponent implements OnInit {
             },
             {
                 name: 'voucherDate', label: 'Date Journée', formatter: (record: VoucherTemp) => {
-                    return moment(record.voucherDate).format('D MMM YYYY')
+                    return moment(record.voucherDate).format('D MMMM YYYY')
                 }
             },
         ];
