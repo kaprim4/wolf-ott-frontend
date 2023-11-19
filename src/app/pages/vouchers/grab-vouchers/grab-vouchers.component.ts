@@ -178,8 +178,8 @@ export class GrabVouchersComponent implements OnInit {
                 if (v) {
                     Swal.fire({
                         title: "N° de bon existe déjà",
-                        text: "Ce bon est saisi par la station " + v.gasStation?.libelle + ". Veuillez vérifier le numéro du bon s'il est correct.",
-                        icon: "error"
+                        html: "Ce bon est saisi par la station " + v.gasStation?.libelle + " le "+moment(v.voucherDate).format('D MMMM YYYY')+".<br /> Veuillez vérifier le numéro du bon s'il est correct.",
+                        icon: "error",
                     })
                 }
             }, (error) => {
