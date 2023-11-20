@@ -14,6 +14,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {InputProps, InputPropsTypesEnum} from "../../../core/interfaces/input_props";
 import {VoucherTypeService} from "../../../core/service/voucher-type.service";
 import {GasStation} from "../../../core/interfaces/gas_station";
+import {TokenService} from "../../../core/service/token.service";
 
 moment.locale('fr');
 
@@ -43,6 +44,7 @@ export class VoucherConsultComponent implements OnInit {
     constructor(
         private eventService: EventService,
         private roleService: RoleService,
+        private tokenService: TokenService,
         private voucherTempService: VoucherTempService,
         private voucherTypeService: VoucherTypeService,
         private fb: FormBuilder,
@@ -131,14 +133,19 @@ export class VoucherConsultComponent implements OnInit {
         this.voucherTempService.getVoucherTemps()?.subscribe(
             (data: VoucherTemp[]) => {
                 if (data && data.length > 0) {
-                    if (this.voucherType_id != '') {
                         data.map((voucher: VoucherTemp) => {
-                            if (voucher.voucherType.id == this.voucherType_id)
-                                this.records.push(voucher);
+                            //if (voucher.voucherType.id == this.voucherType_id)
+                            if (voucher.gasStation.id == this.tokenService.getPayload().gas_station_id){
+                                if (this.voucherType_id != '') {
+                                    if (voucher.voucherType.id == this.voucherType_id){
+                                        this.records.push(voucher);
+                                    }
+                                }else{
+                                    this.records.push(voucher);
+                                }
+                            }
+
                         });
-                    } else {
-                        this.records = data;
-                    }
                     this.loading = false;
                 } else {
                     this.error = "La liste est vide.";
