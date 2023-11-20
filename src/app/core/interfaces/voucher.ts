@@ -28,3 +28,30 @@ export interface VoucherTemp {
 
     [key: string]: string | number | boolean | any;
 }
+
+export interface VoucherCustomer {
+    id: number;
+    codeSap: string;
+    libelle: string;
+    isActivated: boolean;
+    isDeleted: boolean;
+    createdAt: string;
+    updatedAt: string;
+
+    [key: string]: string | number | boolean;
+}
+
+export interface VoucherControl {
+    id: number;
+    voucherType: any;
+    voucherCustomer: any;
+    voucherNumber: string;
+    voucherAmount: number;
+    newlyAdded: boolean;
+    isActivated: boolean;
+    isDeleted: boolean;
+    createdAt: string;
+    updatedAt: string;
+
+    [key: string]: string | number | boolean | any;
+}

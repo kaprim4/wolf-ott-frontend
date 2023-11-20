@@ -83,6 +83,20 @@ export class LeftSidebarComponent implements OnInit {
                 isTitle: false,
                 children: [
                     {
+                        key: 'voucher-customer',
+                        label: 'Consulter les clients',
+                        icon: 'admin',
+                        url: '/vouchers/voucher-customer',
+                        parentKey: 'voucher',
+                    },
+                    {
+                        key: 'voucher-control',
+                        label: 'Bons de contrôle',
+                        icon: 'admin',
+                        url: '/vouchers/voucher-control',
+                        parentKey: 'voucher',
+                    },
+                    {
                         key: 'voucher-type',
                         label: 'Type des bons',
                         url: '/vouchers/voucher-type',

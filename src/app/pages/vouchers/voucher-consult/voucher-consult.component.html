@@ -1,3 +1,62 @@
+<swal #successSwal title="Succès!" text="Cette entrée a été ajoutée avec succès." icon="success"></swal>
+<swal #errorSwal title="Erreur!"
+      text="Une erreur s'est produite. Les informations saisies ne sont pas prises en compte." icon="error"></swal>
+
+<div class="row">
+    <div class="col-12">
+        <form [formGroup]="filterForm" name="add-form needs-validation" (ngSubmit)="onSubmit()">
+            <div class="card">
+                <div class="card-header align-items-center d-flex">
+                    <h4 class="card-title mb-0 flex-grow-1">
+                        <i class="fe-filter bg-soft-primary rounded-circle fs-4 p-1"></i> Filtrer
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div id="{{entityElm.entity}}" class="row">
+                        <div class="position-relative col-md-6 col-lg-3" *ngFor="let prop of objectProps">
+                            <label for="{{entityElm.entity}}_{{prop.input}}" class="form-label">{{prop.label}}</label>
+                            <input *ngIf="['text','email','password','hidden'].includes(prop.type)" class="form-control" type="{{prop.type}}" id="{{entityElm.entity}}_{{prop.input}}" required i18n-placeholder placeholder="Entrez votre identifiant" formControlName="{{prop.input}}" [ngClass]="{'is-invalid':formSubmitted && formValues[prop.input].invalid}"/>
+                            <div *ngIf="['checkbox'].includes(prop.type)" class="form-switch">
+                                <div class="form-check">
+                                    <input type="checkbox" id="{{entityElm.entity}}_{{prop.input}}" formControlName="{{prop.input}}" [ngClass]="{'is-invalid':formSubmitted && formValues[prop.input].invalid}" class="form-check-input form-check-input" />
+                                    <label class="form-check-label form-check-label" for="{{entityElm.entity}}_{{prop.input}}">{{prop.label}}</label>
+                                </div>
+                                <div id="{{entityElm.entity}}_{{prop.input}}_help" class="form-text mb-0 help-text">* cette option est
+                                    facultative.
+                                </div>
+                            </div>
+                            <select *ngIf="['select'].includes(prop.type)" id="{{entityElm.entity}}_{{prop.input}}" class="form-control select2-basic form-select select2-hidden-accessible" formControlName="{{prop.input}}" [ngClass]="{'is-invalid':formSubmitted && formValues[prop.input].invalid}">
+                                <option value="">Choisissez une option</option>
+                                <option *ngFor="let child of prop.joinTable" value="{{child.id}}">
+                                    #{{child.id}} - {{child.libelle}}
+                                </option>
+                            </select>
+                            <div *ngIf="formSubmitted && formValues[prop.input].valid" class="valid-tooltip">
+                                Cela semble bon!
+                            </div>
+                            <div *ngIf="formSubmitted && formValues[prop.input].invalid" class="invalid-tooltip">
+                                Veuillez saisir une valeur valide.
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end card body -->
+                </div>
+                <!-- end card body-->
+                <!-- start card footer -->
+                <div class="card-footer overflow-hidden">
+                    <button type="submit" class="btn btn-success rounded-pill waves-effect waves-light float-end">
+                        <span class="btn-label">
+                            <i class="mdi mdi-check-all"></i>
+                        </span> Filtrer
+                    </button>
+                </div>
+                <!-- end card footer -->
+                <!-- end card -->
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -11,11 +70,12 @@
             </div>
             <div class="card-body">
                 <app-ui-preloader [display]="loading"></app-ui-preloader>
-                <ngb-alert [dismissible]="false" type="danger" *ngIf="error">
-                    {{ error }}
-                </ngb-alert>
+                <ngb-alert [dismissible]="false" type="danger" *ngIf="error">{{ error }}</ngb-alert>
                 <!-- table start -->
-                <app-advanced-table [tableData]="records" [columns]="columns" [pagination]="true" [pageSizeOptions]="pageSizeOptions" [hasRowSelection]="true" [isSearchable]="true" (search)="searchData($event)" [isSortable]="true" (sort)="onSort($event)" [canEdit]="false" [canDelete]="false">
+                <app-advanced-table [tableData]="records" [columns]="columns" [pagination]="true"
+                                    [pageSizeOptions]="pageSizeOptions" [hasRowSelection]="true" [isSearchable]="true"
+                                    (search)="searchData($event)" [isSortable]="true" (sort)="onSort($event)"
+                                    (deleteRowEvent)="deleteRow($event)" [canEdit]="false" [canDelete]="true">
                 </app-advanced-table>
             </div>
             <!-- end card body-->

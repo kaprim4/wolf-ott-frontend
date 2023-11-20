@@ -4,7 +4,7 @@ import {VoucherTypeService} from "../../../core/service/voucher-type.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {IFormType} from "../../../core/interfaces/formType";
-import {VoucherTemp, VoucherType} from "../../../core/interfaces/voucher";
+import {VoucherControl, VoucherTemp, VoucherType} from "../../../core/interfaces/voucher";
 import {EventType} from "../../../core/constants/events";
 import * as moment from "moment/moment";
 import {now} from "moment/moment";
@@ -16,6 +16,8 @@ import {TokenService} from "../../../core/service/token.service";
 import {GasStationService} from "../../../core/service/gas-station.service";
 import Swal from "sweetalert2";
 import {GasStation} from "../../../core/interfaces/gas_station";
+import {VoucherControlService} from "../../../core/service/voucher-control.service";
+import {isNumeric} from "../../../core/helpers/functions";
 
 moment.locale('fr');
 
@@ -25,6 +27,7 @@ moment.locale('fr');
     styleUrls: ['./grab-vouchers.component.scss']
 })
 export class GrabVouchersComponent implements OnInit {
+
     @Input()
     voucherTemp: VoucherTemp = {
         barcode: "",
@@ -61,6 +64,7 @@ export class GrabVouchersComponent implements OnInit {
         private activated: ActivatedRoute,
         private tokenService: TokenService,
         private voucherTempService: VoucherTempService,
+        private voucherControlService: VoucherControlService,
         private gasStationService: GasStationService,
     ) {
     }
@@ -94,6 +98,9 @@ export class GrabVouchersComponent implements OnInit {
     error: string = '';
     loadingForm: boolean = false;
     loadingList: boolean = false;
+    isVerified: boolean = false;
+    voucherError: string = '';
+    @Input() onVerifyClick: boolean = true;
 
     get formValues() {
         return this.standardForm.controls;
@@ -140,25 +147,28 @@ export class GrabVouchersComponent implements OnInit {
                 let _slipNumber = this.activated.snapshot.paramMap.get('slipNumber');
                 if (_slipNumber) {
                     this.slipNumber = _slipNumber;
-                    this.gasStationService.getGasStation(this.tokenService.getPayload().gas_station_id).subscribe((_gasStation) => {
-                        if (_gasStation) {
-                            this.gasStation = _gasStation;
-                            this.voucherTypeService.getVoucherType(this.voucherType_id)?.subscribe((data: VoucherType) => {
-                                if (data) {
-                                    this.voucher_type_name = data.libelle;
-                                    this.title = 'Saisie de Bon de type ' + this.voucher_type_name;
-                                    this.voucherTemp.gasStation = _gasStation;
-                                    this.voucherTemp.isActivated = true;
-                                    this.voucherTemp.poste_produit = 99;
-                                    this.voucherTemp.voucherDate = this.voucherDate;
-                                    this.voucherTemp.voucherType = data;
-                                    this.voucherTemp.slipNumber = this.slipNumber;
-                                    this.loadingForm = false;
-                                    this.initFieldsConfig();
-                                }
-                            });
-                        }
-                    });
+                    this.gasStationService.getGasStation(this.tokenService.getPayload().gas_station_id).subscribe(
+                        (_gasStation) => {
+                            if (_gasStation) {
+                                this.gasStation = _gasStation;
+                                this.voucherTypeService.getVoucherType(this.voucherType_id)?.subscribe(
+                                    (data: VoucherType) => {
+                                        if (data) {
+                                            this.voucher_type_name = data.libelle;
+                                            this.title = 'Saisie de Bon de type ' + this.voucher_type_name;
+                                            this.voucherTemp.gasStation = _gasStation;
+                                            this.voucherTemp.isActivated = true;
+                                            this.voucherTemp.poste_produit = 99;
+                                            this.voucherTemp.voucherDate = this.voucherDate;
+                                            this.voucherTemp.voucherType = data;
+                                            this.voucherTemp.slipNumber = this.slipNumber;
+                                            this.loadingForm = false;
+                                            this.initFieldsConfig();
+                                        }
+                                    }
+                                );
+                            }
+                        });
                 }
             } else {
                 this.router.navigate(['vouchers/voucher-type']);
@@ -174,16 +184,8 @@ export class GrabVouchersComponent implements OnInit {
         this.formSubmitted = true;
         if (this.standardForm.valid) {
             let voucherNumber: string = this.standardForm.controls['voucherNumber'].value;
-            this.voucherTempService.getVoucherTempByVoucherNumber(voucherNumber)?.subscribe((v: VoucherTemp) => {
-                if (v) {
-                    Swal.fire({
-                        title: "N° de bon existe déjà",
-                        html: "Ce bon est saisi par la station " + v.gasStation?.libelle + " le "+moment(v.voucherDate).format('D MMMM YYYY')+".<br /> Veuillez vérifier le numéro du bon s'il est correct.",
-                        icon: "error",
-                    })
-                }
-            }, (error) => {
-                this.voucherTypeService.getVoucherType(this.voucherType_id)?.subscribe((voucherType: VoucherType) => {
+            this.voucherTypeService.getVoucherType(this.voucherType_id)?.subscribe(
+                (voucherType: VoucherType) => {
                     if (voucherType) {
                         this.voucherTemp.createdAt = moment(now()).format('Y-M-DTHH:mm:ss').toString();
                         this.voucherTemp.updatedAt = moment(now()).format('Y-M-DTHH:mm:ss').toString();
@@ -193,44 +195,49 @@ export class GrabVouchersComponent implements OnInit {
                         }
                         this.voucherTemp.voucherNumber = voucherNumber;
                         this.voucherTemp.voucherType = voucherType;
-                        this.voucherTempService.addVoucherTemp(this.voucherTemp).subscribe(
-                            (data) => {
-                                if (data) {
-                                    console.log(data);
-                                    this.records.push(this.voucherTemp);
-                                    this.successSwal.fire();
+                        this.voucherControlService.getVoucherControlByVoucherNumber(voucherNumber)?.subscribe(
+                            (vc: VoucherControl) => {
+                                if (vc) {
+                                    this.voucherTemp.voucherAmount = vc.voucherAmount;
+                                    this.voucherTempService.addVoucherTemp(this.voucherTemp).subscribe(
+                                        (data) => {
+                                            if (data) {
+                                                console.log(data);
+                                                this.records.push(this.voucherTemp);
+                                                this.successSwal.fire();
+                                            }
+                                        },
+                                        (error: string) => {
+                                            this.errorSwal.fire().then((r) => {
+                                                this.error = error;
+                                                console.log(error);
+                                            });
+                                        },
+                                        (): void => {
+                                            this.loadingForm = false;
+                                        }
+                                    );
                                 }
-                            },
-                            (error: string) => {
-                                this.errorSwal.fire().then((r) => {
-                                    this.error = error;
-                                    console.log(error);
-                                });
-                            },
-                            (): void => {
-                                this.loadingForm = false;
                             }
-                        )
+                        );
                     }
-                });
-            });
+                }
+            );
         }
     }
 
-    _fetchData()
-        :
-        void {
+    _fetchData(): void {
         this.voucherTempService.getVoucherTemps()?.subscribe(
             (data: VoucherTemp[]) => {
                 if (data && data.length > 0) {
                     console.log("data:", data);
                     this.records = [];
                     data.map((voucher: VoucherTemp) => {
-                        if (voucher.voucherDate === this.voucherDate && voucher.voucherType.id === this.voucherType_id) {
-                            if (this.tokenService.getPayload().role_id === 1) {
+                        if (voucher.voucherDate == this.voucherDate && voucher.voucherType.id == this.voucherType_id) {
+                            if (this.tokenService.getPayload().role_id == 1) {
                                 this.records.push(voucher);
                             } else {
-                                if (voucher.gasStation === this.gasStation) {
+                                if (voucher.gasStation == this.gasStation) {
                                     this.records.push(voucher);
                                 }
                             }
@@ -245,9 +252,7 @@ export class GrabVouchersComponent implements OnInit {
         );
     }
 
-    initTableConfig()
-        :
-        void {
+    initTableConfig(): void {
         this.columns = [
             //{name: 'id', label: '#', formatter: (record: VoucherTemp) => record.id},
             {name: 'gasStation', label: 'Code Client', formatter: (record: VoucherTemp) => record.gasStation.libelle},
@@ -272,23 +277,12 @@ export class GrabVouchersComponent implements OnInit {
         ];
     }
 
-    compare(v1
-                :
-                number | string | boolean, v2
-                :
-                number | string | boolean
-    ):
-        any {
+    compare(v1: number | string | boolean, v2: number | string | boolean): any {
         return v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
     }
 
-    onSort(event
-               :
-               SortEvent
-    ):
-        void {
-        if (event.direction === ''
-        ) {
+    onSort(event: SortEvent): void {
+        if (event.direction === '') {
             this._fetchData();
         } else {
             this.records = [...this.records].sort((a, b) => {
@@ -298,12 +292,7 @@ export class GrabVouchersComponent implements OnInit {
         }
     }
 
-    matches(row
-                :
-                VoucherTemp, term
-                :
-                string
-    ) {
+    matches(row: VoucherTemp, term: string) {
         return row.gasStation?.libelle.toLowerCase().includes(term)
             || row.voucherType?.libelle.toLowerCase().includes(term)
             || row.slipNumber.toLowerCase().includes(term)
@@ -313,13 +302,8 @@ export class GrabVouchersComponent implements OnInit {
             || row.voucherDate.toLowerCase().includes(term);
     }
 
-    searchData(searchTerm
-                   :
-                   string
-    ):
-        void {
-        if (searchTerm === ''
-        ) {
+    searchData(searchTerm: string): void {
+        if (searchTerm === '') {
             this._fetchData();
         } else {
             this._fetchData();
@@ -329,10 +313,7 @@ export class GrabVouchersComponent implements OnInit {
         }
     }
 
-    deleteRow(deleteEvent
-                  :
-                  DeleteEvent
-    ) {
+    deleteRow(deleteEvent: DeleteEvent) {
         Swal.fire({
             title: "Etes-vous sûr?",
             text: "Voulez vous procèder à la suppression de cet entrée ?",
@@ -377,4 +358,51 @@ export class GrabVouchersComponent implements OnInit {
             }
         });
     }
+
+    verifyVoucher(): void {
+        let voucherNumber: string = this.standardForm.controls['voucherNumber'].value;
+        this.voucherTempService.getVoucherTempByVoucherNumber(voucherNumber)?.subscribe(
+            (v: VoucherTemp) => {
+                if (v) {
+                    Swal.fire({
+                        title: "N° de bon existe déjà",
+                        html: "Ce bon est saisi par la station " + v.gasStation?.libelle + " le " + moment(v.voucherDate).format('D MMMM YYYY') + ".<br /> Veuillez vérifier le numéro du bon s'il est correct.",
+                        icon: "error",
+                    });
+                    this.isVerified = false;
+                }
+            }, (error) => {
+                if (this.voucherTemp.voucherType.id === 3) {
+                    if(isNumeric(voucherNumber)) {
+                        this.voucherControlService.getVoucherControlByVoucherNumber(voucherNumber)?.subscribe(
+                            (v: VoucherControl) => {
+                                if (v) {
+                                    Swal.fire({
+                                        title: "N° de bon valide",
+                                        icon: "info",
+                                        confirmButtonText: "Continuer"
+                                    });
+                                    this.isVerified = true;
+                                }
+                            }, (error) => {
+                                Swal.fire({
+                                    title: "N° de bon n'existe pas",
+                                    html: "Ce bon WINXO est invalide et <b>ne figure pas</b> dans notre base de données.<br /> Veuillez <b>vérifier</b> le numéro du bon s'il est correct.",
+                                    icon: "error",
+                                });
+                                this.isVerified = false;
+                            }
+                        );
+                    }else{
+                        Swal.fire({
+                            title: "N° de bon erroné",
+                            html: "Le N° de série de bon WINXO est toujours <b>Numérique</b>.<br /> Veuillez <b>vérifier</b> le type de bon s'il est correct.",
+                            icon: "error",
+                        });
+                        this.isVerified = false;
+                    }
+                }
+            }
+        );
+    };
 }

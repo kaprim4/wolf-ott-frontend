@@ -12,6 +12,8 @@ import {UiModule} from "../../shared/ui/ui.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { GrabVouchersComponent } from './grab-vouchers/grab-vouchers.component';
 import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";
+import { VoucherCustomerComponent } from './voucher-customer/voucher-customer.component';
+import { VoucherControlComponent } from './voucher-control/voucher-control.component';
 
 
 @NgModule({
@@ -20,7 +22,9 @@ import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";
     VoucherConsultComponent,
     EndDayComponent,
     PdfGenerationComponent,
-    GrabVouchersComponent
+    GrabVouchersComponent,
+    VoucherCustomerComponent,
+    VoucherControlComponent
   ],
     imports: [
         CommonModule,

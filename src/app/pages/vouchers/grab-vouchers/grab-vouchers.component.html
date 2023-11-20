@@ -39,30 +39,19 @@
                                        id="{{entityElm.entity}}_slipNumber" formControlName="slipNumber" readonly/>
                             </div>
                             <div class="position-relative col-md-6 col-lg-4 mb-3">
-                                <label for="{{entityElm.entity}}_voucherNumber" class="form-label">
-                                    Numéro de Bon
-                                </label>
-                                <input class="form-control" type="text" id="{{entityElm.entity}}_voucherNumber"
-                                       i18n-placeholder placeholder="Entrez un Numéro de Bon"
-                                       formControlName="voucherNumber"
-                                       [ngClass]="{'is-invalid':formSubmitted && formValues['voucherNumber'].invalid}"/>
+                                <label for="{{entityElm.entity}}_voucherNumber" class="form-label">Numéro de Bon</label>
+                                <input class="form-control" type="text" id="{{entityElm.entity}}_voucherNumber" i18n-placeholder placeholder="Entrez un Numéro de Bon" formControlName="voucherNumber" [ngClass]="{'is-invalid':formSubmitted && formValues['voucherNumber'].invalid}"/>
                                 <div *ngIf="formSubmitted && formValues['voucherNumber'].valid" class="valid-tooltip">
                                     Cela semble bon!
                                 </div>
-                                <div *ngIf="formSubmitted && formValues['voucherNumber'].invalid"
-                                     class="invalid-tooltip">
-                                    Veuillez saisir une valeur valide.
+                                <div *ngIf="formSubmitted && formValues['voucherNumber'].invalid" class="invalid-tooltip">
+                                    {{voucherError}}
                                 </div>
                             </div>
 
                             <div *ngIf="voucherType_id===4" class="position-relative col-md-6 col-lg-4 mb-3">
-                                <label for="{{entityElm.entity}}_vehiculeNumber" class="form-label">
-                                    Numéro véhicule
-                                </label>
-                                <input class="form-control" type="text" id="{{entityElm.entity}}_vehiculeNumber"
-                                       i18n-placeholder placeholder="Entrez un Numéro de Bon"
-                                       formControlName="vehiculeNumber"
-                                       [ngClass]="{'is-invalid':formSubmitted && formValues['vehiculeNumber'].invalid}"/>
+                                <label for="{{entityElm.entity}}_vehiculeNumber" class="form-label">Numéro véhicule</label>
+                                <input class="form-control" type="text" id="{{entityElm.entity}}_vehiculeNumber" i18n-placeholder placeholder="Entrez un Numéro de Bon" formControlName="vehiculeNumber" [ngClass]="{'is-invalid':formSubmitted && formValues['vehiculeNumber'].invalid}"/>
                                 <div *ngIf="formSubmitted && formValues['vehiculeNumber'].valid" class="valid-tooltip">
                                     Cela semble bon!
                                 </div>
@@ -73,13 +62,8 @@
                             </div>
 
                             <div *ngIf="voucherType_id===4" class="position-relative col-md-6 col-lg-4 mb-3">
-                                <label for="{{entityElm.entity}}_voucherAmount" class="form-label">
-                                    Montant du Bon
-                                </label>
-                                <input class="form-control" type="text" id="{{entityElm.entity}}_voucherAmount"
-                                       i18n-placeholder placeholder="Entrez un Numéro de Bon"
-                                       formControlName="voucherAmount"
-                                       [ngClass]="{'is-invalid':formSubmitted && formValues['voucherAmount'].invalid}"/>
+                                <label for="{{entityElm.entity}}_voucherAmount" class="form-label">Montant du Bon</label>
+                                <input class="form-control" type="text" id="{{entityElm.entity}}_voucherAmount" i18n-placeholder placeholder="Entrez un Numéro de Bon" formControlName="voucherAmount" [ngClass]="{'is-invalid':formSubmitted && formValues['voucherAmount'].invalid}"/>
                                 <div *ngIf="formSubmitted && formValues['voucherAmount'].valid" class="valid-tooltip">
                                     Cela semble bon!
                                 </div>
@@ -95,14 +79,21 @@
                 <!-- end card body-->
                 <!-- start card footer -->
                 <div class="card-footer overflow-hidden">
-                    <button [routerLink]="['../voucher-type']" type="button" class="btn btn-info rounded-pill waves-effect waves-light">
+                    <a [routerLink]="['../voucher-type']" type="button" class="btn btn-info rounded-pill waves-effect waves-light">
                         <span class="btn-label-left"><i class="mdi mdi-keyboard-backspace"></i></span> Retour à l'écran précédente
-                    </button>
-                    <button type="submit" class="btn btn-success rounded-pill waves-effect waves-light float-end">
+                    </a>
+
+                    <button [disabled]="!isVerified" type="submit" class="btn btn-success rounded-pill waves-effect waves-light float-end">
                         <span class="btn-label">
                             <i class="mdi mdi-check-all"></i>
                         </span> Valider
                     </button>
+
+                    <a [ngStyle]="{pointerEvents: isVerified ? 'none' : ''}" class="btn {{isVerified ? 'btn-soft-secondary':'btn-info'}} rounded-pill waves-effect waves-light float-end me-2" (click)="verifyVoucher()">
+                        <span class="btn-label">
+                            <i class="mdi mdi-alert-circle-outline"></i>
+                        </span> Vérifier le bon
+                    </a>
                 </div>
                 <!-- end card footer -->
                 <!-- end card -->

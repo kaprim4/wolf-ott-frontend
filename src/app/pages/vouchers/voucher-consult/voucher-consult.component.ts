@@ -1,13 +1,19 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {EventService} from "../../../core/service/event.service";
 import {EventType} from "../../../core/constants/events";
-import {Column} from "../../../shared/advanced-table/advanced-table.component";
+import {Column, DeleteEvent} from "../../../shared/advanced-table/advanced-table.component";
 import {IFormType} from "../../../core/interfaces/formType";
 import * as moment from "moment/moment";
 import {SortEvent} from "../../../shared/advanced-table/sortable.directive";
 import {RoleService} from "../../../core/service/role.service";
-import {VoucherTemp} from "../../../core/interfaces/voucher";
+import {VoucherTemp, VoucherType} from "../../../core/interfaces/voucher";
 import {VoucherTempService} from "../../../core/service/voucher-temp.service";
+import Swal from "sweetalert2";
+import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {InputProps, InputPropsTypesEnum} from "../../../core/interfaces/input_props";
+import {VoucherTypeService} from "../../../core/service/voucher-type.service";
+import {GasStation} from "../../../core/interfaces/gas_station";
 
 moment.locale('fr');
 
@@ -28,22 +34,95 @@ export class VoucherConsultComponent implements OnInit {
         entity: 'gas-station-temp'
     }
 
+    @ViewChild('errorSwal')
+    public readonly errorSwal!: SwalComponent;
+
+    @ViewChild('deleteSwal')
+    public readonly deleteSwal!: SwalComponent;
+
     constructor(
         private eventService: EventService,
         private roleService: RoleService,
         private voucherTempService: VoucherTempService,
+        private voucherTypeService: VoucherTypeService,
+        private fb: FormBuilder,
     ) {
+    }
+
+    filterForm: FormGroup = this.fb.group({
+        voucherType_id: [''],
+    });
+    formSubmitted: boolean = false;
+    voucherTypes: VoucherType[] = [];
+    gasStations: GasStation[] = [];
+    objectProps: InputProps[] = [];
+    voucherType_id: string = '';
+    gasStation_id: number = 0;
+
+
+    initFieldsConfig(): void {
+        this.objectProps = [
+            {
+                input: 'voucherType_id',
+                label: 'Type Bon',
+                type: InputPropsTypesEnum.S,
+                value: this.voucherType_id,
+                joinTable: this.voucherTypes,
+                joinTableId: 'id',
+                joinTableIdLabel: 'libelle'
+            },
+            /*{
+                input: 'gasStation_id',
+                label: 'Type Bon',
+                type: InputPropsTypesEnum.S,
+                value: this.gasStation_id,
+                joinTable: this.gasStations,
+                joinTableId: 'id',
+                joinTableIdLabel: 'libelle'
+            },*/
+        ]
+    }
+
+    private _fetchVoucherTypeData() {
+        this.voucherTypeService.getVoucherTypes()?.subscribe(
+            (data) => {
+                if (data) {
+                    this.voucherTypes = data;
+                    this.initFieldsConfig();
+                }
+            }
+        );
+    }
+
+    private _fetchVoucherGasStationData() {
+        this.voucherTempService.getVoucherTemps()?.subscribe((data) => {
+            if (data) {
+                data.map((voucher: VoucherTemp) => {
+                    let gs: GasStation = voucher.gasStation;
+                    if (!this.gasStations.includes(gs)) {
+                        this.gasStations.push(gs);
+                    }
+                });
+                this.initFieldsConfig();
+            }
+        });
+    }
+
+    get formValues() {
+        return this.filterForm.controls;
     }
 
     ngOnInit(): void {
         this.eventService.broadcast(EventType.CHANGE_PAGE_TITLE, {
-            title: "Consulter les bons",
+            title: "Consulter les bons saisis",
             breadCrumbItems: [
                 {label: 'Gestion bons', path: '.'},
-                {label: 'Consulter les bons', path: '.', active: true}
+                {label: 'Consulter les bons saisis', path: '.', active: true}
             ]
         });
         this.loading = true;
+        this._fetchVoucherGasStationData();
+        this._fetchVoucherTypeData();
         this._fetchData();
         this.initTableConfig();
     }
@@ -51,9 +130,15 @@ export class VoucherConsultComponent implements OnInit {
     _fetchData(): void {
         this.voucherTempService.getVoucherTemps()?.subscribe(
             (data: VoucherTemp[]) => {
-                console.log("data", data);
                 if (data && data.length > 0) {
-                    this.records = data;
+                    if (this.voucherType_id != '') {
+                        data.map((voucher: VoucherTemp) => {
+                            if (voucher.voucherType.id == this.voucherType_id)
+                                this.records.push(voucher);
+                        });
+                    } else {
+                        this.records = data;
+                    }
                     this.loading = false;
                 } else {
                     this.error = "La liste est vide.";
@@ -117,9 +202,6 @@ export class VoucherConsultComponent implements OnInit {
             || row.voucherDate.toLowerCase().includes(term);
     }
 
-    /**
-     * Search Method
-     */
     searchData(searchTerm: string): void {
         if (searchTerm === '') {
             this._fetchData();
@@ -128,6 +210,62 @@ export class VoucherConsultComponent implements OnInit {
             let updatedData = this.records;
             updatedData = updatedData.filter(record => this.matches(record, searchTerm));
             this.records = updatedData;
+        }
+    }
+
+    deleteRow(deleteEvent: DeleteEvent) {
+        Swal.fire({
+            title: "Etes-vous sûr?",
+            text: "Voulez vous procèder à la suppression de cet entrée ?",
+            icon: "error",
+            showCancelButton: true,
+            confirmButtonColor: "#28bb4b",
+            cancelButtonColor: "#f34e4e",
+            confirmButtonText: "Oui, supprimez-le !"
+        }).then((re) => {
+            this.loading = true;
+            if (re.isConfirmed) {
+                if (deleteEvent.id) {
+                    this.voucherTempService.getVoucherTemp(deleteEvent.id)?.subscribe(
+                        (data: VoucherTemp) => {
+                            if (data) {
+                                this.voucherTempService.deleteVoucherTemp(data.id).subscribe(
+                                    () => {
+                                        Swal.fire({
+                                            title: "Succès!",
+                                            text: "Cette entrée a été supprimée avec succès.",
+                                            icon: "success"
+                                        }).then();
+                                    },
+                                    (error: string) => {
+                                        this.errorSwal.fire().then(() => {
+                                            this.error = error;
+                                            console.log(error);
+                                        });
+                                    },
+                                    (): void => {
+                                        this.records.splice(deleteEvent.index, 1);
+                                        this.loading = false;
+                                    }
+                                )
+                            }
+                        }
+                    );
+                } else {
+                    this.loading = false;
+                    this.error = this.entityElm.label + " introuvable.";
+                }
+            }
+        });
+    }
+
+    onSubmit() {
+        this.formSubmitted = true;
+        if (this.filterForm.valid) {
+            this.loading = true;
+            this.records = [];
+            this.voucherType_id = this.filterForm.controls['voucherType_id'].value;
+            this._fetchData();
         }
     }
 }
