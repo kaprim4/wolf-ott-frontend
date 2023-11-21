@@ -55,3 +55,12 @@ export interface VoucherControl {
 
     [key: string]: string | number | boolean | any;
 }
+
+export interface VoucherTypeSum {
+    gasStation: any;
+    voucherType: any;
+    sum: number;
+    count: number;
+
+    [key: string]: string | number | any;
+}

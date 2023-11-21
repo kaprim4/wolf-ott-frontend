@@ -12,6 +12,7 @@ import * as moment from "moment";
 import {now} from "moment";
 import {Region} from "../../../../core/interfaces/region";
 import {RegionService} from "../../../../core/service/region.service";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
 @Component({
     selector: 'app-c-add',
@@ -98,6 +99,20 @@ export class CAddComponent implements OnInit {
 
     private _fetchRegionData() {
         this.regionService.getRegions()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data) => {
                 if (data) {
                     this.regionList = data;
@@ -130,7 +145,21 @@ export class CAddComponent implements OnInit {
         if (this.addForm.valid) {
             this.loading = true;
             let region: Region | null = null;
-            this.regionService.getRegion(this.addForm.controls['region_id'].value).subscribe((r) => {
+            this.regionService.getRegion(this.addForm.controls['region_id'].value).subscribe(
+                (data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`Got a successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+
+                    }
+                    console.log('This contains body: ', data.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                    }
+                }(r) => {
                 region = r;
                 if (region) {
                     this.city = {
@@ -143,6 +172,20 @@ export class CAddComponent implements OnInit {
                         updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString()
                     }
                     this.cityService.addCity(this.city).subscribe(
+                        (data: HttpResponse<any>) => {
+                            if (data.status === 200 || data.status === 202) {
+                                console.log(`Got a successfull status code: ${data.status}`);
+                            }
+                            if (data.body) {
+
+                            }
+                            console.log('This contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
+                            }
+                        }
                         (data) => {
                             if (data) {
                                 console.log(data);

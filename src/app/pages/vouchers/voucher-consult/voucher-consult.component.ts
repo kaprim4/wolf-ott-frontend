@@ -15,6 +15,7 @@ import {InputProps, InputPropsTypesEnum} from "../../../core/interfaces/input_pr
 import {VoucherTypeService} from "../../../core/service/voucher-type.service";
 import {GasStation} from "../../../core/interfaces/gas_station";
 import {TokenService} from "../../../core/service/token.service";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
 moment.locale('fr');
 
@@ -87,27 +88,47 @@ export class VoucherConsultComponent implements OnInit {
 
     private _fetchVoucherTypeData() {
         this.voucherTypeService.getVoucherTypes()?.subscribe(
-            (data) => {
-                if (data) {
-                    this.voucherTypes = data;
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+                    this.voucherTypes = data.body;
                     this.initFieldsConfig();
                 }
-            }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            },
         );
     }
 
     private _fetchVoucherGasStationData() {
-        this.voucherTempService.getVoucherTemps()?.subscribe((data) => {
-            if (data) {
-                data.map((voucher: VoucherTemp) => {
-                    let gs: GasStation = voucher.gasStation;
-                    if (!this.gasStations.includes(gs)) {
-                        this.gasStations.push(gs);
-                    }
-                });
-                this.initFieldsConfig();
+        this.voucherTempService.getVoucherTemps()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+                    data.body.map((voucher: VoucherTemp) => {
+                        let gs: GasStation = voucher.gasStation;
+                        if (!this.gasStations.includes(gs)) {
+                            this.gasStations.push(gs);
+                        }
+                    });
+                    this.initFieldsConfig();
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
             }
-        });
+        );
     }
 
     get formValues() {
@@ -131,24 +152,35 @@ export class VoucherConsultComponent implements OnInit {
 
     _fetchData(): void {
         this.voucherTempService.getVoucherTemps()?.subscribe(
-            (data: VoucherTemp[]) => {
-                if (data && data.length > 0) {
-                        data.map((voucher: VoucherTemp) => {
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+                    if (data.body && data.body.length > 0) {
+                        data.body.map((voucher: VoucherTemp) => {
                             //if (voucher.voucherType.id == this.voucherType_id)
-                            if (voucher.gasStation.id == this.tokenService.getPayload().gas_station_id){
+                            if (voucher.gasStation.id == this.tokenService.getPayload().gas_station_id) {
                                 if (this.voucherType_id != '') {
-                                    if (voucher.voucherType.id == this.voucherType_id){
+                                    if (voucher.voucherType.id == this.voucherType_id) {
                                         this.records.push(voucher);
                                     }
-                                }else{
+                                } else {
                                     this.records.push(voucher);
                                 }
                             }
 
                         });
-                    this.loading = false;
-                } else {
-                    this.error = "La liste est vide.";
+                        this.loading = false;
+                    } else {
+                        this.error = "La liste est vide.";
+                    }
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
                 }
             }
         );
@@ -234,9 +266,39 @@ export class VoucherConsultComponent implements OnInit {
             if (re.isConfirmed) {
                 if (deleteEvent.id) {
                     this.voucherTempService.getVoucherTemp(deleteEvent.id)?.subscribe(
+
+
+                        (data: HttpResponse<any>) => {
+                            if (data.status === 200 || data.status === 202) {
+                                console.log(`Got a successfull status code: ${data.status}`);
+                            }
+                            if (data.body) {
+
+                            }
+                            console.log('This contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
+                            }
+                        }
                         (data: VoucherTemp) => {
                             if (data) {
                                 this.voucherTempService.deleteVoucherTemp(data.id).subscribe(
+                                    (data: HttpResponse<any>) => {
+                                        if (data.status === 200 || data.status === 202) {
+                                            console.log(`Got a successfull status code: ${data.status}`);
+                                        }
+                                        if (data.body) {
+
+                                        }
+                                        console.log('This contains body: ', data.body);
+                                    },
+                                    (err: HttpErrorResponse) => {
+                                        if (err.status === 403 || err.status === 404) {
+                                            console.error(`${err.status} status code caught`);
+                                        }
+                                    }
                                     () => {
                                         Swal.fire({
                                             title: "Succès!",

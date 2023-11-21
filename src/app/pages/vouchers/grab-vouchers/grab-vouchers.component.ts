@@ -18,6 +18,7 @@ import Swal from "sweetalert2";
 import {GasStation} from "../../../core/interfaces/gas_station";
 import {VoucherControlService} from "../../../core/service/voucher-control.service";
 import {isNumeric} from "../../../core/helpers/functions";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
 moment.locale('fr');
 
@@ -148,10 +149,38 @@ export class GrabVouchersComponent implements OnInit {
                 if (_slipNumber) {
                     this.slipNumber = _slipNumber;
                     this.gasStationService.getGasStation(this.tokenService.getPayload().gas_station_id).subscribe(
+                        (data: HttpResponse<any>) => {
+                            if (data.status === 200 || data.status === 202) {
+                                console.log(`Got a successfull status code: ${data.status}`);
+                            }
+                            if (data.body) {
+
+                            }
+                            console.log('This contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
+                            }
+                        }
                         (_gasStation) => {
                             if (_gasStation) {
                                 this.gasStation = _gasStation;
                                 this.voucherTypeService.getVoucherType(this.voucherType_id)?.subscribe(
+                                    (data: HttpResponse<any>) => {
+                                        if (data.status === 200 || data.status === 202) {
+                                            console.log(`Got a successfull status code: ${data.status}`);
+                                        }
+                                        if (data.body) {
+
+                                        }
+                                        console.log('This contains body: ', data.body);
+                                    },
+                                    (err: HttpErrorResponse) => {
+                                        if (err.status === 403 || err.status === 404) {
+                                            console.error(`${err.status} status code caught`);
+                                        }
+                                    }
                                     (data: VoucherType) => {
                                         if (data) {
                                             this.voucher_type_name = data.libelle;
@@ -185,6 +214,20 @@ export class GrabVouchersComponent implements OnInit {
         if (this.standardForm.valid) {
             let voucherNumber: string = this.standardForm.controls['voucherNumber'].value;
             this.voucherTypeService.getVoucherType(this.voucherType_id)?.subscribe(
+                (data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`Got a successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+
+                    }
+                    console.log('This contains body: ', data.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                    }
+                }
                 (voucherType: VoucherType) => {
                     if (voucherType) {
                         this.voucherTemp.createdAt = moment(now()).format('Y-M-DTHH:mm:ss').toString();
@@ -196,10 +239,38 @@ export class GrabVouchersComponent implements OnInit {
                         this.voucherTemp.voucherNumber = voucherNumber;
                         this.voucherTemp.voucherType = voucherType;
                         this.voucherControlService.getVoucherControlByVoucherNumber(voucherNumber)?.subscribe(
+                            (data: HttpResponse<any>) => {
+                                if (data.status === 200 || data.status === 202) {
+                                    console.log(`Got a successfull status code: ${data.status}`);
+                                }
+                                if (data.body) {
+
+                                }
+                                console.log('This contains body: ', data.body);
+                            },
+                            (err: HttpErrorResponse) => {
+                                if (err.status === 403 || err.status === 404) {
+                                    console.error(`${err.status} status code caught`);
+                                }
+                            }
                             (vc: VoucherControl) => {
                                 if (vc) {
                                     this.voucherTemp.voucherAmount = vc.voucherAmount;
                                     this.voucherTempService.addVoucherTemp(this.voucherTemp).subscribe(
+                                        (data: HttpResponse<any>) => {
+                                            if (data.status === 200 || data.status === 202) {
+                                                console.log(`Got a successfull status code: ${data.status}`);
+                                            }
+                                            if (data.body) {
+
+                                            }
+                                            console.log('This contains body: ', data.body);
+                                        },
+                                        (err: HttpErrorResponse) => {
+                                            if (err.status === 403 || err.status === 404) {
+                                                console.error(`${err.status} status code caught`);
+                                            }
+                                        }
                                         (data) => {
                                             if (data) {
                                                 console.log(data);
@@ -228,6 +299,20 @@ export class GrabVouchersComponent implements OnInit {
 
     _fetchData(): void {
         this.voucherTempService.getVoucherTemps()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data: VoucherTemp[]) => {
                 if (data && data.length > 0) {
                     console.log("data:", data);
@@ -327,9 +412,37 @@ export class GrabVouchersComponent implements OnInit {
             if (re.isConfirmed) {
                 if (deleteEvent.id) {
                     this.voucherTempService.getVoucherTemp(deleteEvent.id)?.subscribe(
+                        (data: HttpResponse<any>) => {
+                            if (data.status === 200 || data.status === 202) {
+                                console.log(`Got a successfull status code: ${data.status}`);
+                            }
+                            if (data.body) {
+
+                            }
+                            console.log('This contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
+                            }
+                        }
                         (data: VoucherTemp) => {
                             if (data) {
                                 this.voucherTempService.deleteVoucherTemp(data.id).subscribe(
+                                    (data: HttpResponse<any>) => {
+                                        if (data.status === 200 || data.status === 202) {
+                                            console.log(`Got a successfull status code: ${data.status}`);
+                                        }
+                                        if (data.body) {
+
+                                        }
+                                        console.log('This contains body: ', data.body);
+                                    },
+                                    (err: HttpErrorResponse) => {
+                                        if (err.status === 403 || err.status === 404) {
+                                            console.error(`${err.status} status code caught`);
+                                        }
+                                    }
                                     () => {
                                         Swal.fire({
                                             title: "Succès!",
@@ -362,6 +475,20 @@ export class GrabVouchersComponent implements OnInit {
     verifyVoucher(): void {
         let voucherNumber: string = this.standardForm.controls['voucherNumber'].value;
         this.voucherTempService.getVoucherTempByVoucherNumber(voucherNumber)?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (v: VoucherTemp) => {
                 if (v) {
                     Swal.fire({
@@ -371,10 +498,25 @@ export class GrabVouchersComponent implements OnInit {
                     });
                     this.isVerified = false;
                 }
-            }, (error) => {
+            }, (e: HttpErrorResponse) => {
+                console.log(e.status);
                 if (this.voucherTemp.voucherType.id === 3) {
                     if(isNumeric(voucherNumber)) {
                         this.voucherControlService.getVoucherControlByVoucherNumber(voucherNumber)?.subscribe(
+                            (data: HttpResponse<any>) => {
+                                if (data.status === 200 || data.status === 202) {
+                                    console.log(`Got a successfull status code: ${data.status}`);
+                                }
+                                if (data.body) {
+
+                                }
+                                console.log('This contains body: ', data.body);
+                            },
+                            (err: HttpErrorResponse) => {
+                                if (err.status === 403 || err.status === 404) {
+                                    console.error(`${err.status} status code caught`);
+                                }
+                            }
                             (v: VoucherControl) => {
                                 if (v) {
                                     Swal.fire({

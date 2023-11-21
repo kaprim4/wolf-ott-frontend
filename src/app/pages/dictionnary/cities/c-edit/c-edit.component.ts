@@ -12,6 +12,7 @@ import * as moment from "moment/moment";
 import {now} from "moment/moment";
 import {Region} from "../../../../core/interfaces/region";
 import {RegionService} from "../../../../core/service/region.service";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
 @Component({
     selector: 'app-c-edit',
@@ -123,6 +124,20 @@ export class CEditComponent implements OnInit {
 
     private _fetchRegionData() {
         this.regionService.getRegions()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data) => {
                 if (data) {
                     this.regionList = data;
@@ -155,7 +170,21 @@ export class CEditComponent implements OnInit {
         if (this.editForm.valid) {
             this.loading = true;
             let region: Region | null = null;
-            this.regionService.getRegion(this.editForm.controls['region_id'].value).subscribe((r) => {
+            this.regionService.getRegion(this.editForm.controls['region_id'].value).subscribe(
+                (data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`Got a successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+
+                    }
+                    console.log('This contains body: ', data.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                    }
+                }(r) => {
                 region = r;
                 if (region) {
                     this.city = {
@@ -168,6 +197,20 @@ export class CEditComponent implements OnInit {
                         updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
                     }
                     this.cityService.updateCity(this.city).subscribe(
+                        (data: HttpResponse<any>) => {
+                            if (data.status === 200 || data.status === 202) {
+                                console.log(`Got a successfull status code: ${data.status}`);
+                            }
+                            if (data.body) {
+
+                            }
+                            console.log('This contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
+                            }
+                        }
                         (data) => {
                             if (data) {
                                 this.successSwal.fire().then(() => {

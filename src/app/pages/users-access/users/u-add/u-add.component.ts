@@ -14,6 +14,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
 import * as moment from "moment";
 import {now} from "moment";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
 @Component({
     selector: 'app-r-add',
@@ -156,7 +157,20 @@ export class UAddComponent implements OnInit {
     }
 
     private _fetchGasStationData() {
-        this.gasStationService.getGasStations()?.subscribe(
+        this.gasStationService.getGasStations()?.subscribe((data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data) => {
                 if (data) {
                     this.gasStationList = data;
@@ -167,7 +181,20 @@ export class UAddComponent implements OnInit {
     }
 
     private _fetchRoleData() {
-        this.roleService.getRoles()?.subscribe(
+        this.roleService.getRoles()?.subscribe((data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data) => {
                 if (data) {
                     this.roleList = data;
@@ -218,7 +245,20 @@ export class UAddComponent implements OnInit {
             this.updateFormValues();
             console.log(this.user);
             if (this.user) {
-                this.userService.addUser(this.user).subscribe(
+                this.userService.addUser(this.user).subscribe((data: HttpResponse<any>) => {
+                        if (data.status === 200 || data.status === 202) {
+                            console.log(`Got a successfull status code: ${data.status}`);
+                        }
+                        if (data.body) {
+
+                        }
+                        console.log('This contains body: ', data.body);
+                    },
+                    (err: HttpErrorResponse) => {
+                        if (err.status === 403 || err.status === 404) {
+                            console.error(`${err.status} status code caught`);
+                        }
+                    }
                     (data) => {
                         if (data) {
                             console.log(data);

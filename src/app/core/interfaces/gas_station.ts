@@ -1,7 +1,3 @@
-import {Company} from "./company";
-import {Supervisor} from "./supervisor";
-import {City} from "./city";
-
 export interface GasStation {
     id: number;
     company: any;

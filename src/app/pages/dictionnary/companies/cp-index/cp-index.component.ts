@@ -12,6 +12,7 @@ import {Company} from "../../../../core/interfaces/company";
 import {CompanyService} from "../../../../core/service/company.service";
 import Swal from "sweetalert2";
 import {Supervisor} from "../../../../core/interfaces/supervisor";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 moment.locale('fr');
 
 @Component({
@@ -52,6 +53,20 @@ export class CpIndexComponent implements OnInit {
 
     _fetchData(): void {
         this.companyService.getCompanies()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data: Company[]) => {
                 console.log("data", data);
                 if (data && data.length > 0) {
@@ -133,9 +148,37 @@ export class CpIndexComponent implements OnInit {
             if (re.isConfirmed) {
                 if (deleteEvent.id) {
                     this.companyService.getCompany(deleteEvent.id)?.subscribe(
+                        (data: HttpResponse<any>) => {
+                            if (data.status === 200 || data.status === 202) {
+                                console.log(`Got a successfull status code: ${data.status}`);
+                            }
+                            if (data.body) {
+
+                            }
+                            console.log('This contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
+                            }
+                        }
                         (data: Company) => {
                             if (data) {
                                 this.companyService.deleteCompany(data.id).subscribe(
+                                    (data: HttpResponse<any>) => {
+                                        if (data.status === 200 || data.status === 202) {
+                                            console.log(`Got a successfull status code: ${data.status}`);
+                                        }
+                                        if (data.body) {
+
+                                        }
+                                        console.log('This contains body: ', data.body);
+                                    },
+                                    (err: HttpErrorResponse) => {
+                                        if (err.status === 403 || err.status === 404) {
+                                            console.error(`${err.status} status code caught`);
+                                        }
+                                    }
                                     () => {
                                         Swal.fire({
                                             title: "Succès!",

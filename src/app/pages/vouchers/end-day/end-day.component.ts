@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {EventService} from "../../../core/service/event.service";
 import {EventType} from "../../../core/constants/events";
-import {VoucherTemp, VoucherType} from "../../../core/interfaces/voucher";
+import {VoucherTemp, VoucherTypeSum} from "../../../core/interfaces/voucher";
 import {Column, DeleteEvent} from "../../../shared/advanced-table/advanced-table.component";
 import {IFormType} from "../../../core/interfaces/formType";
 import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
@@ -10,25 +10,28 @@ import {TokenService} from "../../../core/service/token.service";
 import {VoucherTempService} from "../../../core/service/voucher-temp.service";
 import {VoucherTypeService} from "../../../core/service/voucher-type.service";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {GasStation} from "../../../core/interfaces/gas_station";
-import {InputProps, InputPropsTypesEnum} from "../../../core/interfaces/input_props";
+import {InputProps} from "../../../core/interfaces/input_props";
 import * as moment from "moment";
 import {SortEvent} from "../../../shared/advanced-table/sortable.directive";
 import Swal from "sweetalert2";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-end-day',
   templateUrl: './end-day.component.html',
   styleUrls: ['./end-day.component.scss']
 })
-export class EndDayComponent implements OnInit {
+export class EndDayComponent implements OnInit
+{
+
     records: VoucherTemp[] = [];
     columns: Column[] = [];
     pageSizeOptions: number[] = [10, 25, 50, 100];
     loading: boolean = false;
     error: string = '';
+
     entityElm: IFormType = {
-        label: 'Bon temporaire',
+        label: 'Bon saisi',
         entity: 'gas-station-temp'
     }
 
@@ -51,61 +54,12 @@ export class EndDayComponent implements OnInit {
     filterForm: FormGroup = this.fb.group({
         voucherType_id: [''],
     });
+
     formSubmitted: boolean = false;
-    voucherTypes: VoucherType[] = [];
-    gasStations: GasStation[] = [];
     objectProps: InputProps[] = [];
     voucherType_id: string = '';
-    gasStation_id: number = 0;
 
-
-    initFieldsConfig(): void {
-        this.objectProps = [
-            {
-                input: 'voucherType_id',
-                label: 'Type Bon',
-                type: InputPropsTypesEnum.S,
-                value: this.voucherType_id,
-                joinTable: this.voucherTypes,
-                joinTableId: 'id',
-                joinTableIdLabel: 'libelle'
-            },
-            /*{
-                input: 'gasStation_id',
-                label: 'Type Bon',
-                type: InputPropsTypesEnum.S,
-                value: this.gasStation_id,
-                joinTable: this.gasStations,
-                joinTableId: 'id',
-                joinTableIdLabel: 'libelle'
-            },*/
-        ]
-    }
-
-    private _fetchVoucherTypeData() {
-        this.voucherTypeService.getVoucherTypes()?.subscribe(
-            (data) => {
-                if (data) {
-                    this.voucherTypes = data;
-                    this.initFieldsConfig();
-                }
-            }
-        );
-    }
-
-    private _fetchVoucherGasStationData() {
-        this.voucherTempService.getVoucherTemps()?.subscribe((data) => {
-            if (data) {
-                data.map((voucher: VoucherTemp) => {
-                    let gs: GasStation = voucher.gasStation;
-                    if (!this.gasStations.includes(gs)) {
-                        this.gasStations.push(gs);
-                    }
-                });
-                this.initFieldsConfig();
-            }
-        });
-    }
+    voucherTypeSums: VoucherTypeSum[] = [];
 
     get formValues() {
         return this.filterForm.controls;
@@ -120,18 +74,30 @@ export class EndDayComponent implements OnInit {
             ]
         });
         this.loading = true;
-        this._fetchVoucherGasStationData();
-        this._fetchVoucherTypeData();
         this._fetchData();
+        this._fetchStatisticsData();
         this.initTableConfig();
     }
 
     _fetchData(): void {
         this.voucherTempService.getVoucherTemps()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data: VoucherTemp[]) => {
                 if (data && data.length > 0) {
                     data.map((voucher: VoucherTemp) => {
-                        //if (voucher.voucherType.id == this.voucherType_id)
                         if (voucher.gasStation.id == this.tokenService.getPayload().gas_station_id){
                             if (this.voucherType_id != '') {
                                 if (voucher.voucherType.id == this.voucherType_id){
@@ -141,9 +107,45 @@ export class EndDayComponent implements OnInit {
                                 this.records.push(voucher);
                             }
                         }
-
                     });
                     this.loading = false;
+                } else {
+                    this.error = "La liste est vide.";
+                }
+            }
+        );
+    }
+
+    _fetchStatisticsData(): void {
+        this.voucherTempService.getVoucherTempStatistics()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
+            (data: []) => {
+                if (data && data.length > 0) {
+                    data.map((value) => {
+                        if(value[0]['id'] == this.tokenService.getPayload().gas_station_id){
+                            this.voucherTypeSums.push({
+                                gasStation: value[0],
+                                voucherType: value[1],
+                                sum: value[2],
+                                count: value[3],
+                            });
+                        }
+                    });
+                    this.loading = false;
+                    console.log(this.voucherTypeSums);
                 } else {
                     this.error = "La liste est vide.";
                 }
@@ -231,9 +233,37 @@ export class EndDayComponent implements OnInit {
             if (re.isConfirmed) {
                 if (deleteEvent.id) {
                     this.voucherTempService.getVoucherTemp(deleteEvent.id)?.subscribe(
+                        (data: HttpResponse<any>) => {
+                            if (data.status === 200 || data.status === 202) {
+                                console.log(`Got a successfull status code: ${data.status}`);
+                            }
+                            if (data.body) {
+
+                            }
+                            console.log('This contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
+                            }
+                        }
                         (data: VoucherTemp) => {
                             if (data) {
                                 this.voucherTempService.deleteVoucherTemp(data.id).subscribe(
+                                    (data: HttpResponse<any>) => {
+                                        if (data.status === 200 || data.status === 202) {
+                                            console.log(`Got a successfull status code: ${data.status}`);
+                                        }
+                                        if (data.body) {
+
+                                        }
+                                        console.log('This contains body: ', data.body);
+                                    },
+                                    (err: HttpErrorResponse) => {
+                                        if (err.status === 403 || err.status === 404) {
+                                            console.error(`${err.status} status code caught`);
+                                        }
+                                    }
                                     () => {
                                         Swal.fire({
                                             title: "Succès!",

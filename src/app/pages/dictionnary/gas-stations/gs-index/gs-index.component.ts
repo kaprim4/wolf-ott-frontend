@@ -11,6 +11,7 @@ import {Company} from "../../../../core/interfaces/company";
 import {Supervisor} from "../../../../core/interfaces/supervisor";
 import {City} from "../../../../core/interfaces/city";
 import Swal from "sweetalert2";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
 @Component({
     selector: 'app-gs-index',
@@ -50,6 +51,20 @@ export class GsIndexComponent implements OnInit {
 
     _fetchData(): void {
         this.gasStationService.getGasStations()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data: GasStation[]) => {
                 console.log("data", data);
                 if (data && data.length > 0) {
@@ -145,9 +160,37 @@ export class GsIndexComponent implements OnInit {
             if (re.isConfirmed) {
                 if (deleteEvent.id) {
                     this.gasStationService.getGasStation(deleteEvent.id)?.subscribe(
+                        (data: HttpResponse<any>) => {
+                            if (data.status === 200 || data.status === 202) {
+                                console.log(`Got a successfull status code: ${data.status}`);
+                            }
+                            if (data.body) {
+
+                            }
+                            console.log('This contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
+                            }
+                        }
                         (data: GasStation) => {
                             if (data) {
                                 this.gasStationService.deleteGasStation(data.id).subscribe(
+                                    (data: HttpResponse<any>) => {
+                                        if (data.status === 200 || data.status === 202) {
+                                            console.log(`Got a successfull status code: ${data.status}`);
+                                        }
+                                        if (data.body) {
+
+                                        }
+                                        console.log('This contains body: ', data.body);
+                                    },
+                                    (err: HttpErrorResponse) => {
+                                        if (err.status === 403 || err.status === 404) {
+                                            console.error(`${err.status} status code caught`);
+                                        }
+                                    }
                                     () => {
                                         Swal.fire({
                                             title: "Succès!",

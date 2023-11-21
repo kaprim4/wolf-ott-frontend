@@ -10,6 +10,7 @@ import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import * as moment from "moment/moment";
 import {now} from "moment/moment";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
 @Component({
     selector: 'app-cp-edit',
@@ -91,6 +92,20 @@ export class CpEditComponent implements OnInit {
         let id = Number(this.activated.snapshot.paramMap.get('id'));
         if (id) {
             this.companyService.getCompany(id)?.subscribe(
+                (data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`Got a successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+
+                    }
+                    console.log('This contains body: ', data.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                    }
+                }
                 (data: Company) => {
                     if (data) {
                         this.company = data;
@@ -135,6 +150,20 @@ export class CpEditComponent implements OnInit {
                 updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
             }
             this.companyService.updateCompany(this.company).subscribe(
+                (data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`Got a successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+
+                    }
+                    console.log('This contains body: ', data.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                    }
+                }
                 (data) => {
                     if (data) {
                         this.successSwal.fire().then(() => {

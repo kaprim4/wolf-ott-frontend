@@ -10,6 +10,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
 import * as moment from "moment";
 import {now} from "moment";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
 @Component({
     selector: 'app-sp-add',
@@ -140,6 +141,20 @@ export class SpAddComponent implements OnInit {
             console.log(this.supervisor);
             if (this.supervisor) {
                 this.supervisorService.addSupervisor(this.supervisor).subscribe(
+                    (data: HttpResponse<any>) => {
+                        if (data.status === 200 || data.status === 202) {
+                            console.log(`Got a successfull status code: ${data.status}`);
+                        }
+                        if (data.body) {
+
+                        }
+                        console.log('This contains body: ', data.body);
+                    },
+                    (err: HttpErrorResponse) => {
+                        if (err.status === 403 || err.status === 404) {
+                            console.error(`${err.status} status code caught`);
+                        }
+                    }
                     (data) => {
                         if (data) {
                             console.log(data);

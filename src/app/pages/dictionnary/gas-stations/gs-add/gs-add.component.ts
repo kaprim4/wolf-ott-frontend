@@ -16,6 +16,7 @@ import {CityService} from "../../../../core/service/city.service";
 import {Company} from "../../../../core/interfaces/company";
 import {Supervisor} from "../../../../core/interfaces/supervisor";
 import {City} from "../../../../core/interfaces/city";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
 @Component({
     selector: 'app-gs-add',
@@ -181,6 +182,20 @@ export class GsAddComponent implements OnInit {
 
     private _fetchCompanyData() {
         this.companyService.getCompanies()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data) => {
                 if (data) {
                     this.companyList = data;
@@ -192,6 +207,20 @@ export class GsAddComponent implements OnInit {
 
     private _fetchSupervisorData() {
         this.supervisorService.getSupervisors()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data) => {
                 if (data) {
                     this.supervisorList = data;
@@ -203,6 +232,20 @@ export class GsAddComponent implements OnInit {
 
     private _fetchCityData() {
         this.cityService.getCities()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data) => {
                 if (data) {
                     this.cityList = data;
@@ -239,13 +282,55 @@ export class GsAddComponent implements OnInit {
             let company: Company | null = null;
             let supervisor: Supervisor | null = null;
             let city: City | null = null;
-            this.companyService.getCompany(this.addForm.controls['company_id'].value).subscribe((c) => {
+            this.companyService.getCompany(this.addForm.controls['company_id'].value).subscribe(
+                (data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`Got a successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+
+                    }
+                    console.log('This contains body: ', data.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                    }
+                }(c) => {
                 company = c;
                 if (company) {
-                    this.supervisorService.getSupervisor(this.addForm.controls['supervisor_id'].value).subscribe((s) => {
+                    this.supervisorService.getSupervisor(this.addForm.controls['supervisor_id'].value).subscribe(
+                        (data: HttpResponse<any>) => {
+                            if (data.status === 200 || data.status === 202) {
+                                console.log(`Got a successfull status code: ${data.status}`);
+                            }
+                            if (data.body) {
+
+                            }
+                            console.log('This contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
+                            }
+                        }(s) => {
                         supervisor = s;
                         if (supervisor) {
-                            this.cityService.getCity(this.addForm.controls['city_id'].value).subscribe((ct) => {
+                            this.cityService.getCity(this.addForm.controls['city_id'].value).subscribe(
+                                (data: HttpResponse<any>) => {
+                                    if (data.status === 200 || data.status === 202) {
+                                        console.log(`Got a successfull status code: ${data.status}`);
+                                    }
+                                    if (data.body) {
+
+                                    }
+                                    console.log('This contains body: ', data.body);
+                                },
+                                (err: HttpErrorResponse) => {
+                                    if (err.status === 403 || err.status === 404) {
+                                        console.error(`${err.status} status code caught`);
+                                    }
+                                }(ct) => {
                                 city = ct;
                                 if (city) {
                                     this.gasStation = {
@@ -265,6 +350,20 @@ export class GsAddComponent implements OnInit {
                                         updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString()
                                     }
                                     this.gasStationService.addGasStation(this.gasStation).subscribe(
+                                        (data: HttpResponse<any>) => {
+                                            if (data.status === 200 || data.status === 202) {
+                                                console.log(`Got a successfull status code: ${data.status}`);
+                                            }
+                                            if (data.body) {
+
+                                            }
+                                            console.log('This contains body: ', data.body);
+                                        },
+                                        (err: HttpErrorResponse) => {
+                                            if (err.status === 403 || err.status === 404) {
+                                                console.error(`${err.status} status code caught`);
+                                            }
+                                        }
                                         (data) => {
                                             if (data) {
                                                 console.log(data);

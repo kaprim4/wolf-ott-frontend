@@ -12,6 +12,7 @@ import {Supervisor} from "../../../../core/interfaces/supervisor";
 import {SupervisorService} from "../../../../core/service/supervisor.service";
 import Swal from "sweetalert2";
 import {VoucherTemp} from "../../../../core/interfaces/voucher";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 moment.locale('fr');
 
 @Component({
@@ -52,6 +53,20 @@ export class SpIndexComponent implements OnInit {
 
     _fetchData(): void {
         this.supervisorService.getSupervisors()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data: Supervisor[]) => {
                 console.log("data", data);
                 if (data && data.length > 0) {
@@ -137,9 +152,37 @@ export class SpIndexComponent implements OnInit {
             if (re.isConfirmed) {
                 if (deleteEvent.id) {
                     this.supervisorService.getSupervisor(deleteEvent.id)?.subscribe(
+                        (data: HttpResponse<any>) => {
+                            if (data.status === 200 || data.status === 202) {
+                                console.log(`Got a successfull status code: ${data.status}`);
+                            }
+                            if (data.body) {
+
+                            }
+                            console.log('This contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
+                            }
+                        }
                         (data: Supervisor) => {
                             if (data) {
                                 this.supervisorService.deleteSupervisor(data.id).subscribe(
+                                    (data: HttpResponse<any>) => {
+                                        if (data.status === 200 || data.status === 202) {
+                                            console.log(`Got a successfull status code: ${data.status}`);
+                                        }
+                                        if (data.body) {
+
+                                        }
+                                        console.log('This contains body: ', data.body);
+                                    },
+                                    (err: HttpErrorResponse) => {
+                                        if (err.status === 403 || err.status === 404) {
+                                            console.error(`${err.status} status code caught`);
+                                        }
+                                    }
                                     () => {
                                         Swal.fire({
                                             title: "Succès!",

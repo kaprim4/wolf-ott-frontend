@@ -36,21 +36,19 @@
         <div class="card">
             <div class="card-header align-items-center d-flex">
                 <h4 class="card-title mb-0 flex-grow-1">
-                    <i class="fe-layers bg-soft-primary rounded-circle fs-4 p-1"></i> Total
+                    <i class="fas fa-user bg-soft-primary rounded-circle fs-4 p-1"></i> Totaux
                 </h4>
             </div>
-            <div class="card-body">
-
+            <div class="card-body m-0">
+                <table class="table table-bordered table-hover display nowrap margin-top-10 w-p100 m-0">
+                    <tbody>
+                    <tr class="col_price" *ngFor="let voucherTypeSum of voucherTypeSums">
+                        <td class="title" colspan="4">Le montant total des bons {{voucherTypeSum.voucherType?.libelle}}</td>
+                        <td class="price">{{voucherTypeSum.sum | currency:'MAD':'symbol':'3.2-2':'fr'}}</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-            <!-- end card body-->
-            <!-- start card footer -->
-            <div class="card-footer overflow-hidden">
-                <button type="submit" class="btn btn-success rounded-pill waves-effect waves-light float-end">
-                    <span class="btn-label"><i class="mdi mdi-check-all"></i></span> Filtrer
-                </button>
-            </div>
-            <!-- end card footer -->
-            <!-- end card -->
         </div>
     </div>
 </div>

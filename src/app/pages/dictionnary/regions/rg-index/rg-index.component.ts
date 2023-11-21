@@ -12,6 +12,7 @@ import {Region} from "../../../../core/interfaces/region";
 import {RegionService} from "../../../../core/service/region.service";
 import Swal from "sweetalert2";
 import {Supervisor} from "../../../../core/interfaces/supervisor";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 moment.locale('fr');
 
 @Component({
@@ -52,6 +53,20 @@ export class RgIndexComponent implements OnInit {
 
     _fetchData(): void {
         this.regionService.getRegions()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data: Region[]) => {
                 console.log("data", data);
                 if (data && data.length > 0) {
@@ -135,9 +150,37 @@ export class RgIndexComponent implements OnInit {
             if (re.isConfirmed) {
                 if (deleteEvent.id) {
                     this.regionService.getRegion(deleteEvent.id)?.subscribe(
+                        (data: HttpResponse<any>) => {
+                            if (data.status === 200 || data.status === 202) {
+                                console.log(`Got a successfull status code: ${data.status}`);
+                            }
+                            if (data.body) {
+
+                            }
+                            console.log('This contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
+                            }
+                        }
                         (data: Region) => {
                             if (data) {
                                 this.regionService.deleteRegion(data.id).subscribe(
+                                    (data: HttpResponse<any>) => {
+                                        if (data.status === 200 || data.status === 202) {
+                                            console.log(`Got a successfull status code: ${data.status}`);
+                                        }
+                                        if (data.body) {
+
+                                        }
+                                        console.log('This contains body: ', data.body);
+                                    },
+                                    (err: HttpErrorResponse) => {
+                                        if (err.status === 403 || err.status === 404) {
+                                            console.error(`${err.status} status code caught`);
+                                        }
+                                    }
                                     () => {
                                         Swal.fire({
                                             title: "Succès!",

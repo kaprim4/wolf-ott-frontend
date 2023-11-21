@@ -9,6 +9,7 @@ import {EventType} from "../../../core/constants/events";
 import * as moment from "moment";
 import {SortEvent} from "../../../shared/advanced-table/sortable.directive";
 import {VoucherCustomerService} from "../../../core/service/voucher-customer.service";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-voucher-customer',
@@ -48,6 +49,20 @@ export class VoucherCustomerComponent implements OnInit {
 
     _fetchData(): void {
         this.voucherCustomerService.getVoucherCustomers()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data: VoucherCustomer[]) => {
                 console.log("data", data);
                 if (data && data.length > 0) {

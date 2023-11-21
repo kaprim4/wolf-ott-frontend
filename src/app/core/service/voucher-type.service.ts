@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 import {environment} from "../../../environments/environment";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {VoucherType} from "../interfaces/voucher";
+import {TokenService} from "./token.service";
 
 @Injectable({
     providedIn: 'root'
@@ -10,28 +11,49 @@ import {VoucherType} from "../interfaces/voucher";
 export class VoucherTypeService {
 
     private apiServerUrl = environment.apiBaseUrl;
+    private header1: HttpHeaders;
 
     constructor(
-        private http: HttpClient
-    ) { }
-
-    public getVoucherTypes(): Observable<VoucherType[]> {
-        return this.http.get<VoucherType[]>(`${this.apiServerUrl}/api/v1/voucher-types/all`);
+        private http: HttpClient,
+        private tokenService: TokenService
+    ) {
+        this.header1 = new HttpHeaders();
+        this.header1 = this.header1.append('Content-Type', 'application/json');
+        this.header1 = this.header1.append('Authorization', `Bearer ${this.tokenService.getToken()}`);
     }
 
-    public getVoucherType(id: number): Observable<VoucherType> {
-        return this.http.get<VoucherType>(`${this.apiServerUrl}/api/v1/voucher-types/find/${id}`);
+    public getVoucherTypes(): Observable<HttpResponse<VoucherType[]>> {
+        return this.http.get<VoucherType[]>(
+            `${this.apiServerUrl}/api/v1/voucher-types/all`,
+            {headers: this.header1, observe: 'response'},
+        );
     }
 
-    public addVoucherType(voucherType: VoucherType): Observable<VoucherType> {
-        return this.http.post<VoucherType>(`${this.apiServerUrl}/api/v1/voucher-types/add`, voucherType);
+    public getVoucherType(id: number): Observable<HttpResponse<VoucherType>> {
+        return this.http.get<VoucherType>(
+            `${this.apiServerUrl}/api/v1/voucher-types/find/${id}`,
+            {headers: this.header1, observe: 'response'},
+        );
     }
 
-    public updateVoucherType(voucherType: VoucherType): Observable<VoucherType> {
-        return this.http.put<VoucherType>(`${this.apiServerUrl}/api/v1/voucher-types/update`, voucherType);
+    public addVoucherType(voucherType: VoucherType): Observable<HttpResponse<VoucherType>> {
+        return this.http.post<VoucherType>(
+            `${this.apiServerUrl}/api/v1/voucher-types/add`, voucherType,
+            {headers: this.header1, observe: 'response'},
+        );
     }
 
-    public deleteVoucherType(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiServerUrl}/api/v1/voucher-types/delete/${id}`);
+    public updateVoucherType(voucherType: VoucherType): Observable<HttpResponse<VoucherType>> {
+        return this.http.put<VoucherType>(
+            `${this.apiServerUrl}/api/v1/voucher-types/update`, voucherType,
+            {headers: this.header1, observe: 'response'},
+        );
+    }
+
+    public deleteVoucherType(id: number): Observable<HttpResponse<void>> {
+        return this.http.delete<void>(
+            `${this.apiServerUrl}/api/v1/voucher-types/delete/${id}`,
+            {headers: this.header1, observe: 'response'},
+        );
     }
 }

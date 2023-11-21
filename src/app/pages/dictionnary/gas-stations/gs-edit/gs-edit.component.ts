@@ -16,6 +16,7 @@ import {City} from "../../../../core/interfaces/city";
 import {CompanyService} from "../../../../core/service/company.service";
 import {SupervisorService} from "../../../../core/service/supervisor.service";
 import {CityService} from "../../../../core/service/city.service";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
 @Component({
     selector: 'app-gs-edit',
@@ -196,6 +197,20 @@ export class GsEditComponent implements OnInit {
         let id = Number(this.activated.snapshot.paramMap.get('id'));
         if (id) {
             this.gasStationService.getGasStation(id)?.subscribe(
+                (data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`Got a successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+
+                    }
+                    console.log('This contains body: ', data.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                    }
+                }
                 (data: GasStation) => {
                     if (data) {
                         this.gasStation = data;
@@ -212,6 +227,20 @@ export class GsEditComponent implements OnInit {
 
     private _fetchCompanyData() {
         this.companyService.getCompanies()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data) => {
                 if (data) {
                     this.companyList = data;
@@ -223,6 +252,20 @@ export class GsEditComponent implements OnInit {
 
     private _fetchSupervisorData() {
         this.supervisorService.getSupervisors()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data) => {
                 if (data) {
                     this.supervisorList = data;
@@ -234,6 +277,20 @@ export class GsEditComponent implements OnInit {
 
     private _fetchCityData() {
         this.cityService.getCities()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data) => {
                 if (data) {
                     this.cityList = data;
@@ -270,13 +327,55 @@ export class GsEditComponent implements OnInit {
             let company: Company | null = null;
             let supervisor: Supervisor | null = null;
             let city: City | null = null;
-            this.companyService.getCompany(this.editForm.controls['company_id'].value).subscribe((c) => {
+            this.companyService.getCompany(this.editForm.controls['company_id'].value).subscribe(
+                (data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`Got a successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+
+                    }
+                    console.log('This contains body: ', data.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                    }
+                }(c) => {
                 company = c;
                 if (company) {
-                    this.supervisorService.getSupervisor(this.editForm.controls['supervisor_id'].value).subscribe((s) => {
+                    this.supervisorService.getSupervisor(this.editForm.controls['supervisor_id'].value).subscribe(
+                        (data: HttpResponse<any>) => {
+                            if (data.status === 200 || data.status === 202) {
+                                console.log(`Got a successfull status code: ${data.status}`);
+                            }
+                            if (data.body) {
+
+                            }
+                            console.log('This contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
+                            }
+                        }(s) => {
                         supervisor = s;
                         if (supervisor) {
-                            this.cityService.getCity(this.editForm.controls['city_id'].value).subscribe((ct) => {
+                            this.cityService.getCity(this.editForm.controls['city_id'].value).subscribe(
+                                (data: HttpResponse<any>) => {
+                                    if (data.status === 200 || data.status === 202) {
+                                        console.log(`Got a successfull status code: ${data.status}`);
+                                    }
+                                    if (data.body) {
+
+                                    }
+                                    console.log('This contains body: ', data.body);
+                                },
+                                (err: HttpErrorResponse) => {
+                                    if (err.status === 403 || err.status === 404) {
+                                        console.error(`${err.status} status code caught`);
+                                    }
+                                }(ct) => {
                                 city = ct;
                                 if (city) {
                                     this.gasStation = {
@@ -296,6 +395,20 @@ export class GsEditComponent implements OnInit {
                                         updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString()
                                     }
                                     this.gasStationService.updateGasStation(this.gasStation).subscribe(
+                                        (data: HttpResponse<any>) => {
+                                            if (data.status === 200 || data.status === 202) {
+                                                console.log(`Got a successfull status code: ${data.status}`);
+                                            }
+                                            if (data.body) {
+
+                                            }
+                                            console.log('This contains body: ', data.body);
+                                        },
+                                        (err: HttpErrorResponse) => {
+                                            if (err.status === 403 || err.status === 404) {
+                                                console.error(`${err.status} status code caught`);
+                                            }
+                                        }
                                         (data) => {
                                             if (data) {
                                                 this.successSwal.fire().then(() => {

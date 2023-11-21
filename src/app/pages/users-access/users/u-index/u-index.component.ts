@@ -15,6 +15,7 @@ import {IFormType} from "../../../../core/interfaces/formType";
 import {GasStation} from "../../../../core/interfaces/gas_station";
 import {Role} from "../../../../core/interfaces/role";
 import Swal from "sweetalert2";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
 moment.locale('fr');
 
@@ -56,6 +57,20 @@ export class UIndexComponent implements OnInit {
 
     _fetchData(): void {
         this.userService.getUsers()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data: IUser[]) => {
                 console.log("data", data);
                 if (data && data.length > 0) {
@@ -147,9 +162,37 @@ export class UIndexComponent implements OnInit {
             if (re.isConfirmed) {
                 if (deleteEvent.id) {
                     this.userService.getUser(deleteEvent.id)?.subscribe(
+                        (data: HttpResponse<any>) => {
+                            if (data.status === 200 || data.status === 202) {
+                                console.log(`Got a successfull status code: ${data.status}`);
+                            }
+                            if (data.body) {
+
+                            }
+                            console.log('This contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
+                            }
+                        }
                         (data: IUser) => {
                             if (data) {
                                 this.userService.deleteUser(data.id).subscribe(
+                                    (data: HttpResponse<any>) => {
+                                        if (data.status === 200 || data.status === 202) {
+                                            console.log(`Got a successfull status code: ${data.status}`);
+                                        }
+                                        if (data.body) {
+
+                                        }
+                                        console.log('This contains body: ', data.body);
+                                    },
+                                    (err: HttpErrorResponse) => {
+                                        if (err.status === 403 || err.status === 404) {
+                                            console.error(`${err.status} status code caught`);
+                                        }
+                                    }
                                     () => {
                                         Swal.fire({
                                             title: "Succès!",

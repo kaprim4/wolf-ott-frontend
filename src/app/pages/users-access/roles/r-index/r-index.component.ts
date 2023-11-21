@@ -13,6 +13,7 @@ import {RoleService} from "../../../../core/service/role.service";
 import Swal from "sweetalert2";
 import {VoucherTemp} from "../../../../core/interfaces/voucher";
 import {City} from "../../../../core/interfaces/city";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 moment.locale('fr');
 
 @Component({
@@ -52,7 +53,20 @@ export class RIndexComponent implements OnInit {
     }
 
     _fetchData(): void {
-        this.roleService.getRoles()?.subscribe(
+        this.roleService.getRoles()?.subscribe((data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data: Role[]) => {
                 console.log("data", data);
                 if (data && data.length > 0) {
@@ -135,10 +149,36 @@ export class RIndexComponent implements OnInit {
             this.loading = true;
             if (re.isConfirmed) {
                 if (deleteEvent.id) {
-                    this.roleService.getRole(deleteEvent.id)?.subscribe(
+                    this.roleService.getRole(deleteEvent.id)?.subscribe((data: HttpResponse<any>) => {
+                            if (data.status === 200 || data.status === 202) {
+                                console.log(`Got a successfull status code: ${data.status}`);
+                            }
+                            if (data.body) {
+
+                            }
+                            console.log('This contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
+                            }
+                        }
                         (data: Role) => {
                             if (data) {
-                                this.roleService.deleteRole(data.id).subscribe(
+                                this.roleService.deleteRole(data.id).subscribe((data: HttpResponse<any>) => {
+                                        if (data.status === 200 || data.status === 202) {
+                                            console.log(`Got a successfull status code: ${data.status}`);
+                                        }
+                                        if (data.body) {
+
+                                        }
+                                        console.log('This contains body: ', data.body);
+                                    },
+                                    (err: HttpErrorResponse) => {
+                                        if (err.status === 403 || err.status === 404) {
+                                            console.error(`${err.status} status code caught`);
+                                        }
+                                    }
                                     () => {
                                         Swal.fire({
                                             title: "Succès!",

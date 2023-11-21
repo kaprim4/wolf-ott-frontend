@@ -7,6 +7,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {InputProps, InputPropsTypesEnum} from "../../../core/interfaces/input_props";
 import {VoucherType} from "../../../core/interfaces/voucher";
 import {VoucherTypeService} from "../../../core/service/voucher-type.service";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
 @Component({
     selector: 'app-voucher-type',
@@ -74,6 +75,20 @@ export class VoucherTypeComponent implements OnInit {
 
     private _fetchVoucherTypesData() {
         this.voucherTypeService.getVoucherTypes()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data) => {
                 if (data) {
                     this.voucherTypes = data;

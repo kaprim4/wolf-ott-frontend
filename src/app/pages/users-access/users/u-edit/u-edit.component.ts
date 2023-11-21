@@ -14,6 +14,7 @@ import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import * as moment from "moment/moment";
 import {now} from "moment/moment";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
 @Component({
     selector: 'app-u-edit',
@@ -168,6 +169,20 @@ export class UEditComponent implements OnInit {
         let id = Number(this.activated.snapshot.paramMap.get('id'));
         if (id) {
             this.userService.getUser(id)?.subscribe(
+                (data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`Got a successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+
+                    }
+                    console.log('This contains body: ', data.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                    }
+                }
                 (data: IUser) => {
                     if (data) {
                         this.user = data;
@@ -184,6 +199,20 @@ export class UEditComponent implements OnInit {
 
     private _fetchGasStationData() {
         this.gasStationService.getGasStations()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data) => {
                 if (data) {
                     this.gasStationList = data;
@@ -195,6 +224,20 @@ export class UEditComponent implements OnInit {
 
     private _fetchRoleData() {
         this.roleService.getRoles()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
             (data) => {
                 if (data) {
                     this.roleList = data;
@@ -229,10 +272,38 @@ export class UEditComponent implements OnInit {
             this.loading = true;
             let role: Role | null = null;
             let gas_station: GasStation | null = null;
-            this.roleService.getRole(this.editForm.controls['role_id'].value).subscribe((r) => {
+            this.roleService.getRole(this.editForm.controls['role_id'].value).subscribe(
+                (data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`Got a successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+
+                    }
+                    console.log('This contains body: ', data.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                    }
+                }(r) => {
                 role = r;
                 if (role) {
-                    this.gasStationService.getGasStation(this.editForm.controls['gas_station_id'].value).subscribe((g) => {
+                    this.gasStationService.getGasStation(this.editForm.controls['gas_station_id'].value).subscribe(
+                        (data: HttpResponse<any>) => {
+                            if (data.status === 200 || data.status === 202) {
+                                console.log(`Got a successfull status code: ${data.status}`);
+                            }
+                            if (data.body) {
+
+                            }
+                            console.log('This contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
+                            }
+                        }(g) => {
                         gas_station = g;
                         if (gas_station) {
                             this.user = {
@@ -250,6 +321,20 @@ export class UEditComponent implements OnInit {
                                 updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
                             }
                             this.userService.updateUser(this.user).subscribe(
+                                (data: HttpResponse<any>) => {
+                                    if (data.status === 200 || data.status === 202) {
+                                        console.log(`Got a successfull status code: ${data.status}`);
+                                    }
+                                    if (data.body) {
+
+                                    }
+                                    console.log('This contains body: ', data.body);
+                                },
+                                (err: HttpErrorResponse) => {
+                                    if (err.status === 403 || err.status === 404) {
+                                        console.error(`${err.status} status code caught`);
+                                    }
+                                }
                                 (data) => {
                                     if (data) {
                                         this.successSwal.fire().then(() => {

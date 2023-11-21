@@ -1,19 +1,16 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {IFormType} from "../../../../core/interfaces/formType";
-import {IUser} from "../../../../core/interfaces/user";
 import {EventService} from "../../../../core/service/event.service";
-import {UserService} from "../../../../core/service/user.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {EventType} from "../../../../core/constants/events";
-import {GasStation} from "../../../../core/interfaces/gas_station";
 import {Role} from "../../../../core/interfaces/role";
 import {InputProps, InputPropsTypesEnum} from "../../../../core/interfaces/input_props";
-import {GasStationService} from "../../../../core/service/gas-station.service";
 import {RoleService} from "../../../../core/service/role.service";
 import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import * as moment from "moment/moment";
 import {now} from "moment/moment";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
 @Component({
     selector: 'app-r-edit',
@@ -103,7 +100,20 @@ export class REditComponent implements OnInit {
     private _fetchData() {
         let id = Number(this.activated.snapshot.paramMap.get('id'));
         if (id) {
-            this.roleService.getRole(id)?.subscribe(
+            this.roleService.getRole(id)?.subscribe((data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`Got a successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+
+                    }
+                    console.log('This contains body: ', data.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                    }
+                }
                 (data: Role) => {
                     if (data) {
                         this.role = data;
@@ -148,7 +158,20 @@ export class REditComponent implements OnInit {
                 createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
                 updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
             }
-            this.roleService.updateRole(this.role).subscribe(
+            this.roleService.updateRole(this.role).subscribe((data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`Got a successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+
+                    }
+                    console.log('This contains body: ', data.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                    }
+                }
                 (data) => {
                     if (data) {
                         this.successSwal.fire().then(() => {
