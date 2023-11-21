@@ -157,48 +157,40 @@ export class UAddComponent implements OnInit {
     }
 
     private _fetchGasStationData() {
-        this.gasStationService.getGasStations()?.subscribe((data: HttpResponse<any>) => {
+        this.gasStationService.getGasStations()?.subscribe(
+            (data: HttpResponse<any>) => {
                 if (data.status === 200 || data.status === 202) {
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
-
+                    this.gasStationList = data.body;
+                    this.initFieldsConfig();
                 }
                 console.log('This contains body: ', data.body);
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                }
-            }
-            (data) => {
-                if (data) {
-                    this.gasStationList = data;
-                    this.initFieldsConfig();
                 }
             }
         );
     }
 
     private _fetchRoleData() {
-        this.roleService.getRoles()?.subscribe((data: HttpResponse<any>) => {
+        this.roleService.getRoles()?.subscribe(
+            (data: HttpResponse<any>) => {
                 if (data.status === 200 || data.status === 202) {
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
-
+                    this.roleList = data.body;
+                    this.initFieldsConfig();
                 }
                 console.log('This contains body: ', data.body);
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                }
-            }
-            (data) => {
-                if (data) {
-                    this.roleList = data;
-                    this.initFieldsConfig();
                 }
             }
         );
@@ -245,34 +237,26 @@ export class UAddComponent implements OnInit {
             this.updateFormValues();
             console.log(this.user);
             if (this.user) {
-                this.userService.addUser(this.user).subscribe((data: HttpResponse<any>) => {
+                this.userService.addUser(this.user).subscribe(
+                    (data: HttpResponse<any>) => {
                         if (data.status === 200 || data.status === 202) {
                             console.log(`Got a successfull status code: ${data.status}`);
                         }
                         if (data.body) {
-
+                            this.successSwal.fire().then(() => {
+                                this.router.navigate(['users-access/' + this.entityElm.entity + 's'])
+                            });
                         }
                         console.log('This contains body: ', data.body);
                     },
                     (err: HttpErrorResponse) => {
                         if (err.status === 403 || err.status === 404) {
                             console.error(`${err.status} status code caught`);
-                        }
-                    }
-                    (data) => {
-                        if (data) {
-                            console.log(data);
-                            this.successSwal.fire().then(() => {
-                                this.router.navigate(['users-access/' + this.entityElm.entity + 's'])
+                            this.errorSwal.fire().then((r) => {
+                                this.error = err.message;
+                                console.log(err.message);
                             });
                         }
-                    },
-                    (error: string) => {
-
-                        this.errorSwal.fire().then((r) => {
-                            this.error = error;
-                            console.log(error);
-                        });
                     },
                     (): void => {
                         this.loading = false;

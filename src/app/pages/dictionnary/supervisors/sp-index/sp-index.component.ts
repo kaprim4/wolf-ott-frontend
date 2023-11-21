@@ -58,22 +58,18 @@ export class SpIndexComponent implements OnInit {
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
-
+                    if (data.body && data.body.length > 0) {
+                        this.records = data.body;
+                        this.loading = false;
+                    } else {
+                        this.error = "La liste est vide.";
+                    }
                 }
                 console.log('This contains body: ', data.body);
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                }
-            }
-            (data: Supervisor[]) => {
-                console.log("data", data);
-                if (data && data.length > 0) {
-                    this.records = data;
-                    this.loading = false;
-                } else {
-                    this.error = "La liste est vide.";
                 }
             }
         );
@@ -157,51 +153,41 @@ export class SpIndexComponent implements OnInit {
                                 console.log(`Got a successfull status code: ${data.status}`);
                             }
                             if (data.body) {
-
-                            }
-                            console.log('This contains body: ', data.body);
-                        },
-                        (err: HttpErrorResponse) => {
-                            if (err.status === 403 || err.status === 404) {
-                                console.error(`${err.status} status code caught`);
-                            }
-                        }
-                        (data: Supervisor) => {
-                            if (data) {
-                                this.supervisorService.deleteSupervisor(data.id).subscribe(
-                                    (data: HttpResponse<any>) => {
-                                        if (data.status === 200 || data.status === 202) {
-                                            console.log(`Got a successfull status code: ${data.status}`);
+                                this.supervisorService.deleteSupervisor(data.body.id).subscribe(
+                                    (data2: HttpResponse<any>) => {
+                                        if (data2.status === 200 || data2.status === 202) {
+                                            console.log(`Got a successfull status code: ${data2.status}`);
                                         }
-                                        if (data.body) {
-
+                                        if (data2.body) {
+                                            Swal.fire({
+                                                title: "Succès!",
+                                                text: "Cette entrée a été supprimée avec succès.",
+                                                icon: "success"
+                                            }).then();
                                         }
-                                        console.log('This contains body: ', data.body);
+                                        console.log('This contains body: ', data2.body);
                                     },
                                     (err: HttpErrorResponse) => {
                                         if (err.status === 403 || err.status === 404) {
                                             console.error(`${err.status} status code caught`);
+                                            Swal.fire({
+                                                title: "Erreur!",
+                                                text: err.message,
+                                                icon: "error"
+                                            }).then();
                                         }
-                                    }
-                                    () => {
-                                        Swal.fire({
-                                            title: "Succès!",
-                                            text: "Cette entrée a été supprimée avec succès.",
-                                            icon: "success"
-                                        }).then();
-                                    },
-                                    (error: string) => {
-                                        Swal.fire({
-                                            title: "Erreur!",
-                                            text: error,
-                                            icon: "error"
-                                        }).then();
                                     },
                                     (): void => {
                                         this.records.splice(deleteEvent.index, 1);
                                         this.loading = false;
                                     }
                                 )
+                            }
+                            console.log('This contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
                             }
                         }
                     );

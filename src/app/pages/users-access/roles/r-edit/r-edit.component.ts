@@ -100,25 +100,21 @@ export class REditComponent implements OnInit {
     private _fetchData() {
         let id = Number(this.activated.snapshot.paramMap.get('id'));
         if (id) {
-            this.roleService.getRole(id)?.subscribe((data: HttpResponse<any>) => {
+            this.roleService.getRole(id)?.subscribe(
+                (data: HttpResponse<any>) => {
                     if (data.status === 200 || data.status === 202) {
                         console.log(`Got a successfull status code: ${data.status}`);
                     }
                     if (data.body) {
-
+                        this.role = data.body;
+                        this.loading = false;
+                        this.initFieldsConfig();
                     }
                     console.log('This contains body: ', data.body);
                 },
                 (err: HttpErrorResponse) => {
                     if (err.status === 403 || err.status === 404) {
                         console.error(`${err.status} status code caught`);
-                    }
-                }
-                (data: Role) => {
-                    if (data) {
-                        this.role = data;
-                        this.loading = false;
-                        this.initFieldsConfig();
                     }
                 }
             );
@@ -158,11 +154,15 @@ export class REditComponent implements OnInit {
                 createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
                 updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
             }
-            this.roleService.updateRole(this.role).subscribe((data: HttpResponse<any>) => {
+            this.roleService.updateRole(this.role).subscribe(
+                (data: HttpResponse<any>) => {
                     if (data.status === 200 || data.status === 202) {
                         console.log(`Got a successfull status code: ${data.status}`);
                     }
                     if (data.body) {
+                        this.successSwal.fire().then(() => {
+                            this.router.navigate(['users-access/roles'])
+                        });
 
                     }
                     console.log('This contains body: ', data.body);
@@ -170,20 +170,11 @@ export class REditComponent implements OnInit {
                 (err: HttpErrorResponse) => {
                     if (err.status === 403 || err.status === 404) {
                         console.error(`${err.status} status code caught`);
-                    }
-                }
-                (data) => {
-                    if (data) {
-                        this.successSwal.fire().then(() => {
-                            this.router.navigate(['users-access/roles'])
+                        this.errorSwal.fire().then((r) => {
+                            this.error = err.message;
+                            console.log(err.message);
                         });
                     }
-                },
-                (error: string) => {
-                    this.errorSwal.fire().then((r) => {
-                        this.error = error;
-                        console.log(error);
-                    });
                 },
                 (): void => {
                     this.loading = false;
