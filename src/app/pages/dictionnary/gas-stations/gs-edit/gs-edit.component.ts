@@ -202,20 +202,15 @@ export class GsEditComponent implements OnInit {
                         console.log(`Got a successfull status code: ${data.status}`);
                     }
                     if (data.body) {
-
+                        this.gasStation = data.body;
+                        this.loading = false;
+                        this.initFieldsConfig();
                     }
                     console.log('This contains body: ', data.body);
                 },
                 (err: HttpErrorResponse) => {
                     if (err.status === 403 || err.status === 404) {
                         console.error(`${err.status} status code caught`);
-                    }
-                }
-                (data: GasStation) => {
-                    if (data) {
-                        this.gasStation = data;
-                        this.loading = false;
-                        this.initFieldsConfig();
                     }
                 }
             );
@@ -232,19 +227,14 @@ export class GsEditComponent implements OnInit {
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
-
+                    this.companyList = data.body;
+                    this.initFieldsConfig();
                 }
                 console.log('This contains body: ', data.body);
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                }
-            }
-            (data) => {
-                if (data) {
-                    this.companyList = data;
-                    this.initFieldsConfig();
                 }
             }
         );
@@ -257,19 +247,14 @@ export class GsEditComponent implements OnInit {
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
-
+                    this.supervisorList = data.body;
+                    this.initFieldsConfig();
                 }
                 console.log('This contains body: ', data.body);
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                }
-            }
-            (data) => {
-                if (data) {
-                    this.supervisorList = data;
-                    this.initFieldsConfig();
                 }
             }
         );
@@ -282,19 +267,14 @@ export class GsEditComponent implements OnInit {
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
-
+                    this.cityList = data.body;
+                    this.initFieldsConfig();
                 }
                 console.log('This contains body: ', data.body);
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                }
-            }
-            (data) => {
-                if (data) {
-                    this.cityList = data;
-                    this.initFieldsConfig();
                 }
             }
         );
@@ -333,7 +313,87 @@ export class GsEditComponent implements OnInit {
                         console.log(`Got a successfull status code: ${data.status}`);
                     }
                     if (data.body) {
-
+                        company = data.body;
+                        if (company) {
+                            this.supervisorService.getSupervisor(this.editForm.controls['supervisor_id'].value).subscribe(
+                                (data2: HttpResponse<any>) => {
+                                    if (data2.status === 200 || data2.status === 202) {
+                                        console.log(`Got a successfull status code: ${data2.status}`);
+                                    }
+                                    if (data2.body) {
+                                        supervisor = data2.body;
+                                        if (supervisor) {
+                                            this.cityService.getCity(this.editForm.controls['city_id'].value).subscribe(
+                                                (data3: HttpResponse<any>) => {
+                                                    if (data3.status === 200 || data3.status === 202) {
+                                                        console.log(`Got a successfull status code: ${data3.status}`);
+                                                    }
+                                                    if (data3.body) {
+                                                        city = data3.body;
+                                                        if (city) {
+                                                            this.gasStation = {
+                                                                id: this.editForm.controls['id'].value,
+                                                                company: company,
+                                                                code_sap: this.editForm.controls['code_sap'].value,
+                                                                libelle: this.editForm.controls['libelle'].value,
+                                                                address: this.editForm.controls['address'].value,
+                                                                city: city,
+                                                                latitude: this.editForm.controls['latitude'].value,
+                                                                longitude: this.editForm.controls['longitude'].value,
+                                                                supervisor: supervisor,
+                                                                zip_code: this.editForm.controls['zip_code'].value,
+                                                                isActivated: this.editForm.controls['isActivated'].value,
+                                                                isDeleted: false,
+                                                                createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
+                                                                updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString()
+                                                            }
+                                                            this.gasStationService.updateGasStation(this.gasStation).subscribe(
+                                                                (data4: HttpResponse<any>) => {
+                                                                    if (data4.status === 200 || data4.status === 202) {
+                                                                        console.log(`Got a successfull status code: ${data4.status}`);
+                                                                    }
+                                                                    if (data4.body) {
+                                                                        this.successSwal.fire().then(() => {
+                                                                            this.router.navigate(['dictionnary/gas-stations'])
+                                                                        });
+                                                                    }
+                                                                    console.log('This contains body: ', data4.body);
+                                                                },
+                                                                (err: HttpErrorResponse) => {
+                                                                    if (err.status === 403 || err.status === 404) {
+                                                                        console.error(`${err.status} status code caught`);
+                                                                    }
+                                                                }
+                                                            )
+                                                            console.log(this.gasStation);
+                                                        }
+                                                    }
+                                                    console.log('This contains body: ', data3.body);
+                                                },
+                                                (err: HttpErrorResponse) => {
+                                                    if (err.status === 403 || err.status === 404) {
+                                                        console.error(`${err.status} status code caught`);
+                                                        this.errorSwal.fire().then((r) => {
+                                                            this.error = err.message;
+                                                            console.log(err.error);
+                                                        });
+                                                    }
+                                                },
+                                                (): void => {
+                                                    this.loading = false;
+                                                }
+                                            );
+                                        }
+                                    }
+                                    console.log('This contains body: ', data2.body);
+                                },
+                                (err: HttpErrorResponse) => {
+                                    if (err.status === 403 || err.status === 404) {
+                                        console.error(`${err.status} status code caught`);
+                                    }
+                                }
+                            );
+                        }
                     }
                     console.log('This contains body: ', data.body);
                 },
@@ -341,98 +401,8 @@ export class GsEditComponent implements OnInit {
                     if (err.status === 403 || err.status === 404) {
                         console.error(`${err.status} status code caught`);
                     }
-                }(c) => {
-                company = c;
-                if (company) {
-                    this.supervisorService.getSupervisor(this.editForm.controls['supervisor_id'].value).subscribe(
-                        (data: HttpResponse<any>) => {
-                            if (data.status === 200 || data.status === 202) {
-                                console.log(`Got a successfull status code: ${data.status}`);
-                            }
-                            if (data.body) {
-
-                            }
-                            console.log('This contains body: ', data.body);
-                        },
-                        (err: HttpErrorResponse) => {
-                            if (err.status === 403 || err.status === 404) {
-                                console.error(`${err.status} status code caught`);
-                            }
-                        }(s) => {
-                        supervisor = s;
-                        if (supervisor) {
-                            this.cityService.getCity(this.editForm.controls['city_id'].value).subscribe(
-                                (data: HttpResponse<any>) => {
-                                    if (data.status === 200 || data.status === 202) {
-                                        console.log(`Got a successfull status code: ${data.status}`);
-                                    }
-                                    if (data.body) {
-
-                                    }
-                                    console.log('This contains body: ', data.body);
-                                },
-                                (err: HttpErrorResponse) => {
-                                    if (err.status === 403 || err.status === 404) {
-                                        console.error(`${err.status} status code caught`);
-                                    }
-                                }(ct) => {
-                                city = ct;
-                                if (city) {
-                                    this.gasStation = {
-                                        id: this.editForm.controls['id'].value,
-                                        company: company,
-                                        code_sap: this.editForm.controls['code_sap'].value,
-                                        libelle: this.editForm.controls['libelle'].value,
-                                        address: this.editForm.controls['address'].value,
-                                        city: city,
-                                        latitude: this.editForm.controls['latitude'].value,
-                                        longitude: this.editForm.controls['longitude'].value,
-                                        supervisor: supervisor,
-                                        zip_code: this.editForm.controls['zip_code'].value,
-                                        isActivated: this.editForm.controls['isActivated'].value,
-                                        isDeleted: false,
-                                        createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
-                                        updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString()
-                                    }
-                                    this.gasStationService.updateGasStation(this.gasStation).subscribe(
-                                        (data: HttpResponse<any>) => {
-                                            if (data.status === 200 || data.status === 202) {
-                                                console.log(`Got a successfull status code: ${data.status}`);
-                                            }
-                                            if (data.body) {
-
-                                            }
-                                            console.log('This contains body: ', data.body);
-                                        },
-                                        (err: HttpErrorResponse) => {
-                                            if (err.status === 403 || err.status === 404) {
-                                                console.error(`${err.status} status code caught`);
-                                            }
-                                        }
-                                        (data) => {
-                                            if (data) {
-                                                this.successSwal.fire().then(() => {
-                                                    this.router.navigate(['dictionnary/gas-stations'])
-                                                });
-                                            }
-                                        },
-                                        (error: string) => {
-                                            this.errorSwal.fire().then((r) => {
-                                                this.error = error;
-                                                console.log(error);
-                                            });
-                                        },
-                                        (): void => {
-                                            this.loading = false;
-                                        }
-                                    )
-                                    console.log(this.gasStation);
-                                }
-                            });
-                        }
-                    });
                 }
-            });
+            );
         }
     }
 

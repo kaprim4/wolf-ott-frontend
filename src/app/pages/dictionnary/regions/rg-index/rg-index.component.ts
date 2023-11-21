@@ -13,6 +13,7 @@ import {RegionService} from "../../../../core/service/region.service";
 import Swal from "sweetalert2";
 import {Supervisor} from "../../../../core/interfaces/supervisor";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+
 moment.locale('fr');
 
 @Component({
@@ -58,22 +59,18 @@ export class RgIndexComponent implements OnInit {
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
-
+                    if (data.body && data.body.length > 0) {
+                        this.records = data.body;
+                        this.loading = false;
+                    } else {
+                        this.error = "La liste est vide.";
+                    }
                 }
                 console.log('This contains body: ', data.body);
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                }
-            }
-            (data: Region[]) => {
-                console.log("data", data);
-                if (data && data.length > 0) {
-                    this.records = data;
-                    this.loading = false;
-                } else {
-                    this.error = "La liste est vide.";
                 }
             }
         );
@@ -155,51 +152,37 @@ export class RgIndexComponent implements OnInit {
                                 console.log(`Got a successfull status code: ${data.status}`);
                             }
                             if (data.body) {
-
-                            }
-                            console.log('This contains body: ', data.body);
-                        },
-                        (err: HttpErrorResponse) => {
-                            if (err.status === 403 || err.status === 404) {
-                                console.error(`${err.status} status code caught`);
-                            }
-                        }
-                        (data: Region) => {
-                            if (data) {
-                                this.regionService.deleteRegion(data.id).subscribe(
+                                this.regionService.deleteRegion(data.body.id).subscribe(
                                     (data: HttpResponse<any>) => {
                                         if (data.status === 200 || data.status === 202) {
                                             console.log(`Got a successfull status code: ${data.status}`);
                                         }
                                         if (data.body) {
-
+                                            Swal.fire({
+                                                title: "Succès!",
+                                                text: "Cette entrée a été supprimée avec succès.",
+                                                icon: "success"
+                                            }).then();
                                         }
                                         console.log('This contains body: ', data.body);
                                     },
                                     (err: HttpErrorResponse) => {
                                         if (err.status === 403 || err.status === 404) {
                                             console.error(`${err.status} status code caught`);
+                                            Swal.fire({
+                                                title: "Erreur!",
+                                                text: err.message,
+                                                icon: "error"
+                                            }).then();
                                         }
                                     }
-                                    () => {
-                                        Swal.fire({
-                                            title: "Succès!",
-                                            text: "Cette entrée a été supprimée avec succès.",
-                                            icon: "success"
-                                        }).then();
-                                    },
-                                    (error: string) => {
-                                        Swal.fire({
-                                            title: "Erreur!",
-                                            text: error,
-                                            icon: "error"
-                                        }).then();
-                                    },
-                                    (): void => {
-                                        this.records.splice(deleteEvent.index, 1);
-                                        this.loading = false;
-                                    }
                                 )
+                            }
+                            console.log('This contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
                             }
                         }
                     );

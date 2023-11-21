@@ -192,16 +192,16 @@ export class CEditComponent implements OnInit {
                                 updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
                             }
                             this.cityService.updateCity(this.city).subscribe(
-                                (data: HttpResponse<any>) => {
-                                    if (data.status === 200 || data.status === 202) {
-                                        console.log(`Got a successfull status code: ${data.status}`);
+                                (data2: HttpResponse<any>) => {
+                                    if (data2.status === 200 || data2.status === 202) {
+                                        console.log(`Got a successfull status code: ${data2.status}`);
                                     }
-                                    if (data.body) {
+                                    if (data2.body) {
                                         this.successSwal.fire().then(() => {
                                             this.router.navigate(['dictionnary/cities'])
                                         });
                                     }
-                                    console.log('This contains body: ', data.body);
+                                    console.log('This contains body: ', data2.body);
                                 },
                                 (error: HttpErrorResponse) => {
                                     if (error.status === 403 || error.status === 404) {

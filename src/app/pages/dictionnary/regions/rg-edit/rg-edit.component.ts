@@ -109,20 +109,15 @@ export class RgEditComponent implements OnInit {
                         console.log(`Got a successfull status code: ${data.status}`);
                     }
                     if (data.body) {
-
+                        this.region = data.body;
+                        this.loading = false;
+                        this.initFieldsConfig();
                     }
                     console.log('This contains body: ', data.body);
                 },
                 (err: HttpErrorResponse) => {
                     if (err.status === 403 || err.status === 404) {
                         console.error(`${err.status} status code caught`);
-                    }
-                }
-                (data: Region) => {
-                    if (data) {
-                        this.region = data;
-                        this.loading = false;
-                        this.initFieldsConfig();
                     }
                 }
             );
@@ -168,27 +163,20 @@ export class RgEditComponent implements OnInit {
                         console.log(`Got a successfull status code: ${data.status}`);
                     }
                     if (data.body) {
-
+                        this.successSwal.fire().then(() => {
+                            this.router.navigate(['dictionnary/regions'])
+                        });
                     }
                     console.log('This contains body: ', data.body);
                 },
                 (err: HttpErrorResponse) => {
                     if (err.status === 403 || err.status === 404) {
                         console.error(`${err.status} status code caught`);
-                    }
-                }
-                (data) => {
-                    if (data) {
-                        this.successSwal.fire().then(() => {
-                            this.router.navigate(['dictionnary/regions'])
+                        this.errorSwal.fire().then((r) => {
+                            this.error = err.message;
+                            console.log(err.message);
                         });
                     }
-                },
-                (error: string) => {
-                    this.errorSwal.fire().then((r) => {
-                        this.error = error;
-                        console.log(error);
-                    });
                 },
                 (): void => {
                     this.loading = false;

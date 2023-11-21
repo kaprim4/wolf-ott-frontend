@@ -158,12 +158,12 @@ export class CAddComponent implements OnInit {
                                 updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString()
                             }
                             this.cityService.addCity(this.city).subscribe(
-                                (data: HttpResponse<any>) => {
-                                    if (data.status === 200 || data.status === 202) {
-                                        console.log(`Got a successfull status code: ${data.status}`);
+                                (data2: HttpResponse<any>) => {
+                                    if (data2.status === 200 || data2.status === 202) {
+                                        console.log(`Got a successfull status code: ${data2.status}`);
                                     }
-                                    if (data.body) {
-                                        console.log(data);
+                                    if (data2.body) {
+                                        console.log(data2);
                                         this.successSwal.fire().then(() => {
                                             this.router.navigate(['dictionnary/cities'])
                                         });

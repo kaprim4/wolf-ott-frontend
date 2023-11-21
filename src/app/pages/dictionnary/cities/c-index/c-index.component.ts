@@ -154,18 +154,18 @@ export class CIndexComponent implements OnInit {
                             }
                             if (data.body) {
                                 this.cityService.deleteCity(data.body.id).subscribe(
-                                    (data: HttpResponse<any>) => {
-                                        if (data.status === 200 || data.status === 202) {
-                                            console.log(`Got a successfull status code: ${data.status}`);
+                                    (data2: HttpResponse<any>) => {
+                                        if (data.status === 200 || data2.status === 202) {
+                                            console.log(`Got a successfull status code: ${data2.status}`);
                                         }
-                                        if (data.body) {
+                                        if (data2.body) {
                                             Swal.fire({
                                                 title: "Succès!",
                                                 text: "Cette entrée a été supprimée avec succès.",
                                                 icon: "success"
                                             }).then();
                                         }
-                                        console.log('This contains body: ', data.body);
+                                        console.log('This contains body: ', data2.body);
                                     },
                                     (err: HttpErrorResponse) => {
                                         if (err.status === 403 || err.status === 404) {
