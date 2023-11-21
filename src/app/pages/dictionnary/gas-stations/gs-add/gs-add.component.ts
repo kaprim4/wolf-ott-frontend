@@ -187,19 +187,14 @@ export class GsAddComponent implements OnInit {
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
-
+                    this.companyList = data.body;
+                    this.initFieldsConfig();
                 }
                 console.log('This contains body: ', data.body);
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                }
-            }
-            (data) => {
-                if (data) {
-                    this.companyList = data;
-                    this.initFieldsConfig();
                 }
             }
         );
@@ -212,19 +207,14 @@ export class GsAddComponent implements OnInit {
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
-
+                    this.supervisorList = data.body;
+                    this.initFieldsConfig();
                 }
                 console.log('This contains body: ', data.body);
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                }
-            }
-            (data) => {
-                if (data) {
-                    this.supervisorList = data;
-                    this.initFieldsConfig();
                 }
             }
         );
@@ -237,6 +227,9 @@ export class GsAddComponent implements OnInit {
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
+                    this.cityList = data.body;
+                    this.initFieldsConfig();
+                    this.loading = false;
 
                 }
                 console.log('This contains body: ', data.body);
@@ -244,13 +237,6 @@ export class GsAddComponent implements OnInit {
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                }
-            }
-            (data) => {
-                if (data) {
-                    this.cityList = data;
-                    this.initFieldsConfig();
-                    this.loading = false;
                 }
             }
         );
@@ -288,41 +274,78 @@ export class GsAddComponent implements OnInit {
                         console.log(`Got a successfull status code: ${data.status}`);
                     }
                     if (data.body) {
-
-                    }
-                    console.log('This contains body: ', data.body);
-                },
-                (err: HttpErrorResponse) => {
-                    if (err.status === 403 || err.status === 404) {
-                        console.error(`${err.status} status code caught`);
-                    }
-                }(c) => {
-                company = c;
-                if (company) {
-                    this.supervisorService.getSupervisor(this.addForm.controls['supervisor_id'].value).subscribe(
-                        (data: HttpResponse<any>) => {
-                            if (data.status === 200 || data.status === 202) {
-                                console.log(`Got a successfull status code: ${data.status}`);
-                            }
-                            if (data.body) {
-
-                            }
-                            console.log('This contains body: ', data.body);
-                        },
-                        (err: HttpErrorResponse) => {
-                            if (err.status === 403 || err.status === 404) {
-                                console.error(`${err.status} status code caught`);
-                            }
-                        }(s) => {
-                        supervisor = s;
-                        if (supervisor) {
-                            this.cityService.getCity(this.addForm.controls['city_id'].value).subscribe(
-                                (data: HttpResponse<any>) => {
-                                    if (data.status === 200 || data.status === 202) {
-                                        console.log(`Got a successfull status code: ${data.status}`);
+                        company = data.body;
+                        if (company) {
+                            this.supervisorService.getSupervisor(this.addForm.controls['supervisor_id'].value).subscribe(
+                                (data2: HttpResponse<any>) => {
+                                    if (data2.status === 200 || data2.status === 202) {
+                                        console.log(`Got a successfull status code: ${data2.status}`);
                                     }
-                                    if (data.body) {
+                                    if (data2.body) {
+                                        supervisor = data2.body;
+                                        if (supervisor) {
+                                            this.cityService.getCity(this.addForm.controls['city_id'].value).subscribe(
+                                                (data3: HttpResponse<any>) => {
+                                                    if (data3.status === 200 || data3.status === 202) {
+                                                        console.log(`Got a successfull status code: ${data3.status}`);
+                                                    }
+                                                    if (data3.body) {
+                                                        city = data3.body;
+                                                        if (city) {
+                                                            this.gasStation = {
+                                                                id: this.addForm.controls['id'].value,
+                                                                company: company,
+                                                                code_sap: this.addForm.controls['code_sap'].value,
+                                                                libelle: this.addForm.controls['libelle'].value,
+                                                                address: this.addForm.controls['address'].value,
+                                                                city: city,
+                                                                latitude: this.addForm.controls['latitude'].value,
+                                                                longitude: this.addForm.controls['longitude'].value,
+                                                                supervisor: supervisor,
+                                                                zip_code: this.addForm.controls['zip_code'].value,
+                                                                isActivated: this.addForm.controls['isActivated'].value,
+                                                                isDeleted: false,
+                                                                createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
+                                                                updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString()
+                                                            }
+                                                            this.gasStationService.addGasStation(this.gasStation).subscribe(
+                                                                (data4: HttpResponse<any>) => {
+                                                                    if (data4.status === 200 || data4.status === 202) {
+                                                                        console.log(`Got a successfull status code: ${data4.status}`);
+                                                                    }
+                                                                    if (data4.body) {
+                                                                        console.log(data4);
+                                                                        this.successSwal.fire().then(() => {
+                                                                            this.router.navigate(['dictionnary/' + this.entityElm.entity + 's'])
+                                                                        });
 
+                                                                    }
+                                                                    console.log('This contains body: ', data.body);
+                                                                },
+                                                                (err: HttpErrorResponse) => {
+                                                                    if (err.status === 403 || err.status === 404) {
+                                                                        console.error(`${err.status} status code caught`);
+                                                                        this.errorSwal.fire().then((r) => {
+                                                                            this.error = err.message;
+                                                                            console.log(err.message);
+                                                                        });
+                                                                    }
+                                                                },
+                                                                (): void => {
+                                                                    this.loading = false;
+                                                                }
+                                                            )
+                                                        }
+                                                    }
+                                                    console.log('This contains body: ', data.body);
+                                                },
+                                                (err: HttpErrorResponse) => {
+                                                    if (err.status === 403 || err.status === 404) {
+                                                        console.error(`${err.status} status code caught`);
+                                                    }
+                                                }
+                                            );
+                                        }
                                     }
                                     console.log('This contains body: ', data.body);
                                 },
@@ -330,64 +353,18 @@ export class GsAddComponent implements OnInit {
                                     if (err.status === 403 || err.status === 404) {
                                         console.error(`${err.status} status code caught`);
                                     }
-                                }(ct) => {
-                                city = ct;
-                                if (city) {
-                                    this.gasStation = {
-                                        id: this.addForm.controls['id'].value,
-                                        company: company,
-                                        code_sap: this.addForm.controls['code_sap'].value,
-                                        libelle: this.addForm.controls['libelle'].value,
-                                        address: this.addForm.controls['address'].value,
-                                        city: city,
-                                        latitude: this.addForm.controls['latitude'].value,
-                                        longitude: this.addForm.controls['longitude'].value,
-                                        supervisor: supervisor,
-                                        zip_code: this.addForm.controls['zip_code'].value,
-                                        isActivated: this.addForm.controls['isActivated'].value,
-                                        isDeleted: false,
-                                        createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
-                                        updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString()
-                                    }
-                                    this.gasStationService.addGasStation(this.gasStation).subscribe(
-                                        (data: HttpResponse<any>) => {
-                                            if (data.status === 200 || data.status === 202) {
-                                                console.log(`Got a successfull status code: ${data.status}`);
-                                            }
-                                            if (data.body) {
-
-                                            }
-                                            console.log('This contains body: ', data.body);
-                                        },
-                                        (err: HttpErrorResponse) => {
-                                            if (err.status === 403 || err.status === 404) {
-                                                console.error(`${err.status} status code caught`);
-                                            }
-                                        }
-                                        (data) => {
-                                            if (data) {
-                                                console.log(data);
-                                                this.successSwal.fire().then(() => {
-                                                    this.router.navigate(['dictionnary/' + this.entityElm.entity + 's'])
-                                                });
-                                            }
-                                        },
-                                        (error: string) => {
-                                            this.errorSwal.fire().then((r) => {
-                                                this.error = error;
-                                                console.log(error);
-                                            });
-                                        },
-                                        (): void => {
-                                            this.loading = false;
-                                        }
-                                    )
                                 }
-                            });
+                            );
                         }
-                    });
+                    }
+                    console.log('This contains body: ', data.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                    }
                 }
-            });
+            );
         }
     }
 }

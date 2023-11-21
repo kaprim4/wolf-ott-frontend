@@ -104,20 +104,15 @@ export class CAddComponent implements OnInit {
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
-
+                    this.regionList = data.body;
+                    this.initFieldsConfig();
+                    this.loading = false;
                 }
                 console.log('This contains body: ', data.body);
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                }
-            }
-            (data) => {
-                if (data) {
-                    this.regionList = data;
-                    this.initFieldsConfig();
-                    this.loading = false;
                 }
             }
         );
@@ -151,7 +146,44 @@ export class CAddComponent implements OnInit {
                         console.log(`Got a successfull status code: ${data.status}`);
                     }
                     if (data.body) {
-
+                        region = data.body;
+                        if (region) {
+                            this.city = {
+                                id: this.addForm.controls['id'].value,
+                                region: region,
+                                libelle: this.addForm.controls['libelle'].value,
+                                isActivated: this.addForm.controls['isActivated'].value,
+                                isDeleted: false,
+                                createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
+                                updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString()
+                            }
+                            this.cityService.addCity(this.city).subscribe(
+                                (data: HttpResponse<any>) => {
+                                    if (data.status === 200 || data.status === 202) {
+                                        console.log(`Got a successfull status code: ${data.status}`);
+                                    }
+                                    if (data.body) {
+                                        console.log(data);
+                                        this.successSwal.fire().then(() => {
+                                            this.router.navigate(['dictionnary/cities'])
+                                        });
+                                    }
+                                    console.log('This contains body: ', data.body);
+                                },
+                                (error: HttpErrorResponse) => {
+                                    if (error.status === 403 || error.status === 404) {
+                                        console.error(`${error.status} status code caught`);
+                                        this.errorSwal.fire().then((r) => {
+                                            this.error = error.message;
+                                            console.log(error.message);
+                                        });
+                                    }
+                                },
+                                (): void => {
+                                    this.loading = false;
+                                }
+                            )
+                        }
                     }
                     console.log('This contains body: ', data.body);
                 },
@@ -159,53 +191,8 @@ export class CAddComponent implements OnInit {
                     if (err.status === 403 || err.status === 404) {
                         console.error(`${err.status} status code caught`);
                     }
-                }(r) => {
-                region = r;
-                if (region) {
-                    this.city = {
-                        id: this.addForm.controls['id'].value,
-                        region: region,
-                        libelle: this.addForm.controls['libelle'].value,
-                        isActivated: this.addForm.controls['isActivated'].value,
-                        isDeleted: false,
-                        createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
-                        updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString()
-                    }
-                    this.cityService.addCity(this.city).subscribe(
-                        (data: HttpResponse<any>) => {
-                            if (data.status === 200 || data.status === 202) {
-                                console.log(`Got a successfull status code: ${data.status}`);
-                            }
-                            if (data.body) {
-
-                            }
-                            console.log('This contains body: ', data.body);
-                        },
-                        (err: HttpErrorResponse) => {
-                            if (err.status === 403 || err.status === 404) {
-                                console.error(`${err.status} status code caught`);
-                            }
-                        }
-                        (data) => {
-                            if (data) {
-                                console.log(data);
-                                this.successSwal.fire().then(() => {
-                                    this.router.navigate(['dictionnary/cities'])
-                                });
-                            }
-                        },
-                        (error: string) => {
-                            this.errorSwal.fire().then((r) => {
-                                this.error = error;
-                                console.log(error);
-                            });
-                        },
-                        (): void => {
-                            this.loading = false;
-                        }
-                    )
                 }
-            });
+            );
         }
     }
 }

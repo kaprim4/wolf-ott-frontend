@@ -13,6 +13,7 @@ import {CityService} from "../../../../core/service/city.service";
 import Swal from "sweetalert2";
 import {Supervisor} from "../../../../core/interfaces/supervisor";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+
 moment.locale('fr');
 
 @Component({
@@ -58,22 +59,19 @@ export class CIndexComponent implements OnInit {
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
-
+                    console.log("data", data);
+                    if (data.body && data.body.length > 0) {
+                        this.records = data.body;
+                        this.loading = false;
+                    } else {
+                        this.error = "La liste est vide.";
+                    }
                 }
                 console.log('This contains body: ', data.body);
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                }
-            }
-            (data: City[]) => {
-                console.log("data", data);
-                if (data && data.length > 0) {
-                    this.records = data;
-                    this.loading = false;
-                } else {
-                    this.error = "La liste est vide.";
                 }
             }
         );
@@ -155,24 +153,17 @@ export class CIndexComponent implements OnInit {
                                 console.log(`Got a successfull status code: ${data.status}`);
                             }
                             if (data.body) {
-
-                            }
-                            console.log('This contains body: ', data.body);
-                        },
-                        (err: HttpErrorResponse) => {
-                            if (err.status === 403 || err.status === 404) {
-                                console.error(`${err.status} status code caught`);
-                            }
-                        }
-                        (data: City) => {
-                            if (data) {
-                                this.cityService.deleteCity(data.id).subscribe(
+                                this.cityService.deleteCity(data.body.id).subscribe(
                                     (data: HttpResponse<any>) => {
                                         if (data.status === 200 || data.status === 202) {
                                             console.log(`Got a successfull status code: ${data.status}`);
                                         }
                                         if (data.body) {
-
+                                            Swal.fire({
+                                                title: "Succès!",
+                                                text: "Cette entrée a été supprimée avec succès.",
+                                                icon: "success"
+                                            }).then();
                                         }
                                         console.log('This contains body: ', data.body);
                                     },
@@ -180,26 +171,18 @@ export class CIndexComponent implements OnInit {
                                         if (err.status === 403 || err.status === 404) {
                                             console.error(`${err.status} status code caught`);
                                         }
-                                    }
-                                    () => {
-                                        Swal.fire({
-                                            title: "Succès!",
-                                            text: "Cette entrée a été supprimée avec succès.",
-                                            icon: "success"
-                                        }).then();
-                                    },
-                                    (error: string) => {
-                                        Swal.fire({
-                                            title: "Erreur!",
-                                            text: error,
-                                            icon: "error"
-                                        }).then();
                                     },
                                     (): void => {
                                         this.records.splice(deleteEvent.index, 1);
                                         this.loading = false;
                                     }
                                 )
+                            }
+                            console.log('This contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
                             }
                         }
                     );

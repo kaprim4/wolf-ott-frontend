@@ -108,11 +108,20 @@ export class CEditComponent implements OnInit {
         let id = Number(this.activated.snapshot.paramMap.get('id'));
         if (id) {
             this.cityService.getCity(id)?.subscribe(
-                (data: City) => {
-                    if (data) {
-                        this.city = data;
+                (data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`Got a successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+                        this.city = data.body;
                         this.loading = false;
                         this.initFieldsConfig();
+                    }
+                    console.log('This contains body: ', data.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
                     }
                 }
             );
@@ -129,19 +138,14 @@ export class CEditComponent implements OnInit {
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
-
+                    this.regionList = data.body;
+                    this.initFieldsConfig();
                 }
                 console.log('This contains body: ', data.body);
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                }
-            }
-            (data) => {
-                if (data) {
-                    this.regionList = data;
-                    this.initFieldsConfig();
                 }
             }
         );
@@ -176,7 +180,44 @@ export class CEditComponent implements OnInit {
                         console.log(`Got a successfull status code: ${data.status}`);
                     }
                     if (data.body) {
-
+                        region = data.body;
+                        if (region) {
+                            this.city = {
+                                id: this.editForm.controls['id'].value,
+                                region: region,
+                                libelle: this.editForm.controls['libelle'].value,
+                                isActivated: this.editForm.controls['isActivated'].value,
+                                isDeleted: false,
+                                createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
+                                updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
+                            }
+                            this.cityService.updateCity(this.city).subscribe(
+                                (data: HttpResponse<any>) => {
+                                    if (data.status === 200 || data.status === 202) {
+                                        console.log(`Got a successfull status code: ${data.status}`);
+                                    }
+                                    if (data.body) {
+                                        this.successSwal.fire().then(() => {
+                                            this.router.navigate(['dictionnary/cities'])
+                                        });
+                                    }
+                                    console.log('This contains body: ', data.body);
+                                },
+                                (error: HttpErrorResponse) => {
+                                    if (error.status === 403 || error.status === 404) {
+                                        console.error(`${error.status} status code caught`);
+                                        this.errorSwal.fire().then((r) => {
+                                            this.error = error.message;
+                                            console.log(error.message);
+                                        });
+                                    }
+                                },
+                                (): void => {
+                                    this.loading = false;
+                                }
+                            )
+                            console.log(this.city);
+                        }
                     }
                     console.log('This contains body: ', data.body);
                 },
@@ -184,53 +225,8 @@ export class CEditComponent implements OnInit {
                     if (err.status === 403 || err.status === 404) {
                         console.error(`${err.status} status code caught`);
                     }
-                }(r) => {
-                region = r;
-                if (region) {
-                    this.city = {
-                        id: this.editForm.controls['id'].value,
-                        region: region,
-                        libelle: this.editForm.controls['libelle'].value,
-                        isActivated: this.editForm.controls['isActivated'].value,
-                        isDeleted: false,
-                        createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
-                        updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
-                    }
-                    this.cityService.updateCity(this.city).subscribe(
-                        (data: HttpResponse<any>) => {
-                            if (data.status === 200 || data.status === 202) {
-                                console.log(`Got a successfull status code: ${data.status}`);
-                            }
-                            if (data.body) {
-
-                            }
-                            console.log('This contains body: ', data.body);
-                        },
-                        (err: HttpErrorResponse) => {
-                            if (err.status === 403 || err.status === 404) {
-                                console.error(`${err.status} status code caught`);
-                            }
-                        }
-                        (data) => {
-                            if (data) {
-                                this.successSwal.fire().then(() => {
-                                    this.router.navigate(['dictionnary/cities'])
-                                });
-                            }
-                        },
-                        (error: string) => {
-                            this.errorSwal.fire().then((r) => {
-                                this.error = error;
-                                console.log(error);
-                            });
-                        },
-                        (): void => {
-                            this.loading = false;
-                        }
-                    )
-                    console.log(this.city)
                 }
-            });
+            );
         }
     }
 }
