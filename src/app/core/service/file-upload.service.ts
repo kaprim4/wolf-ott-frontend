@@ -25,8 +25,7 @@ export class FileUploadService {
         const formData: FormData = new FormData();
         formData.append('file', file);
         return this.http.request(
-            new HttpRequest('POST', `${this.apiServerUrl}/api/v1/voucher-types/upload`, formData, {
-                headers: this.header1,
+            new HttpRequest('POST', `${this.apiServerUrl}/api/v1/storage/upload`, formData, {
                 reportProgress: true,
                 responseType: 'json',
             })
@@ -35,7 +34,7 @@ export class FileUploadService {
 
     getFiles(): Observable<HttpResponse<any>> {
         return this.http.get(
-            `${this.apiServerUrl}/api/v1/voucher-types/files`,
+            `${this.apiServerUrl}/api/v1/storage/files`,
             {headers: this.header1, observe: 'response'},
         )
     }
