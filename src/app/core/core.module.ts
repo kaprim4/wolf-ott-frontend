@@ -8,7 +8,7 @@ import {TokenInterceptor} from './helpers/token.interceptor';
 @NgModule({
     declarations: [],
     imports: [
-        CommonModule
+        CommonModule,
     ],
     providers: [
         Title,
@@ -23,6 +23,7 @@ import {TokenInterceptor} from './helpers/token.interceptor';
             multi: true
         },
     ],
+    exports: []
 })
 export class CoreModule {
 

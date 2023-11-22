@@ -4,7 +4,6 @@ import {Column} from "../../../shared/advanced-table/advanced-table.component";
 import {IFormType} from "../../../core/interfaces/formType";
 import {EventService} from "../../../core/service/event.service";
 import {RoleService} from "../../../core/service/role.service";
-import {VoucherTempService} from "../../../core/service/voucher-temp.service";
 import {EventType} from "../../../core/constants/events";
 import * as moment from "moment";
 import {SortEvent} from "../../../shared/advanced-table/sortable.directive";
@@ -54,22 +53,18 @@ export class VoucherCustomerComponent implements OnInit {
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
-
+                    if (data.body && data.body.length > 0) {
+                        this.records = data.body;
+                        this.loading = false;
+                    } else {
+                        this.error = "La liste est vide.";
+                    }
                 }
                 console.log('This contains body: ', data.body);
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                }
-            }
-            (data: VoucherCustomer[]) => {
-                console.log("data", data);
-                if (data && data.length > 0) {
-                    this.records = data;
-                    this.loading = false;
-                } else {
-                    this.error = "La liste est vide.";
                 }
             }
         );

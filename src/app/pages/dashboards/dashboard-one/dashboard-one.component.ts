@@ -16,6 +16,7 @@ import {AuthenticationService} from "../../../core/service/auth.service";
 import {TokenService} from "../../../core/service/token.service";
 import {Region} from "../../../core/interfaces/region";
 import {GasStation} from "../../../core/interfaces/gas_station";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
 @Component({
     selector: 'app-dashboard-1',
@@ -27,6 +28,9 @@ export class DashboardOneComponent implements OnInit {
     messages: Message[] = [];
     recentProjects: Project[] = [];
     gasStationList: GasStation[] = [];
+
+    loading:boolean = false;
+    error:string = '';
 
     constructor(
         private eventService: EventService,
@@ -46,6 +50,7 @@ export class DashboardOneComponent implements OnInit {
                 ]
             }
         );
+        this.loading = true;
         this._fetchGasStationData();
         this._fetchData();
     }
@@ -57,12 +62,23 @@ export class DashboardOneComponent implements OnInit {
 
     private _fetchGasStationData() {
         this.gasStationService.getGasStations()?.subscribe(
-            (data) => {
-                if (data) {
-                    data.map((gasStation:GasStation, index:number)=>{
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+                    data.body.map((gasStation:GasStation, index:number)=>{
                         if(gasStation.company.id == 2)
                             this.gasStationList.push(gasStation);
                     })
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                    this.error = err.message;
+                    this.loading = false;
                 }
             }
         );

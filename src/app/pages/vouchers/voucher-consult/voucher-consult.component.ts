@@ -266,57 +266,45 @@ export class VoucherConsultComponent implements OnInit {
             if (re.isConfirmed) {
                 if (deleteEvent.id) {
                     this.voucherTempService.getVoucherTemp(deleteEvent.id)?.subscribe(
-
-
                         (data: HttpResponse<any>) => {
                             if (data.status === 200 || data.status === 202) {
                                 console.log(`Got a successfull status code: ${data.status}`);
                             }
                             if (data.body) {
-
-                            }
-                            console.log('This contains body: ', data.body);
-                        },
-                        (err: HttpErrorResponse) => {
-                            if (err.status === 403 || err.status === 404) {
-                                console.error(`${err.status} status code caught`);
-                            }
-                        }
-                        (data: VoucherTemp) => {
-                            if (data) {
-                                this.voucherTempService.deleteVoucherTemp(data.id).subscribe(
-                                    (data: HttpResponse<any>) => {
-                                        if (data.status === 200 || data.status === 202) {
-                                            console.log(`Got a successfull status code: ${data.status}`);
+                                this.voucherTempService.deleteVoucherTemp(data.body.id).subscribe(
+                                    (data2: HttpResponse<any>) => {
+                                        if (data2.status === 200 || data2.status === 202) {
+                                            console.log(`Got a successfull status code: ${data2.status}`);
                                         }
-                                        if (data.body) {
-
+                                        if (data2.body) {
+                                            Swal.fire({
+                                                title: "Succès!",
+                                                text: "Cette entrée a été supprimée avec succès.",
+                                                icon: "success"
+                                            }).then();
                                         }
-                                        console.log('This contains body: ', data.body);
+                                        console.log('This contains body: ', data2.body);
                                     },
                                     (err: HttpErrorResponse) => {
                                         if (err.status === 403 || err.status === 404) {
                                             console.error(`${err.status} status code caught`);
+                                            this.errorSwal.fire().then(() => {
+                                                this.error = err.message;
+                                                console.log(err.message);
+                                            });
                                         }
-                                    }
-                                    () => {
-                                        Swal.fire({
-                                            title: "Succès!",
-                                            text: "Cette entrée a été supprimée avec succès.",
-                                            icon: "success"
-                                        }).then();
-                                    },
-                                    (error: string) => {
-                                        this.errorSwal.fire().then(() => {
-                                            this.error = error;
-                                            console.log(error);
-                                        });
                                     },
                                     (): void => {
                                         this.records.splice(deleteEvent.index, 1);
                                         this.loading = false;
                                     }
                                 )
+                            }
+                            console.log('This contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
                             }
                         }
                     );

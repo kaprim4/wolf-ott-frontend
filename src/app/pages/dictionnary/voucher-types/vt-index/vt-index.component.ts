@@ -1,53 +1,44 @@
 import {Component, OnInit} from '@angular/core';
-// constants
-import {EventType} from 'src/app/core/constants/events';
-
-// service
-import {EventService} from 'src/app/core/service/event.service';
-import {UserService} from "../../../../core/service/user.service";
-
-// types
-import {SortEvent} from 'src/app/shared/advanced-table/sortable.directive';
-import {Column, DeleteEvent} from 'src/app/shared/advanced-table/advanced-table.component';
-import {IUser} from "../../../../core/interfaces/user";
-import * as moment from 'moment';
+import {Column, DeleteEvent} from "../../../../shared/advanced-table/advanced-table.component";
 import {IFormType} from "../../../../core/interfaces/formType";
-import {GasStation} from "../../../../core/interfaces/gas_station";
-import {Role} from "../../../../core/interfaces/role";
-import Swal from "sweetalert2";
+import {EventService} from "../../../../core/service/event.service";
+import {EventType} from "../../../../core/constants/events";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
-
-moment.locale('fr');
+import * as moment from "moment/moment";
+import {SortEvent} from "../../../../shared/advanced-table/sortable.directive";
+import Swal from "sweetalert2";
+import {VoucherTypeService} from "../../../../core/service/voucher-type.service";
+import {VoucherType} from "../../../../core/interfaces/voucher";
 
 @Component({
-    selector: 'app-u-index',
-    templateUrl: './u-index.component.html',
-    styleUrls: ['./u-index.component.scss']
+    selector: 'app-vt-index',
+    templateUrl: './vt-index.component.html',
+    styleUrls: ['./vt-index.component.scss']
 })
-export class UIndexComponent implements OnInit {
+export class VtIndexComponent implements OnInit {
 
-    records: IUser[] = [];
+    records: VoucherType[] = [];
     columns: Column[] = [];
     pageSizeOptions: number[] = [10, 25, 50, 100];
     loading: boolean = false;
     error: string = '';
     entityElm: IFormType = {
-        label: 'Utilisateur',
-        entity: 'user'
+        label: 'Type de bon',
+        entity: 'supervisor'
     }
 
     constructor(
         private eventService: EventService,
-        private userService: UserService
+        private voucherTypeService: VoucherTypeService,
     ) {
     }
 
     ngOnInit(): void {
         this.eventService.broadcast(EventType.CHANGE_PAGE_TITLE, {
-            title: "Liste des utilisateurs",
+            title: "Liste des types de bon",
             breadCrumbItems: [
-                {label: 'Utilisateurs & Accès', path: '.'},
-                {label: 'Liste des utilisateurs', path: '.', active: true}
+                {label: 'Dictionnaire', path: '.'},
+                {label: 'Liste des types de bon', path: '.', active: true}
             ]
         });
         this.loading = true;
@@ -56,7 +47,7 @@ export class UIndexComponent implements OnInit {
     }
 
     _fetchData(): void {
-        this.userService.getUsers()?.subscribe(
+        this.voucherTypeService.getVoucherTypes()?.subscribe(
             (data: HttpResponse<any>) => {
                 if (data.status === 200 || data.status === 202) {
                     console.log(`Got a successfull status code: ${data.status}`);
@@ -81,32 +72,33 @@ export class UIndexComponent implements OnInit {
 
     initTableConfig(): void {
         this.columns = [
-            {name: 'id', label: '#', formatter: (record: IUser) => record.id},
-            {name: 'firstName', label: 'Nom', formatter: (record: IUser) => record.firstName},
-            {name: 'lastName', label: 'Prénom', formatter: (record: IUser) => record.lastName},
-            {name: 'username', label: 'Identifiant', formatter: (record: IUser) => record.username},
-            {name: 'email', label: 'E-mail', formatter: (record: IUser) => record.email},
-            {name: 'role', label: 'Rôle', formatter: (record: IUser) => record.role?.libelle},
-            {name: 'gasStation', label: 'Station', formatter: (record: IUser) => record.gasStation?.libelle},
+            {name: 'id', label: '#', formatter: (record: VoucherType) => record.id},
+            {name: 'libelle', label: 'Nom', formatter: (record: VoucherType) => record.libelle},
             {
-                name: 'isActivated', label: 'Activé ?', formatter: (record: IUser) => {
+                name: 'image', label: 'Image', formatter: (record: VoucherType) => {
+                    let imageName = "./assets/images/no_image.png";
+                    return '<img src="' + (record.imageName ? record.imageName : imageName ) + '" alt="' + record.libelle + '" height="45px" />';
+                }
+            },
+            {
+                name: 'isActivated', label: 'Activé ?', formatter: (record: VoucherType) => {
                     return (record.isActivated ? '<span class="badge bg-success me-1">Oui</span>' : '<span class="badge bg-danger me-1">Non</span>')
                 }
             },
             {
-                name: 'isDeleted', label: 'Supprimé ?', formatter: (record: IUser) => {
+                name: 'isDeleted', label: 'Supprimé ?', formatter: (record: VoucherType) => {
                     return (record.isDeleted ? '<span class="badge bg-success me-1">Oui</span>' : '<span class="badge bg-danger me-1">Non</span>')
                 }
             },
             {
-                name: 'createdAt', label: 'Créé le', formatter: (record: IUser) => {
+                name: 'createdAt', label: 'Créé le', formatter: (record: VoucherType) => {
                     return moment(record.createdAt).format('d MMM YYYY')
                 }
             }
         ];
     }
 
-    compare(v1: number | string | GasStation | Role | boolean, v2: number | string | GasStation | Role | boolean): any {
+    compare(v1: number | string | boolean, v2: number | string | boolean): any {
         return v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
     }
 
@@ -121,24 +113,16 @@ export class UIndexComponent implements OnInit {
         }
     }
 
-    matches(row: IUser, term: string) {
-        return row.firstName.toLowerCase().includes(term)
-            || row.lastName.toLowerCase().includes(term)
-            || row.email.toLowerCase().includes(term)
-            || row.role?.libelle.toLowerCase().includes(term)
-            || row.username.toLowerCase().includes(term);
+    matches(row: VoucherType, term: string) {
+        return row.libelle.toLowerCase().includes(term);
     }
 
-    /**
-     * Search Method
-     */
     searchData(searchTerm: string): void {
         if (searchTerm === '') {
             this._fetchData();
         } else {
             this._fetchData();
             let updatedData = this.records;
-            //  filter
             updatedData = updatedData.filter(record => this.matches(record, searchTerm));
             this.records = updatedData;
         }
@@ -157,25 +141,25 @@ export class UIndexComponent implements OnInit {
             this.loading = true;
             if (re.isConfirmed) {
                 if (deleteEvent.id) {
-                    this.userService.getUser(deleteEvent.id)?.subscribe(
+                    this.voucherTypeService.getVoucherType(deleteEvent.id)?.subscribe(
                         (data: HttpResponse<any>) => {
                             if (data.status === 200 || data.status === 202) {
                                 console.log(`Got a successfull status code: ${data.status}`);
                             }
                             if (data.body) {
-                                this.userService.deleteUser(data.body.id).subscribe(
-                                    (data: HttpResponse<any>) => {
-                                        if (data.status === 200 || data.status === 202) {
-                                            console.log(`Got a successfull status code: ${data.status}`);
+                                this.voucherTypeService.deleteVoucherType(data.body.id).subscribe(
+                                    (data2: HttpResponse<any>) => {
+                                        if (data2.status === 200 || data2.status === 202) {
+                                            console.log(`Got a successfull status code: ${data2.status}`);
                                         }
-                                        if (data.body) {
+                                        if (data2.body) {
                                             Swal.fire({
                                                 title: "Succès!",
                                                 text: "Cette entrée a été supprimée avec succès.",
                                                 icon: "success"
                                             }).then();
                                         }
-                                        console.log('This contains body: ', data.body);
+                                        console.log('This contains body: ', data2.body);
                                     },
                                     (err: HttpErrorResponse) => {
                                         if (err.status === 403 || err.status === 404) {

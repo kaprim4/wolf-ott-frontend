@@ -6,6 +6,8 @@ import {first} from 'rxjs';
 // service
 import {AuthenticationService} from 'src/app/core/service/auth.service';
 import {IUser} from "../../core/interfaces/user";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import {VoucherTemp} from "../../core/interfaces/voucher";
 
 // types
 
@@ -53,17 +55,28 @@ export class RegisterComponent implements OnInit {
 
         if (this.signUpForm.valid) {
             this.loading = true;
-            this.authenticationService.signup(this.formValues['name'].value, this.formValues['email'].value, this.formValues['password'].value)
-                .pipe(first())
-                .subscribe(
-                    (data: IUser) => {
+            let name = this.formValues['name'].value;
+            let email = this.formValues['email'].value;
+            let password = this.formValues['password'].value;
+            this.authenticationService.signup(name, email, password).pipe(first()).subscribe(
+                (data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`Got a successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
                         // navigates to confirm mail screen
                         this.router.navigate(['/auth/confirm-mail']);
-                    },
-                    (error: string) => {
-                        this.error = error;
+                    }
+                    console.log('This contains body: ', data.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                        this.error = err.message;
                         this.loading = false;
-                    });
+                    }
+                }
+            );
         }
     }
 

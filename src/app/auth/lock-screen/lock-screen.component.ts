@@ -6,6 +6,8 @@ import {first} from 'rxjs/operators';
 import {AuthenticationService} from 'src/app/core/service/auth.service';
 import {IUser} from "../../core/interfaces/user";
 import {TokenService} from "../../core/service/token.service";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import {GasStation} from "../../core/interfaces/gas_station";
 // types
 
 
@@ -34,27 +36,31 @@ export class LockScreenComponent implements OnInit {
         });
     }
 
-    /**
-     * convenience getter for easy access to form fields
-     */
     get formValues() {
         return this.lockScreenForm.controls;
     }
 
-    /**
-     * On submit form
-     */
     onSubmit(): void {
         this.formSubmitted = true;
         if (this.lockScreenForm.valid) {
-            // @ts-ignore
-            this.authService.login(this.tokenService.getPayload().username, this.formValues['password'].value).subscribe(
-                data => {
-                    this.tokenService.saveToken(data.token)
+            let username = this.tokenService.getPayload().username;
+            let password = this.formValues['password'].value;
+            this.authService.login(username, password).subscribe(
+                (data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`Got a successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+                        this.tokenService.saveToken(data.body.token)
+                    }
+                    console.log('This contains body: ', data.body);
                 },
-                (error: string) => {
-                    this.error = error;
-                    console.log(error)
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                        this.error = err.message;
+                        console.log(err.message)
+                    }
                 }
             )
         }

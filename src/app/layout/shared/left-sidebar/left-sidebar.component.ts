@@ -246,14 +246,21 @@ export class LeftSidebarComponent implements OnInit {
                             key: 'regions',
                             label: 'Régions',
                             url: '/dictionnary/regions',
-                            icon: 'fas fa-building me-1',
+                            icon: 'fas fa-map-marked-alt me-1',
                             parentKey: 'dictionnary',
                         },
                         {
                             key: 'cities',
                             label: 'Villes',
                             url: '/dictionnary/cities',
-                            icon: 'fas fa-building me-1',
+                            icon: 'fas fa-city me-1',
+                            parentKey: 'dictionnary',
+                        },
+                        {
+                            key: 'voucher-types',
+                            label: 'Types de bon',
+                            url: '/dictionnary/voucher-types',
+                            icon: 'far fa-money-bill-alt me-1',
                             parentKey: 'dictionnary',
                         },
                     ]

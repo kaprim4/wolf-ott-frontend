@@ -1,6 +1,7 @@
 export interface VoucherType {
     id: number;
     libelle: string;
+    imageName: string;
     isActivated: boolean;
     isDeleted: boolean;
     createdAt: string;

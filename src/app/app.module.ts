@@ -15,6 +15,7 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
     imports: [
         BrowserModule,
         HttpClientModule,
+        BrowserModule,
         JoyrideModule.forRoot(),
         SweetAlert2Module.forRoot(),
         CoreModule,

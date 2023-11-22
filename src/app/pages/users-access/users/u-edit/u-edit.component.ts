@@ -174,6 +174,9 @@ export class UEditComponent implements OnInit {
                         console.log(`Got a successfull status code: ${data.status}`);
                     }
                     if (data.body) {
+                        this.user = data.body;
+                        this.loading = false;
+                        this.initFieldsConfig();
 
                     }
                     console.log('This contains body: ', data.body);
@@ -181,13 +184,6 @@ export class UEditComponent implements OnInit {
                 (err: HttpErrorResponse) => {
                     if (err.status === 403 || err.status === 404) {
                         console.error(`${err.status} status code caught`);
-                    }
-                }
-                (data: IUser) => {
-                    if (data) {
-                        this.user = data;
-                        this.loading = false;
-                        this.initFieldsConfig();
                     }
                 }
             );
@@ -204,19 +200,14 @@ export class UEditComponent implements OnInit {
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
-
+                    this.gasStationList = data.body;
+                    this.initFieldsConfig();
                 }
                 console.log('This contains body: ', data.body);
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                }
-            }
-            (data) => {
-                if (data) {
-                    this.gasStationList = data;
-                    this.initFieldsConfig();
                 }
             }
         );
@@ -229,19 +220,14 @@ export class UEditComponent implements OnInit {
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
-
+                    this.roleList = data.body;
+                    this.initFieldsConfig();
                 }
                 console.log('This contains body: ', data.body);
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                }
-            }
-            (data) => {
-                if (data) {
-                    this.roleList = data;
-                    this.initFieldsConfig();
                 }
             }
         );
@@ -278,7 +264,69 @@ export class UEditComponent implements OnInit {
                         console.log(`Got a successfull status code: ${data.status}`);
                     }
                     if (data.body) {
-
+                        role = data.body;
+                        if (role) {
+                            this.gasStationService.getGasStation(this.editForm.controls['gas_station_id'].value).subscribe(
+                                (data2: HttpResponse<any>) => {
+                                    if (data2.status === 200 || data2.status === 202) {
+                                        console.log(`Got a successfull status code: ${data2.status}`);
+                                    }
+                                    if (data2.body) {
+                                        gas_station = data2.body;
+                                        if (gas_station) {
+                                            this.user = {
+                                                id: this.editForm.controls['id'].value,
+                                                role: role,
+                                                gasStation: gas_station,
+                                                firstName: this.editForm.controls['firstName'].value,
+                                                lastName: this.editForm.controls['lastName'].value,
+                                                email: this.editForm.controls['email'].value,
+                                                username: this.editForm.controls['username'].value,
+                                                password: this.editForm.controls['password'].value,
+                                                isActivated: this.editForm.controls['isActivated'].value,
+                                                isDeleted: false,
+                                                createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
+                                                updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
+                                            }
+                                            this.userService.updateUser(this.user).subscribe(
+                                                (data3: HttpResponse<any>) => {
+                                                    if (data3.status === 200 || data3.status === 202) {
+                                                        console.log(`Got a successfull status code: ${data3.status}`);
+                                                    }
+                                                    if (data3.body) {
+                                                        this.successSwal.fire().then(() => {
+                                                            this.router.navigate(['users-access/' + this.entityElm.entity + 's'])
+                                                        });
+                                                    }
+                                                    console.log('This contains body: ', data.body);
+                                                },
+                                                (err: HttpErrorResponse) => {
+                                                    if (err.status === 403 || err.status === 404) {
+                                                        console.error(`${err.status} status code caught`);
+                                                        this.errorSwal.fire().then((r) => {
+                                                            this.error = err.message;
+                                                            console.log(err.message);
+                                                        });
+                                                    }
+                                                },
+                                                (): void => {
+                                                    this.loading = false;
+                                                }
+                                            )
+                                            console.log(this.user)
+                                        } else {
+                                            this.errorSwal.fire().then(r => this.loading = false);
+                                        }
+                                    }
+                                    console.log('This contains body: ', data2.body);
+                                },
+                                (err: HttpErrorResponse) => {
+                                    if (err.status === 403 || err.status === 404) {
+                                        console.error(`${err.status} status code caught`);
+                                    }
+                                }
+                            );
+                        }
                     }
                     console.log('This contains body: ', data.body);
                 },
@@ -286,79 +334,8 @@ export class UEditComponent implements OnInit {
                     if (err.status === 403 || err.status === 404) {
                         console.error(`${err.status} status code caught`);
                     }
-                }(r) => {
-                role = r;
-                if (role) {
-                    this.gasStationService.getGasStation(this.editForm.controls['gas_station_id'].value).subscribe(
-                        (data: HttpResponse<any>) => {
-                            if (data.status === 200 || data.status === 202) {
-                                console.log(`Got a successfull status code: ${data.status}`);
-                            }
-                            if (data.body) {
-
-                            }
-                            console.log('This contains body: ', data.body);
-                        },
-                        (err: HttpErrorResponse) => {
-                            if (err.status === 403 || err.status === 404) {
-                                console.error(`${err.status} status code caught`);
-                            }
-                        }(g) => {
-                        gas_station = g;
-                        if (gas_station) {
-                            this.user = {
-                                id: this.editForm.controls['id'].value,
-                                role: role,
-                                gasStation: gas_station,
-                                firstName: this.editForm.controls['firstName'].value,
-                                lastName: this.editForm.controls['lastName'].value,
-                                email: this.editForm.controls['email'].value,
-                                username: this.editForm.controls['username'].value,
-                                password: this.editForm.controls['password'].value,
-                                isActivated: this.editForm.controls['isActivated'].value,
-                                isDeleted: false,
-                                createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
-                                updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
-                            }
-                            this.userService.updateUser(this.user).subscribe(
-                                (data: HttpResponse<any>) => {
-                                    if (data.status === 200 || data.status === 202) {
-                                        console.log(`Got a successfull status code: ${data.status}`);
-                                    }
-                                    if (data.body) {
-
-                                    }
-                                    console.log('This contains body: ', data.body);
-                                },
-                                (err: HttpErrorResponse) => {
-                                    if (err.status === 403 || err.status === 404) {
-                                        console.error(`${err.status} status code caught`);
-                                    }
-                                }
-                                (data) => {
-                                    if (data) {
-                                        this.successSwal.fire().then(() => {
-                                            this.router.navigate(['users-access/' + this.entityElm.entity + 's'])
-                                        });
-                                    }
-                                },
-                                (error: string) => {
-                                    this.errorSwal.fire().then((r) => {
-                                        this.error = error;
-                                        console.log(error);
-                                    });
-                                },
-                                (): void => {
-                                    this.loading = false;
-                                }
-                            )
-                            console.log(this.user)
-                        } else {
-                            this.errorSwal.fire().then(r => this.loading = false);
-                        }
-                    });
                 }
-            });
+            );
         }
     }
 }

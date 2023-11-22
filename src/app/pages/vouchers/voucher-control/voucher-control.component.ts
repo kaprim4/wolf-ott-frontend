@@ -53,22 +53,18 @@ export class VoucherControlComponent implements OnInit {
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
-
+                    if (data.body && data.body.length > 0) {
+                        this.records = data.body;
+                        this.loading = false;
+                    } else {
+                        this.error = "La liste est vide.";
+                    }
                 }
                 console.log('This contains body: ', data.body);
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                }
-            }
-            (data: VoucherControl[]) => {
-                console.log("data", data);
-                if (data && data.length > 0) {
-                    this.records = data;
-                    this.loading = false;
-                } else {
-                    this.error = "La liste est vide.";
                 }
             }
         );

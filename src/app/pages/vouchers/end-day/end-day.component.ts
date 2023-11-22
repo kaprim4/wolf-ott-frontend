@@ -86,31 +86,28 @@ export class EndDayComponent implements OnInit
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
-
+                    if (data.body && data.body.length > 0) {
+                        data.body.map((voucher: VoucherTemp) => {
+                            if (voucher.gasStation.id == this.tokenService.getPayload().gas_station_id){
+                                if (this.voucherType_id != '') {
+                                    if (voucher.voucherType.id == this.voucherType_id){
+                                        this.records.push(voucher);
+                                    }
+                                }else{
+                                    this.records.push(voucher);
+                                }
+                            }
+                        });
+                        this.loading = false;
+                    } else {
+                        this.error = "La liste est vide.";
+                    }
                 }
                 console.log('This contains body: ', data.body);
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                }
-            }
-            (data: VoucherTemp[]) => {
-                if (data && data.length > 0) {
-                    data.map((voucher: VoucherTemp) => {
-                        if (voucher.gasStation.id == this.tokenService.getPayload().gas_station_id){
-                            if (this.voucherType_id != '') {
-                                if (voucher.voucherType.id == this.voucherType_id){
-                                    this.records.push(voucher);
-                                }
-                            }else{
-                                this.records.push(voucher);
-                            }
-                        }
-                    });
-                    this.loading = false;
-                } else {
-                    this.error = "La liste est vide.";
                 }
             }
         );
@@ -123,6 +120,22 @@ export class EndDayComponent implements OnInit
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
+                    if (data.body && data.body.length > 0) {
+                        data.body.map((value:any) => {
+                            if(value[0]['id'] == this.tokenService.getPayload().gas_station_id){
+                                this.voucherTypeSums.push({
+                                    gasStation: value[0],
+                                    voucherType: value[1],
+                                    sum: value[2],
+                                    count: value[3],
+                                });
+                            }
+                        });
+                        this.loading = false;
+                        console.log(this.voucherTypeSums);
+                    } else {
+                        this.error = "La liste est vide.";
+                    }
 
                 }
                 console.log('This contains body: ', data.body);
@@ -130,24 +143,6 @@ export class EndDayComponent implements OnInit
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                }
-            }
-            (data: []) => {
-                if (data && data.length > 0) {
-                    data.map((value) => {
-                        if(value[0]['id'] == this.tokenService.getPayload().gas_station_id){
-                            this.voucherTypeSums.push({
-                                gasStation: value[0],
-                                voucherType: value[1],
-                                sum: value[2],
-                                count: value[3],
-                            });
-                        }
-                    });
-                    this.loading = false;
-                    console.log(this.voucherTypeSums);
-                } else {
-                    this.error = "La liste est vide.";
                 }
             }
         );
@@ -238,23 +233,17 @@ export class EndDayComponent implements OnInit
                                 console.log(`Got a successfull status code: ${data.status}`);
                             }
                             if (data.body) {
-
-                            }
-                            console.log('This contains body: ', data.body);
-                        },
-                        (err: HttpErrorResponse) => {
-                            if (err.status === 403 || err.status === 404) {
-                                console.error(`${err.status} status code caught`);
-                            }
-                        }
-                        (data: VoucherTemp) => {
-                            if (data) {
-                                this.voucherTempService.deleteVoucherTemp(data.id).subscribe(
-                                    (data: HttpResponse<any>) => {
-                                        if (data.status === 200 || data.status === 202) {
-                                            console.log(`Got a successfull status code: ${data.status}`);
+                                this.voucherTempService.deleteVoucherTemp(data.body.id).subscribe(
+                                    (data2: HttpResponse<any>) => {
+                                        if (data2.status === 200 || data2.status === 202) {
+                                            console.log(`Got a successfull status code: ${data2.status}`);
                                         }
-                                        if (data.body) {
+                                        if (data2.body) {
+                                            Swal.fire({
+                                                title: "Succès!",
+                                                text: "Cette entrée a été supprimée avec succès.",
+                                                icon: "success"
+                                            }).then();
 
                                         }
                                         console.log('This contains body: ', data.body);
@@ -262,26 +251,23 @@ export class EndDayComponent implements OnInit
                                     (err: HttpErrorResponse) => {
                                         if (err.status === 403 || err.status === 404) {
                                             console.error(`${err.status} status code caught`);
+                                            this.errorSwal.fire().then(() => {
+                                                this.error = err.message;
+                                                console.log(err.message);
+                                            });
                                         }
-                                    }
-                                    () => {
-                                        Swal.fire({
-                                            title: "Succès!",
-                                            text: "Cette entrée a été supprimée avec succès.",
-                                            icon: "success"
-                                        }).then();
-                                    },
-                                    (error: string) => {
-                                        this.errorSwal.fire().then(() => {
-                                            this.error = error;
-                                            console.log(error);
-                                        });
                                     },
                                     (): void => {
                                         this.records.splice(deleteEvent.index, 1);
                                         this.loading = false;
                                     }
                                 )
+                            }
+                            console.log('This contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
                             }
                         }
                     );

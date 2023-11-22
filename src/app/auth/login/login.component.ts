@@ -7,6 +7,8 @@ import {AuthenticationService} from 'src/app/core/service/auth.service';
 import {ICredential} from "../../core/interfaces/credential";
 import {TokenService} from "../../core/service/token.service";
 import {IToken} from "../../core/interfaces/token";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import {GasStation} from "../../core/interfaces/gas_station";
 
 // types
 
@@ -52,15 +54,23 @@ export class LoginComponent implements OnInit {
         if (this.loginForm.valid) {
             this.loading = true;
             this.authService.login(this.formValues['username'].value, this.formValues['password'].value)?.subscribe(
-                (data: IToken) => {
-                    console.log("login token:", data.token)
-                    this.tokenService.saveToken(data.token)
+                (data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`Got a successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+                        console.log("login token:", data.body.token)
+                        this.tokenService.saveToken(data.body.token)
+                    }
+                    console.log('This contains body: ', data.body);
                 },
-                (error: string) => {
-                    this.error = error;
-                    console.log(error)
-                },
-                ((): void => {
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                        this.error = err.message;
+                        console.log(err.message)
+                    }
+                }, ((): void => {
                     this.loading = false;
                 })
             )

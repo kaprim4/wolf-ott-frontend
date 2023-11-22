@@ -22,6 +22,10 @@ const routes: Routes = [
         path: 'regions', loadChildren: () => import('./regions/regions.module')
             .then(m => m.RegionsModule)
     },
+    {
+        path: 'voucher-types', loadChildren: () => import('./voucher-types/voucher-types.module')
+            .then(m => m.VoucherTypesModule)
+    },
 ];
 
 @NgModule({
