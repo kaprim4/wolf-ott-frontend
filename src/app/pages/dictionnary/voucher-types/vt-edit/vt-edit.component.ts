@@ -167,12 +167,13 @@ export class VtEditComponent implements OnInit {
     upload(idx: number, file: File): void {
         this.progressInfos[idx] = {
             value: 0,
-            fileName: file.name
+            fileName: file.name,
+            fileSize: file.size
         };
         if (file) {
             console.log(file)
-            this.uploadService.upload(file).subscribe({
-                next: (event: any) => {
+            this.uploadService.upload(file).subscribe(
+                 (event: any) => {
                     if (event.type === HttpEventType.UploadProgress) {
                         this.progressInfos[idx].value = Math.round(100 * event.loaded / event.total);
                     } else if (event instanceof HttpResponse) {
@@ -181,12 +182,12 @@ export class VtEditComponent implements OnInit {
                         this.imageInfos = this.uploadService.getFiles();
                     }
                 },
-                error: (err: any) => {
+                 (err: any) => {
                     this.progressInfos[idx].value = 0;
                     const msg = 'Could not upload the file: ' + file.name;
                     this.message.push(msg);
                 }
-            });
+            );
         }
     }
 
