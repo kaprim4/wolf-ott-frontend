@@ -3,6 +3,7 @@ import {HttpClient, HttpRequest, HttpEvent, HttpHeaders, HttpResponse} from '@an
 import {Observable} from 'rxjs';
 import {environment} from "../../../environments/environment";
 import {TokenService} from "./token.service";
+import {GasStation} from "../interfaces/gas_station";
 
 @Injectable({
     providedIn: 'root'
@@ -30,6 +31,13 @@ export class FileUploadService {
                 responseType: 'json',
             })
         );
+    }
+
+    getFile(file_id: String): Observable<HttpResponse<any>> {
+        return this.http.get(
+            `${this.apiServerUrl}/api/v1/storage/files/${file_id}`,
+            {headers: this.header1, observe: 'response'},
+        )
     }
 
     getFiles(): Observable<HttpResponse<any>> {

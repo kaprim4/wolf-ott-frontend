@@ -1,13 +1,13 @@
 export interface VoucherType {
     id: number;
     libelle: string;
-    imageName: string;
+    file: any;
     isActivated: boolean;
     isDeleted: boolean;
     createdAt: string;
     updatedAt: string;
 
-    [key: string]: string | number | boolean;
+    [key: string]: string | number | boolean | any;
 }
 
 export interface VoucherTemp {

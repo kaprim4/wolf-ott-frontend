@@ -13,6 +13,7 @@ import {VoucherType} from "../../../../core/interfaces/voucher";
 import {VoucherTypeService} from "../../../../core/service/voucher-type.service";
 import {Observable} from "rxjs";
 import {FileUploadService} from "../../../../core/service/file-upload.service";
+import {formatBytes} from "../../../../core/helpers/functions";
 
 @Component({
     selector: 'app-vt-edit',
@@ -23,12 +24,12 @@ export class VtEditComponent implements OnInit {
 
     @Input()
     voucherType: VoucherType = {
-        createdAt: "",
         id: 0,
-        imageName: "",
+        libelle: "",
+        file: null,
         isActivated: false,
         isDeleted: false,
-        libelle: "",
+        createdAt: "",
         updatedAt: ""
     }
 
@@ -70,6 +71,7 @@ export class VtEditComponent implements OnInit {
 
     previews: string[] = [];
     imageInfos?: Observable<any>;
+    fileDb: any = null;
 
 
     initFieldsConfig(): void {
@@ -96,7 +98,6 @@ export class VtEditComponent implements OnInit {
         this.editForm = this.fb.group({
             id: [this.voucherType.id],
             libelle: [this.voucherType.libelle, Validators.required],
-            imageName: [this.voucherType.imageName, Validators.required],
             isActivated: [this.voucherType.isActivated]
         });
     }
@@ -111,6 +112,13 @@ export class VtEditComponent implements OnInit {
                     }
                     if (data.body) {
                         this.voucherType = data.body;
+                        if(this.voucherType.file){
+                            let imageName: string | null = "./assets/images/no_image.png";
+                            if (this.voucherType.file && this.voucherType.file?.id) {
+                                imageName = `data:${this.voucherType.file?.imageType};base64,${this.voucherType.file?.imageData}`;
+                                this.previews.push(imageName);
+                            }
+                        }
                         this.loading = false;
                         this.initFieldsConfig();
                     }
@@ -156,38 +164,10 @@ export class VtEditComponent implements OnInit {
             for (let i = 0; i < numberOfFiles; i++) {
                 const reader = new FileReader();
                 reader.onload = (e: any) => {
-                    console.log(e.target.result);
                     this.previews.push(e.target.result);
                 };
                 reader.readAsDataURL(this.selectedFiles[i]);
             }
-        }
-    }
-
-    upload(idx: number, file: File): void {
-        this.progressInfos[idx] = {
-            value: 0,
-            fileName: file.name,
-            fileSize: file.size
-        };
-        if (file) {
-            console.log(file)
-            this.uploadService.upload(file).subscribe(
-                 (event: any) => {
-                    if (event.type === HttpEventType.UploadProgress) {
-                        this.progressInfos[idx].value = Math.round(100 * event.loaded / event.total);
-                    } else if (event instanceof HttpResponse) {
-                        const msg = 'Uploaded the file successfully: ' + file.name;
-                        this.message.push(msg);
-                        this.imageInfos = this.uploadService.getFiles();
-                    }
-                },
-                 (err: any) => {
-                    this.progressInfos[idx].value = 0;
-                    const msg = 'Could not upload the file: ' + file.name;
-                    this.message.push(msg);
-                }
-            );
         }
     }
 
@@ -200,45 +180,88 @@ export class VtEditComponent implements OnInit {
         }
     }
 
+    upload(idx: number, file: File): void {
+        this.progressInfos[idx] = {
+            value: 0,
+            fileName: file.name,
+            fileSize: formatBytes(file.size)
+        };
+        if (file) {
+            this.uploadService.upload(file).subscribe(
+                (event: any) => {
+                    if (event.type === HttpEventType.UploadProgress) {
+                        this.progressInfos[idx].value = Math.round(100 * event.loaded / event.total);
+                    } else if (event instanceof HttpResponse) {
+                        if (event.status === 200 || event.status === 202) {
+                            console.log(`Got a successfull status code: ${event.status}`);
+                        }
+                        if (event.body) {
+                            this.fileDb = event.body;
+                            this.message = [];
+                            this.selectedFiles = undefined;
+                        }
+                        console.log('This contains body: ', event.body);
+                        const msg = 'Le fichier a été téléchargé avec succès: ' + file.name;
+                        this.message.push(msg);
+                        this.imageInfos = this.uploadService.getFiles();
+                    }
+                },
+                (err: any) => {
+                    this.progressInfos[idx].value = 0;
+                    const msg = 'Impossible de télécharger le fichier: ' + file.name;
+                    this.message.push(msg);
+                }
+            );
+        }
+    }
+
     async onSubmit() {
         this.formSubmitted = true;
         if (this.editForm.valid) {
             this.loading = true;
-            this.voucherType = {
-                id: this.editForm.controls['id'].value,
-                libelle: this.editForm.controls['libelle'].value,
-                imageName: this.editForm.controls['imageName'].value,
-                isActivated: this.editForm.controls['isActivated'].value,
-                isDeleted: false,
-                createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
-                updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
+
+            console.log("fileDb: ",this.fileDb);
+
+            this.voucherType.id = this.editForm.controls['id'].value;
+            this.voucherType.libelle = this.editForm.controls['libelle'].value;
+            this.voucherType.file = this.fileDb;
+            this.voucherType.isActivated = this.editForm.controls['isActivated'].value;
+            this.voucherType.isDeleted = false;
+            this.voucherType.createdAt = moment(now()).format('Y-M-DTHH:mm:ss').toString();
+            this.voucherType.updatedAt = moment(now()).format('Y-M-DTHH:mm:ss').toString();
+            console.log(this.voucherType);
+
+            if (this.voucherType) {
+                this.voucherTypeService.updateVoucherType(this.voucherType).subscribe(
+                    (data: HttpResponse<any>) => {
+                        if (data.status === 200 || data.status === 202) {
+                            console.log(`Got a successfull status code: ${data.status}`);
+                        }
+                        if (data.body) {
+                            this.successSwal.fire().then(() => {
+                                this.router.navigate(['dictionnary/voucher-types'])
+                            });
+                        }
+                        console.log('This contains body: ', data.body);
+                    },
+                    (err: HttpErrorResponse) => {
+                        if (err.status === 403 || err.status === 404) {
+                            console.error(`${err.status} status code caught`);
+                            this.errorSwal.fire().then((r) => {
+                                this.error = err.message;
+                                console.log(err.message);
+                            });
+                        }
+                    },
+                    (): void => {
+                        this.loading = false;
+                    }
+                );
+            } else {
+                this.errorSwal.fire().then(r => this.loading = false);
             }
-            this.voucherTypeService.updateVoucherType(this.voucherType).subscribe(
-                (data: HttpResponse<any>) => {
-                    if (data.status === 200 || data.status === 202) {
-                        console.log(`Got a successfull status code: ${data.status}`);
-                    }
-                    if (data.body) {
-                        this.successSwal.fire().then(() => {
-                            this.router.navigate(['dictionnary/supervisors'])
-                        });
-                    }
-                    console.log('This contains body: ', data.body);
-                },
-                (err: HttpErrorResponse) => {
-                    if (err.status === 403 || err.status === 404) {
-                        console.error(`${err.status} status code caught`);
-                        this.errorSwal.fire().then((r) => {
-                            this.error = err.message;
-                            console.log(err.message);
-                        });
-                    }
-                },
-                (): void => {
-                    this.loading = false;
-                }
-            )
-            console.log(this.voucherType)
         }
     }
+
+    protected readonly formatBytes = formatBytes;
 }

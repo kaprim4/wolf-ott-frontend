@@ -120,9 +120,6 @@ export class CIndexComponent implements OnInit {
             || row.region.libelle.toLowerCase().includes(term);
     }
 
-    /**
-     * Search Method
-     */
     searchData(searchTerm: string): void {
         if (searchTerm === '') {
             this._fetchData();

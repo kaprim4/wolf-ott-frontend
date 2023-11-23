@@ -13,6 +13,7 @@ import {FileUploadService} from "../../../../core/service/file-upload.service";
 import {Observable} from "rxjs";
 import {VoucherType} from "../../../../core/interfaces/voucher";
 import {VoucherTypeService} from "../../../../core/service/voucher-type.service";
+import {FileDb} from "../../../../core/interfaces/file_db";
 
 @Component({
     selector: 'app-vt-add',
@@ -25,7 +26,7 @@ export class VtAddComponent implements OnInit {
     voucherType: VoucherType = {
         createdAt: "",
         id: 0,
-        imageName: "",
+        file: null,
         isActivated: false,
         isDeleted: false,
         libelle: "",
@@ -69,6 +70,7 @@ export class VtAddComponent implements OnInit {
 
     previews: string[] = [];
     imageInfos?: Observable<any>;
+    fileDb: any = null;
 
     initFieldsConfig(): void {
         this.objectProps = [
@@ -93,18 +95,6 @@ export class VtAddComponent implements OnInit {
         ];
     }
 
-    private updateFormValues() {
-        this.voucherType = {
-            id: this.addForm.controls['id'].value,
-            libelle: this.addForm.controls['libelle'].value,
-            imageName: this.addForm.controls['imageName'].value,
-            isActivated: this.addForm.controls['isActivated'].value,
-            isDeleted: false,
-            createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
-            updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
-        }
-    }
-
     get formValues() {
         return this.addForm.controls;
     }
@@ -126,46 +116,17 @@ export class VtAddComponent implements OnInit {
         this.message = [];
         this.progressInfos = [];
         this.selectedFiles = event.target.files;
-
         this.previews = [];
         if (this.selectedFiles && this.selectedFiles[0]) {
             const numberOfFiles = this.selectedFiles.length;
             for (let i = 0; i < numberOfFiles; i++) {
                 const reader = new FileReader();
-
                 reader.onload = (e: any) => {
                     console.log(e.target.result);
                     this.previews.push(e.target.result);
                 };
-
                 reader.readAsDataURL(this.selectedFiles[i]);
             }
-        }
-    }
-
-    upload(idx: number, file: File): void {
-        this.progressInfos[idx] = {
-            value: 0,
-            fileName: file.name
-        };
-
-        if (file) {
-            this.uploadService.upload(file).subscribe({
-                next: (event: any) => {
-                    if (event.type === HttpEventType.UploadProgress) {
-                        this.progressInfos[idx].value = Math.round(100 * event.loaded / event.total);
-                    } else if (event instanceof HttpResponse) {
-                        const msg = 'Uploaded the file successfully: ' + file.name;
-                        this.message.push(msg);
-                        this.imageInfos = this.uploadService.getFiles();
-                    }
-                },
-                error: (err: any) => {
-                    this.progressInfos[idx].value = 0;
-                    const msg = 'Could not upload the file: ' + file.name;
-                    this.message.push(msg);
-                }
-            });
         }
     }
 
@@ -178,12 +139,55 @@ export class VtAddComponent implements OnInit {
         }
     }
 
+    upload(idx: number, file: File): void {
+        this.progressInfos[idx] = {
+            value: 0,
+            fileName: file.name
+        };
+        if (file) {
+            this.uploadService.upload(file).subscribe({
+                next: (event: any) => {
+                    if (event.type === HttpEventType.UploadProgress) {
+                        this.progressInfos[idx].value = Math.round(100 * event.loaded / event.total);
+                    } else if (event instanceof HttpResponse) {
+                        if (event.status === 200 || event.status === 202) {
+                            console.log(`Got a successfull status code: ${event.status}`);
+                        }
+                        if (event.body) {
+                            this.fileDb = event.body;
+                            this.message = [];
+                            this.selectedFiles = undefined;
+                        }
+                        console.log('This contains body: ', event.body);
+                        const msg = 'Le fichier a été téléchargé avec succès: ' + file.name;
+                        this.message.push(msg);
+                        this.imageInfos = this.uploadService.getFiles();
+                    }
+                },
+                error: (error: any) => {
+                    this.progressInfos[idx].value = 0;
+                    const msg = 'Impossible de télécharger le fichier: ' + file.name;
+                    this.message.push(msg);
+                }
+            });
+        }
+    }
+
     async onSubmit() {
         this.formSubmitted = true;
         if (this.addForm.valid) {
             this.loading = true;
-            this.updateFormValues();
+
+            this.voucherType.id = this.addForm.controls['id'].value;
+            this.voucherType.libelle = this.addForm.controls['libelle'].value;
+            this.voucherType.file = this.fileDb;
+            this.voucherType.isActivated = this.addForm.controls['isActivated'].value;
+            this.voucherType.isDeleted = false;
+            this.voucherType.createdAt = moment(now()).format('Y-M-DTHH:mm:ss').toString();
+            this.voucherType.updatedAt = moment(now()).format('Y-M-DTHH:mm:ss').toString();
+
             console.log(this.voucherType);
+
             if (this.voucherType) {
                 this.voucherTypeService.addVoucherType(this.voucherType).subscribe(
                     (data: HttpResponse<any>) => {
@@ -192,7 +196,7 @@ export class VtAddComponent implements OnInit {
                         }
                         if (data.body) {
                             this.successSwal.fire().then(() => {
-                                this.router.navigate(['dictionnary/' + this.entityElm.entity + 's'])
+                                this.router.navigate(['dictionnary/voucher-types'])
                             });
                         }
                         console.log('This contains body: ', data.body);

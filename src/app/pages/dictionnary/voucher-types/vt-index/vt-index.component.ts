@@ -9,6 +9,7 @@ import {SortEvent} from "../../../../shared/advanced-table/sortable.directive";
 import Swal from "sweetalert2";
 import {VoucherTypeService} from "../../../../core/service/voucher-type.service";
 import {VoucherType} from "../../../../core/interfaces/voucher";
+import {FileUploadService} from "../../../../core/service/file-upload.service";
 
 @Component({
     selector: 'app-vt-index',
@@ -30,6 +31,7 @@ export class VtIndexComponent implements OnInit {
     constructor(
         private eventService: EventService,
         private voucherTypeService: VoucherTypeService,
+        private fileUploadService: FileUploadService
     ) {
     }
 
@@ -75,9 +77,12 @@ export class VtIndexComponent implements OnInit {
             {name: 'id', label: '#', formatter: (record: VoucherType) => record.id},
             {name: 'libelle', label: 'Nom', formatter: (record: VoucherType) => record.libelle},
             {
-                name: 'image', label: 'Image', formatter: (record: VoucherType) => {
-                    let imageName = "./assets/images/no_image.png";
-                    return '<img src="' + (record.imageName ? record.imageName : imageName ) + '" alt="' + record.libelle + '" height="45px" />';
+                name: 'file', label: 'Image', formatter: (record: VoucherType) => {
+                    let imageName: string | null = "./assets/images/no_image.png";
+                    if (record.file && record.file?.id) {
+                        imageName = `data:${record.file?.imageType};base64,${record.file?.imageData}`;
+                    }
+                    return '<img src="' + imageName + '" alt="' + record.libelle + '" title="' + record.libelle + '" height="32px" />';
                 }
             },
             {
