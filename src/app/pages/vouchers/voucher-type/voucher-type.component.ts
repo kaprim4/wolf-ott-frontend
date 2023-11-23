@@ -82,13 +82,14 @@ export class VoucherTypeComponent implements OnInit {
                 if (data.body) {
                     this.voucherTypes = data.body;
                     this.initFieldsConfig();
-                    this.loading = false;
                 }
                 console.log('This contains body: ', data.body);
+                this.loading = false;
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
+                    this.loading = false;
                 }
             }
         );
