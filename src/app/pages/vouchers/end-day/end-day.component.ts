@@ -17,12 +17,11 @@ import Swal from "sweetalert2";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
 @Component({
-  selector: 'app-end-day',
-  templateUrl: './end-day.component.html',
-  styleUrls: ['./end-day.component.scss']
+    selector: 'app-end-day',
+    templateUrl: './end-day.component.html',
+    styleUrls: ['./end-day.component.scss']
 })
-export class EndDayComponent implements OnInit
-{
+export class EndDayComponent implements OnInit {
 
     records: VoucherTemp[] = [];
     columns: Column[] = [];
@@ -88,12 +87,12 @@ export class EndDayComponent implements OnInit
                 if (data.body) {
                     if (data.body && data.body.length > 0) {
                         data.body.map((voucher: VoucherTemp) => {
-                            if (voucher.gasStation.id == this.tokenService.getPayload().gas_station_id){
+                            if (voucher.voucherHeader.gasStation.id == this.tokenService.getPayload().gas_station_id) {
                                 if (this.voucherType_id != '') {
-                                    if (voucher.voucherType.id == this.voucherType_id){
+                                    if (voucher.voucherType.id == this.voucherType_id) {
                                         this.records.push(voucher);
                                     }
-                                }else{
+                                } else {
                                     this.records.push(voucher);
                                 }
                             }
@@ -121,11 +120,16 @@ export class EndDayComponent implements OnInit
                 }
                 if (data.body) {
                     if (data.body && data.body.length > 0) {
-                        data.body.map((value:any) => {
-                            if(value[0]['id'] == this.tokenService.getPayload().gas_station_id){
+                        data.body.map((value: any) => {
+                            if (value[0]['id'] == this.tokenService.getPayload().gas_station_id) {
+                                let imageName: string | null = "./assets/images/no_image.png";
+                                if (value[1].file && value[1].file?.id) {
+                                    imageName = `data:${value[1].file?.imageType};base64,${value[1].file?.imageData}`;
+                                }
                                 this.voucherTypeSums.push({
                                     gasStation: value[0],
                                     voucherType: value[1],
+                                    voucherTypeIcon: `data:${value[1].file?.imageType};base64,${value[1].file?.imageData}`,
                                     sum: value[2],
                                     count: value[3],
                                 });
@@ -151,7 +155,7 @@ export class EndDayComponent implements OnInit
     initTableConfig(): void {
         this.columns = [
             {name: 'id', label: '#', formatter: (record: VoucherTemp) => record.id},
-            {name: 'gasStation', label: 'Code Client', formatter: (record: VoucherTemp) => record.gasStation.libelle},
+            {name: 'gasStation', label: 'Code Client', formatter: (record: VoucherTemp) => record.voucherHeader.gasStation.libelle},
             {name: 'voucherType', label: 'Type Bon', formatter: (record: VoucherTemp) => record.voucherType.libelle},
             {
                 name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherTemp) => {
@@ -194,7 +198,7 @@ export class EndDayComponent implements OnInit
     }
 
     matches(row: VoucherTemp, term: string) {
-        return row.gasStation?.libelle.toLowerCase().includes(term)
+        return row.voucherHeader.gasStation?.libelle.toLowerCase().includes(term)
             || row.voucherType?.libelle.toLowerCase().includes(term)
             || row.slipNumber.toLowerCase().includes(term)
             || row.voucherNumber.toLowerCase().includes(term)
@@ -279,13 +283,11 @@ export class EndDayComponent implements OnInit
         });
     }
 
-    onSubmit() {
+    endTheDay() {
         this.formSubmitted = true;
-        if (this.filterForm.valid) {
-            this.loading = true;
-            this.records = [];
-            this.voucherType_id = this.filterForm.controls['voucherType_id'].value;
-            this._fetchData();
-        }
+        this.loading = true;
+        this.records = [];
+
+
     }
 }

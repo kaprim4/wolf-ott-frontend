@@ -4,7 +4,7 @@ import {VoucherTypeService} from "../../../core/service/voucher-type.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {IFormType} from "../../../core/interfaces/formType";
-import {VoucherControl, VoucherTemp, VoucherType} from "../../../core/interfaces/voucher";
+import {VoucherTemp} from "../../../core/interfaces/voucher";
 import {EventType} from "../../../core/constants/events";
 import * as moment from "moment/moment";
 import {now} from "moment/moment";
@@ -33,8 +33,7 @@ export class GrabVouchersComponent implements OnInit {
     voucherTemp: VoucherTemp = {
         barcode: "",
         createdAt: "",
-        gasStation: null,
-        gasStationOrigin: null,
+        gasStationOrigin: undefined,
         id: 0,
         isActivated: false,
         isDeleted: false,
@@ -44,8 +43,9 @@ export class GrabVouchersComponent implements OnInit {
         vehiculeNumber: "",
         voucherAmount: 0,
         voucherDate: "",
+        voucherHeader: undefined,
         voucherNumber: "",
-        voucherType: null
+        voucherType: undefined
     };
 
     @ViewChild('successSwal')
@@ -163,7 +163,7 @@ export class GrabVouchersComponent implements OnInit {
                                         if (data2.body) {
                                             this.voucher_type_name = data2.body.libelle;
                                             this.title = 'Saisie de Bon de type ' + this.voucher_type_name;
-                                            this.voucherTemp.gasStation = this.gasStation;
+                                            this.voucherTemp.voucherHeader.gasStation = this.gasStation;
                                             this.voucherTemp.isActivated = true;
                                             this.voucherTemp.poste_produit = 99;
                                             this.voucherTemp.voucherDate = this.voucherDate;
@@ -270,7 +270,7 @@ export class GrabVouchersComponent implements OnInit {
                                 if (this.tokenService.getPayload().role_id == 1) {
                                     this.records.push(voucher);
                                 } else {
-                                    if (voucher.gasStation == this.gasStation) {
+                                    if (voucher.voucherHeader.gasStation == this.gasStation) {
                                         this.records.push(voucher);
                                     }
                                 }
@@ -295,7 +295,7 @@ export class GrabVouchersComponent implements OnInit {
     initTableConfig(): void {
         this.columns = [
             //{name: 'id', label: '#', formatter: (record: VoucherTemp) => record.id},
-            {name: 'gasStation', label: 'Code Client', formatter: (record: VoucherTemp) => record.gasStation.libelle},
+            {name: 'gasStation', label: 'Code Client', formatter: (record: VoucherTemp) => record.voucherHeader.gasStation.libelle},
             {name: 'voucherType', label: 'Type Bon', formatter: (record: VoucherTemp) => record.voucherType.libelle},
             {
                 name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherTemp) => {
@@ -333,7 +333,7 @@ export class GrabVouchersComponent implements OnInit {
     }
 
     matches(row: VoucherTemp, term: string) {
-        return row.gasStation?.libelle.toLowerCase().includes(term)
+        return row.voucherHeader.gasStation?.libelle.toLowerCase().includes(term)
             || row.voucherType?.libelle.toLowerCase().includes(term)
             || row.slipNumber.toLowerCase().includes(term)
             || row.voucherNumber.toLowerCase().includes(term)

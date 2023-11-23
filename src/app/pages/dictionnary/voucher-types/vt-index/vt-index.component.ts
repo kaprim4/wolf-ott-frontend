@@ -82,7 +82,7 @@ export class VtIndexComponent implements OnInit {
                     if (record.file && record.file?.id) {
                         imageName = `data:${record.file?.imageType};base64,${record.file?.imageData}`;
                     }
-                    return '<img src="' + imageName + '" alt="' + record.libelle + '" title="' + record.libelle + '" height="32px" />';
+                    return '<img src="' + imageName + '" alt="' + record.libelle + '" title="' + record.libelle + '" class="thumb-md rounded img-thumbnail" />';
                 }
             },
             {

@@ -10,15 +10,39 @@ export interface VoucherType {
     [key: string]: string | number | boolean | any;
 }
 
+export interface VoucherHeader {
+    id: number;
+    gasStation: any;
+    number: string;
+    isActivated: boolean;
+    isDeleted: boolean;
+    createdAt: string;
+    updatedAt: string;
+
+    [key: string]: string | number | boolean | any;
+}
+
+export interface VoucherLine {
+    id: number;
+    voucherTemp: any;
+    isActivated: boolean;
+    isDeleted: boolean;
+    createdAt: string;
+    updatedAt: string;
+
+    [key: string]: string | number | boolean | any;
+}
+
+
 export interface VoucherTemp {
     id: number;
     voucherType: any;
+    voucherHeader: any;
     voucherNumber: string;
     slipNumber: string;
     barcode: string;
     vehiculeNumber: string;
     voucherDate: string;
-    gasStation: any;
     gasStationOrigin: any;
     poste_produit: number;
     voucherAmount: number;
@@ -58,8 +82,8 @@ export interface VoucherControl {
 }
 
 export interface VoucherTypeSum {
-    gasStation: any;
     voucherType: any;
+    voucherTypeIcon: string;
     sum: number;
     count: number;
 

@@ -114,7 +114,7 @@ export class VoucherConsultComponent implements OnInit {
                 }
                 if (data.body) {
                     data.body.map((voucher: VoucherTemp) => {
-                        let gs: GasStation = voucher.gasStation;
+                        let gs: GasStation = voucher.voucherHeader.gasStation;
                         if (!this.gasStations.includes(gs)) {
                             this.gasStations.push(gs);
                         }
@@ -160,7 +160,7 @@ export class VoucherConsultComponent implements OnInit {
                     if (data.body && data.body.length > 0) {
                         data.body.map((voucher: VoucherTemp) => {
                             //if (voucher.voucherType.id == this.voucherType_id)
-                            if (voucher.gasStation.id == this.tokenService.getPayload().gas_station_id) {
+                            if (voucher.voucherHeader.gasStation.id == this.tokenService.getPayload().gas_station_id) {
                                 if (this.voucherType_id != '') {
                                     if (voucher.voucherType.id == this.voucherType_id) {
                                         this.records.push(voucher);
@@ -189,7 +189,7 @@ export class VoucherConsultComponent implements OnInit {
     initTableConfig(): void {
         this.columns = [
             {name: 'id', label: '#', formatter: (record: VoucherTemp) => record.id},
-            {name: 'gasStation', label: 'Code Client', formatter: (record: VoucherTemp) => record.gasStation.libelle},
+            {name: 'gasStation', label: 'Code Client', formatter: (record: VoucherTemp) => record.voucherHeader.gasStation.libelle},
             {name: 'voucherType', label: 'Type Bon', formatter: (record: VoucherTemp) => record.voucherType.libelle},
             {
                 name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherTemp) => {
@@ -232,7 +232,7 @@ export class VoucherConsultComponent implements OnInit {
     }
 
     matches(row: VoucherTemp, term: string) {
-        return row.gasStation?.libelle.toLowerCase().includes(term)
+        return row.voucherHeader?.gasStation?.libelle.toLowerCase().includes(term)
             || row.voucherType?.libelle.toLowerCase().includes(term)
             || row.slipNumber.toLowerCase().includes(term)
             || row.voucherNumber.toLowerCase().includes(term)
