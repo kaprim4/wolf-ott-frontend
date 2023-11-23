@@ -93,13 +93,12 @@
             </div>
         </div>
         <!-- end card body -->
-
         <!-- start card footer -->
         <div class="card-footer overflow-hidden">
             <button [routerLink]="['../']" type="button" class="btn btn-info rounded-pill waves-effect waves-light">
                 <span class="btn-label-left"><i class="mdi mdi-format-list-checkbox"></i></span> Retour à la liste
             </button>
-            <button [ngStyle]="{pointerEvents: !selectedFiles ? '' : 'none'}" type="submit" class="btn {{!selectedFiles ? 'btn-success' : 'btn-soft-secondary'}} rounded-pill waves-effect waves-light float-end ms-2">
+            <button type="submit" class="btn btn-success rounded-pill waves-effect waves-light float-end">
                 <span class="btn-label">
                     <i class="mdi mdi-check-all"></i>
                 </span> Valider

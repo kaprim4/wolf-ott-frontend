@@ -13,7 +13,7 @@ import {FileUploadService} from "../../../../core/service/file-upload.service";
 import {Observable} from "rxjs";
 import {VoucherType} from "../../../../core/interfaces/voucher";
 import {VoucherTypeService} from "../../../../core/service/voucher-type.service";
-import {FileDb} from "../../../../core/interfaces/file_db";
+import {formatBytes} from "../../../../core/helpers/functions";
 
 @Component({
     selector: 'app-vt-add',
@@ -24,12 +24,12 @@ export class VtAddComponent implements OnInit {
 
     @Input()
     voucherType: VoucherType = {
-        createdAt: "",
         id: 0,
+        libelle: "",
         file: null,
         isActivated: false,
         isDeleted: false,
-        libelle: "",
+        createdAt: "",
         updatedAt: ""
     }
 
@@ -49,8 +49,8 @@ export class VtAddComponent implements OnInit {
     }
 
     entityElm: IFormType = {
-        label: 'Superviseur',
-        entity: 'supervisor'
+        label: 'Type de bon',
+        entity: 'vouchers-type'
     }
     title: string = 'Nouvelle entrée' + (this.entityElm.entity ? ' (' + this.entityElm.label + ')' : '');
     objectProps: InputProps[] = [];
@@ -58,7 +58,6 @@ export class VtAddComponent implements OnInit {
     addForm: FormGroup = this.fb.group({
         id: [this.voucherType.id],
         libelle: ['', Validators.required],
-        imageName: ['', Validators.required],
         isActivated: [false]
     });
     formSubmitted: boolean = false;
@@ -142,7 +141,8 @@ export class VtAddComponent implements OnInit {
     upload(idx: number, file: File): void {
         this.progressInfos[idx] = {
             value: 0,
-            fileName: file.name
+            fileName: file.name,
+            fileSize: formatBytes(file.size)
         };
         if (file) {
             this.uploadService.upload(file).subscribe({
@@ -186,7 +186,7 @@ export class VtAddComponent implements OnInit {
             this.voucherType.createdAt = moment(now()).format('Y-M-DTHH:mm:ss').toString();
             this.voucherType.updatedAt = moment(now()).format('Y-M-DTHH:mm:ss').toString();
 
-            console.log(this.voucherType);
+            console.log("voucherType:", this.voucherType);
 
             if (this.voucherType) {
                 this.voucherTypeService.addVoucherType(this.voucherType).subscribe(

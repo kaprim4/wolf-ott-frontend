@@ -51,7 +51,7 @@ export class VtEditComponent implements OnInit {
 
     entityElm: IFormType = {
         label: 'Type de bon',
-        entity: 'supervisor'
+        entity: 'vouchers-type'
     }
     title: string = 'Modifier cette entrée' + (this.entityElm.entity ? ' (' + this.entityElm.label + ')' : '');
     objectProps: InputProps[] = [];
@@ -59,7 +59,6 @@ export class VtEditComponent implements OnInit {
     editForm: FormGroup = this.fb.group({
         id: [this.voucherType.id],
         libelle: ['', Validators.required],
-        imageName: ['', Validators.required],
         isActivated: [false]
     });
     formSubmitted: boolean = false;
@@ -72,7 +71,6 @@ export class VtEditComponent implements OnInit {
     previews: string[] = [];
     imageInfos?: Observable<any>;
     fileDb: any = null;
-
 
     initFieldsConfig(): void {
         this.objectProps = [

@@ -24,35 +24,35 @@ export class VoucherTypeService {
 
     public getVoucherTypes(): Observable<HttpResponse<VoucherType[]>> {
         return this.http.get<VoucherType[]>(
-            `${this.apiServerUrl}/api/v1/voucher-types/all`,
+            `${this.apiServerUrl}/api/v1/vouchers-type/all`,
             {headers: this.header1, observe: 'response'},
         );
     }
 
     public getVoucherType(id: number): Observable<HttpResponse<VoucherType>> {
         return this.http.get<VoucherType>(
-            `${this.apiServerUrl}/api/v1/voucher-types/find/${id}`,
+            `${this.apiServerUrl}/api/v1/vouchers-type/find/${id}`,
             {headers: this.header1, observe: 'response'},
         );
     }
 
     public addVoucherType(voucherType: VoucherType): Observable<HttpResponse<VoucherType>> {
         return this.http.post<VoucherType>(
-            `${this.apiServerUrl}/api/v1/voucher-types/add`, voucherType,
+            `${this.apiServerUrl}/api/v1/vouchers-type/add`, voucherType,
             {headers: this.header1, observe: 'response'},
         );
     }
 
     public updateVoucherType(voucherType: VoucherType): Observable<HttpResponse<VoucherType>> {
         return this.http.put<VoucherType>(
-            `${this.apiServerUrl}/api/v1/voucher-types/update`, voucherType,
+            `${this.apiServerUrl}/api/v1/vouchers-type/update`, voucherType,
             {headers: this.header1, observe: 'response'},
         );
     }
 
     public deleteVoucherType(id: number): Observable<HttpResponse<void>> {
         return this.http.delete<void>(
-            `${this.apiServerUrl}/api/v1/voucher-types/delete/${id}`,
+            `${this.apiServerUrl}/api/v1/vouchers-type/delete/${id}`,
             {headers: this.header1, observe: 'response'},
         );
     }
