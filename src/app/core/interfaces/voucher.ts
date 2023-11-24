@@ -13,7 +13,8 @@ export interface VoucherType {
 export interface VoucherHeader {
     id: number;
     gasStation: any;
-    number: string;
+    slipNumber: number;
+    voucherDate: string;
     isActivated: boolean;
     isDeleted: boolean;
     createdAt: string;
@@ -39,13 +40,12 @@ export interface VoucherTemp {
     voucherType: any;
     voucherHeader: any;
     voucherNumber: string;
-    slipNumber: string;
-    barcode: string;
-    vehiculeNumber: string;
-    voucherDate: string;
-    gasStationOrigin: any;
-    poste_produit: number;
     voucherAmount: number;
+    voucherDate: string;
+    vehiculeNumber: string;
+    barcode: string;
+    poste_produit: number;
+    gasStationOrigin: any;
     isActivated: boolean;
     isDeleted: boolean;
     createdAt: string;
@@ -88,4 +88,10 @@ export interface VoucherTypeSum {
     count: number;
 
     [key: string]: string | number | any;
+}
+
+export interface VoucherResponseHeader {
+    gas_station_id: number;
+    maxSlipNumber: number;
+    nextSlipNumber: number;
 }

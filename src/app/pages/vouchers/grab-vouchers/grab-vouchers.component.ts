@@ -4,7 +4,7 @@ import {VoucherTypeService} from "../../../core/service/voucher-type.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {IFormType} from "../../../core/interfaces/formType";
-import {VoucherTemp} from "../../../core/interfaces/voucher";
+import {VoucherHeader, VoucherTemp} from "../../../core/interfaces/voucher";
 import {EventType} from "../../../core/constants/events";
 import * as moment from "moment/moment";
 import {now} from "moment/moment";
@@ -17,8 +17,9 @@ import {GasStationService} from "../../../core/service/gas-station.service";
 import Swal from "sweetalert2";
 import {GasStation} from "../../../core/interfaces/gas_station";
 import {VoucherControlService} from "../../../core/service/voucher-control.service";
-import {isNumeric} from "../../../core/helpers/functions";
+import {isNumeric, padLeft} from "../../../core/helpers/functions";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import {VoucherHeaderService} from "../../../core/service/voucher-header.service";
 
 moment.locale('fr');
 
@@ -31,21 +32,20 @@ export class GrabVouchersComponent implements OnInit {
 
     @Input()
     voucherTemp: VoucherTemp = {
-        barcode: "",
-        createdAt: "",
-        gasStationOrigin: undefined,
         id: 0,
-        isActivated: false,
-        isDeleted: false,
-        poste_produit: 0,
-        slipNumber: "",
-        updatedAt: "",
-        vehiculeNumber: "",
+        voucherHeader: undefined,
+        voucherType: undefined,
+        voucherNumber: "",
         voucherAmount: 0,
         voucherDate: "",
-        voucherHeader: undefined,
-        voucherNumber: "",
-        voucherType: undefined
+        vehiculeNumber: "",
+        barcode: "",
+        poste_produit: 0,
+        gasStationOrigin: undefined,
+        isActivated: false,
+        isDeleted: false,
+        createdAt: "",
+        updatedAt: "",
     };
 
     @ViewChild('successSwal')
@@ -66,11 +66,23 @@ export class GrabVouchersComponent implements OnInit {
         private tokenService: TokenService,
         private voucherTempService: VoucherTempService,
         private voucherControlService: VoucherControlService,
+        private voucherHeaderService: VoucherHeaderService,
         private gasStationService: GasStationService,
     ) {
     }
 
     voucherType_id: number = 0;
+    voucherHeader_id: number = 0;
+    voucherHeader: VoucherHeader = {
+        id: 0,
+        slipNumber: 0,
+        gasStation: undefined,
+        voucherDate: "",
+        isActivated: true,
+        isDeleted: false,
+        createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
+        updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
+    }
     voucherDate: string = '';
     slipNumber: string = '';
     voucher_type_name: string = '';
@@ -111,8 +123,8 @@ export class GrabVouchersComponent implements OnInit {
         if (this.voucherType_id != 3) {
             this.standardForm = this.fb.group({
                 voucherType_id: [this.voucherTemp.voucherType?.id],
-                voucherDate: [this.voucherTemp.voucherDate],
-                slipNumber: [this.voucherTemp.slipNumber],
+                voucherDate: [this.voucherHeader.voucherDate],
+                slipNumber: [padLeft(String(this.voucherHeader.slipNumber), '0', 6)],
                 voucherNumber: [this.voucherTemp.voucherNumber, Validators.required],
                 vehiculeNumber: [this.voucherTemp.vehiculeNumber, Validators.required],
                 voucherAmount: [this.voucherTemp.voucherAmount, Validators.required]
@@ -120,10 +132,55 @@ export class GrabVouchersComponent implements OnInit {
         } else {
             this.standardForm = this.fb.group({
                 voucherType_id: [this.voucherTemp.voucherType?.id],
-                voucherDate: [this.voucherTemp.voucherDate],
-                slipNumber: [this.voucherTemp.slipNumber],
+                voucherDate: [this.voucherHeader.voucherDate],
+                slipNumber: [padLeft(String(this.voucherHeader.slipNumber), '0', 6)],
                 voucherNumber: [this.voucherTemp.voucherNumber, Validators.required],
             });
+        }
+    }
+
+    private _fetchVoucherHeaderData() {
+        let _voucherHeader_id = Number(this.activated.snapshot.paramMap.get('voucherHeader_id'));
+        if (_voucherHeader_id) {
+            this.voucherHeader_id = _voucherHeader_id;
+            this.voucherHeaderService.getVoucherHeader(_voucherHeader_id)?.subscribe(
+                (data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`Got a successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+                        this.voucherHeaderService.getVoucherHeaderBySlipNumber(data.body.maxSlipNumber)?.subscribe(
+                            (data2: HttpResponse<any>) => {
+                                if (data2.status === 200 || data2.status === 202) {
+                                    console.log(`Got a successfull status code: ${data2.status}`);
+                                }
+                                if (data2.body) {
+                                    this.voucherHeader = data2.body;
+                                    this.voucherTemp.voucherHeader = data2.body;
+                                    this.initFieldsConfig();
+                                }
+                                console.log('getVoucherHeaderBySlipNumber contains body: ', data2.body);
+                                this.loadingForm = false;
+                            },
+                            (err: HttpErrorResponse) => {
+                                if (err.status === 403 || err.status === 404) {
+                                    console.error(`${err.status} status code caught`);
+                                    this.loadingForm = false;
+                                }
+                            }
+                        );
+                        this.initFieldsConfig();
+                    }
+                    console.log('getNextVoucherHeader contains body: ', data.body);
+                    this.loadingForm = false;
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                        this.loadingForm = false;
+                    }
+                }
+            );
         }
     }
 
@@ -138,64 +195,50 @@ export class GrabVouchersComponent implements OnInit {
         });
         this.loadingForm = true;
         this.loadingList = true;
-
-        let _id = Number(this.activated.snapshot.paramMap.get('voucherType_id'));
-        if (_id) {
-            this.voucherType_id = _id;
-            let _date = this.activated.snapshot.paramMap.get('voucherDate');
-            if (_date) {
-                this.voucherDate = _date;
-                let _slipNumber = this.activated.snapshot.paramMap.get('slipNumber');
-                if (_slipNumber) {
-                    this.slipNumber = _slipNumber;
-                    this.gasStationService.getGasStation(this.tokenService.getPayload().gas_station_id).subscribe(
-                        (data: HttpResponse<any>) => {
-                            if (data.status === 200 || data.status === 202) {
-                                console.log(`Got a successfull status code: ${data.status}`);
+        let _voucherType_id = Number(this.activated.snapshot.paramMap.get('voucherType_id'));
+        if (_voucherType_id) {
+            this.voucherType_id = _voucherType_id;
+            this.gasStationService.getGasStation(this.tokenService.getPayload().gas_station_id).subscribe(
+                (data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`Got a successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+                        this.gasStation = data.body;
+                        this.voucherTypeService.getVoucherType(this.voucherType_id)?.subscribe(
+                            (data2: HttpResponse<any>) => {
+                                if (data2.status === 200 || data2.status === 202) {
+                                    console.log(`Got a successfull status code: ${data2.status}`);
+                                }
+                                if (data2.body) {
+                                    this.voucher_type_name = data2.body.libelle;
+                                    this.title = 'Saisie de Bon de type ' + this.voucher_type_name;
+                                    this.voucherTemp.isActivated = true;
+                                    this.voucherTemp.poste_produit = 99;
+                                    this.voucherTemp.voucherDate = this.voucherDate;
+                                    this.voucherTemp.voucherType = data;
+                                    this.loadingForm = false;
+                                    this.initFieldsConfig();
+                                }
+                                console.log('This contains body: ', data2.body);
+                            },
+                            (err: HttpErrorResponse) => {
+                                if (err.status === 403 || err.status === 404) {
+                                    console.error(`${err.status} status code caught`);
+                                }
                             }
-                            if (data.body) {
-                                this.gasStation = data.body;
-                                this.voucherTypeService.getVoucherType(this.voucherType_id)?.subscribe(
-                                    (data2: HttpResponse<any>) => {
-                                        if (data2.status === 200 || data2.status === 202) {
-                                            console.log(`Got a successfull status code: ${data2.status}`);
-                                        }
-                                        if (data2.body) {
-                                            this.voucher_type_name = data2.body.libelle;
-                                            this.title = 'Saisie de Bon de type ' + this.voucher_type_name;
-                                            this.voucherTemp.voucherHeader.gasStation = this.gasStation;
-                                            this.voucherTemp.isActivated = true;
-                                            this.voucherTemp.poste_produit = 99;
-                                            this.voucherTemp.voucherDate = this.voucherDate;
-                                            this.voucherTemp.voucherType = data;
-                                            this.voucherTemp.slipNumber = this.slipNumber;
-                                            this.loadingForm = false;
-                                            this.initFieldsConfig();
-                                        }
-                                        console.log('This contains body: ', data2.body);
-                                    },
-                                    (err: HttpErrorResponse) => {
-                                        if (err.status === 403 || err.status === 404) {
-                                            console.error(`${err.status} status code caught`);
-                                        }
-                                    }
-                                );
-                            }
-                            console.log('This contains body: ', data.body);
-                        },
-                        (err: HttpErrorResponse) => {
-                            if (err.status === 403 || err.status === 404) {
-                                console.error(`${err.status} status code caught`);
-                            }
-                        }
-                    );
+                        );
+                    }
+                    console.log('This contains body: ', data.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                    }
                 }
-            } else {
-                this.router.navigate(['vouchers/voucher-type']);
-            }
-        } else {
-            this.router.navigate(['vouchers/voucher-type']);
+            );
         }
+        this._fetchVoucherHeaderData();
         this.initTableConfig();
         this._fetchData();
     }
@@ -277,12 +320,12 @@ export class GrabVouchersComponent implements OnInit {
                             }
                         });
                         console.log("records:", this.records);
-                        this.loadingList = false;
                     } else {
                         this.error = "La liste est vide.";
                     }
                 }
                 console.log('This contains body: ', data.body);
+                this.loadingList = false;
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
@@ -299,7 +342,7 @@ export class GrabVouchersComponent implements OnInit {
             {name: 'voucherType', label: 'Type Bon', formatter: (record: VoucherTemp) => record.voucherType.libelle},
             {
                 name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherTemp) => {
-                    return '<span class="badge bg-purple text-light fs-5 m-0">' + record.slipNumber + '<span>'
+                    return '<span class="badge bg-purple text-light fs-5 m-0">' + record.voucherHeader.slipNumber + '<span>'
                 }
             },
             {name: 'voucherNumber', label: 'Numéro Bon', formatter: (record: VoucherTemp) => record.voucherNumber},
@@ -335,7 +378,7 @@ export class GrabVouchersComponent implements OnInit {
     matches(row: VoucherTemp, term: string) {
         return row.voucherHeader.gasStation?.libelle.toLowerCase().includes(term)
             || row.voucherType?.libelle.toLowerCase().includes(term)
-            || row.slipNumber.toLowerCase().includes(term)
+            || row.voucherHeader.slipNumber.toLowerCase().includes(term)
             || row.voucherNumber.toLowerCase().includes(term)
             || row.voucherAmount.toString().toLowerCase().includes(term)
             || row.vehiculeNumber.toLowerCase().includes(term)

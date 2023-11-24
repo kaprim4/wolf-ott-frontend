@@ -1,3 +1,6 @@
+<swal #successSwal title="Succès!" text="Cette entrée a été ajoutée avec succès." icon="success"></swal>
+<swal #errorSwal title="Erreur!" text="Une erreur s'est produite. Les informations saisies ne sont pas prises en compte." icon="error"></swal>
+
 <div class="row">
     <div class="col-12">
         <form [formGroup]="standardForm" name="add-form needs-validation" (ngSubmit)="onSubmit()">
@@ -13,7 +16,7 @@
                 <div class="card-body">
                     <p class="text-muted"></p>
                     <div class="live-preview">
-                        <app-ui-preloader [display]="loading"></app-ui-preloader>
+                        <app-ui-preloader [display]="loadingForm"></app-ui-preloader>
                         <ngb-alert [dismissible]="false" type="danger" *ngIf="error">
                             {{ error }}
                         </ngb-alert>
@@ -52,6 +55,23 @@
                                     Veuillez saisir une valeur valide.
                                 </div>
                             </div>
+                            <div class="position-relative col-md-6 col-lg-4 mb-3">
+                                <label for="voucherDate" class="form-label">Date Journée</label>
+                                <input class="form-control" type="date" id="voucherDate" formControlName="voucherDate" required [ngClass]="{'is-invalid':formSubmitted && formValues['voucherDate'].invalid}" />
+                                <div *ngIf="formSubmitted && formValues['voucherDate'].valid" class="valid-tooltip">
+                                    Cela semble bon!
+                                </div>
+                                <div *ngIf="formSubmitted && formValues['voucherDate'].invalid" class="invalid-tooltip">
+                                    Veuillez saisir une valeur valide.
+                                </div>
+                            </div>
+                            <div class="position-relative col-md-6 col-lg-4 mb-3">
+                                <label for="slipNumber" class="form-label">Numéro Bordereau</label>
+                                <input class="form-control bg-soft-blue text-dark fs-5 fw-bold" type="text" id="slipNumber" value="{{voucherResponseHeader?.nextSlipNumber | number:'6.0'}}" disabled />
+                                <h4 class="fs-6">
+                                    Dernier N°: <span class="badge bg-dark rounded-pill me-1 text-light fs-6">{{voucherResponseHeader?.maxSlipNumber | number:'6.0'}}</span>
+                                </h4>
+                            </div>
                         </div>
                     </div>
                     <!-- end card body -->
@@ -62,7 +82,7 @@
                     <button type="submit" class="btn btn-success rounded-pill waves-effect waves-light float-end">
                         <span class="btn-label">
                             <i class="mdi mdi-check-all"></i>
-                        </span> Valider
+                        </span> Créer un bordereau
                     </button>
                 </div>
                 <!-- end card footer -->
@@ -73,3 +93,31 @@
     </div>
     <!-- end row-->
 </div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">
+                    <i class="mdi mdi-script-text bg-soft-primary rounded-circle fs-4 p-1"></i> Liste des Bordereaux
+                    <p class="text-muted mb-0 mt-1 fs-6">
+                        ({{records.length}} entrée{{records.length > 1 ? "s" : ""}})
+                    </p>
+                </h4>
+            </div>
+            <div class="card-body">
+                <app-ui-preloader [display]="loadingList"></app-ui-preloader>
+                <ngb-alert [dismissible]="false" type="danger" *ngIf="errorList">
+                    {{ errorList }}
+                </ngb-alert>
+                <!-- table start -->
+                <app-advanced-table [tableData]="records" [columns]="columns" [pagination]="true" [pageSizeOptions]="pageSizeOptions" [hasRowSelection]="true" [isSearchable]="true" (search)="searchData($event)" [isSortable]="true" (sort)="onSort($event)" [canDelete]="false" [canEdit]="false">
+                </app-advanced-table>
+            </div>
+            <!-- end card body-->
+        </div>
+        <!-- end card -->
+    </div>
+    <!-- end col-->
+</div>
+<!-- end row-->

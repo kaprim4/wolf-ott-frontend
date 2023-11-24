@@ -159,7 +159,7 @@ export class EndDayComponent implements OnInit {
             {name: 'voucherType', label: 'Type Bon', formatter: (record: VoucherTemp) => record.voucherType.libelle},
             {
                 name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherTemp) => {
-                    return '<span class="badge bg-purple text-light fs-5 m-0">' + record.slipNumber + '<span>'
+                    return '<span class="badge bg-purple text-light fs-5 m-0">' + record.voucherHeader.slipNumber + '<span>'
                 }
             },
             {name: 'voucherNumber', label: 'Numéro Bon', formatter: (record: VoucherTemp) => record.voucherNumber},
@@ -200,7 +200,7 @@ export class EndDayComponent implements OnInit {
     matches(row: VoucherTemp, term: string) {
         return row.voucherHeader.gasStation?.libelle.toLowerCase().includes(term)
             || row.voucherType?.libelle.toLowerCase().includes(term)
-            || row.slipNumber.toLowerCase().includes(term)
+            || row.voucherHeader.slipNumber.toLowerCase().includes(term)
             || row.voucherNumber.toLowerCase().includes(term)
             || row.voucherAmount.toString().toLowerCase().includes(term)
             || row.vehiculeNumber.toLowerCase().includes(term)
