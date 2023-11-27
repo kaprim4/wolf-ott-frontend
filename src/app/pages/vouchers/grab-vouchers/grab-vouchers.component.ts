@@ -4,7 +4,7 @@ import {VoucherTypeService} from "../../../core/service/voucher-type.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {IFormType} from "../../../core/interfaces/formType";
-import {VoucherHeader, VoucherTemp} from "../../../core/interfaces/voucher";
+import {VoucherHeader, VoucherTemp, VoucherType} from "../../../core/interfaces/voucher";
 import {EventType} from "../../../core/constants/events";
 import * as moment from "moment/moment";
 import {now} from "moment/moment";
@@ -15,7 +15,6 @@ import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
 import {TokenService} from "../../../core/service/token.service";
 import {GasStationService} from "../../../core/service/gas-station.service";
 import Swal from "sweetalert2";
-import {GasStation} from "../../../core/interfaces/gas_station";
 import {VoucherControlService} from "../../../core/service/voucher-control.service";
 import {isNumeric, padLeft} from "../../../core/helpers/functions";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
@@ -33,15 +32,14 @@ export class GrabVouchersComponent implements OnInit {
     @Input()
     voucherTemp: VoucherTemp = {
         id: 0,
-        voucherHeader: undefined,
-        voucherType: undefined,
+        voucherHeader: null,
+        voucherType: null,
         voucherNumber: "",
         voucherAmount: 0,
-        voucherDate: "",
-        vehiculeNumber: "",
+        vehiculeNumber: "0",
         barcode: "",
         poste_produit: 0,
-        gasStationOrigin: undefined,
+        gasStationOrigin: null,
         isActivated: false,
         isDeleted: false,
         createdAt: "",
@@ -71,107 +69,88 @@ export class GrabVouchersComponent implements OnInit {
     ) {
     }
 
-    voucherType_id: number = 0;
-    voucherHeader_id: number = 0;
-    voucherHeader: VoucherHeader = {
-        id: 0,
-        slipNumber: 0,
-        gasStation: undefined,
-        voucherDate: "",
-        isActivated: true,
-        isDeleted: false,
-        createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
-        updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
-    }
-    voucherDate: string = '';
-    slipNumber: string = '';
-    voucher_type_name: string = '';
-    gasStation: GasStation | null = null;
-
-    entityElm: IFormType = {
-        label: 'Saisie de Bon',
-        entity: 'grab-vouchers'
-    }
+    entityElm: IFormType = {label: 'Saisie de Bon', entity: 'grab-vouchers'}
     title: string = 'Saisie de Bon';
+
+    voucherHeader: VoucherHeader | null = null;
+    voucherTypes: VoucherType[] = [];
+    voucherType_id: number = 0;
+    standardForm: FormGroup = this.fb.group({
+        voucherType: [this.voucherType_id, Validators.required],
+        voucherNumber: ['', Validators.required],
+        vehiculeNumber: ['0'],
+        voucherAmount: ['0']
+    });
 
     records: VoucherTemp[] = [];
     columns: Column[] = [];
     pageSizeOptions: number[] = [10, 25, 50, 100];
-
-    standardForm: FormGroup = this.fb.group({
-        voucherType_id: [''],
-        voucherDate: [''],
-        slipNumber: [''],
-        voucherNumber: ['', Validators.required],
-        vehiculeNumber: ['', Validators.required],
-        voucherAmount: ['', Validators.required]
-    });
 
     formSubmitted: boolean = false;
     error: string = '';
     loadingForm: boolean = false;
     loadingList: boolean = false;
     isVerified: boolean = false;
-    voucherError: string = '';
-    @Input() onVerifyClick: boolean = true;
+    voucherError: string = 'Veuillez saisir une valeur valide.';
 
     get formValues() {
         return this.standardForm.controls;
     }
 
-    initFieldsConfig(): void {
+    private initFieldsConfig(): void {
         if (this.voucherType_id != 3) {
             this.standardForm = this.fb.group({
-                voucherType_id: [this.voucherTemp.voucherType?.id],
-                voucherDate: [this.voucherHeader.voucherDate],
-                slipNumber: [padLeft(String(this.voucherHeader.slipNumber), '0', 6)],
-                voucherNumber: [this.voucherTemp.voucherNumber, Validators.required],
-                vehiculeNumber: [this.voucherTemp.vehiculeNumber, Validators.required],
-                voucherAmount: [this.voucherTemp.voucherAmount, Validators.required]
+                voucherType: [this.voucherType_id, Validators.required],
+                voucherNumber: [this.voucherTemp?.voucherNumber, Validators.required],
+                vehiculeNumber: [this.voucherTemp?.vehiculeNumber, Validators.required],
+                voucherAmount: [this.voucherTemp?.voucherAmount, Validators.required]
             });
         } else {
             this.standardForm = this.fb.group({
-                voucherType_id: [this.voucherTemp.voucherType?.id],
-                voucherDate: [this.voucherHeader.voucherDate],
-                slipNumber: [padLeft(String(this.voucherHeader.slipNumber), '0', 6)],
-                voucherNumber: [this.voucherTemp.voucherNumber, Validators.required],
+                voucherType: [this.voucherType_id, Validators.required],
+                voucherNumber: [this.voucherTemp?.voucherNumber, Validators.required],
+                vehiculeNumber: [this.voucherTemp?.vehiculeNumber],
+                voucherAmount: [this.voucherTemp?.voucherAmount]
             });
         }
+    }
+
+    private _fetchVoucherTypesData() {
+        this.voucherTypeService.getVoucherTypes()?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`getVoucherTypes a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+                    this.voucherTypes = data.body;
+                    this.initFieldsConfig();
+                }
+                console.log('_fetchVoucherTypesData contains body: ', data.body);
+                this.loadingForm = false;
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                    this.loadingForm = false;
+                }
+            }
+        );
     }
 
     private _fetchVoucherHeaderData() {
         let _voucherHeader_id = Number(this.activated.snapshot.paramMap.get('voucherHeader_id'));
         if (_voucherHeader_id) {
-            this.voucherHeader_id = _voucherHeader_id;
-            this.voucherHeaderService.getVoucherHeader(_voucherHeader_id)?.subscribe(
+            this.voucherHeaderService.getVoucherHeader(_voucherHeader_id).subscribe(
                 (data: HttpResponse<any>) => {
                     if (data.status === 200 || data.status === 202) {
-                        console.log(`Got a successfull status code: ${data.status}`);
+                        console.log(`getVoucherHeader a successfull status code: ${data.status}`);
                     }
                     if (data.body) {
-                        this.voucherHeaderService.getVoucherHeaderBySlipNumber(data.body.maxSlipNumber)?.subscribe(
-                            (data2: HttpResponse<any>) => {
-                                if (data2.status === 200 || data2.status === 202) {
-                                    console.log(`Got a successfull status code: ${data2.status}`);
-                                }
-                                if (data2.body) {
-                                    this.voucherHeader = data2.body;
-                                    this.voucherTemp.voucherHeader = data2.body;
-                                    this.initFieldsConfig();
-                                }
-                                console.log('getVoucherHeaderBySlipNumber contains body: ', data2.body);
-                                this.loadingForm = false;
-                            },
-                            (err: HttpErrorResponse) => {
-                                if (err.status === 403 || err.status === 404) {
-                                    console.error(`${err.status} status code caught`);
-                                    this.loadingForm = false;
-                                }
-                            }
-                        );
+                        this.voucherHeader = data.body;
+                        this.voucherTemp.voucherHeader = data.body;
                         this.initFieldsConfig();
                     }
-                    console.log('getNextVoucherHeader contains body: ', data.body);
+                    console.log('getVoucherHeader contains body: ', data.body);
                     this.loadingForm = false;
                 },
                 (err: HttpErrorResponse) => {
@@ -181,6 +160,8 @@ export class GrabVouchersComponent implements OnInit {
                     }
                 }
             );
+        } else {
+            this.router.navigate(['vouchers/voucher-type', {}]);
         }
     }
 
@@ -194,42 +175,98 @@ export class GrabVouchersComponent implements OnInit {
             ]
         });
         this.loadingForm = true;
+        this._fetchVoucherHeaderData();
+        this._fetchVoucherTypesData();
+        this.initTableConfig();
+
         this.loadingList = true;
-        let _voucherType_id = Number(this.activated.snapshot.paramMap.get('voucherType_id'));
-        if (_voucherType_id) {
-            this.voucherType_id = _voucherType_id;
-            this.gasStationService.getGasStation(this.tokenService.getPayload().gas_station_id).subscribe(
+        this._fetchData();
+    }
+
+    onSelect() {
+        let _voucherType = this.standardForm.controls['voucherType'].value;
+        if (_voucherType != 0) {
+            this.voucherTypeService.getVoucherType(_voucherType)?.subscribe(
                 (data: HttpResponse<any>) => {
                     if (data.status === 200 || data.status === 202) {
-                        console.log(`Got a successfull status code: ${data.status}`);
+                        console.log(`getVoucherType a successfull status code: ${data.status}`);
                     }
                     if (data.body) {
-                        this.gasStation = data.body;
-                        this.voucherTypeService.getVoucherType(this.voucherType_id)?.subscribe(
-                            (data2: HttpResponse<any>) => {
-                                if (data2.status === 200 || data2.status === 202) {
-                                    console.log(`Got a successfull status code: ${data2.status}`);
-                                }
-                                if (data2.body) {
-                                    this.voucher_type_name = data2.body.libelle;
-                                    this.title = 'Saisie de Bon de type ' + this.voucher_type_name;
-                                    this.voucherTemp.isActivated = true;
-                                    this.voucherTemp.poste_produit = 99;
-                                    this.voucherTemp.voucherDate = this.voucherDate;
-                                    this.voucherTemp.voucherType = data;
-                                    this.loadingForm = false;
-                                    this.initFieldsConfig();
-                                }
-                                console.log('This contains body: ', data2.body);
-                            },
-                            (err: HttpErrorResponse) => {
-                                if (err.status === 403 || err.status === 404) {
-                                    console.error(`${err.status} status code caught`);
-                                }
-                            }
-                        );
+                        this.voucherTemp.voucherType = data.body;
+                        this.voucherType_id = data.body.id;
+                        console.log('getVoucherType contains body: ', data.body);
                     }
-                    console.log('This contains body: ', data.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                    }
+                }
+            );
+        } else {
+            this.voucherType_id = 0;
+            this.voucherTemp.voucherType = null;
+        }
+    }
+
+    verifyVoucher() {
+        this.formSubmitted = true;
+        console.log(this.standardForm)
+        if (this.standardForm.valid) {
+            console.log("clicked")
+            let voucherNumber: string = this.standardForm.controls['voucherNumber'].value;
+            this.voucherTemp.createdAt = moment(now()).format('Y-M-DTHH:mm:ss').toString();
+            this.voucherTemp.updatedAt = moment(now()).format('Y-M-DTHH:mm:ss').toString();
+            this.voucherTemp.voucherNumber = voucherNumber;
+            this.voucherTemp.isActivated = true;
+            this.voucherTemp.poste_produit = 99;
+
+            if (this.voucherType_id != 3) {
+                this.voucherTemp.vehiculeNumber = this.standardForm.controls['vehiculeNumber'].value;
+                this.voucherTemp.voucherAmount = this.standardForm.controls['voucherAmount'].value;
+            }
+            this.voucherTempService.getVoucherTempByVoucherNumber(voucherNumber)?.subscribe(
+                (data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`getVoucherTempByVoucherNumber a successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+                        Swal.fire({
+                            title: "N° de bon existe déjà",
+                            html: "Ce bon est saisi par la station " + data.body.gasStation?.libelle + " le " + moment(data.body.voucherDate).format('D MMMM YYYY') + ".<br /> Veuillez vérifier le numéro du bon s'il est correct.",
+                            icon: "error",
+                        });
+                        this.voucherError = 'N° de bon existe déjà.';
+                        this.isVerified = false;
+                    } else {
+                        if (this.voucherTemp.voucherType.id === 3) {
+                            if (!isNumeric(voucherNumber)) {
+                                Swal.fire({
+                                    title: "N° de bon erroné",
+                                    html: "Le N° de série de bon WINXO est toujours <b>Numérique</b>.<br /> Veuillez <b>vérifier</b> le type de bon s'il est correct.",
+                                    icon: "error",
+                                });
+                                this.voucherError = 'N° de bon erroné.';
+                                this.isVerified = false;
+                            } else {
+                                Swal.fire({
+                                    title: "N° de bon valide",
+                                    icon: "info",
+                                    confirmButtonText: "Continuer"
+                                });
+                                this.isVerified = true;
+                            }
+                        } else {
+                            Swal.fire({
+                                title: "N° de bon valide",
+                                icon: "info",
+                                confirmButtonText: "Continuer"
+                            });
+                            this.voucherError = '';
+                            this.isVerified = true;
+                        }
+                    }
+                    console.log('getVoucherTempByVoucherNumber This contains body: ', data.body);
                 },
                 (err: HttpErrorResponse) => {
                     if (err.status === 403 || err.status === 404) {
@@ -238,37 +275,23 @@ export class GrabVouchersComponent implements OnInit {
                 }
             );
         }
-        this._fetchVoucherHeaderData();
-        this.initTableConfig();
-        this._fetchData();
     }
 
-    async onSubmit() {
-        this.formSubmitted = true;
-        if (this.standardForm.valid) {
-            let voucherNumber: string = this.standardForm.controls['voucherNumber'].value;
-            this.voucherTypeService.getVoucherType(this.voucherType_id)?.subscribe(
+    onSubmit() {
+        if (this.voucherTemp.voucherType.id === 3) {
+            this.voucherControlService.getVoucherControlByVoucherNumber(this.voucherTemp.voucherNumber).subscribe(
                 (data: HttpResponse<any>) => {
                     if (data.status === 200 || data.status === 202) {
-                        console.log(`Got a successfull status code: ${data.status}`);
+                        console.log(`getVoucherControlByVoucherNumber a successfull status code: ${data.status}`);
                     }
                     if (data.body) {
-                        this.voucherTemp.createdAt = moment(now()).format('Y-M-DTHH:mm:ss').toString();
-                        this.voucherTemp.updatedAt = moment(now()).format('Y-M-DTHH:mm:ss').toString();
-                        if (this.voucherType_id != 3) {
-                            this.voucherTemp.vehiculeNumber = this.standardForm.controls['vehiculeNumber'].value;
-                            this.voucherTemp.voucherAmount = this.standardForm.controls['voucherAmount'].value;
-                        }
-                        this.voucherTemp.voucherNumber = voucherNumber;
-                        this.voucherTemp.voucherType = data.body;
-
+                        this.voucherTemp.voucherAmount = data.body.voucherAmount;
                         this.voucherTempService.addVoucherTemp(this.voucherTemp).subscribe(
                             (data3: HttpResponse<any>) => {
                                 if (data3.status === 200 || data3.status === 202) {
                                     console.log(`Got a successfull status code: ${data3.status}`);
                                 }
                                 if (data3.body) {
-                                    console.log(data);
                                     this.records.push(this.voucherTemp);
                                     this.successSwal.fire();
                                 }
@@ -287,44 +310,73 @@ export class GrabVouchersComponent implements OnInit {
                                 this.loadingForm = false;
                             }
                         );
-                        console.log('This contains body: ', data.body);
+                    }else{
+                        Swal.fire({
+                            title: "N° de bon introuvable",
+                            html: "Le N° de série de bon WINXO est toujours <b>Numérique</b>.<br /> Veuillez <b>vérifier</b> le type de bon s'il est correct.",
+                            icon: "error",
+                        });
+                        this.voucherError = 'N° de bon erroné.';
+                        this.isVerified = false;
                     }
+                    console.log('getVoucherControlByVoucherNumber contains body: ', data.body);
                 },
                 (err: HttpErrorResponse) => {
                     if (err.status === 403 || err.status === 404) {
                         console.error(`${err.status} status code caught`);
+                        this.errorSwal.fire().then((r) => {
+                            this.error = err.message;
+                            console.log(err.message);
+                        });
                     }
+                },
+                (): void => {
+                    this.loadingForm = false;
+                })
+        }else{
+            this.voucherTempService.addVoucherTemp(this.voucherTemp).subscribe(
+                (data3: HttpResponse<any>) => {
+                    if (data3.status === 200 || data3.status === 202) {
+                        console.log(`Got a successfull status code: ${data3.status}`);
+                    }
+                    if (data3.body) {
+                        this.records.push(this.voucherTemp);
+                        this.successSwal.fire();
+                    }
+                    console.log('This contains body: ', data3.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                        this.errorSwal.fire().then((r) => {
+                            this.error = err.message;
+                            console.log(err.message);
+                        });
+                    }
+                },
+                (): void => {
+                    this.loadingForm = false;
                 }
             );
         }
     }
 
-    _fetchData(): void {
+
+    private _fetchData(): void {
         this.voucherTempService.getVoucherTemps()?.subscribe(
             (data: HttpResponse<any>) => {
                 if (data.status === 200 || data.status === 202) {
-                    console.log(`Got a successfull status code: ${data.status}`);
+                    console.log(`getVoucherTemps a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
                     if (data.body && data.body.length > 0) {
-                        this.records = [];
-                        data.body.map((voucher: VoucherTemp) => {
-                            if (voucher.voucherDate == this.voucherDate && voucher.voucherType.id == this.voucherType_id) {
-                                if (this.tokenService.getPayload().role_id == 1) {
-                                    this.records.push(voucher);
-                                } else {
-                                    if (voucher.voucherHeader.gasStation == this.gasStation) {
-                                        this.records.push(voucher);
-                                    }
-                                }
-                            }
-                        });
-                        console.log("records:", this.records);
+                        this.records = data.body;
                     } else {
                         this.error = "La liste est vide.";
                     }
+                    this.loadingList = false;
                 }
-                console.log('This contains body: ', data.body);
+                console.log('getVoucherTemps contains body: ', data.body);
                 this.loadingList = false;
             },
             (err: HttpErrorResponse) => {
@@ -335,14 +387,14 @@ export class GrabVouchersComponent implements OnInit {
         );
     }
 
-    initTableConfig(): void {
+    private initTableConfig(): void {
         this.columns = [
             //{name: 'id', label: '#', formatter: (record: VoucherTemp) => record.id},
             {name: 'gasStation', label: 'Code Client', formatter: (record: VoucherTemp) => record.voucherHeader.gasStation.libelle},
             {name: 'voucherType', label: 'Type Bon', formatter: (record: VoucherTemp) => record.voucherType.libelle},
             {
                 name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherTemp) => {
-                    return '<span class="badge bg-purple text-light fs-5 m-0">' + record.voucherHeader.slipNumber + '<span>'
+                    return '<span class="badge bg-purple text-light fs-5 m-0">' + padLeft(String(record.voucherHeader.slipNumber), '0', 6) + '<span>'
                 }
             },
             {name: 'voucherNumber', label: 'Numéro Bon', formatter: (record: VoucherTemp) => record.voucherNumber},
@@ -354,7 +406,7 @@ export class GrabVouchersComponent implements OnInit {
             },
             {
                 name: 'voucherDate', label: 'Date Journée', formatter: (record: VoucherTemp) => {
-                    return moment(record.voucherDate).format('D MMMM YYYY')
+                    return moment(record.voucherHeader.voucherDate).format('D MMMM YYYY')
                 }
             },
         ];
@@ -381,8 +433,7 @@ export class GrabVouchersComponent implements OnInit {
             || row.voucherHeader.slipNumber.toLowerCase().includes(term)
             || row.voucherNumber.toLowerCase().includes(term)
             || row.voucherAmount.toString().toLowerCase().includes(term)
-            || row.vehiculeNumber.toLowerCase().includes(term)
-            || row.voucherDate.toLowerCase().includes(term);
+            || row.vehiculeNumber.toLowerCase().includes(term);
     }
 
     searchData(searchTerm: string): void {
@@ -460,55 +511,5 @@ export class GrabVouchersComponent implements OnInit {
                 }
             }
         });
-    }
-
-    verifyVoucher(): void {
-        let voucherNumber: string = this.standardForm.controls['voucherNumber'].value;
-        this.voucherTempService.getVoucherTempByVoucherNumber(voucherNumber)?.subscribe(
-            (data: HttpResponse<any>) => {
-                if (data.status === 200 || data.status === 202) {
-                    console.log(`Got a successfull status code: ${data.status}`);
-                }
-                if (data.body) {
-                    Swal.fire({
-                        title: "N° de bon existe déjà",
-                        html: "Ce bon est saisi par la station " + data.body.gasStation?.libelle + " le " + moment(data.body.voucherDate).format('D MMMM YYYY') + ".<br /> Veuillez vérifier le numéro du bon s'il est correct.",
-                        icon: "error",
-                    });
-                    this.isVerified = false;
-                } else {
-                    if (this.voucherTemp.voucherType.id === 3) {
-                        if (!isNumeric(voucherNumber)) {
-                            Swal.fire({
-                                title: "N° de bon erroné",
-                                html: "Le N° de série de bon WINXO est toujours <b>Numérique</b>.<br /> Veuillez <b>vérifier</b> le type de bon s'il est correct.",
-                                icon: "error",
-                            });
-                            this.isVerified = false;
-                        } else {
-                            Swal.fire({
-                                title: "N° de bon valide",
-                                icon: "info",
-                                confirmButtonText: "Continuer"
-                            });
-                            this.isVerified = true;
-                        }
-                    } else {
-                        Swal.fire({
-                            title: "N° de bon valide",
-                            icon: "info",
-                            confirmButtonText: "Continuer"
-                        });
-                        this.isVerified = true;
-                    }
-                }
-                console.log('getVoucherTempByVoucherNumber This contains body: ', data.body);
-            },
-            (err: HttpErrorResponse) => {
-                if (err.status === 403 || err.status === 404) {
-                    console.error(`${err.status} status code caught`);
-                }
-            }
-        );
     }
 }

@@ -15,6 +15,7 @@ export interface VoucherHeader {
     gasStation: any;
     slipNumber: number;
     voucherDate: string;
+    isDayOver: boolean;
     isActivated: boolean;
     isDeleted: boolean;
     createdAt: string;
@@ -34,14 +35,12 @@ export interface VoucherLine {
     [key: string]: string | number | boolean | any;
 }
 
-
 export interface VoucherTemp {
     id: number;
     voucherType: any;
     voucherHeader: any;
     voucherNumber: string;
     voucherAmount: number;
-    voucherDate: string;
     vehiculeNumber: string;
     barcode: string;
     poste_produit: number;

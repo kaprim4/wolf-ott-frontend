@@ -205,7 +205,7 @@ export class VoucherConsultComponent implements OnInit {
             },
             {
                 name: 'voucherDate', label: 'Date Journée', formatter: (record: VoucherTemp) => {
-                    return moment(record.voucherDate).format('D MMMM YYYY')
+                    return moment(record.voucherHeader.voucherDate).format('D MMMM YYYY')
                 }
             },
             {
@@ -237,8 +237,7 @@ export class VoucherConsultComponent implements OnInit {
             || row.voucherHeader.slipNumber.toLowerCase().includes(term)
             || row.voucherNumber.toLowerCase().includes(term)
             || row.voucherAmount.toString().toLowerCase().includes(term)
-            || row.vehiculeNumber.toLowerCase().includes(term)
-            || row.voucherDate.toLowerCase().includes(term);
+            || row.vehiculeNumber.toLowerCase().includes(term);
     }
 
     searchData(searchTerm: string): void {

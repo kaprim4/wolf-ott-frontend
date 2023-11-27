@@ -1,6 +1,5 @@
-<swal #successSwal title="Succès!" text="Cette entrée a été ajoutée avec succès." icon="success"></swal>
-<swal #errorSwal title="Erreur!"
-      text="Une erreur s'est produite. Les informations saisies ne sont pas prises en compte." icon="error"></swal>
+<swal #successSwal title="Succès!" text="Cette journée a été clôturée avec succès." icon="success"></swal>
+<swal #errorSwal title="Erreur!" text="Une erreur s'est produite. Les informations saisies ne sont pas prises en compte." icon="error"></swal>
 
 <div class="row">
     <div class="col-12">
@@ -26,7 +25,10 @@
             <!-- end card body-->
             <div class="card-footer">
                 <div class="flex-shrink-0">
-                    <button (click)="endTheDay()" class="btn btn-success btn-md rounded-pill waves-effect waves-light float-end">
+                    <div class="float-start">
+                        <h4 class="card-title badge bg-purple text-light fs-5 m-0">{{count}}</h4> bon(s) pour une total de <h4 class="card-title badge bg-purple text-light fs-5 m-0">{{sum | currency:'MAD':'symbol':'3.2-2':'fr'}}</h4>
+                    </div>
+                    <button (click)="endTheDay()" type="button" class="btn btn-success btn-md rounded-pill waves-effect waves-light float-end">
                         <span class="btn-label">
                             <i class="mdi mdi-check-all"></i>
                         </span> Clôturer
@@ -45,7 +47,7 @@
     <div class="position-relative col-md-2 col-lg-2 mb-0" *ngFor="let voucherTypeSum of voucherTypeSums">
         <div class="card">
             <div class="text-center p-1">
-                <img class="card-img-top img-fluid thumb-md-percent" src="{{voucherTypeSum.voucherTypeIcon}}" alt="{{voucherTypeSum.voucherType?.libelle}}" />
+                <img class="card-img-top img-fluid thumb-md-percent" src="{{voucherTypeSum.voucherTypeIcon}}" alt="{{voucherTypeSum.voucherType?.libelle}}" title="{{voucherTypeSum.voucherType?.libelle}}" />
             </div>
             <div class="card-body">
                 <h4 class="card-title badge bg-purple text-light fs-5 m-0">{{voucherTypeSum.voucherType?.libelle}}</h4>

@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {EventService} from "../../../core/service/event.service";
 import {EventType} from "../../../core/constants/events";
-import {VoucherTemp, VoucherTypeSum} from "../../../core/interfaces/voucher";
+import {VoucherLine, VoucherTemp, VoucherTypeSum} from "../../../core/interfaces/voucher";
 import {Column, DeleteEvent} from "../../../shared/advanced-table/advanced-table.component";
 import {IFormType} from "../../../core/interfaces/formType";
 import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
@@ -15,6 +15,11 @@ import * as moment from "moment";
 import {SortEvent} from "../../../shared/advanced-table/sortable.directive";
 import Swal from "sweetalert2";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import {padLeft} from "../../../core/helpers/functions";
+import {VoucherLineService} from "../../../core/service/voucher-line.service";
+import {Router} from "@angular/router";
+import {now} from "moment/moment";
+import {VoucherHeaderService} from "../../../core/service/voucher-header.service";
 
 @Component({
     selector: 'app-end-day',
@@ -34,18 +39,20 @@ export class EndDayComponent implements OnInit {
         entity: 'gas-station-temp'
     }
 
+    @ViewChild('successSwal')
+    public readonly successSwal!: SwalComponent;
+
     @ViewChild('errorSwal')
     public readonly errorSwal!: SwalComponent;
-
-    @ViewChild('deleteSwal')
-    public readonly deleteSwal!: SwalComponent;
 
     constructor(
         private eventService: EventService,
         private roleService: RoleService,
         private tokenService: TokenService,
         private voucherTempService: VoucherTempService,
-        private voucherTypeService: VoucherTypeService,
+        private voucherLineService: VoucherLineService,
+        private voucherHeaderService: VoucherHeaderService,
+        private router: Router,
         private fb: FormBuilder,
     ) {
     }
@@ -54,10 +61,10 @@ export class EndDayComponent implements OnInit {
         voucherType_id: [''],
     });
 
-    formSubmitted: boolean = false;
     objectProps: InputProps[] = [];
     voucherType_id: string = '';
-
+    sum: number = 0;
+    count: number = 0;
     voucherTypeSums: VoucherTypeSum[] = [];
 
     get formValues() {
@@ -121,22 +128,21 @@ export class EndDayComponent implements OnInit {
                 if (data.body) {
                     if (data.body && data.body.length > 0) {
                         data.body.map((value: any) => {
-                            if (value[0]['id'] == this.tokenService.getPayload().gas_station_id) {
-                                let imageName: string | null = "./assets/images/no_image.png";
-                                if (value[1].file && value[1].file?.id) {
-                                    imageName = `data:${value[1].file?.imageType};base64,${value[1].file?.imageData}`;
-                                }
-                                this.voucherTypeSums.push({
-                                    gasStation: value[0],
-                                    voucherType: value[1],
-                                    voucherTypeIcon: `data:${value[1].file?.imageType};base64,${value[1].file?.imageData}`,
-                                    sum: value[2],
-                                    count: value[3],
-                                });
+                            let imageName: string | null = "./assets/images/no_image.png";
+                            if (value[0].file && value[0].file?.id) {
+                                imageName = `data:${value[0].file?.imageType};base64,${value[0].file?.imageData}`;
                             }
+                            this.voucherTypeSums.push({
+                                voucherType: value[0],
+                                voucherTypeIcon: `data:${value[0].file?.imageType};base64,${value[0].file?.imageData}`,
+                                sum: value[1],
+                                count: value[2],
+                            });
+                            this.sum += value[1];
+                            this.count += value[2];
                         });
                         this.loading = false;
-                        console.log(this.voucherTypeSums);
+                        console.log("voucherTypeSums: ", this.voucherTypeSums);
                     } else {
                         this.error = "La liste est vide.";
                     }
@@ -159,7 +165,7 @@ export class EndDayComponent implements OnInit {
             {name: 'voucherType', label: 'Type Bon', formatter: (record: VoucherTemp) => record.voucherType.libelle},
             {
                 name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherTemp) => {
-                    return '<span class="badge bg-purple text-light fs-5 m-0">' + record.voucherHeader.slipNumber + '<span>'
+                    return '<span class="badge bg-purple text-light fs-5 m-0">' + padLeft(String(record.voucherHeader.slipNumber), '0', 6) + '<span>'
                 }
             },
             {name: 'voucherNumber', label: 'Numéro Bon', formatter: (record: VoucherTemp) => record.voucherNumber},
@@ -171,7 +177,7 @@ export class EndDayComponent implements OnInit {
             },
             {
                 name: 'voucherDate', label: 'Date Journée', formatter: (record: VoucherTemp) => {
-                    return moment(record.voucherDate).format('D MMMM YYYY')
+                    return moment(record.voucherHeader.voucherDate).format('D MMMM YYYY')
                 }
             },
             {
@@ -203,8 +209,7 @@ export class EndDayComponent implements OnInit {
             || row.voucherHeader.slipNumber.toLowerCase().includes(term)
             || row.voucherNumber.toLowerCase().includes(term)
             || row.voucherAmount.toString().toLowerCase().includes(term)
-            || row.vehiculeNumber.toLowerCase().includes(term)
-            || row.voucherDate.toLowerCase().includes(term);
+            || row.vehiculeNumber.toLowerCase().includes(term);
     }
 
     searchData(searchTerm: string): void {
@@ -284,10 +289,42 @@ export class EndDayComponent implements OnInit {
     }
 
     endTheDay() {
-        this.formSubmitted = true;
         this.loading = true;
-        this.records = [];
-
-
+        //let voucherHeader = this.voucherHeaderService.
+        this.records.map((voucherTemp: VoucherTemp) => {
+            let voucherLine: VoucherLine = {
+                id: 0,
+                voucherTemp: voucherTemp,
+                isActivated: true,
+                isDeleted: false,
+                createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
+                updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
+            }
+            this.voucherLineService.addVoucherLine(voucherLine).subscribe(
+                (data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`Got a successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+                        this.successSwal.fire().then(() => {
+                            this.router.navigate(['vouchers/end-day'])
+                        });
+                    }
+                    console.log('This contains body: ', data.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                        this.errorSwal.fire().then((r) => {
+                            this.error = err.message;
+                            console.log(err.message);
+                        });
+                    }
+                },
+                (): void => {
+                    this.loading = false;
+                }
+            )
+        });
     }
 }

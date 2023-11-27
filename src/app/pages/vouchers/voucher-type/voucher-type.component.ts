@@ -5,7 +5,7 @@ import {IFormType} from "../../../core/interfaces/formType";
 import {Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {InputProps, InputPropsTypesEnum} from "../../../core/interfaces/input_props";
-import {VoucherHeader, VoucherResponseHeader, VoucherType} from "../../../core/interfaces/voucher";
+import {VoucherHeader, VoucherResponseHeader} from "../../../core/interfaces/voucher";
 import {VoucherTypeService} from "../../../core/service/voucher-type.service";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 import {VoucherHeaderService} from "../../../core/service/voucher-header.service";
@@ -48,6 +48,7 @@ export class VoucherTypeComponent implements OnInit {
         slipNumber: 0,
         gasStation: undefined,
         voucherDate: "",
+        isDayOver: false,
         isActivated: true,
         isDeleted: false,
         createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
@@ -63,14 +64,11 @@ export class VoucherTypeComponent implements OnInit {
 
     standardForm: FormGroup = this.fb.group({
         id: [this.voucherHeader.id],
-        voucherTypes_id: ['', Validators.required],
         voucherDate: ['', Validators.required],
     });
 
-    voucherTypes: VoucherType[] = [];
     gasStation: GasStation | null = null;
     voucherResponseHeader: VoucherResponseHeader | null = null;
-    objectProps: InputProps[] = [];
 
     formSubmitted: boolean = false;
     error: string = '';
@@ -82,20 +80,6 @@ export class VoucherTypeComponent implements OnInit {
     records: VoucherHeader[] = [];
     columns: Column[] = [];
     pageSizeOptions: number[] = [10, 25, 50, 100];
-
-    initFieldsConfig(): void {
-        this.objectProps = [
-            {
-                input: 'voucherTypes_id',
-                label: 'Type de Bon',
-                type: InputPropsTypesEnum.S,
-                value: '',
-                joinTable: this.voucherTypes,
-                joinTableId: 'id',
-                joinTableIdLabel: 'libelle'
-            },
-        ];
-    }
 
     _fetchData(): void {
         this.voucherHeaderService.getVoucherHeaders()?.subscribe(
@@ -150,28 +134,6 @@ export class VoucherTypeComponent implements OnInit {
         );
     }
 
-    private _fetchVoucherTypesData() {
-        this.voucherTypeService.getVoucherTypes()?.subscribe(
-            (data: HttpResponse<any>) => {
-                if (data.status === 200 || data.status === 202) {
-                    console.log(`Got a successfull status code: ${data.status}`);
-                }
-                if (data.body) {
-                    this.voucherTypes = data.body;
-                    this.initFieldsConfig();
-                }
-                console.log('_fetchVoucherTypesData contains body: ', data.body);
-                this.loadingForm = false;
-            },
-            (err: HttpErrorResponse) => {
-                if (err.status === 403 || err.status === 404) {
-                    console.error(`${err.status} status code caught`);
-                    this.loadingForm = false;
-                }
-            }
-        );
-    }
-
     private _fetchVoucherHeaderData() {
         this.voucherHeaderService.getNextVoucherHeader(this.tokenService.getPayload().gas_station_id)?.subscribe(
             (data: HttpResponse<any>) => {
@@ -180,7 +142,6 @@ export class VoucherTypeComponent implements OnInit {
                 }
                 if (data.body) {
                     this.voucherResponseHeader = data.body;
-                    this.initFieldsConfig();
                 }
                 console.log('_fetchVoucherHeaderData contains body: ', data.body);
                 this.loadingForm = false;
@@ -212,13 +173,12 @@ export class VoucherTypeComponent implements OnInit {
         this.initTableConfig();
         this._fetchData();
         this._fetchGasStationData();
-        this._fetchVoucherTypesData();
         this._fetchVoucherHeaderData();
     }
 
     initTableConfig(): void {
         this.columns = [
-            {name: 'id', label: '#', formatter: (record: VoucherHeader) => record.id},
+            //{name: 'id', label: '#', formatter: (record: VoucherHeader) => record.id},
             {name: 'gasStation', label: 'Station', formatter: (record: VoucherHeader) => record.gasStation.libelle},
             {
                 name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherHeader) => {
@@ -231,13 +191,13 @@ export class VoucherTypeComponent implements OnInit {
                 }
             },
             {
-                name: 'isActivated', label: 'Activé ?', formatter: (record: VoucherHeader) => {
-                    return (record.isActivated ? '<span class="badge bg-success me-1">Oui</span>' : '<span class="badge bg-danger me-1">Non</span>')
+                name: 'isDayOver', label: 'Journée clôturée ?', formatter: (record: VoucherHeader) => {
+                    return (record.isDayOver ? '<span class="badge bg-success me-1">Oui</span>' : '<span class="badge bg-danger me-1">Non</span>')
                 }
             },
             {
-                name: 'isDeleted', label: 'Supprimé ?', formatter: (record: VoucherHeader) => {
-                    return (record.isDeleted ? '<span class="badge bg-success me-1">Oui</span>' : '<span class="badge bg-danger me-1">Non</span>')
+                name: 'isActivated', label: 'Activé ?', formatter: (record: VoucherHeader) => {
+                    return (record.isActivated ? '<span class="badge bg-success me-1">Oui</span>' : '<span class="badge bg-danger me-1">Non</span>')
                 }
             },
             {
@@ -251,7 +211,7 @@ export class VoucherTypeComponent implements OnInit {
                         'vouchers/grab-vouchers', {
                             voucherHeader_id: record.id,
                         }
-                    ])+'" class="btn btn-purple btn-xs rounded-pill waves-effect waves-light"><span class="btn-label"><i class="mdi mdi-circle-edit-outline"></i></span> Modifier</a>'
+                    ])+'" class="btn btn-purple btn-xs rounded-pill waves-effect waves-light"><span class="btn-label"><i class="mdi mdi-circle-edit-outline"></i></span> Compléter</a>'
                 }
             }
         ];
@@ -292,6 +252,7 @@ export class VoucherTypeComponent implements OnInit {
     async onSubmit() {
         this.formSubmitted = true;
         if (this.standardForm.valid) {
+            console.log('clicked')
             this.loadingForm = true;
             this.voucherHeader.id = this.standardForm.controls['id'].value;
             this.voucherHeader.voucherDate = this.standardForm.controls['voucherDate'].value;
@@ -304,13 +265,8 @@ export class VoucherTypeComponent implements OnInit {
                             console.log(`Got a successfull status code: ${data.status}`);
                         }
                         if (data.body) {
-                            this.successSwal.fire().then(() => {
-                                this.router.navigate([
-                                    'vouchers/grab-vouchers', {
-                                        voucherType_id: this.standardForm.controls['voucherTypes_id'].value,
-                                    }
-                                ]);
-                            });
+                            this.records.push(this.voucherHeader);
+                            this.successSwal.fire();
                         }
                         console.log('This contains body: ', data.body);
                     },

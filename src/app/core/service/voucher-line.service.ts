@@ -24,38 +24,39 @@ export class VoucherLineService {
 
     public getVoucherLines(): Observable<HttpResponse<VoucherLine[]>> {
         return this.http.get<VoucherLine[]>(
-            `${this.apiServerUrl}/api/v1/voucher-line/all`,
+            `${this.apiServerUrl}/api/v1/vouchers-line/all`,
             {headers: this.header1, observe: 'response'},
         );
     }
 
     public getVoucherLineStatistics(): Observable<HttpResponse<[]>> {
         return this.http.get<[]>(
-            `${this.apiServerUrl}/api/v1/voucher-line/find/sum`,
+            `${this.apiServerUrl}/api/v1/vouchers-line/find/sum`,
             {headers: this.header1, observe: 'response'},
         );
     }
 
     public getVoucherLine(id: number): Observable<HttpResponse<VoucherLine>> {
         return this.http.get<VoucherLine>(
-            `${this.apiServerUrl}/api/v1/voucher-line/find/${id}`,
+            `${this.apiServerUrl}/api/v1/vouchers-line/find/${id}`,
             {headers: this.header1, observe: 'response'},
         );
     }
 
-    public addVoucherLine(voucherTemp: VoucherLine): Observable<HttpResponse<VoucherLine>> {
-        return this.http.post<VoucherLine>(`${this.apiServerUrl}/api/v1/voucher-line/add`,
-            voucherTemp,
+    public addVoucherLine(voucherLine: VoucherLine): Observable<HttpResponse<VoucherLine>> {
+        return this.http.post<VoucherLine>(`${this.apiServerUrl}/api/v1/vouchers-line/add`,
+            voucherLine,
             {headers: this.header1, observe: 'response'},);
     }
 
-    public updateVoucherLine(voucherTemp: VoucherLine): Observable<HttpResponse<VoucherLine>> {
-        return this.http.put<VoucherLine>(`${this.apiServerUrl}/api/v1/voucher-line/update`, voucherTemp,
+    public updateVoucherLine(voucherLine: VoucherLine): Observable<HttpResponse<VoucherLine>> {
+        return this.http.put<VoucherLine>(`${this.apiServerUrl}/api/v1/vouchers-line/update`,
+            voucherLine,
             {headers: this.header1, observe: 'response'},);
     }
 
     public deleteVoucherLine(id: number): Observable<HttpResponse<void>> {
-        return this.http.delete<void>(`${this.apiServerUrl}/api/v1/voucher-line/delete/${id}`,
+        return this.http.delete<void>(`${this.apiServerUrl}/api/v1/vouchers-line/delete/${id}`,
             {headers: this.header1, observe: 'response'},
         );
     }
