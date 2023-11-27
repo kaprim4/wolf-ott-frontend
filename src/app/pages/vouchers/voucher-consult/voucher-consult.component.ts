@@ -16,6 +16,7 @@ import {VoucherTypeService} from "../../../core/service/voucher-type.service";
 import {GasStation} from "../../../core/interfaces/gas_station";
 import {TokenService} from "../../../core/service/token.service";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import {padLeft} from "../../../core/helpers/functions";
 
 moment.locale('fr');
 
@@ -193,7 +194,7 @@ export class VoucherConsultComponent implements OnInit {
             {name: 'voucherType', label: 'Type Bon', formatter: (record: VoucherTemp) => record.voucherType.libelle},
             {
                 name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherTemp) => {
-                    return '<span class="badge bg-purple text-light fs-5 m-0">' + record.voucherHeader.slipNumber + '<span>'
+                    return '<span class="badge bg-purple text-light fs-5 m-0">' + padLeft(String(record.voucherHeader.slipNumber), '0', 6) + '<span>'
                 }
             },
             {name: 'voucherNumber', label: 'Numéro Bon', formatter: (record: VoucherTemp) => record.voucherNumber},

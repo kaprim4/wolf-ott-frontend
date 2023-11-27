@@ -213,7 +213,6 @@ export class GrabVouchersComponent implements OnInit {
         this.formSubmitted = true;
         console.log(this.standardForm)
         if (this.standardForm.valid) {
-            console.log("clicked")
             let voucherNumber: string = this.standardForm.controls['voucherNumber'].value;
             this.voucherTemp.createdAt = moment(now()).format('Y-M-DTHH:mm:ss').toString();
             this.voucherTemp.updatedAt = moment(now()).format('Y-M-DTHH:mm:ss').toString();
@@ -249,12 +248,42 @@ export class GrabVouchersComponent implements OnInit {
                                 this.voucherError = 'N° de bon erroné.';
                                 this.isVerified = false;
                             } else {
-                                Swal.fire({
-                                    title: "N° de bon valide",
-                                    icon: "info",
-                                    confirmButtonText: "Continuer"
-                                });
-                                this.isVerified = true;
+                                this.voucherControlService.getVoucherControlByVoucherNumber(this.voucherTemp.voucherNumber).subscribe(
+                                    (data: HttpResponse<any>) => {
+                                        if (data.status === 200 || data.status === 202) {
+                                            console.log(`getVoucherControlByVoucherNumber a successfull status code: ${data.status}`);
+                                        }
+                                        if (data.body) {
+                                            this.voucherTemp.voucherAmount = data.body.voucherAmount;
+                                            Swal.fire({
+                                                title: "N° de bon valide",
+                                                icon: "info",
+                                                confirmButtonText: "Continuer"
+                                            });
+                                            this.isVerified = true;
+                                        } else {
+                                            Swal.fire({
+                                                title: "N° de bon introuvable",
+                                                html: "Le N° de série de bon WINXO est <b>introuvable</b>.<br /> Veuillez <b>vérifier</b> le type de bon s'il est correct.",
+                                                icon: "error",
+                                            });
+                                            this.voucherError = 'N° de bon erroné.';
+                                            this.isVerified = false;
+                                        }
+                                        console.log('getVoucherControlByVoucherNumber contains body: ', data.body);
+                                    },
+                                    (err: HttpErrorResponse) => {
+                                        if (err.status === 403 || err.status === 404) {
+                                            console.error(`${err.status} status code caught`);
+                                            this.errorSwal.fire().then((r) => {
+                                                this.error = err.message;
+                                                console.log(err.message);
+                                            });
+                                        }
+                                    },
+                                    (): void => {
+                                        this.loadingForm = false;
+                                    })
                             }
                         } else {
                             Swal.fire({
@@ -279,47 +308,16 @@ export class GrabVouchersComponent implements OnInit {
 
     onSubmit() {
         if (this.voucherTemp.voucherType.id === 3) {
-            this.voucherControlService.getVoucherControlByVoucherNumber(this.voucherTemp.voucherNumber).subscribe(
-                (data: HttpResponse<any>) => {
-                    if (data.status === 200 || data.status === 202) {
-                        console.log(`getVoucherControlByVoucherNumber a successfull status code: ${data.status}`);
+            this.voucherTempService.addVoucherTemp(this.voucherTemp).subscribe(
+                (data3: HttpResponse<any>) => {
+                    if (data3.status === 200 || data3.status === 202) {
+                        console.log(`Got a successfull status code: ${data3.status}`);
                     }
-                    if (data.body) {
-                        this.voucherTemp.voucherAmount = data.body.voucherAmount;
-                        this.voucherTempService.addVoucherTemp(this.voucherTemp).subscribe(
-                            (data3: HttpResponse<any>) => {
-                                if (data3.status === 200 || data3.status === 202) {
-                                    console.log(`Got a successfull status code: ${data3.status}`);
-                                }
-                                if (data3.body) {
-                                    this.records.push(this.voucherTemp);
-                                    this.successSwal.fire();
-                                }
-                                console.log('This contains body: ', data3.body);
-                            },
-                            (err: HttpErrorResponse) => {
-                                if (err.status === 403 || err.status === 404) {
-                                    console.error(`${err.status} status code caught`);
-                                    this.errorSwal.fire().then((r) => {
-                                        this.error = err.message;
-                                        console.log(err.message);
-                                    });
-                                }
-                            },
-                            (): void => {
-                                this.loadingForm = false;
-                            }
-                        );
-                    }else{
-                        Swal.fire({
-                            title: "N° de bon introuvable",
-                            html: "Le N° de série de bon WINXO est toujours <b>Numérique</b>.<br /> Veuillez <b>vérifier</b> le type de bon s'il est correct.",
-                            icon: "error",
-                        });
-                        this.voucherError = 'N° de bon erroné.';
-                        this.isVerified = false;
+                    if (data3.body) {
+                        this.records.push(this.voucherTemp);
+                        this.successSwal.fire();
                     }
-                    console.log('getVoucherControlByVoucherNumber contains body: ', data.body);
+                    console.log('This contains body: ', data3.body);
                 },
                 (err: HttpErrorResponse) => {
                     if (err.status === 403 || err.status === 404) {
@@ -332,8 +330,9 @@ export class GrabVouchersComponent implements OnInit {
                 },
                 (): void => {
                     this.loadingForm = false;
-                })
-        }else{
+                }
+            );
+        } else {
             this.voucherTempService.addVoucherTemp(this.voucherTemp).subscribe(
                 (data3: HttpResponse<any>) => {
                     if (data3.status === 200 || data3.status === 202) {
