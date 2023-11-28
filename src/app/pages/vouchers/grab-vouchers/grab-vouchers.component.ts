@@ -307,57 +307,31 @@ export class GrabVouchersComponent implements OnInit {
     }
 
     onSubmit() {
-        if (this.voucherTemp.voucherType.id === 3) {
-            this.voucherTempService.addVoucherTemp(this.voucherTemp).subscribe(
-                (data3: HttpResponse<any>) => {
-                    if (data3.status === 200 || data3.status === 202) {
-                        console.log(`Got a successfull status code: ${data3.status}`);
-                    }
-                    if (data3.body) {
-                        this.records.push(this.voucherTemp);
-                        this.successSwal.fire();
-                    }
-                    console.log('This contains body: ', data3.body);
-                },
-                (err: HttpErrorResponse) => {
-                    if (err.status === 403 || err.status === 404) {
-                        console.error(`${err.status} status code caught`);
-                        this.errorSwal.fire().then((r) => {
-                            this.error = err.message;
-                            console.log(err.message);
-                        });
-                    }
-                },
-                (): void => {
-                    this.loadingForm = false;
+        this.voucherTempService.addVoucherTemp(this.voucherTemp).subscribe(
+            (data3: HttpResponse<any>) => {
+                if (data3.status === 200 || data3.status === 202) {
+                    console.log(`Got a successfull status code: ${data3.status}`);
                 }
-            );
-        } else {
-            this.voucherTempService.addVoucherTemp(this.voucherTemp).subscribe(
-                (data3: HttpResponse<any>) => {
-                    if (data3.status === 200 || data3.status === 202) {
-                        console.log(`Got a successfull status code: ${data3.status}`);
-                    }
-                    if (data3.body) {
-                        this.records.push(this.voucherTemp);
-                        this.successSwal.fire();
-                    }
-                    console.log('This contains body: ', data3.body);
-                },
-                (err: HttpErrorResponse) => {
-                    if (err.status === 403 || err.status === 404) {
-                        console.error(`${err.status} status code caught`);
-                        this.errorSwal.fire().then((r) => {
-                            this.error = err.message;
-                            console.log(err.message);
-                        });
-                    }
-                },
-                (): void => {
-                    this.loadingForm = false;
+                if (data3.body) {
+                    this.records.push(this.voucherTemp);
+                    this.successSwal.fire();
+                    this.isVerified = false;
                 }
-            );
-        }
+                console.log('This contains body: ', data3.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                    this.errorSwal.fire().then((r) => {
+                        this.error = err.message;
+                        console.log(err.message);
+                    });
+                }
+            },
+            (): void => {
+                this.loadingForm = false;
+            }
+        );
     }
 
 

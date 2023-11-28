@@ -290,8 +290,31 @@ export class EndDayComponent implements OnInit {
 
     endTheDay() {
         this.loading = true;
-        //let voucherHeader = this.voucherHeaderService.
-        this.records.map((voucherTemp: VoucherTemp) => {
+        this.voucherHeaderService.getLastVoucherHeaderOpened().subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`getLastVoucherHeaderOpened has successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+
+                }
+                console.log('getLastVoucherHeaderOpened contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                    this.errorSwal.fire().then((r) => {
+                        this.error = err.message;
+                        console.log(err.message);
+                    });
+                }
+            },
+            (): void => {
+                this.loading = false;
+            }
+        )
+
+        /*this.records.map((voucherTemp: VoucherTemp) => {
             let voucherLine: VoucherLine = {
                 id: 0,
                 voucherTemp: voucherTemp,
@@ -325,6 +348,6 @@ export class EndDayComponent implements OnInit {
                     this.loading = false;
                 }
             )
-        });
+        });*/
     }
 }

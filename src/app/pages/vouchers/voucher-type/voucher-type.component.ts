@@ -4,8 +4,7 @@ import {EventService} from "../../../core/service/event.service";
 import {IFormType} from "../../../core/interfaces/formType";
 import {Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {InputProps, InputPropsTypesEnum} from "../../../core/interfaces/input_props";
-import {VoucherHeader, VoucherResponseHeader} from "../../../core/interfaces/voucher";
+import {VoucherHeader, VoucherHeaderResponse, VoucherResponseHeader} from "../../../core/interfaces/voucher";
 import {VoucherTypeService} from "../../../core/service/voucher-type.service";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 import {VoucherHeaderService} from "../../../core/service/voucher-header.service";
@@ -16,8 +15,9 @@ import * as moment from "moment/moment";
 import {now} from "moment/moment";
 import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
 import {SortEvent} from "../../../shared/advanced-table/sortable.directive";
-import {Column} from "../../../shared/advanced-table/advanced-table.component";
+import {Column, DeleteEvent} from "../../../shared/advanced-table/advanced-table.component";
 import {padLeft} from "../../../core/helpers/functions";
+import Swal from "sweetalert2";
 
 @Component({
     selector: 'app-voucher-type',
@@ -77,7 +77,7 @@ export class VoucherTypeComponent implements OnInit {
     loadingList: boolean = false;
     slipNumber: number = 0;
 
-    records: VoucherHeader[] = [];
+    records: VoucherHeaderResponse[] = [];
     columns: Column[] = [];
     pageSizeOptions: number[] = [10, 25, 50, 100];
 
@@ -90,9 +90,9 @@ export class VoucherTypeComponent implements OnInit {
                 if (data.body) {
                     if (data.body && data.body.length > 0) {
                         this.records = [];
-                        data.body.map((voucher: VoucherHeader) => {
-                            if (voucher.gasStation.id == this.tokenService.getPayload().gas_station_id) {
-                                this.records.push(voucher);
+                        data.body.map((voucherHeaderResponse: VoucherHeaderResponse) => {
+                            if (voucherHeaderResponse.voucherHeader.gasStation.id == this.tokenService.getPayload().gas_station_id) {
+                                this.records.push(voucherHeaderResponse);
                             }
                         });
                         console.log("records:", this.records);
@@ -178,42 +178,43 @@ export class VoucherTypeComponent implements OnInit {
 
     initTableConfig(): void {
         this.columns = [
-            //{name: 'id', label: '#', formatter: (record: VoucherHeader) => record.id},
-            {name: 'gasStation', label: 'Station', formatter: (record: VoucherHeader) => record.gasStation.libelle},
+            {name: 'id', label: '#', formatter: (record: VoucherHeaderResponse) => record.id},
+            {name: 'gasStation', label: 'Station', formatter: (record: VoucherHeaderResponse) => record.voucherHeader.gasStation.libelle},
             {
-                name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherHeader) => {
-                    return '<span class="badge bg-purple text-light fs-5 m-0">' + padLeft(String(record.slipNumber), '0', 6) + '<span>'
+                name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherHeaderResponse) => {
+                    return '<a href="' + this.router.createUrlTree(['vouchers/grab-vouchers', {voucherHeader_id: record.voucherHeader.id}]) + '" class="btn btn-success btn-xs waves-effect waves-light"> ' + padLeft(String(record.voucherHeader.slipNumber), '0', 6) + '<span class="btn-label-right"><i class="mdi mdi-check-all"></i></span></a>'
                 }
             },
             {
-                name: 'voucherDate', label: 'Date Journée', formatter: (record: VoucherHeader) => {
-                    return moment(record.voucherDate).format('D MMMM YYYY')
+                name: 'voucherDate', label: 'Date Journée', formatter: (record: VoucherHeaderResponse) => {
+                    return moment(record.voucherHeader.voucherDate).format('D MMMM YYYY')
                 }
             },
             {
-                name: 'isDayOver', label: 'Journée clôturée ?', formatter: (record: VoucherHeader) => {
-                    return (record.isDayOver ? '<span class="badge bg-success me-1">Oui</span>' : '<span class="badge bg-danger me-1">Non</span>')
+                name: 'voucherCount', label: 'Nombre de bon', formatter: (record: VoucherHeaderResponse) => {
+                    return record.voucherCount
                 }
             },
             {
-                name: 'isActivated', label: 'Activé ?', formatter: (record: VoucherHeader) => {
-                    return (record.isActivated ? '<span class="badge bg-success me-1">Oui</span>' : '<span class="badge bg-danger me-1">Non</span>')
+                name: 'voucherSum', label: 'Valeur total', formatter: (record: VoucherHeaderResponse) => {
+                    return record.voucherSum
                 }
             },
             {
-                name: 'createdAt', label: 'Créé le', formatter: (record: VoucherHeader) => {
-                    return moment(record.createdAt).format('D MMMM YYYY')
+                name: 'isDayOver', label: 'Journée clôturée ?', formatter: (record: VoucherHeaderResponse) => {
+                    return (record.voucherHeader.isDayOver ? '<span class="badge bg-success me-1">Oui</span>' : '<span class="badge bg-danger me-1">Non</span>')
                 }
             },
             {
-                name: '', label: 'Actions', formatter: (record: VoucherHeader) => {
-                    return '<a href="'+this.router.createUrlTree([
-                        'vouchers/grab-vouchers', {
-                            voucherHeader_id: record.id,
-                        }
-                    ])+'" class="btn btn-purple btn-xs rounded-pill waves-effect waves-light"><span class="btn-label"><i class="mdi mdi-circle-edit-outline"></i></span> Compléter</a>'
+                name: 'isActivated', label: 'Activé ?', formatter: (record: VoucherHeaderResponse) => {
+                    return (record.voucherHeader.isActivated ? '<span class="badge bg-success me-1">Oui</span>' : '<span class="badge bg-danger me-1">Non</span>')
                 }
-            }
+            },
+            {
+                name: 'createdAt', label: 'Créé le', formatter: (record: VoucherHeaderResponse) => {
+                    return moment(record.voucherHeader.createdAt).format('D MMMM YYYY')
+                }
+            },
         ];
     }
 
@@ -232,10 +233,10 @@ export class VoucherTypeComponent implements OnInit {
         }
     }
 
-    matches(row: VoucherHeader, term: string) {
-        return row.gasStation?.libelle.toLowerCase().includes(term)
-            || row.slipNumber.toString().toLowerCase().includes(term)
-            || row.voucherDate.toLowerCase().includes(term);
+    matches(row: VoucherHeaderResponse, term: string) {
+        return row.voucherHeader.gasStation?.libelle.toLowerCase().includes(term)
+            || row.voucherHeader.slipNumber.toString().toLowerCase().includes(term)
+            || row.voucherHeader.voucherDate.toLowerCase().includes(term);
     }
 
     searchData(searchTerm: string): void {
@@ -252,41 +253,138 @@ export class VoucherTypeComponent implements OnInit {
     async onSubmit() {
         this.formSubmitted = true;
         if (this.standardForm.valid) {
-            console.log('clicked')
-            this.loadingForm = true;
-            this.voucherHeader.id = this.standardForm.controls['id'].value;
-            this.voucherHeader.voucherDate = this.standardForm.controls['voucherDate'].value;
-            this.voucherHeader.slipNumber = this.voucherResponseHeader ? this.voucherResponseHeader.nextSlipNumber : 0;
-            console.log(this.voucherHeader);
-            if (this.voucherHeader) {
-                this.voucherHeaderService.addVoucherHeader(this.voucherHeader).subscribe(
-                    (data: HttpResponse<any>) => {
-                        if (data.status === 200 || data.status === 202) {
-                            console.log(`Got a successfull status code: ${data.status}`);
+            Swal.fire({
+                title: "Etes-vous sûr?",
+                html: 'Vous êtes sur le point de créer un nouveau Bordereau pour la journée du <b>' + moment(this.standardForm.controls['voucherDate'].value).format('D MMMM YYYY') + '</b>.<br />Voulez-vous vraiment procèder ?',
+                icon: "error",
+                showCancelButton: true,
+                confirmButtonColor: "#28bb4b",
+                cancelButtonColor: "#f34e4e",
+                confirmButtonText: "Oui, supprimez-le !"
+            }).then((re) => {
+                if (re.isConfirmed) {
+                    this.loadingForm = true;
+                    this.voucherHeaderService.getLastVoucherHeaderOpened().subscribe(
+                        (data: HttpResponse<any>) => {
+                            if (data.status === 200 || data.status === 202) {
+                                console.log(`getLastVoucherHeaderOpened has successfull status code: ${data.status}`);
+                            }
+                            if (data.body) {
+                                Swal.fire({
+                                    title: "Opération impossible",
+                                    html: 'Un bordereau portant le N° <b>' + padLeft(String(data.body.slipNumber), '0', 6) + '</b> en date du <b>' + moment(data.body.voucherDate).format('D MMMM YYYY') + '</b> est toujours <b>OUVERT</b>.<br /> Veuillez <b>Clôturer</b> la journée et réessayer.',
+                                    icon: "error",
+                                });
+                                this.loadingForm = false;
+                            } else {
+                                this.voucherHeader.id = this.standardForm.controls['id'].value;
+                                this.voucherHeader.voucherDate = this.standardForm.controls['voucherDate'].value;
+                                this.voucherHeader.slipNumber = this.voucherResponseHeader ? this.voucherResponseHeader.nextSlipNumber : 0;
+                                console.log(this.voucherHeader);
+                                if (this.voucherHeader) {
+                                    this.voucherHeaderService.addVoucherHeader(this.voucherHeader).subscribe(
+                                        (data: HttpResponse<any>) => {
+                                            if (data.status === 200 || data.status === 202) {
+                                                console.log(`Got a successfull status code: ${data.status}`);
+                                            }
+                                            if (data.body) {
+                                                let v: VoucherHeaderResponse = {
+                                                    id: this.voucherHeader.id,
+                                                    voucherCount: 0,
+                                                    voucherHeader: this.voucherHeader,
+                                                    voucherSum: 0
+                                                }
+                                                this.records.push(v);
+                                                this.successSwal.fire();
+                                                this.loadingForm = false;
+                                            }
+                                            console.log('This contains body: ', data.body);
+                                        },
+                                        (err: HttpErrorResponse) => {
+                                            if (err.status === 403 || err.status === 404) {
+                                                console.error(`${err.status} status code caught`);
+                                                this.errorSwal.fire().then((r) => {
+                                                    this.error = err.message;
+                                                    console.log(err.message);
+                                                });
+                                            }
+                                        },
+                                        (): void => {
+                                            this.loadingForm = false;
+                                        }
+                                    )
+                                }
+                            }
+                            console.log('getLastVoucherHeaderOpened contains body: ', data.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
+                                this.errorSwal.fire().then((r) => {
+                                    this.error = err.message;
+                                    console.log(err.message);
+                                });
+                            }
+                        },
+                        (): void => {
+                            this.loadingForm = false;
                         }
-                        if (data.body) {
-                            this.records.push(this.voucherHeader);
-                            this.successSwal.fire();
-                        }
-                        console.log('This contains body: ', data.body);
-                    },
-                    (err: HttpErrorResponse) => {
-                        if (err.status === 403 || err.status === 404) {
-                            console.error(`${err.status} status code caught`);
-                            this.errorSwal.fire().then((r) => {
-                                this.error = err.message;
-                                console.log(err.message);
-                            });
-                        }
-                    },
-                    (): void => {
-                        this.loadingForm = false;
-                    }
-                )
-            } else {
-                this.errorSwal.fire().then(r => this.loadingForm = false);
-            }
+                    )
+                }else{
+                    this.loadingForm = false;
+                }
+            });
         }
+    }
 
+    deleteRow(deleteEvent: DeleteEvent) {
+        Swal.fire({
+            title: "Etes-vous sûr?",
+            text: "Voulez vous procèder à la suppression de cet entrée ?",
+            icon: "error",
+            showCancelButton: true,
+            confirmButtonColor: "#28bb4b",
+            cancelButtonColor: "#f34e4e",
+            confirmButtonText: "Oui, supprimez-le !"
+        }).then((re) => {
+            this.loadingList = true;
+            if (re.isConfirmed) {
+                console.log("deleteEvent: ", deleteEvent.id)
+                if (deleteEvent.id) {
+                    this.voucherHeaderService.deleteVoucherHeader(deleteEvent.id).subscribe(
+                        (data2: HttpResponse<any>) => {
+                            if (data2.status === 200 || data2.status === 202) {
+                                console.log(`Got a successfull status code: ${data2.status}`);
+                            }
+                            if (data2.body) {
+                                Swal.fire({
+                                    title: "Succès!",
+                                    text: "Cette entrée a été supprimée avec succès.",
+                                    icon: "success"
+                                }).then();
+                            }
+                            console.log('This contains body: ', data2.body);
+                        },
+                        (err: HttpErrorResponse) => {
+                            if (err.status === 403 || err.status === 404) {
+                                console.error(`${err.status} status code caught`);
+                                this.errorSwal.fire().then(() => {
+                                    this.errorList = err.message;
+                                    console.log(err.message);
+                                });
+                            }
+                        },
+                        (): void => {
+                            this.records.splice(deleteEvent.index, 1);
+                            this.loadingList = false;
+                        }
+                    );
+
+                } else {
+                    this.loadingList = false;
+                    this.errorList = this.entityElm.label + " introuvable.";
+                }
+            }
+        });
     }
 }

@@ -24,6 +24,15 @@ export interface VoucherHeader {
     [key: string]: string | number | boolean | any;
 }
 
+export interface VoucherHeaderResponse {
+    id: number;
+    voucherHeader: any;
+    voucherCount: number;
+    voucherSum: number;
+
+    [key: string]: number | any;
+}
+
 export interface VoucherLine {
     id: number;
     voucherTemp: any;

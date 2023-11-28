@@ -77,7 +77,7 @@
                     {{ errorList }}
                 </ngb-alert>
                 <!-- table start -->
-                <app-advanced-table [tableData]="records" [columns]="columns" [pagination]="true" [pageSizeOptions]="pageSizeOptions" [hasRowSelection]="true" [isSearchable]="true" (search)="searchData($event)" [isSortable]="true" (sort)="onSort($event)" [canDelete]="false" [canEdit]="false">
+                <app-advanced-table [tableData]="records" [columns]="columns" [pagination]="true" [pageSizeOptions]="pageSizeOptions" [hasRowSelection]="true" [isSearchable]="true" (search)="searchData($event)" [isSortable]="true" (sort)="onSort($event)" (deleteRowEvent)="deleteRow($event)" [canDelete]="true" [canEdit]="false">
                 </app-advanced-table>
             </div>
             <!-- end card body-->

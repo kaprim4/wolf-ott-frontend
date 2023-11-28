@@ -3,7 +3,7 @@ import {environment} from "../../../environments/environment";
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {TokenService} from "./token.service";
-import {VoucherHeader, VoucherResponseHeader} from "../interfaces/voucher";
+import {VoucherHeader, VoucherHeaderResponse, VoucherResponseHeader} from "../interfaces/voucher";
 
 @Injectable({
     providedIn: 'root'
@@ -22,8 +22,8 @@ export class VoucherHeaderService {
         this.header1 = this.header1.append('Authorization', `Bearer ${this.tokenService.getToken()}`);
     }
 
-    public getVoucherHeaders(): Observable<HttpResponse<VoucherHeader[]>> {
-        return this.http.get<VoucherHeader[]>(
+    public getVoucherHeaders(): Observable<HttpResponse<VoucherHeaderResponse[]>> {
+        return this.http.get<VoucherHeaderResponse[]>(
             `${this.apiServerUrl}/api/v1/vouchers-header/all`,
             {headers: this.header1, observe: 'response'},
         );
@@ -46,6 +46,13 @@ export class VoucherHeaderService {
     public getVoucherHeaderBySlipNumber(slipNumber: number): Observable<HttpResponse<VoucherHeader>> {
         return this.http.get<VoucherHeader>(
             `${this.apiServerUrl}/api/v1/vouchers-header/find/slip_number/${slipNumber}`,
+            {headers: this.header1, observe: 'response'},
+        );
+    }
+
+    public getLastVoucherHeaderOpened(): Observable<HttpResponse<VoucherHeader>> {
+        return this.http.get<VoucherHeader>(
+            `${this.apiServerUrl}/api/v1/vouchers-header/find/opened`,
             {headers: this.header1, observe: 'response'},
         );
     }
