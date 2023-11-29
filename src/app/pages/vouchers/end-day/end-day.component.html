@@ -14,7 +14,9 @@
             </div>
             <div class="card-body pb-0">
                 <app-ui-preloader [display]="loading"></app-ui-preloader>
-                <ngb-alert [dismissible]="false" type="danger" *ngIf="error">{{ error }}</ngb-alert>
+                <ngb-alert [dismissible]="false" type="danger" *ngIf="error">
+                    <i class="fe-alert-triangle me-1 fs-4"></i> {{ error }}
+                </ngb-alert>
                 <!-- table start -->
                 <app-advanced-table [tableData]="records" [columns]="columns" [pagination]="true"
                                     [pageSizeOptions]="pageSizeOptions" [hasRowSelection]="true" [isSearchable]="true"
@@ -28,7 +30,7 @@
                     <div class="float-start">
                         <h4 class="card-title badge bg-purple text-light fs-5 m-0">{{count}}</h4> bon(s) pour une total de <h4 class="card-title badge bg-purple text-light fs-5 m-0">{{sum | currency:'MAD':'symbol':'3.2-2':'fr'}}</h4>
                     </div>
-                    <button (click)="endTheDay()" type="button" class="btn btn-success btn-md rounded-pill waves-effect waves-light float-end">
+                    <button [ngStyle]="{pointerEvents: records.length > 0 ? '' : 'none'}" (click)="endTheDay()" type="button" class="btn {{records.length > 0 ? 'btn-info':'btn-soft-secondary'}} btn-md rounded-pill waves-effect waves-light float-end">
                         <span class="btn-label">
                             <i class="mdi mdi-check-all"></i>
                         </span> Clôturer

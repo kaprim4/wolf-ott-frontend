@@ -14,6 +14,7 @@ import { GrabVouchersComponent } from './grab-vouchers/grab-vouchers.component';
 import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";
 import { VoucherCustomerComponent } from './voucher-customer/voucher-customer.component';
 import { VoucherControlComponent } from './voucher-control/voucher-control.component';
+import { VoucherHeaderListComponent } from './voucher-header-list/voucher-header-list.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { VoucherControlComponent } from './voucher-control/voucher-control.compo
     PdfGenerationComponent,
     GrabVouchersComponent,
     VoucherCustomerComponent,
-    VoucherControlComponent
+    VoucherControlComponent,
+    VoucherHeaderListComponent
   ],
     imports: [
         CommonModule,

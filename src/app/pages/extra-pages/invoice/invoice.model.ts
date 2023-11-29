@@ -1,3 +1,6 @@
+import {Supervisor} from "../../../core/interfaces/supervisor";
+import {VoucherLine} from "../../../core/interfaces/voucher";
+
 interface InvoiceItem {
     id: number;
     name: string;
@@ -31,4 +34,21 @@ export interface Invoice {
     discount?: number;
     vat?: number;
     total?: number;
-};
+}
+
+interface TitleItem {
+    text?: string;
+}
+
+export interface Slip {
+    slipNumber?: string;
+    title?: TitleItem[];
+    supervisor?: Supervisor;
+    date?: string;
+    signature?: string;
+    vouchers?: VoucherLine[];
+    sub_total?: number;
+    discount?: number;
+    vat?: number;
+    total?: number;
+}

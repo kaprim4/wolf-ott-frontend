@@ -25,54 +25,57 @@ export class VoucherHeaderService {
     public getVoucherHeaders(): Observable<HttpResponse<VoucherHeaderResponse[]>> {
         return this.http.get<VoucherHeaderResponse[]>(
             `${this.apiServerUrl}/api/v1/vouchers-header/all`,
-            {headers: this.header1, observe: 'response'},
+            {headers: this.header1, observe: 'response'}
         );
     }
 
     public getVoucherHeaderStatistics(): Observable<HttpResponse<[]>> {
         return this.http.get<[]>(
             `${this.apiServerUrl}/api/v1/vouchers-header/find/sum`,
-            {headers: this.header1, observe: 'response'},
+            {headers: this.header1, observe: 'response'}
         );
     }
 
     public getVoucherHeader(id: number): Observable<HttpResponse<VoucherHeader>> {
         return this.http.get<VoucherHeader>(
             `${this.apiServerUrl}/api/v1/vouchers-header/find/${id}`,
-            {headers: this.header1, observe: 'response'},
+            {headers: this.header1, observe: 'response'}
         );
     }
 
     public getVoucherHeaderBySlipNumber(slipNumber: number): Observable<HttpResponse<VoucherHeader>> {
         return this.http.get<VoucherHeader>(
             `${this.apiServerUrl}/api/v1/vouchers-header/find/slip_number/${slipNumber}`,
-            {headers: this.header1, observe: 'response'},
+            {headers: this.header1, observe: 'response'}
         );
     }
 
-    public getLastVoucherHeaderOpened(): Observable<HttpResponse<VoucherHeader>> {
+    public getLastVoucherHeaderOpened(gasStation_id: number): Observable<HttpResponse<VoucherHeader>> {
         return this.http.get<VoucherHeader>(
-            `${this.apiServerUrl}/api/v1/vouchers-header/find/opened`,
-            {headers: this.header1, observe: 'response'},
+            `${this.apiServerUrl}/api/v1/vouchers-header/find/opened/${gasStation_id}`,
+            {headers: this.header1, observe: 'response'}
         );
     }
 
     public getNextVoucherHeader(gasStation_id: number): Observable<HttpResponse<VoucherResponseHeader>> {
         return this.http.get<VoucherResponseHeader>(
             `${this.apiServerUrl}/api/v1/vouchers-header/find/next/${gasStation_id}`,
-            {headers: this.header1, observe: 'response'},
+            {headers: this.header1, observe: 'response'}
         );
     }
 
     public addVoucherHeader(voucherHeader: VoucherHeader): Observable<HttpResponse<VoucherHeader>> {
         return this.http.post<VoucherHeader>(`${this.apiServerUrl}/api/v1/vouchers-header/add`,
             voucherHeader,
-            {headers: this.header1, observe: 'response'},);
+            {headers: this.header1, observe: 'response'}
+        );
     }
 
     public updateVoucherHeader(voucherHeader: VoucherHeader): Observable<HttpResponse<VoucherHeader>> {
-        return this.http.put<VoucherHeader>(`${this.apiServerUrl}/api/v1/vouchers-header/update`, voucherHeader,
-            {headers: this.header1, observe: 'response'},);
+        return this.http.put<VoucherHeader>(`${this.apiServerUrl}/api/v1/vouchers-header/update`,
+            voucherHeader,
+            {headers: this.header1, observe: 'response'}
+        );
     }
 
     public deleteVoucherHeader(id: number): Observable<HttpResponse<void>> {

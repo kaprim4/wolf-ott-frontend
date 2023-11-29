@@ -50,6 +50,13 @@ export class VoucherTempService {
         );
     }
 
+    public getVoucherTempByHeader(header_id: number): Observable<HttpResponse<VoucherTemp>> {
+        return this.http.get<VoucherTemp>(
+            `${this.apiServerUrl}/api/v1/vouchers-temp/find/header/${header_id}`,
+            {headers: this.header1, observe: 'response'},
+        );
+    }
+
     public addVoucherTemp(voucherTemp: VoucherTemp): Observable<HttpResponse<VoucherTemp>> {
         return this.http.post<VoucherTemp>(`${this.apiServerUrl}/api/v1/vouchers-temp/add`,
             voucherTemp,

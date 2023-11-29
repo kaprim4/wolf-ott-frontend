@@ -6,7 +6,7 @@ import {IFormType} from "../../../core/interfaces/formType";
 import * as moment from "moment/moment";
 import {SortEvent} from "../../../shared/advanced-table/sortable.directive";
 import {RoleService} from "../../../core/service/role.service";
-import {VoucherTemp, VoucherType} from "../../../core/interfaces/voucher";
+import {VoucherHeaderResponse, VoucherTemp, VoucherType} from "../../../core/interfaces/voucher";
 import {VoucherTempService} from "../../../core/service/voucher-temp.service";
 import Swal from "sweetalert2";
 import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
@@ -17,6 +17,7 @@ import {GasStation} from "../../../core/interfaces/gas_station";
 import {TokenService} from "../../../core/service/token.service";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 import {padLeft} from "../../../core/helpers/functions";
+import {Router} from "@angular/router";
 
 moment.locale('fr');
 
@@ -50,6 +51,7 @@ export class VoucherConsultComponent implements OnInit {
         private voucherTempService: VoucherTempService,
         private voucherTypeService: VoucherTypeService,
         private fb: FormBuilder,
+        private router: Router,
     ) {
     }
 
@@ -193,8 +195,8 @@ export class VoucherConsultComponent implements OnInit {
             {name: 'gasStation', label: 'Code Client', formatter: (record: VoucherTemp) => record.voucherHeader.gasStation.libelle},
             {name: 'voucherType', label: 'Type Bon', formatter: (record: VoucherTemp) => record.voucherType.libelle},
             {
-                name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherTemp) => {
-                    return '<span class="badge bg-purple text-light fs-5 m-0">' + padLeft(String(record.voucherHeader.slipNumber), '0', 6) + '<span>'
+                name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherHeaderResponse) => {
+                    return '<a href="' + this.router.createUrlTree(['vouchers/grab-vouchers', {voucherHeader_id: record.voucherHeader.id}]) + '" class="btn btn-success btn-xs waves-effect waves-light"> ' + padLeft(String(record.voucherHeader.slipNumber), '0', 6) + '<span class="btn-label-right"><i class="mdi mdi-check-all"></i></span></a>'
                 }
             },
             {name: 'voucherNumber', label: 'Numéro Bon', formatter: (record: VoucherTemp) => record.voucherNumber},

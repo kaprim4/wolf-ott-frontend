@@ -154,6 +154,7 @@ export class REditComponent implements OnInit {
                 createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
                 updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
             }
+            console.log(this.role);
             this.roleService.updateRole(this.role).subscribe(
                 (data: HttpResponse<any>) => {
                     if (data.status === 200 || data.status === 202) {
@@ -179,8 +180,7 @@ export class REditComponent implements OnInit {
                 (): void => {
                     this.loading = false;
                 }
-            )
-            console.log(this.role)
+            );
         }
     }
 }

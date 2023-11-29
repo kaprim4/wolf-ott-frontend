@@ -1,7 +1,13 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {EventService} from "../../../core/service/event.service";
 import {EventType} from "../../../core/constants/events";
-import {VoucherLine, VoucherTemp, VoucherTypeSum} from "../../../core/interfaces/voucher";
+import {
+    VoucherHeader,
+    VoucherHeaderResponse,
+    VoucherLine,
+    VoucherTemp,
+    VoucherTypeSum
+} from "../../../core/interfaces/voucher";
 import {Column, DeleteEvent} from "../../../shared/advanced-table/advanced-table.component";
 import {IFormType} from "../../../core/interfaces/formType";
 import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
@@ -28,12 +34,6 @@ import {VoucherHeaderService} from "../../../core/service/voucher-header.service
 })
 export class EndDayComponent implements OnInit {
 
-    records: VoucherTemp[] = [];
-    columns: Column[] = [];
-    pageSizeOptions: number[] = [10, 25, 50, 100];
-    loading: boolean = false;
-    error: string = '';
-
     entityElm: IFormType = {
         label: 'Bon saisi',
         entity: 'gas-station-temp'
@@ -57,15 +57,21 @@ export class EndDayComponent implements OnInit {
     ) {
     }
 
+    records: VoucherTemp[] = [];
+    columns: Column[] = [];
+    pageSizeOptions: number[] = [10, 25, 50, 100];
+    loading: boolean = false;
+    error: string = '';
     filterForm: FormGroup = this.fb.group({
         voucherType_id: [''],
     });
-
     objectProps: InputProps[] = [];
     voucherType_id: string = '';
     sum: number = 0;
     count: number = 0;
     voucherTypeSums: VoucherTypeSum[] = [];
+
+    voucherHeader: VoucherHeader | null = null;
 
     get formValues() {
         return this.filterForm.controls;
@@ -80,9 +86,38 @@ export class EndDayComponent implements OnInit {
             ]
         });
         this.loading = true;
-        this._fetchData();
-        this._fetchStatisticsData();
+        this._fetchVoucherHeader();
         this.initTableConfig();
+    }
+
+    _fetchVoucherHeader(): void {
+        this.voucherHeaderService.getLastVoucherHeaderOpened(this.tokenService.getPayload().gas_station_id).subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`getLastVoucherHeaderOpened has successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+                    this.voucherHeader = data.body;
+                    this._fetchData();
+                    this._fetchStatisticsData();
+                } else {
+                    this.error = "Aucun Bordereau n'est ouvert pour le moment.";
+                }
+                console.log('getLastVoucherHeaderOpened contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                    this.errorSwal.fire().then((r) => {
+                        this.error = err.message;
+                        console.log(err.message);
+                    });
+                }
+            },
+            (): void => {
+                this.loading = false;
+            }
+        )
     }
 
     _fetchData(): void {
@@ -161,11 +196,15 @@ export class EndDayComponent implements OnInit {
     initTableConfig(): void {
         this.columns = [
             {name: 'id', label: '#', formatter: (record: VoucherTemp) => record.id},
-            {name: 'gasStation', label: 'Code Client', formatter: (record: VoucherTemp) => record.voucherHeader.gasStation.libelle},
+            {
+                name: 'gasStation',
+                label: 'Code Client',
+                formatter: (record: VoucherTemp) => record.voucherHeader.gasStation.libelle
+            },
             {name: 'voucherType', label: 'Type Bon', formatter: (record: VoucherTemp) => record.voucherType.libelle},
             {
-                name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherTemp) => {
-                    return '<span class="badge bg-purple text-light fs-5 m-0">' + padLeft(String(record.voucherHeader.slipNumber), '0', 6) + '<span>'
+                name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherHeaderResponse) => {
+                    return '<a href="' + this.router.createUrlTree(['vouchers/grab-vouchers', {voucherHeader_id: record.voucherHeader.id}]) + '" class="btn btn-success btn-xs waves-effect waves-light"> ' + padLeft(String(record.voucherHeader.slipNumber), '0', 6) + '<span class="btn-label-right"><i class="mdi mdi-check-all"></i></span></a>'
                 }
             },
             {name: 'voucherNumber', label: 'Numéro Bon', formatter: (record: VoucherTemp) => record.voucherNumber},
@@ -290,53 +329,59 @@ export class EndDayComponent implements OnInit {
 
     endTheDay() {
         this.loading = true;
-        this.voucherHeaderService.getLastVoucherHeaderOpened().subscribe(
-            (data: HttpResponse<any>) => {
-                if (data.status === 200 || data.status === 202) {
-                    console.log(`getLastVoucherHeaderOpened has successfull status code: ${data.status}`);
-                }
-                if (data.body) {
-
-                }
-                console.log('getLastVoucherHeaderOpened contains body: ', data.body);
-            },
-            (err: HttpErrorResponse) => {
-                if (err.status === 403 || err.status === 404) {
-                    console.error(`${err.status} status code caught`);
-                    this.errorSwal.fire().then((r) => {
-                        this.error = err.message;
-                        console.log(err.message);
-                    });
-                }
-            },
-            (): void => {
-                this.loading = false;
-            }
-        )
-
-        /*this.records.map((voucherTemp: VoucherTemp) => {
-            let voucherLine: VoucherLine = {
-                id: 0,
-                voucherTemp: voucherTemp,
-                isActivated: true,
-                isDeleted: false,
-                createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
-                updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
-            }
-            this.voucherLineService.addVoucherLine(voucherLine).subscribe(
+        if (this.voucherHeader) {
+            this.voucherHeader.isDayOver = true;
+            this.voucherHeader.updatedAt = moment(now()).format('Y-M-DTHH:mm:ss').toString();
+            console.log(this.voucherHeader);
+            this.voucherHeaderService.updateVoucherHeader(this.voucherHeader).subscribe(
                 (data: HttpResponse<any>) => {
                     if (data.status === 200 || data.status === 202) {
-                        console.log(`Got a successfull status code: ${data.status}`);
+                        console.log(`updateVoucherHeader has successfull status code: ${data.status}`);
                     }
                     if (data.body) {
-                        this.successSwal.fire().then(() => {
-                            this.router.navigate(['vouchers/end-day'])
+                        this.records.map((voucherTemp: VoucherTemp, index: number) => {
+                            let voucherLine: VoucherLine = {
+                                id: 0,
+                                voucherTemp: voucherTemp,
+                                isActivated: true,
+                                isDeleted: false,
+                                createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
+                                updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
+                            }
+                            this.voucherLineService.addVoucherLine(voucherLine).subscribe(
+                                (data: HttpResponse<any>) => {
+                                    if (data.status === 200 || data.status === 202) {
+                                        console.log(`Got a successfull status code: ${data.status}`);
+                                    }
+                                    if (data.body) {
+                                    }
+                                    console.log('This contains body: ', data.body);
+                                },
+                                (err: HttpErrorResponse) => {
+                                    if (err.status === 403 || err.status === 404) {
+                                        console.error(`${err.status} status code caught`);
+                                        this.errorSwal.fire().then((r) => {
+                                            this.error = err.message;
+                                            console.log(err.message);
+                                        });
+                                    }
+                                },
+                                (): void => {
+                                    this.records.splice(index, 1);
+                                    this.loading = false;
+                                }
+                            )
                         });
+                    }else{
+                        this.router.navigate(['vouchers/end-day'])
                     }
-                    console.log('This contains body: ', data.body);
+                    this.successSwal.fire().then(() => {
+                        this.router.navigate(['vouchers/voucher-header-list'])
+                    });
+                    console.log('updateVoucherHeader contains body: ', data.body);
                 },
                 (err: HttpErrorResponse) => {
-                    if (err.status === 403 || err.status === 404) {
+                    if (err.status === 403 || err.status === 404 || err.status === 500) {
                         console.error(`${err.status} status code caught`);
                         this.errorSwal.fire().then((r) => {
                             this.error = err.message;
@@ -347,7 +392,7 @@ export class EndDayComponent implements OnInit {
                 (): void => {
                     this.loading = false;
                 }
-            )
-        });*/
+            );
+        }
     }
 }

@@ -117,7 +117,7 @@ export class LeftSidebarComponent implements OnInit {
                     {
                         key: 'pdf-generation',
                         label: 'Génération PDF',
-                        url: '/vouchers/pdf-generation',
+                        url: '/vouchers/voucher-header-list',
                         parentKey: 'voucher',
                     },
                 ]

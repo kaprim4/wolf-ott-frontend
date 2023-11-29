@@ -7,6 +7,7 @@ import {PdfGenerationComponent} from "./pdf-generation/pdf-generation.component"
 import {GrabVouchersComponent} from "./grab-vouchers/grab-vouchers.component";
 import {VoucherCustomerComponent} from "./voucher-customer/voucher-customer.component";
 import {VoucherControlComponent} from "./voucher-control/voucher-control.component";
+import {VoucherHeaderListComponent} from "./voucher-header-list/voucher-header-list.component";
 
 const routes: Routes = [
     { path: 'voucher-customer', component: VoucherCustomerComponent},
@@ -15,6 +16,7 @@ const routes: Routes = [
     { path: 'voucher-type', component: VoucherTypeComponent},
     { path: 'end-day', component: EndDayComponent},
     { path: 'pdf-generation', component: PdfGenerationComponent},
+    { path: 'voucher-header-list', component: VoucherHeaderListComponent},
     { path: 'grab-vouchers', component: GrabVouchersComponent},
 ];
 

@@ -264,7 +264,7 @@ export class VoucherTypeComponent implements OnInit {
             }).then((re) => {
                 if (re.isConfirmed) {
                     this.loadingForm = true;
-                    this.voucherHeaderService.getLastVoucherHeaderOpened().subscribe(
+                    this.voucherHeaderService.getLastVoucherHeaderOpened(this.tokenService.getPayload().gas_station_id).subscribe(
                         (data: HttpResponse<any>) => {
                             if (data.status === 200 || data.status === 202) {
                                 console.log(`getLastVoucherHeaderOpened has successfull status code: ${data.status}`);
@@ -351,19 +351,51 @@ export class VoucherTypeComponent implements OnInit {
             if (re.isConfirmed) {
                 console.log("deleteEvent: ", deleteEvent.id)
                 if (deleteEvent.id) {
-                    this.voucherHeaderService.deleteVoucherHeader(deleteEvent.id).subscribe(
-                        (data2: HttpResponse<any>) => {
-                            if (data2.status === 200 || data2.status === 202) {
-                                console.log(`Got a successfull status code: ${data2.status}`);
+                    this.voucherHeaderService.getVoucherHeader(deleteEvent.id).subscribe(
+                        (data: HttpResponse<any>) => {
+                            if (data.status === 200 || data.status === 202) {
+                                console.log(`getVoucherHeader a successfull status code: ${data.status}`);
                             }
-                            if (data2.body) {
-                                Swal.fire({
-                                    title: "Succès!",
-                                    text: "Cette entrée a été supprimée avec succès.",
-                                    icon: "success"
-                                }).then();
+                            if (data.body) {
+                                if(data.body.isDayOver){
+                                    Swal.fire({
+                                        title: "Opération impossible",
+                                        html: 'Un bordereau portant le N° <b>' + padLeft(String(data.body.slipNumber), '0', 6) + '</b> en date du <b>' + moment(data.body.voucherDate).format('D MMMM YYYY') + '</b> a été déjà <b>clôturé</b>.<br />Impossible de  <b>SUPPRIMER</b> cette journée.',
+                                        icon: "error",
+                                    });
+                                    this.loadingList = false;
+                                } else {
+                                    this.voucherHeaderService.deleteVoucherHeader(deleteEvent.id).subscribe(
+                                        (data2: HttpResponse<any>) => {
+                                            if (data2.status === 200 || data2.status === 202) {
+                                                console.log(`Got a successfull status code: ${data2.status}`);
+                                            }
+                                            if (data2.body) {
+                                                Swal.fire({
+                                                    title: "Succès!",
+                                                    text: "Cette entrée a été supprimée avec succès.",
+                                                    icon: "success"
+                                                }).then();
+                                            }
+                                            console.log('This contains body: ', data2.body);
+                                        },
+                                        (err: HttpErrorResponse) => {
+                                            if (err.status === 403 || err.status === 404) {
+                                                console.error(`${err.status} status code caught`);
+                                                this.errorSwal.fire().then(() => {
+                                                    this.errorList = err.message;
+                                                    console.log(err.message);
+                                                });
+                                            }
+                                        },
+                                        (): void => {
+                                            this.records.splice(deleteEvent.index, 1);
+                                            this.loadingList = false;
+                                        }
+                                    );
+                                }
                             }
-                            console.log('This contains body: ', data2.body);
+                            console.log('getVoucherHeader contains body: ', data.body);
                         },
                         (err: HttpErrorResponse) => {
                             if (err.status === 403 || err.status === 404) {
@@ -375,11 +407,9 @@ export class VoucherTypeComponent implements OnInit {
                             }
                         },
                         (): void => {
-                            this.records.splice(deleteEvent.index, 1);
                             this.loadingList = false;
                         }
                     );
-
                 } else {
                     this.loadingList = false;
                     this.errorList = this.entityElm.label + " introuvable.";

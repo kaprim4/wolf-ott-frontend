@@ -283,7 +283,8 @@ export class GrabVouchersComponent implements OnInit {
                                     },
                                     (): void => {
                                         this.loadingForm = false;
-                                    })
+                                    }
+                                );
                             }
                         } else {
                             Swal.fire({
@@ -363,7 +364,11 @@ export class GrabVouchersComponent implements OnInit {
     private initTableConfig(): void {
         this.columns = [
             //{name: 'id', label: '#', formatter: (record: VoucherTemp) => record.id},
-            {name: 'gasStation', label: 'Code Client', formatter: (record: VoucherTemp) => record.voucherHeader.gasStation.libelle},
+            {
+                name: 'gasStation',
+                label: 'Code Client',
+                formatter: (record: VoucherTemp) => record.voucherHeader.gasStation.libelle
+            },
             {name: 'voucherType', label: 'Type Bon', formatter: (record: VoucherTemp) => record.voucherType.libelle},
             {
                 name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherTemp) => {

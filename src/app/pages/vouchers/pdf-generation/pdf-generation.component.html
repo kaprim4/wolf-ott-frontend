@@ -1,1 +1,96 @@
-<p>pdf-generation works!</p>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <div class="panel-body">
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <td class="col-md-1 text-center">
+                                <img src="assets/images/logo-small-2.png" alt="" height="77">
+                            </td>
+                            <td class="col-md-9 text-uppercase fw-bold fs-5 text-black text-center align-self-center">
+                                bordereau avoir de remise des bons<br/>
+                                <span *ngFor="let voucher of invoiceData.vouchers">
+                                    {{voucher.voucherTemp.voucherType.libelle}}
+                                </span>
+                            </td>
+                            <td class="col-md-2 fw-bold">
+                                Bordereau N° <br/>
+                                <span class="badge bg-purple text-light fs-4 m-0">{{invoiceData.slipNumber}}</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+
+                        </div><!-- end col -->
+                    </div>
+                    <!-- end row -->
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table mt-4">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Item</th>
+                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Cost</th>
+                                        <th>Total</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!--<tr *ngFor="let item of invoiceData">
+                                        <td>{{item.id}}</td>
+                                        <td>{{item.name}}</td>
+                                        <td>{{item.description}}</td>
+                                        <td>{{item.quantity}}</td>
+                                        <td>{{item.unit_cost | currency : 'USD' : 'symbol' : '1.0-0'}}</td>
+                                        <td>{{item.total | currency : 'USD' : 'symbol' : '1.0-0'}}</td>
+                                    </tr>-->
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6 col-6">
+                            <div class="clearfix mt-4">
+                                <h5 class="small text-dark fw-normal">PAYMENT TERMS AND POLICIES</h5>
+                                <small>
+
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-6 offset-xl-3">
+                            <p class="text-end"><b>Sub-total:</b> {{invoiceData.sub_total | number : '1.1-2'}}</p>
+                            <p class="text-end">Discount: {{invoiceData.discount}}%</p>
+                            <p class="text-end">VAT: {{invoiceData.vat}}%</p>
+                            <hr>
+                            <h3 class="text-end">USD {{invoiceData.total | number : '1.1-2'}}</h3>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="d-print-none">
+                        <div class="float-end">
+                            <a href="javascript:window.print()" class="btn btn-dark waves-effect waves-light"><i
+                                class="fa fa-print"></i></a>
+                            <a [routerLink]="['.']" class="btn btn-primary waves-effect waves-light ms-1">Submit</a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- end card body-->
+        </div>
+        <!-- end card -->
+    </div>
+    <!-- end col-->
+</div>
+<!-- end row-->
