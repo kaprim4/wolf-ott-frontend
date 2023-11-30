@@ -14,7 +14,7 @@ import Swal from "sweetalert2";
 import {GasStation} from "../../../core/interfaces/gas_station";
 import {Supervisor} from "../../../core/interfaces/supervisor";
 import {VoucherHeader, VoucherLine, VoucherTemp, VoucherTypeSum} from "../../../core/interfaces/voucher";
-import {padLeft} from "../../../core/helpers/functions";
+import {padLeft, splitToNChunks} from "../../../core/helpers/functions";
 import {VoucherLineService} from "../../../core/service/voucher-line.service";
 import {VoucherTempService} from "../../../core/service/voucher-temp.service";
 import * as moment from "moment/moment";
@@ -59,9 +59,7 @@ export class PdfGenerationComponent implements OnInit {
     gasStation!: GasStation;
     supervisor!: Supervisor;
     voucherHeader!: VoucherHeader;
-    voucherLines1!: VoucherTemp[];
-    voucherLines2!: VoucherTemp[];
-    voucherLines3!: VoucherTemp[];
+    voucherLines!: VoucherTemp[];
     sum: number = 0;
     count: number = 0;
     voucherTypeSums: VoucherTypeSum[] = [];
@@ -128,7 +126,7 @@ export class PdfGenerationComponent implements OnInit {
                                     console.log(`getVoucherTempByHeader a successfull status code: ${data.status}`);
                                 }
                                 if (data.body) {
-                                    this.voucherLines1 = data.body;
+                                    this.voucherLines = data.body;
                                     this._fetchStatisticsData();
                                     this._fetchGasStation();
                                     this._fetchData();
@@ -192,15 +190,17 @@ export class PdfGenerationComponent implements OnInit {
     }
 
     _fetchData(): void {
+        let array = splitToNChunks(this.voucherLines, 3);
+        console.log(array);
         this.invoiceData = {
             slipNumber: padLeft(String(this.voucherHeader?.slipNumber), '0', 6),
             title: [],
             supervisor: this.supervisor,
             slipDate: moment(this.voucherHeader?.voucherDate).format('D MMMM YYYY'),
             signature: "",
-            vouchers1: this.voucherLines1,
-            vouchers2: this.voucherLines2,
-            vouchers3: this.voucherLines3,
+            vouchers1: this.voucherLines,
+            vouchers2: this.voucherLines,
+            vouchers3: this.voucherLines,
             documentDate: moment(now()).format('D MMMM YYYY'),
         }
         this.loadingList = false;

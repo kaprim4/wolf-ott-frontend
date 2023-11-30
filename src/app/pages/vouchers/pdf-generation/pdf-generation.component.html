@@ -34,12 +34,12 @@
                                 <tr>
                                     <td class="col-lg-2">de M</td>
                                     <td class="w-0">:</td>
-                                    <td class="fw-bold">{{invoiceData.supervisor?.firstName}} {{invoiceData.supervisor?.lastName}}</td>
+                                    <td class="fw-bold">{{invoiceData?.supervisor?.firstName}} {{invoiceData?.supervisor?.lastName}}</td>
                                 </tr>
                                 <tr>
                                     <td class="col-lg-2">Le</td>
                                     <td class="w-0">:</td>
-                                    <td class="fw-bold">{{invoiceData.slipDate}}</td>
+                                    <td class="fw-bold">{{invoiceData?.slipDate}}</td>
                                 </tr>
                                 <tr>
                                     <td class="col-lg-2">Signature</td>
@@ -74,7 +74,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor="let item of invoiceData.vouchers1; let index=index;">
+                                        <tr *ngFor="let item of invoiceData?.vouchers1; let index=index;">
                                             <td class="text-start ps-2" style="padding: 2px;">{{index+1}}</td>
                                             <td class="text-end fw-bold" style="padding: 2px;">{{item.voucherNumber}}</td>
                                             <td class="text-center" style="padding: 2px;">{{item.voucherType.libelle}}</td>
@@ -101,7 +101,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr *ngFor="let item of invoiceData.vouchers2; let index=index;">
+                                    <tr *ngFor="let item of invoiceData?.vouchers2; let index=index;">
                                         <td class="text-start ps-2" style="padding: 2px;">{{index+1}}</td>
                                         <td class="text-end fw-bold" style="padding: 2px;">{{item.voucherNumber}}</td>
                                         <td class="text-center" style="padding: 2px;">{{item.voucherType.libelle}}</td>
@@ -128,7 +128,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr *ngFor="let item of invoiceData.vouchers3; let index=index;">
+                                    <tr *ngFor="let item of invoiceData?.vouchers3; let index=index;">
                                         <td class="text-start ps-2" style="padding: 2px;">{{index+1}}</td>
                                         <td class="text-end fw-bold" style="padding: 2px;">{{item.voucherNumber}}</td>
                                         <td class="text-center" style="padding: 2px;">{{item.voucherType.libelle}}</td>
@@ -213,7 +213,7 @@
                                         Date d'établissement du Bordereau Avoir :
                                     </td>
                                     <td class="fw-bold text-start">
-                                        {{invoiceData.documentDate}}
+                                        {{invoiceData?.documentDate}}
                                     </td>
                                 </tr>
                                 <tr>

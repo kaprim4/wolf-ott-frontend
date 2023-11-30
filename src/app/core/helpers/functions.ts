@@ -1,3 +1,5 @@
+import {VoucherTemp} from "../interfaces/voucher";
+
 export function isNumeric(s: any) {
     if (typeof s !== 'string') {
         return false;
@@ -18,4 +20,14 @@ export function formatBytes(bytes: number, decimals = 2) {
 
 export function padLeft(text:string, padChar:string, size:number): string {
     return (String(padChar).repeat(size) + text).substr( (size * -1), size) ;
+}
+
+export function splitToNChunks(array:VoucherTemp[], n:number) {
+    const chunkSize = n;
+    const chunks = [];
+    for (let i = 0; i < array.length; i += chunkSize) {
+        const chunk = array.slice(i, i + chunkSize);
+        chunks.push(chunk);
+    }
+    return chunks;
 }
