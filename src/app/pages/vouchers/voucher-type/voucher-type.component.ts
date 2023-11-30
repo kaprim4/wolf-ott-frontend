@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {EventType} from "../../../core/constants/events";
 import {EventService} from "../../../core/service/event.service";
 import {IFormType} from "../../../core/interfaces/formType";
-import {Router} from "@angular/router";
+import {Router, UrlTree} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {VoucherHeader, VoucherHeaderResponse, VoucherResponseHeader} from "../../../core/interfaces/voucher";
 import {VoucherTypeService} from "../../../core/service/voucher-type.service";
@@ -179,10 +179,16 @@ export class VoucherTypeComponent implements OnInit {
     initTableConfig(): void {
         this.columns = [
             {name: 'id', label: '#', formatter: (record: VoucherHeaderResponse) => record.id},
-            {name: 'gasStation', label: 'Station', formatter: (record: VoucherHeaderResponse) => record.voucherHeader.gasStation.libelle},
+            {
+                name: 'gasStation',
+                label: 'Station',
+                formatter: (record: VoucherHeaderResponse) => record.voucherHeader.gasStation.libelle
+            },
             {
                 name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherHeaderResponse) => {
-                    return '<a href="' + this.router.createUrlTree(['vouchers/grab-vouchers', {voucherHeader_id: record.voucherHeader.id}]) + '" class="btn btn-success btn-xs waves-effect waves-light"> ' + padLeft(String(record.voucherHeader.slipNumber), '0', 6) + '<span class="btn-label-right"><i class="mdi mdi-check-all"></i></span></a>'
+                    let grab_link: UrlTree = this.router.createUrlTree(['vouchers/grab-vouchers']);
+                    let consult_link: UrlTree = this.router.createUrlTree(['vouchers/voucher-consult', {header_id: record.voucherHeader.id}]);
+                    return '<a href="' + (!record.voucherHeader.isDayOver ? grab_link : consult_link) + '" class="btn btn-success btn-xs waves-effect waves-light"> ' + padLeft(String(record.voucherHeader.slipNumber), '0', 6) + '<span class="btn-label-right"><i class="mdi mdi-check-all"></i></span></a>'
                 }
             },
             {
@@ -256,11 +262,11 @@ export class VoucherTypeComponent implements OnInit {
             Swal.fire({
                 title: "Etes-vous sûr?",
                 html: 'Vous êtes sur le point de créer un nouveau Bordereau pour la journée du <b>' + moment(this.standardForm.controls['voucherDate'].value).format('D MMMM YYYY') + '</b>.<br />Voulez-vous vraiment procèder ?',
-                icon: "error",
+                icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#28bb4b",
                 cancelButtonColor: "#f34e4e",
-                confirmButtonText: "Oui, supprimez-le !"
+                confirmButtonText: "Oui, créer-le !"
             }).then((re) => {
                 if (re.isConfirmed) {
                     this.loadingForm = true;
@@ -330,7 +336,7 @@ export class VoucherTypeComponent implements OnInit {
                             this.loadingForm = false;
                         }
                     )
-                }else{
+                } else {
                     this.loadingForm = false;
                 }
             });
@@ -357,7 +363,7 @@ export class VoucherTypeComponent implements OnInit {
                                 console.log(`getVoucherHeader a successfull status code: ${data.status}`);
                             }
                             if (data.body) {
-                                if(data.body.isDayOver){
+                                if (data.body.isDayOver) {
                                     Swal.fire({
                                         title: "Opération impossible",
                                         html: 'Un bordereau portant le N° <b>' + padLeft(String(data.body.slipNumber), '0', 6) + '</b> en date du <b>' + moment(data.body.voucherDate).format('D MMMM YYYY') + '</b> a été déjà <b>clôturé</b>.<br />Impossible de  <b>SUPPRIMER</b> cette journée.',

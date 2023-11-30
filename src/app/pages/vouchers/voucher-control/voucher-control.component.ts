@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {VoucherControl} from "../../../core/interfaces/voucher";
 import {Column} from "../../../shared/advanced-table/advanced-table.component";
 import {IFormType} from "../../../core/interfaces/formType";
@@ -11,9 +11,9 @@ import {VoucherControlService} from "../../../core/service/voucher-control.servi
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
 @Component({
-  selector: 'app-voucher-control',
-  templateUrl: './voucher-control.component.html',
-  styleUrls: ['./voucher-control.component.scss']
+    selector: 'app-voucher-control',
+    templateUrl: './voucher-control.component.html',
+    styleUrls: ['./voucher-control.component.scss']
 })
 export class VoucherControlComponent implements OnInit {
     records: VoucherControl[] = [];
@@ -76,7 +76,11 @@ export class VoucherControlComponent implements OnInit {
         this.columns = [
             {name: 'id', label: '#', formatter: (record: VoucherControl) => record.id},
             {name: 'voucherType', label: 'Type Bon', formatter: (record: VoucherControl) => record.voucherType.libelle},
-            {name: 'voucherCustomer', label: 'Client Bon', formatter: (record: VoucherControl) => record.voucherCustomer.libelle},
+            {
+                name: 'voucherCustomer',
+                label: 'Client Bon',
+                formatter: (record: VoucherControl) => record.voucherCustomer.codeSap + " / " + record.voucherCustomer.libelle
+            },
             {name: 'voucherNumber', label: 'Numéro Bon', formatter: (record: VoucherControl) => record.voucherNumber},
             {name: 'voucherAmount', label: 'Valeur', formatter: (record: VoucherControl) => record.voucherAmount},
             {

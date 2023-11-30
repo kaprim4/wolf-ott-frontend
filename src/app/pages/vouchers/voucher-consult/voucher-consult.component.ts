@@ -6,7 +6,7 @@ import {IFormType} from "../../../core/interfaces/formType";
 import * as moment from "moment/moment";
 import {SortEvent} from "../../../shared/advanced-table/sortable.directive";
 import {RoleService} from "../../../core/service/role.service";
-import {VoucherHeaderResponse, VoucherTemp, VoucherType} from "../../../core/interfaces/voucher";
+import {VoucherHeader, VoucherHeaderResponse, VoucherTemp, VoucherType} from "../../../core/interfaces/voucher";
 import {VoucherTempService} from "../../../core/service/voucher-temp.service";
 import Swal from "sweetalert2";
 import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
@@ -17,7 +17,8 @@ import {GasStation} from "../../../core/interfaces/gas_station";
 import {TokenService} from "../../../core/service/token.service";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 import {padLeft} from "../../../core/helpers/functions";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
+import {VoucherHeaderService} from "../../../core/service/voucher-header.service";
 
 moment.locale('fr');
 
@@ -28,11 +29,6 @@ moment.locale('fr');
 })
 export class VoucherConsultComponent implements OnInit {
 
-    records: VoucherTemp[] = [];
-    columns: Column[] = [];
-    pageSizeOptions: number[] = [10, 25, 50, 100];
-    loading: boolean = false;
-    error: string = '';
     entityElm: IFormType = {
         label: 'Bon temporaire',
         entity: 'gas-station-temp'
@@ -46,10 +42,11 @@ export class VoucherConsultComponent implements OnInit {
 
     constructor(
         private eventService: EventService,
-        private roleService: RoleService,
         private tokenService: TokenService,
-        private voucherTempService: VoucherTempService,
+        private voucherHeaderService: VoucherHeaderService,
         private voucherTypeService: VoucherTypeService,
+        private voucherTempService: VoucherTempService,
+        private activated: ActivatedRoute,
         private fb: FormBuilder,
         private router: Router,
     ) {
@@ -58,12 +55,19 @@ export class VoucherConsultComponent implements OnInit {
     filterForm: FormGroup = this.fb.group({
         voucherType_id: [''],
     });
+
+    voucherHeader!: VoucherHeader;
+
     formSubmitted: boolean = false;
     voucherTypes: VoucherType[] = [];
-    gasStations: GasStation[] = [];
+    voucherType_id: number = 0;
     objectProps: InputProps[] = [];
-    voucherType_id: string = '';
-    gasStation_id: number = 0;
+
+    records: VoucherTemp[] = [];
+    columns: Column[] = [];
+    pageSizeOptions: number[] = [10, 25, 50, 100];
+    loading: boolean = false;
+    error: string = '';
 
 
     initFieldsConfig(): void {
@@ -109,20 +113,84 @@ export class VoucherConsultComponent implements OnInit {
         );
     }
 
-    private _fetchVoucherGasStationData() {
-        this.voucherTempService.getVoucherTemps()?.subscribe(
+    _fetchVoucherHeader(): void {
+        let header_id = Number(this.activated.snapshot.paramMap.get('header_id'));
+        if (header_id) {
+            this.voucherHeaderService.getVoucherHeader(header_id).subscribe(
+                (data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`getLastVoucherHeaderOpened has successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+                        this.voucherHeader = data.body;
+                        this._fetchData();
+                    } else {
+                        this.error = "Aucun Bordereau n'est ouvert pour le moment.";
+                    }
+                    console.log('getLastVoucherHeaderOpened contains body: ', data.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                        this.errorSwal.fire().then((r) => {
+                            this.error = err.message;
+                            console.log(err.message);
+                        });
+                    }
+                },
+                (): void => {
+                    this.loading = false;
+                }
+            )
+        } else {
+            this.voucherHeaderService.getLastVoucherHeaderOpened(this.tokenService.getPayload().gas_station_id).subscribe(
+                (data: HttpResponse<any>) => {
+                    if (data.status === 200 || data.status === 202) {
+                        console.log(`getLastVoucherHeaderOpened has successfull status code: ${data.status}`);
+                    }
+                    if (data.body) {
+                        this.voucherHeader = data.body;
+                        this._fetchData();
+                    } else {
+                        this.error = "Aucun Bordereau n'est ouvert pour le moment.";
+                    }
+                    console.log('getLastVoucherHeaderOpened contains body: ', data.body);
+                },
+                (err: HttpErrorResponse) => {
+                    if (err.status === 403 || err.status === 404) {
+                        console.error(`${err.status} status code caught`);
+                        this.errorSwal.fire().then((r) => {
+                            this.error = err.message;
+                            console.log(err.message);
+                        });
+                    }
+                },
+                (): void => {
+                    this.loading = false;
+                }
+            )
+        }
+
+    }
+
+    _fetchData(): void {
+        this.voucherTempService.getVoucherTempByHeader(this.voucherHeader.id)?.subscribe(
             (data: HttpResponse<any>) => {
                 if (data.status === 200 || data.status === 202) {
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
                 if (data.body) {
-                    data.body.map((voucher: VoucherTemp) => {
-                        let gs: GasStation = voucher.voucherHeader.gasStation;
-                        if (!this.gasStations.includes(gs)) {
-                            this.gasStations.push(gs);
-                        }
-                    });
-                    this.initFieldsConfig();
+                    if (data.body && data.body.length > 0) {
+                        data.body.map((voucher: VoucherTemp) => {
+                            //if (voucher.voucherType.id == this.voucherType_id)
+                            if (voucher.voucherHeader.gasStation.id == this.tokenService.getPayload().gas_station_id) {
+                                this.records.push(voucher);
+                            }
+                        });
+                        this.loading = false;
+                    } else {
+                        this.error = "La liste est vide.";
+                    }
                 }
                 console.log('This contains body: ', data.body);
             },
@@ -147,52 +215,20 @@ export class VoucherConsultComponent implements OnInit {
             ]
         });
         this.loading = true;
-        this._fetchVoucherGasStationData();
+        this.initTableConfig();
+        this._fetchVoucherHeader();
         this._fetchVoucherTypeData();
         this._fetchData();
-        this.initTableConfig();
-    }
-
-    _fetchData(): void {
-        this.voucherTempService.getVoucherTemps()?.subscribe(
-            (data: HttpResponse<any>) => {
-                if (data.status === 200 || data.status === 202) {
-                    console.log(`Got a successfull status code: ${data.status}`);
-                }
-                if (data.body) {
-                    if (data.body && data.body.length > 0) {
-                        data.body.map((voucher: VoucherTemp) => {
-                            //if (voucher.voucherType.id == this.voucherType_id)
-                            if (voucher.voucherHeader.gasStation.id == this.tokenService.getPayload().gas_station_id) {
-                                if (this.voucherType_id != '') {
-                                    if (voucher.voucherType.id == this.voucherType_id) {
-                                        this.records.push(voucher);
-                                    }
-                                } else {
-                                    this.records.push(voucher);
-                                }
-                            }
-
-                        });
-                        this.loading = false;
-                    } else {
-                        this.error = "La liste est vide.";
-                    }
-                }
-                console.log('This contains body: ', data.body);
-            },
-            (err: HttpErrorResponse) => {
-                if (err.status === 403 || err.status === 404) {
-                    console.error(`${err.status} status code caught`);
-                }
-            }
-        );
     }
 
     initTableConfig(): void {
         this.columns = [
             {name: 'id', label: '#', formatter: (record: VoucherTemp) => record.id},
-            {name: 'gasStation', label: 'Code Client', formatter: (record: VoucherTemp) => record.voucherHeader.gasStation.libelle},
+            {
+                name: 'gasStation',
+                label: 'Code Client',
+                formatter: (record: VoucherTemp) => record.voucherHeader.gasStation.libelle
+            },
             {name: 'voucherType', label: 'Type Bon', formatter: (record: VoucherTemp) => record.voucherType.libelle},
             {
                 name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherHeaderResponse) => {
@@ -255,67 +291,77 @@ export class VoucherConsultComponent implements OnInit {
     }
 
     deleteRow(deleteEvent: DeleteEvent) {
-        Swal.fire({
-            title: "Etes-vous sûr?",
-            text: "Voulez vous procèder à la suppression de cet entrée ?",
-            icon: "error",
-            showCancelButton: true,
-            confirmButtonColor: "#28bb4b",
-            cancelButtonColor: "#f34e4e",
-            confirmButtonText: "Oui, supprimez-le !"
-        }).then((re) => {
-            this.loading = true;
-            if (re.isConfirmed) {
-                if (deleteEvent.id) {
-                    this.voucherTempService.getVoucherTemp(deleteEvent.id)?.subscribe(
-                        (data: HttpResponse<any>) => {
-                            if (data.status === 200 || data.status === 202) {
-                                console.log(`Got a successfull status code: ${data.status}`);
-                            }
-                            if (data.body) {
-                                this.voucherTempService.deleteVoucherTemp(data.body.id).subscribe(
-                                    (data2: HttpResponse<any>) => {
-                                        if (data2.status === 200 || data2.status === 202) {
-                                            console.log(`Got a successfull status code: ${data2.status}`);
+        if (this.voucherHeader.isDayOver) {
+            Swal.fire({
+                title: "Opération impossible",
+                html: 'Ce bon figure sur le bordereau portant le N° <b>' + padLeft(String(this.voucherHeader.slipNumber), '0', 6) + '</b> en date du <b>' + moment(this.voucherHeader.voucherDate).format('D MMMM YYYY') + '</b> est <b>Clôturé</b>.<br /> Impossible de le <b>Supprimer</b>.',
+                icon: "error",
+            });
+        }else{
+            Swal.fire({
+                title: "Etes-vous sûr?",
+                text: "Voulez vous procèder à la suppression de cet entrée ?",
+                icon: "error",
+                showCancelButton: true,
+                confirmButtonColor: "#28bb4b",
+                cancelButtonColor: "#f34e4e",
+                confirmButtonText: "Oui, supprimez-le !"
+            }).then((re) => {
+                this.loading = true;
+                if (re.isConfirmed) {
+                    if (deleteEvent.id) {
+                        this.voucherTempService.getVoucherTemp(deleteEvent.id)?.subscribe(
+                            (data: HttpResponse<any>) => {
+                                if (data.status === 200 || data.status === 202) {
+                                    console.log(`Got a successfull status code: ${data.status}`);
+                                }
+                                if (data.body) {
+                                    this.voucherTempService.deleteVoucherTemp(data.body.id).subscribe(
+                                        (data2: HttpResponse<any>) => {
+                                            if (data2.status === 200 || data2.status === 202) {
+                                                console.log(`Got a successfull status code: ${data2.status}`);
+                                            }
+                                            if (data2.body) {
+                                                Swal.fire({
+                                                    title: "Succès!",
+                                                    text: "Cette entrée a été supprimée avec succès.",
+                                                    icon: "success"
+                                                }).then();
+                                            }
+                                            console.log('This contains body: ', data2.body);
+                                        },
+                                        (err: HttpErrorResponse) => {
+                                            if (err.status === 403 || err.status === 404) {
+                                                console.error(`${err.status} status code caught`);
+                                                this.errorSwal.fire().then(() => {
+                                                    this.error = err.message;
+                                                    console.log(err.message);
+                                                });
+                                            }
+                                        },
+                                        (): void => {
+                                            this.records.splice(deleteEvent.index, 1);
+                                            this.loading = false;
                                         }
-                                        if (data2.body) {
-                                            Swal.fire({
-                                                title: "Succès!",
-                                                text: "Cette entrée a été supprimée avec succès.",
-                                                icon: "success"
-                                            }).then();
-                                        }
-                                        console.log('This contains body: ', data2.body);
-                                    },
-                                    (err: HttpErrorResponse) => {
-                                        if (err.status === 403 || err.status === 404) {
-                                            console.error(`${err.status} status code caught`);
-                                            this.errorSwal.fire().then(() => {
-                                                this.error = err.message;
-                                                console.log(err.message);
-                                            });
-                                        }
-                                    },
-                                    (): void => {
-                                        this.records.splice(deleteEvent.index, 1);
-                                        this.loading = false;
-                                    }
-                                )
+                                    )
+                                }
+                                console.log('This contains body: ', data.body);
+                            },
+                            (err: HttpErrorResponse) => {
+                                if (err.status === 403 || err.status === 404) {
+                                    console.error(`${err.status} status code caught`);
+                                }
                             }
-                            console.log('This contains body: ', data.body);
-                        },
-                        (err: HttpErrorResponse) => {
-                            if (err.status === 403 || err.status === 404) {
-                                console.error(`${err.status} status code caught`);
-                            }
-                        }
-                    );
+                        );
+                    } else {
+                        this.loading = false;
+                        this.error = this.entityElm.label + " introuvable.";
+                    }
                 } else {
                     this.loading = false;
-                    this.error = this.entityElm.label + " introuvable.";
                 }
-            }
-        });
+            });
+        }
     }
 
     onSubmit() {

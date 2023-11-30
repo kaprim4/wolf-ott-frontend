@@ -29,9 +29,9 @@ export class VoucherTempService {
         );
     }
 
-    public getVoucherTempStatistics(): Observable<HttpResponse<[]>> {
+    public getVoucherTempStatistics(voucherHeader_id: number): Observable<HttpResponse<[]>> {
         return this.http.get<[]>(
-            `${this.apiServerUrl}/api/v1/vouchers-temp/find/sum`,
+            `${this.apiServerUrl}/api/v1/vouchers-temp/find/sum/${voucherHeader_id}`,
             {headers: this.header1, observe: 'response'},
         );
     }

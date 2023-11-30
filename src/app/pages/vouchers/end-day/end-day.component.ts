@@ -70,24 +70,10 @@ export class EndDayComponent implements OnInit {
     sum: number = 0;
     count: number = 0;
     voucherTypeSums: VoucherTypeSum[] = [];
-
-    voucherHeader: VoucherHeader | null = null;
+    voucherHeader!: VoucherHeader;
 
     get formValues() {
         return this.filterForm.controls;
-    }
-
-    ngOnInit(): void {
-        this.eventService.broadcast(EventType.CHANGE_PAGE_TITLE, {
-            title: "Clôturer la journée",
-            breadCrumbItems: [
-                {label: 'Gestion bons', path: '.'},
-                {label: 'Clôturer la journée', path: '.', active: true}
-            ]
-        });
-        this.loading = true;
-        this._fetchVoucherHeader();
-        this.initTableConfig();
     }
 
     _fetchVoucherHeader(): void {
@@ -120,8 +106,21 @@ export class EndDayComponent implements OnInit {
         )
     }
 
+    ngOnInit(): void {
+        this.eventService.broadcast(EventType.CHANGE_PAGE_TITLE, {
+            title: "Clôturer la journée",
+            breadCrumbItems: [
+                {label: 'Gestion bons', path: '.'},
+                {label: 'Clôturer la journée', path: '.', active: true}
+            ]
+        });
+        this.loading = true;
+        this.initTableConfig();
+        this._fetchVoucherHeader();
+    }
+
     _fetchData(): void {
-        this.voucherTempService.getVoucherTemps()?.subscribe(
+        this.voucherTempService.getVoucherTempByHeader(this.voucherHeader.id)?.subscribe(
             (data: HttpResponse<any>) => {
                 if (data.status === 200 || data.status === 202) {
                     console.log(`Got a successfull status code: ${data.status}`);
@@ -130,13 +129,7 @@ export class EndDayComponent implements OnInit {
                     if (data.body && data.body.length > 0) {
                         data.body.map((voucher: VoucherTemp) => {
                             if (voucher.voucherHeader.gasStation.id == this.tokenService.getPayload().gas_station_id) {
-                                if (this.voucherType_id != '') {
-                                    if (voucher.voucherType.id == this.voucherType_id) {
-                                        this.records.push(voucher);
-                                    }
-                                } else {
-                                    this.records.push(voucher);
-                                }
+                                this.records.push(voucher);
                             }
                         });
                         this.loading = false;
@@ -155,7 +148,7 @@ export class EndDayComponent implements OnInit {
     }
 
     _fetchStatisticsData(): void {
-        this.voucherTempService.getVoucherTempStatistics()?.subscribe(
+        this.voucherTempService.getVoucherTempStatistics(this.voucherHeader.id)?.subscribe(
             (data: HttpResponse<any>) => {
                 if (data.status === 200 || data.status === 202) {
                     console.log(`Got a successfull status code: ${data.status}`);

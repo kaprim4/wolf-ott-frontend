@@ -1,7 +1,6 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {EventService} from "../../../core/service/event.service";
 import {VoucherTypeService} from "../../../core/service/voucher-type.service";
-import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {IFormType} from "../../../core/interfaces/formType";
 import {VoucherHeader, VoucherTemp, VoucherType} from "../../../core/interfaces/voucher";
@@ -13,7 +12,6 @@ import {SortEvent} from "../../../shared/advanced-table/sortable.directive";
 import {VoucherTempService} from "../../../core/service/voucher-temp.service";
 import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
 import {TokenService} from "../../../core/service/token.service";
-import {GasStationService} from "../../../core/service/gas-station.service";
 import Swal from "sweetalert2";
 import {VoucherControlService} from "../../../core/service/voucher-control.service";
 import {isNumeric, padLeft} from "../../../core/helpers/functions";
@@ -58,29 +56,16 @@ export class GrabVouchersComponent implements OnInit {
     constructor(
         private eventService: EventService,
         private voucherTypeService: VoucherTypeService,
-        private router: Router,
         private fb: FormBuilder,
-        private activated: ActivatedRoute,
         private tokenService: TokenService,
         private voucherTempService: VoucherTempService,
         private voucherControlService: VoucherControlService,
         private voucherHeaderService: VoucherHeaderService,
-        private gasStationService: GasStationService,
     ) {
     }
 
     entityElm: IFormType = {label: 'Saisie de Bon', entity: 'grab-vouchers'}
     title: string = 'Saisie de Bon';
-
-    voucherHeader: VoucherHeader | null = null;
-    voucherTypes: VoucherType[] = [];
-    voucherType_id: number = 0;
-    standardForm: FormGroup = this.fb.group({
-        voucherType: [this.voucherType_id, Validators.required],
-        voucherNumber: ['', Validators.required],
-        vehiculeNumber: ['0'],
-        voucherAmount: ['0']
-    });
 
     records: VoucherTemp[] = [];
     columns: Column[] = [];
@@ -93,11 +78,21 @@ export class GrabVouchersComponent implements OnInit {
     isVerified: boolean = false;
     voucherError: string = 'Veuillez saisir une valeur valide.';
 
+    voucherHeader!: VoucherHeader;
+    voucherTypes: VoucherType[] = [];
+    voucherType_id: number = 0;
+    standardForm: FormGroup = this.fb.group({
+        voucherType: [this.voucherType_id, Validators.required],
+        voucherNumber: ['', Validators.required],
+        vehiculeNumber: ['0'],
+        voucherAmount: ['0']
+    });
+
     get formValues() {
         return this.standardForm.controls;
     }
 
-    private initFieldsConfig(): void {
+    initFieldsConfig(): void {
         if (this.voucherType_id != 3) {
             this.standardForm = this.fb.group({
                 voucherType: [this.voucherType_id, Validators.required],
@@ -115,54 +110,114 @@ export class GrabVouchersComponent implements OnInit {
         }
     }
 
-    private _fetchVoucherTypesData() {
-        this.voucherTypeService.getVoucherTypes()?.subscribe(
+    _fetchVoucherHeader(): void {
+        this.voucherHeaderService.getLastVoucherHeaderOpened(this.tokenService.getPayload().gas_station_id).subscribe(
             (data: HttpResponse<any>) => {
                 if (data.status === 200 || data.status === 202) {
-                    console.log(`getVoucherTypes a successfull status code: ${data.status}`);
+                    console.log(`getLastVoucherHeaderOpened has successfull status code: ${data.status}`);
                 }
                 if (data.body) {
-                    this.voucherTypes = data.body;
+                    this.voucherHeader = data.body;
+                    this.voucherTemp.voucherHeader = data.body;
                     this.initFieldsConfig();
+                    this._fetchData();
+                } else {
+                    this.error = "Aucun Bordereau n'est ouvert pour le moment.";
                 }
-                console.log('_fetchVoucherTypesData contains body: ', data.body);
                 this.loadingForm = false;
+                console.log('getLastVoucherHeaderOpened contains body: ', data.body);
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                    this.loadingForm = false;
+                    this.errorSwal.fire().then((r) => {
+                        this.error = err.message;
+                        console.log(err.message);
+                    });
                 }
+            },
+            (): void => {
+                this.loadingForm = false;
+            }
+        )
+    }
+
+    _fetchVoucherTypes() {
+        this.voucherTypeService.getVoucherTypes().subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`getLastVoucherHeaderOpened has successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+                    this.voucherTypes = data.body;
+                    this.initFieldsConfig();
+                } else {
+                    this.error = "Aucun Bordereau n'est ouvert pour le moment.";
+                }
+                this.loadingForm = false;
+                console.log('getLastVoucherHeaderOpened contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                    this.errorSwal.fire().then((r) => {
+                        this.error = err.message;
+                        console.log(err.message);
+                    });
+                }
+            },
+            (): void => {
+                this.loadingForm = false;
+            }
+        )
+    }
+
+    _fetchData(): void {
+        this.voucherTempService.getVoucherTempByHeader(this.voucherHeader.id)?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`getVoucherTemps a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+                    if (data.body && data.body.length > 0) {
+                        this.records = data.body;
+                    } else {
+                        this.error = "La liste est vide.";
+                    }
+                } else {
+                    this.error = "La liste est vide.";
+                }
+                console.log('getVoucherTemps contains body: ', data.body);
+                this.loadingList = false;
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+                this.loadingList = false;
             }
         );
     }
 
-    private _fetchVoucherHeaderData() {
-        let _voucherHeader_id = Number(this.activated.snapshot.paramMap.get('voucherHeader_id'));
-        if (_voucherHeader_id) {
-            this.voucherHeaderService.getVoucherHeader(_voucherHeader_id).subscribe(
-                (data: HttpResponse<any>) => {
-                    if (data.status === 200 || data.status === 202) {
-                        console.log(`getVoucherHeader a successfull status code: ${data.status}`);
-                    }
-                    if (data.body) {
-                        this.voucherHeader = data.body;
-                        this.voucherTemp.voucherHeader = data.body;
-                        this.initFieldsConfig();
-                    }
-                    console.log('getVoucherHeader contains body: ', data.body);
-                    this.loadingForm = false;
-                },
-                (err: HttpErrorResponse) => {
-                    if (err.status === 403 || err.status === 404) {
-                        console.error(`${err.status} status code caught`);
-                        this.loadingForm = false;
-                    }
+    initTableConfig(): void {
+        this.columns = [
+            //{name: 'id', label: '#', formatter: (record: VoucherTemp) => record.id},
+            {name: 'gasStation', label: 'Code Client', formatter: (record: VoucherTemp) => record.voucherHeader.gasStation.libelle},
+            {name: 'voucherType', label: 'Type Bon', formatter: (record: VoucherTemp) => record.voucherType.libelle},
+            {
+                name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherTemp) => {
+                    return '<span class="badge bg-purple text-light fs-5 m-0">' + padLeft(String(record.voucherHeader.slipNumber), '0', 6) + '<span>'
                 }
-            );
-        } else {
-            this.router.navigate(['vouchers/voucher-type', {}]);
-        }
+            },
+            {name: 'voucherNumber', label: 'Numéro Bon', formatter: (record: VoucherTemp) => record.voucherNumber},
+            {name: 'voucherAmount', label: 'Valeur', formatter: (record: VoucherTemp) => record.voucherAmount},
+            {name: 'vehiculeNumber', label: 'Numéro Véhicule', formatter: (record: VoucherTemp) => record.vehiculeNumber},
+            {
+                name: 'voucherDate', label: 'Date Journée', formatter: (record: VoucherTemp) => {
+                    return moment(record.voucherHeader.voucherDate).format('D MMMM YYYY')
+                }
+            },
+        ];
     }
 
     ngOnInit(): void {
@@ -175,12 +230,10 @@ export class GrabVouchersComponent implements OnInit {
             ]
         });
         this.loadingForm = true;
-        this._fetchVoucherHeaderData();
-        this._fetchVoucherTypesData();
-        this.initTableConfig();
-
         this.loadingList = true;
-        this._fetchData();
+        this._fetchVoucherHeader();
+        this.initTableConfig();
+        this._fetchVoucherTypes();
     }
 
     onSelect() {
@@ -232,7 +285,7 @@ export class GrabVouchersComponent implements OnInit {
                     if (data.body) {
                         Swal.fire({
                             title: "N° de bon existe déjà",
-                            html: "Ce bon est saisi par la station " + data.body.gasStation?.libelle + " le " + moment(data.body.voucherDate).format('D MMMM YYYY') + ".<br /> Veuillez vérifier le numéro du bon s'il est correct.",
+                            html: "Ce bon est saisi par la station " + this.voucherTemp.voucherHeader.gasStation?.libelle + " le " + moment(data.body.voucherDate).format('D MMMM YYYY') + ".<br /> Veuillez vérifier le numéro du bon s'il est correct.",
                             icon: "error",
                         });
                         this.voucherError = 'N° de bon existe déjà.';
@@ -333,61 +386,6 @@ export class GrabVouchersComponent implements OnInit {
                 this.loadingForm = false;
             }
         );
-    }
-
-
-    private _fetchData(): void {
-        this.voucherTempService.getVoucherTemps()?.subscribe(
-            (data: HttpResponse<any>) => {
-                if (data.status === 200 || data.status === 202) {
-                    console.log(`getVoucherTemps a successfull status code: ${data.status}`);
-                }
-                if (data.body) {
-                    if (data.body && data.body.length > 0) {
-                        this.records = data.body;
-                    } else {
-                        this.error = "La liste est vide.";
-                    }
-                    this.loadingList = false;
-                }
-                console.log('getVoucherTemps contains body: ', data.body);
-                this.loadingList = false;
-            },
-            (err: HttpErrorResponse) => {
-                if (err.status === 403 || err.status === 404) {
-                    console.error(`${err.status} status code caught`);
-                }
-            }
-        );
-    }
-
-    private initTableConfig(): void {
-        this.columns = [
-            //{name: 'id', label: '#', formatter: (record: VoucherTemp) => record.id},
-            {
-                name: 'gasStation',
-                label: 'Code Client',
-                formatter: (record: VoucherTemp) => record.voucherHeader.gasStation.libelle
-            },
-            {name: 'voucherType', label: 'Type Bon', formatter: (record: VoucherTemp) => record.voucherType.libelle},
-            {
-                name: 'slipNumber', label: 'Numéro Bordereau', formatter: (record: VoucherTemp) => {
-                    return '<span class="badge bg-purple text-light fs-5 m-0">' + padLeft(String(record.voucherHeader.slipNumber), '0', 6) + '<span>'
-                }
-            },
-            {name: 'voucherNumber', label: 'Numéro Bon', formatter: (record: VoucherTemp) => record.voucherNumber},
-            {name: 'voucherAmount', label: 'Valeur', formatter: (record: VoucherTemp) => record.voucherAmount},
-            {
-                name: 'vehiculeNumber',
-                label: 'Numéro Véhicule',
-                formatter: (record: VoucherTemp) => record.vehiculeNumber
-            },
-            {
-                name: 'voucherDate', label: 'Date Journée', formatter: (record: VoucherTemp) => {
-                    return moment(record.voucherHeader.voucherDate).format('D MMMM YYYY')
-                }
-            },
-        ];
     }
 
     compare(v1: number | string | boolean, v2: number | string | boolean): any {

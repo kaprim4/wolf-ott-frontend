@@ -13,10 +13,12 @@ import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 import Swal from "sweetalert2";
 import {GasStation} from "../../../core/interfaces/gas_station";
 import {Supervisor} from "../../../core/interfaces/supervisor";
-import {VoucherHeader, VoucherLine} from "../../../core/interfaces/voucher";
+import {VoucherHeader, VoucherLine, VoucherTemp, VoucherTypeSum} from "../../../core/interfaces/voucher";
 import {padLeft} from "../../../core/helpers/functions";
 import {VoucherLineService} from "../../../core/service/voucher-line.service";
 import {VoucherTempService} from "../../../core/service/voucher-temp.service";
+import * as moment from "moment/moment";
+import {now} from "moment";
 
 @Component({
     selector: 'app-pdf-generation',
@@ -52,11 +54,18 @@ export class PdfGenerationComponent implements OnInit {
     title: string = 'Choix du type de Bon';
 
     loadingList: boolean = false;
+    error: string = '';
     invoiceData!: Slip;
     gasStation!: GasStation;
     supervisor!: Supervisor;
     voucherHeader!: VoucherHeader;
-    voucherLines!: VoucherLine[];
+    voucherLines1!: VoucherTemp[];
+    voucherLines2!: VoucherTemp[];
+    voucherLines3!: VoucherTemp[];
+    sum: number = 0;
+    count: number = 0;
+    voucherTypeSums: VoucherTypeSum[] = [];
+    chunk:number = 14;
 
     private _fetchGasStation() {
         this.gasStationService.getGasStation(this.tokenService.getPayload().gas_station_id).subscribe(
@@ -66,6 +75,7 @@ export class PdfGenerationComponent implements OnInit {
                 }
                 if (data.body) {
                     this.gasStation = data.body;
+                    this._fetchData();
                     this.supervisorService.getSupervisor(data.body.supervisor.id).subscribe(
                         (data2: HttpResponse<any>) => {
                             if (data2.status === 200 || data2.status === 202) {
@@ -111,16 +121,19 @@ export class PdfGenerationComponent implements OnInit {
                     }
                     if (data.body) {
                         this.voucherHeader = data.body;
+                        this._fetchData();
                         this.voucherTempService.getVoucherTempByHeader(data.body.id).subscribe(
                             (data: HttpResponse<any>) => {
                                 if (data.status === 200 || data.status === 202) {
-                                    console.log(`getVoucherHeader a successfull status code: ${data.status}`);
+                                    console.log(`getVoucherTempByHeader a successfull status code: ${data.status}`);
                                 }
                                 if (data.body) {
-                                    this.voucherLines = data.body;
+                                    this.voucherLines1 = data.body;
+                                    this._fetchStatisticsData();
+                                    this._fetchGasStation();
                                     this._fetchData();
                                 }
-                                console.log('getVoucherHeader contains body: ', data.body);
+                                console.log('getVoucherTempByHeader contains body: ', data.body);
                             },
                             (err: HttpErrorResponse) => {
                                 if (err.status === 403 || err.status === 404) {
@@ -140,18 +153,55 @@ export class PdfGenerationComponent implements OnInit {
         }
     }
 
+    _fetchStatisticsData(): void {
+        this.voucherTempService.getVoucherTempStatistics(this.voucherHeader.id)?.subscribe(
+            (data: HttpResponse<any>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`getVoucherTempStatistics a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+                    if (data.body && data.body.length > 0) {
+                        data.body.map((value: any) => {
+                            let imageName: string | null = "./assets/images/no_image.png";
+                            if (value[0].file && value[0].file?.id) {
+                                imageName = `data:${value[0].file?.imageType};base64,${value[0].file?.imageData}`;
+                            }
+                            this.voucherTypeSums.push({
+                                voucherType: value[0],
+                                voucherTypeIcon: `data:${value[0].file?.imageType};base64,${value[0].file?.imageData}`,
+                                sum: value[1],
+                                count: value[2],
+                            });
+                            this.sum += value[1];
+                            this.count += value[2];
+                        });
+                        console.log("voucherTypeSums: ", this.voucherTypeSums);
+                    } else {
+                        this.error = "La liste est vide.";
+                    }
+
+                }
+                console.log('getVoucherTempStatistics contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
+        );
+    }
+
     _fetchData(): void {
         this.invoiceData = {
             slipNumber: padLeft(String(this.voucherHeader?.slipNumber), '0', 6),
             title: [],
             supervisor: this.supervisor,
-            date: "",
+            slipDate: moment(this.voucherHeader?.voucherDate).format('D MMMM YYYY'),
             signature: "",
-            vouchers: this.voucherLines,
-            discount: 0,
-            sub_total: 0,
-            total: 0,
-            vat: 0,
+            vouchers1: this.voucherLines1,
+            vouchers2: this.voucherLines2,
+            vouchers3: this.voucherLines3,
+            documentDate: moment(now()).format('D MMMM YYYY'),
         }
         this.loadingList = false;
     }
@@ -165,9 +215,6 @@ export class PdfGenerationComponent implements OnInit {
             ]
         });
         this.loadingList = true;
-        this._fetchData();
-        this._fetchGasStation();
         this._fetchVoucherHeader();
-
     }
 }
