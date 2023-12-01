@@ -40,14 +40,20 @@ interface TitleItem {
     text?: string;
 }
 
+interface SumItem {
+    sum: number;
+}
+
 export interface Slip {
-    slipNumber?: string;
-    title?: TitleItem[];
-    supervisor?: Supervisor;
-    slipDate?: string;
-    signature?: string;
-    vouchers1?: VoucherTemp[];
-    vouchers2?: VoucherTemp[];
-    vouchers3?: VoucherTemp[];
-    documentDate?: string;
+    slipNumber: string,
+    title: TitleItem[],
+    supervisor: any,
+    slipDate: string,
+    signature: string,
+    vouchers1: VoucherTemp[],
+    vouchers2: VoucherTemp[],
+    vouchers3: VoucherTemp[],
+    documentDate: string,
+    sum: number[],
+    sumLetters: string,
 }

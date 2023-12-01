@@ -1,7 +1,7 @@
-<div class="row">
-    <div class="col-12">
-        <div class="card mt-2">
-            <div class="card-body">
+<div class="row p-0">
+    <div class="col-12 p-0">
+        <div class="card p-0">
+            <div class="card-body p-0">
 
                 <div class="panel-body border border-secondary">
                     <table class="table table-sm border-bottom border-secondary mb-0">
@@ -11,35 +11,41 @@
                             </td>
                             <td class="col-md-9 text-uppercase fw-bold fs-5 text-black text-center align-self-center">
                                 bordereau avoir de remise des bons<br/>
-                                <span class="badge bg-success text-light fs-5 mx-1" *ngFor="let voucherTypeSum of voucherTypeSums">
+                                <span class="badge bg-success text-light fs-5 mx-1"
+                                      *ngFor="let voucherTypeSum of voucherTypeSums">
                                     {{voucherTypeSum.voucherType.libelle}}
                                 </span>
                             </td>
                             <td class="col-md-2 fw-bold">
                                 Bordereau N° <br/>
-                                <span class="badge bg-purple text-light fs-4 m-0">{{invoiceData?.slipNumber}}</span>
+                                <span class="badge bg-purple text-light fs-4 m-0">{{invoiceData.slipNumber}}</span>
                             </td>
                         </tr>
                     </table>
+
                     <div class="row px-2">
                         <div class="col col-sm-8 col-md-8 col-lg-8">
-                            <h5 class=""><ins>Trois vérification :</ins></h5>
+                            <h5 class="">
+                                <ins>Trois vérification :</ins>
+                            </h5>
                             <ol>
                                 <li> de l'autenticité et de la valeur de tous les bons</li>
                                 <li> de la conformité du bordereau avec les bons joints</li>
-                                <li>  de tous les calculs et additions</li>
+                                <li> de tous les calculs et additions</li>
                             </ol>
-                            <h5 class=""><ins>Vérification établies par et sous la responsabilité :</ins></h5>
+                            <h5 class="">
+                                <ins>Vérification établies par et sous la responsabilité :</ins>
+                            </h5>
                             <table class="table table-sm table-borderless mb-0">
                                 <tr>
                                     <td class="col-lg-2">de M</td>
                                     <td class="w-0">:</td>
-                                    <td class="fw-bold">{{invoiceData?.supervisor?.firstName}} {{invoiceData?.supervisor?.lastName}}</td>
+                                    <td class="fw-bold">{{invoiceData.supervisor?.firstName}} {{invoiceData.supervisor?.lastName}}</td>
                                 </tr>
                                 <tr>
                                     <td class="col-lg-2">Le</td>
                                     <td class="w-0">:</td>
-                                    <td class="fw-bold">{{invoiceData?.slipDate}}</td>
+                                    <td class="fw-bold">{{invoiceData.slipDate}}</td>
                                 </tr>
                                 <tr>
                                     <td class="col-lg-2">Signature</td>
@@ -60,99 +66,102 @@
                         <i class="fe-alert-triangle me-1 fs-4"></i> {{ error }}
                     </ngb-alert>
 
-                    <div class="row mt-2">
-                        <div class="col-md-12">
-                            <div class="table-responsive row mx-1">
+                    <div class="row mt-2 mb-4 px-2">
+                        <div class="col col-sm-4 col-md-4 col-lg-4">
+                            <table class="table table-sm table-striped table-borderless border border-secondary fs-6 m-0">
+                                <thead>
+                                <tr>
+                                    <th class="ps-2">N°</th>
+                                    <th class="">Type</th>
+                                    <th class="text-end pe-2">Valeur</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let item of invoiceData.vouchers1; let index=index;">
+                                    <td class="fw-bold ps-2" style="padding: 2px;">{{item.voucherNumber}}</td>
+                                    <td style="padding: 2px;">{{item.voucherType.libelle}}</td>
+                                    <td class="text-end fw-bold pe-2" style="padding: 2px;">
+                                        {{item.voucherAmount | number :'3.2-2'}}
+                                    </td>
+                                </tr>
+                                </tbody>
+                                <tfoot class="border-top border-secondary">
+                                <tr>
+                                    <td colspan="2" class="fw-bold fs-6">Total A</td>
+                                    <td colspan="2" class="text-end fw-bold pe-2 bg-soft-blue text-black"
+                                        style="padding: 2px;">
+                                        {{invoiceData.sum[0] | currency:'MAD':'symbol':'3.2-2':'fr'}}
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
 
-                                <table class="col table table-sm table-striped table-borderless border border-secondary fs-6 mx-1">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-start ps-2 w-25">#</th>
-                                            <th class="text-center w-25">N°</th>
-                                            <th class="text-center w-25">Type</th>
-                                            <th class="text-center w-25">Valeur</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let item of invoiceData?.vouchers1; let index=index;">
-                                            <td class="text-start ps-2" style="padding: 2px;">{{index+1}}</td>
-                                            <td class="text-end fw-bold" style="padding: 2px;">{{item.voucherNumber}}</td>
-                                            <td class="text-center" style="padding: 2px;">{{item.voucherType.libelle}}</td>
-                                            <td class="text-end fw-bold pe-2" style="padding: 2px;">{{item.voucherAmount | number :'3.2-2'}}</td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot class="border-top border-secondary">
-                                        <tr>
-                                            <td colspan="2" class="fw-bold fs-6">Total A</td>
-                                            <td colspan="2" class="text-end fw-bold fs-5 pe-2 bg-soft-blue" style="padding: 2px;">
-                                                {{0 | currency:'MAD':'symbol':'3.2-2':'fr'}}
-                                            </td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                        <div class="col col-sm-4 col-md-4 col-lg-4">
+                            <table class="table table-sm table-striped table-borderless border border-secondary fs-6 m-0">
+                                <thead>
+                                <tr>
+                                    <th class="ps-2">N°</th>
+                                    <th class="">Type</th>
+                                    <th class="text-end pe-2">Valeur</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let item of invoiceData.vouchers2; let index=index;">
+                                    <td class="fw-bold ps-2" style="padding: 2px;">{{item.voucherNumber}}</td>
+                                    <td style="padding: 2px;">{{item.voucherType.libelle}}</td>
+                                    <td class="text-end fw-bold pe-2" style="padding: 2px;">
+                                        {{item.voucherAmount | number :'3.2-2'}}
+                                    </td>
+                                </tr>
+                                </tbody>
+                                <tfoot class="border-top border-secondary">
+                                <tr>
+                                    <td colspan="2" class="fw-bold fs-6">Total B</td>
+                                    <td colspan="2" class="text-end fw-bold pe-2 bg-soft-blue text-black"
+                                        style="padding: 2px;">
+                                        {{invoiceData.sum[1] | currency:'MAD':'symbol':'3.2-2':'fr'}}
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
 
-                                <table class="col table table-sm table-borderless border border-secondary fs-6 mx-1">
-                                    <thead>
-                                    <tr>
-                                        <th class="text-start ps-2 w-25">#</th>
-                                        <th class="text-center w-25">N°</th>
-                                        <th class="text-center w-25">Type</th>
-                                        <th class="text-center w-25">Valeur</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr *ngFor="let item of invoiceData?.vouchers2; let index=index;">
-                                        <td class="text-start ps-2" style="padding: 2px;">{{index+1}}</td>
-                                        <td class="text-end fw-bold" style="padding: 2px;">{{item.voucherNumber}}</td>
-                                        <td class="text-center" style="padding: 2px;">{{item.voucherType.libelle}}</td>
-                                        <td class="text-end fw-bold pe-2" style="padding: 2px;">{{item.voucherAmount | number :'3.2-2'}}</td>
-                                    </tr>
-                                    </tbody>
-                                    <tfoot class="border-top border-secondary">
-                                    <tr>
-                                        <td colspan="2" class="fw-bold fs-6">Total A</td>
-                                        <td colspan="2" class="text-end fw-bold fs-5 pe-2 bg-soft-blue" style="padding: 2px;">
-                                            {{0 | currency:'MAD':'symbol':'3.2-2':'fr'}}
-                                        </td>
-                                    </tr>
-                                    </tfoot>
-                                </table>
-
-                                <table class="col table table-sm table-borderless border border-secondary fs-6 mx-1">
-                                    <thead>
-                                    <tr>
-                                        <th class="text-start ps-2 w-25">#</th>
-                                        <th class="text-center w-25">N°</th>
-                                        <th class="text-center w-25">Type</th>
-                                        <th class="text-center w-25">Valeur</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr *ngFor="let item of invoiceData?.vouchers3; let index=index;">
-                                        <td class="text-start ps-2" style="padding: 2px;">{{index+1}}</td>
-                                        <td class="text-end fw-bold" style="padding: 2px;">{{item.voucherNumber}}</td>
-                                        <td class="text-center" style="padding: 2px;">{{item.voucherType.libelle}}</td>
-                                        <td class="text-end fw-bold pe-2" style="padding: 2px;">{{item.voucherAmount | number :'3.2-2'}}</td>
-                                    </tr>
-                                    </tbody>
-                                    <tfoot class="border-top border-secondary">
-                                    <tr>
-                                        <td colspan="2" class="fw-bold fs-6">Total A</td>
-                                        <td colspan="2" class="text-end fw-bold fs-5 pe-2 bg-soft-blue" style="padding: 2px;">
-                                            {{0 | currency:'MAD':'symbol':'3.2-2':'fr'}}
-                                        </td>
-                                    </tr>
-                                    </tfoot>
-                                </table>
-
-                            </div>
+                        <div class="col col-sm-4 col-md-4 col-lg-4">
+                            <table class="table table-sm table-striped table-borderless border border-secondary fs-6 m-0">
+                                <thead>
+                                <tr>
+                                    <th class="ps-2">N°</th>
+                                    <th class="">Type</th>
+                                    <th class="text-end pe-2">Valeur</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let item of invoiceData.vouchers3; let index=index;">
+                                    <td class="fw-bold ps-2" style="padding: 2px;">{{item.voucherNumber}}</td>
+                                    <td style="padding: 2px;">{{item.voucherType.libelle}}</td>
+                                    <td class="text-end fw-bold pe-2" style="padding: 2px;">
+                                        {{item.voucherAmount | number :'3.2-2'}}
+                                    </td>
+                                </tr>
+                                </tbody>
+                                <tfoot class="border-top border-secondary">
+                                <tr>
+                                    <td colspan="2" class="fw-bold fs-6">Total C</td>
+                                    <td colspan="2" class="text-end fw-bold pe-2 bg-soft-blue text-black"
+                                        style="padding: 2px;">
+                                        {{invoiceData.sum[2] | currency:'MAD':'symbol':'3.2-2':'fr'}}
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
                         </div>
                     </div>
 
-                    <div class="row mt-1">
+                    <div class="row my-4 px-2">
                         <div class="col col-sm-4 col-md-4 col-lg-4">
-                            <div class="border border-secondary ms-2">
-                                <table class="col table table-sm table-striped m-0">
+                            <div class="border border-secondary">
+                                <table class="col table table-sm table-striped m-0 fs-6">
                                     <thead>
                                     <tr>
                                         <td colspan="2" class="fw-bold text-center p-1">Récapitulation</td>
@@ -160,27 +169,28 @@
                                     </thead>
                                     <tbody>
                                     <tr>
-                                        <td class="w-50 ps-2 fw-bold fs-6" style="padding: 2px;">Total A</td>
-                                        <td class="w-50 pe-2 text-end fw-bold fs-5" style="padding: 2px;">
-                                            {{0 | currency:'MAD':'symbol':'3.2-2':'fr'}}
+                                        <td class="w-50 ps-2 fw-bold" style="padding: 2px;">Total A</td>
+                                        <td class="w-50 pe-2 text-end fw-bold" style="padding: 2px;">
+                                            {{invoiceData.sum[0] | currency:'MAD':'symbol':'3.2-2':'fr'}}
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="w-50 ps-2 fw-bold fs-6" style="padding: 2px;">Total B</td>
-                                        <td class="w-50 pe-2 text-end fw-bold fs-5" style="padding: 2px;">
-                                            {{0 | currency:'MAD':'symbol':'3.2-2':'fr'}}
+                                        <td class="w-50 ps-2 fw-bold" style="padding: 2px;">Total B</td>
+                                        <td class="w-50 pe-2 text-end fw-bold" style="padding: 2px;">
+                                            {{invoiceData.sum[1] | currency:'MAD':'symbol':'3.2-2':'fr'}}
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="w-50 ps-2 fw-bold fs-6" style="padding: 2px;">Total C</td>
-                                        <td class="w-50 pe-2 text-end fw-bold fs-5" style="padding: 2px;">
-                                            {{0 | currency:'MAD':'symbol':'3.2-2':'fr'}}
+                                        <td class="w-50 ps-2 fw-bold" style="padding: 2px;">Total C</td>
+                                        <td class="w-50 pe-2 text-end fw-bold" style="padding: 2px;">
+                                            {{invoiceData.sum[2] | currency:'MAD':'symbol':'3.2-2':'fr'}}
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="w-50 ps-2 fw-bold fs-6" style="padding: 2px;">Total Général</td>
-                                        <td colspan="2" class="text-end fw-bold fs-5 pe-2 bg-soft-blue" style="padding: 2px;">
-                                            {{0 | currency:'MAD':'symbol':'3.2-2':'fr'}}
+                                        <td class="w-50 ps-2 fw-bold" style="padding: 2px;">Total Général</td>
+                                        <td colspan="2" class="text-end fw-bold pe-2 bg-soft-blue text-black"
+                                            style="padding: 2px;">
+                                            {{(invoiceData.sum[0] + invoiceData.sum[1] + invoiceData.sum[2]) | currency:'MAD':'symbol':'3.2-2':'fr'}}
                                         </td>
                                     </tr>
                                     </tbody>
@@ -188,41 +198,29 @@
                             </div>
                         </div>
                         <!-- end col -->
-                        <div class="col col-sm-3 col-md-3 col-lg-3">
+                        <div class="col col-sm-4 col-md-4 col-lg-4">
                             <p></p>
                         </div>
                         <!-- end col -->
                         <div class="col col-sm-4 col-md-4 col-lg-4">
-                            <div class="text-center border border-secondary me-2 h-100 pt-2" style="margin: 10px 0 0;">
+                            <div class="text-center border border-secondary h-100 pt-2" style="margin: 0;">
                                 <span class="fw-bold text-black">Mois de validité du bordereau</span>
                             </div>
-                        </div>
-                        <!-- end col -->
-                        <div class="col col-sm-1 col-md-1 col-lg-1">
-                            <p></p>
                         </div>
                         <!-- end col -->
                     </div>
                     <!-- end row -->
 
-                    <div class="row my-2 px-2">
+                    <div class="row my-4 px-2">
                         <div class="col col-sm-12 col-md-12 col-lg-12">
                             <table class="table table-sm table-borderless mb-0">
-                                <tr>
-                                    <td class="fw-bold text-black pe-2">
-                                        Date d'établissement du Bordereau Avoir :
-                                    </td>
-                                    <td class="fw-bold text-start">
-                                        {{invoiceData?.documentDate}}
-                                    </td>
+                                <tr class="row">
+                                    <td class="col fw-bold pe-2">Date d'établissement du Bordereau Avoir :</td>
+                                    <td class="col fw-bold text-black text-start">{{invoiceData.documentDate}}</td>
                                 </tr>
-                                <tr>
-                                    <td class="fw-bold text-black pe-2">
-                                        Arrêté le présent Bordereau Avoir à la somme de :
-                                    </td>
-                                    <td class="fw-bold text-start">
-                                        <del>aaaa</del>
-                                    </td>
+                                <tr class="row">
+                                    <td class="col fw-bold pe-2">Arrêté le présent Bordereau Avoir à la somme de :</td>
+                                    <td class="col fw-bold text-black text-start">{{invoiceData.sumLetters}}</td>
                                 </tr>
                             </table>
                             <span></span>

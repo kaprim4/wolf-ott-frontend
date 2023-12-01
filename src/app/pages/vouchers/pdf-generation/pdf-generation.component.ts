@@ -6,15 +6,14 @@ import {TokenService} from "../../../core/service/token.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
 import {IFormType} from "../../../core/interfaces/formType";
-import {Invoice, Slip} from "../../extra-pages/invoice/invoice.model";
+import {Slip} from "../../extra-pages/invoice/invoice.model";
 import {SupervisorService} from "../../../core/service/supervisor.service";
 import {GasStationService} from "../../../core/service/gas-station.service";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
-import Swal from "sweetalert2";
 import {GasStation} from "../../../core/interfaces/gas_station";
 import {Supervisor} from "../../../core/interfaces/supervisor";
-import {VoucherHeader, VoucherLine, VoucherTemp, VoucherTypeSum} from "../../../core/interfaces/voucher";
-import {padLeft, splitToNChunks} from "../../../core/helpers/functions";
+import {VoucherHeader, VoucherTemp, VoucherTypeSum} from "../../../core/interfaces/voucher";
+import {padLeft} from "../../../core/helpers/functions";
 import {VoucherLineService} from "../../../core/service/voucher-line.service";
 import {VoucherTempService} from "../../../core/service/voucher-temp.service";
 import * as moment from "moment/moment";
@@ -55,15 +54,30 @@ export class PdfGenerationComponent implements OnInit {
 
     loadingList: boolean = false;
     error: string = '';
-    invoiceData!: Slip;
+    invoiceData: Slip = {
+        documentDate: "",
+        signature: "",
+        slipDate: "",
+        slipNumber: "",
+        sum: [],
+        sumLetters: "",
+        supervisor: undefined,
+        title: [],
+        vouchers1: [],
+        vouchers2: [],
+        vouchers3: []
+
+    };
     gasStation!: GasStation;
     supervisor!: Supervisor;
     voucherHeader!: VoucherHeader;
-    voucherLines!: VoucherTemp[];
+    voucherLines1: VoucherTemp[] = [];
+    voucherLines2: VoucherTemp[] = [];
+    voucherLines3: VoucherTemp[] = [];
     sum: number = 0;
     count: number = 0;
     voucherTypeSums: VoucherTypeSum[] = [];
-    chunk:number = 14;
+    chunk: number = 14;
 
     private _fetchGasStation() {
         this.gasStationService.getGasStation(this.tokenService.getPayload().gas_station_id).subscribe(
@@ -126,7 +140,15 @@ export class PdfGenerationComponent implements OnInit {
                                     console.log(`getVoucherTempByHeader a successfull status code: ${data.status}`);
                                 }
                                 if (data.body) {
-                                    this.voucherLines = data.body;
+                                    data.body.map((v: VoucherTemp, index: number) => {
+                                        if (index < 14) {
+                                            this.voucherLines1.push(v);
+                                        } else if (index >= 14 && index < 28) {
+                                            this.voucherLines2.push(v);
+                                        } else {
+                                            this.voucherLines3.push(v);
+                                        }
+                                    });
                                     this._fetchStatisticsData();
                                     this._fetchGasStation();
                                     this._fetchData();
@@ -190,19 +212,24 @@ export class PdfGenerationComponent implements OnInit {
     }
 
     _fetchData(): void {
-        let array = splitToNChunks(this.voucherLines, 3);
-        console.log(array);
         this.invoiceData = {
             slipNumber: padLeft(String(this.voucherHeader?.slipNumber), '0', 6),
             title: [],
             supervisor: this.supervisor,
             slipDate: moment(this.voucherHeader?.voucherDate).format('D MMMM YYYY'),
             signature: "",
-            vouchers1: this.voucherLines,
-            vouchers2: this.voucherLines,
-            vouchers3: this.voucherLines,
+            vouchers1: this.voucherLines1,
+            vouchers2: this.voucherLines2,
+            vouchers3: this.voucherLines3,
             documentDate: moment(now()).format('D MMMM YYYY'),
+            sum: [
+                this.voucherLines1.map((v) => v.voucherAmount).flat().reduce((a, b) => a + b, 0),
+                this.voucherLines2.map((v) => v.voucherAmount).flat().reduce((a, b) => a + b, 0),
+                this.voucherLines3.map((v) => v.voucherAmount).flat().reduce((a, b) => a + b, 0)
+            ],
+            sumLetters: "-----------------------------"
         }
+        console.log("invoiceData: ", this.invoiceData)
         this.loadingList = false;
     }
 

@@ -18,16 +18,7 @@ export function formatBytes(bytes: number, decimals = 2) {
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
 }
 
-export function padLeft(text:string, padChar:string, size:number): string {
-    return (String(padChar).repeat(size) + text).substr( (size * -1), size) ;
+export function padLeft(text: string, padChar: string, size: number): string {
+    return (String(padChar).repeat(size) + text).substr((size * -1), size);
 }
 
-export function splitToNChunks(array:VoucherTemp[], n:number) {
-    const chunkSize = n;
-    const chunks = [];
-    for (let i = 0; i < array.length; i += chunkSize) {
-        const chunk = array.slice(i, i + chunkSize);
-        chunks.push(chunk);
-    }
-    return chunks;
-}
