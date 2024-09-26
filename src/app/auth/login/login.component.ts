@@ -6,9 +6,7 @@ import {ActivatedRoute} from '@angular/router';
 import {AuthenticationService} from 'src/app/core/service/auth.service';
 import {ICredential} from "../../core/interfaces/credential";
 import {TokenService} from "../../core/service/token.service";
-import {IToken} from "../../core/interfaces/token";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
-import {GasStation} from "../../core/interfaces/gas_station";
 import {environment} from "../../../environments/environment";
 
 // types

@@ -4,10 +4,8 @@ import {Router} from '@angular/router';
 import {first} from 'rxjs/operators';
 // service
 import {AuthenticationService} from 'src/app/core/service/auth.service';
-import {IUser} from "../../core/interfaces/user";
 import {TokenService} from "../../core/service/token.service";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
-import {GasStation} from "../../core/interfaces/gas_station";
 // types
 
 

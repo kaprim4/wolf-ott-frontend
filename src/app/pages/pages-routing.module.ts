@@ -7,20 +7,20 @@ const routes: Routes = [
         loadChildren: () => import('./dashboards/dashboards.module')
             .then(m => m.DashboardsModule)
     },
-    {
-        path: 'vouchers',
-        loadChildren: () => import('./vouchers/vouchers.module')
-            .then(m => m.VouchersModule)
-    },
-    {
-        path: 'dictionnary',
-        loadChildren: () => import('./dictionnary/dictionnary.module')
-            .then(m => m.DictionnaryModule)
-    },
+    // {
+    //     path: 'dictionnary',
+    //     loadChildren: () => import('./dictionnary/dictionnary.module')
+    //         .then(m => m.DictionnaryModule)
+    // },
     {
         path: 'users-access',
         loadChildren: () => import('./users-access/users-access.module')
             .then(m => m.UsersAccessModule)
+    },
+    {
+        path: 'line',
+        loadChildren: () => import('./line/line.module')
+            .then(m => m.LineModule)
     },
     {
         path: 'pages',

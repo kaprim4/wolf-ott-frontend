@@ -1,17 +1,14 @@
 
 export interface IUser {
     id: number;
-    firstName: string;
-    lastName: string;
     username: string;
-    password: string;
     email: string;
-    role: any;
-    isActivated: boolean;
-    isDeleted: boolean;
-    createdAt: string;
-    updatedAt: string;
+    credits: number;
+    dateRegistered: string;
+    notes: string;
+    ip: string;
     lastLogin: string;
+    status: boolean;
 
     [key: string]: number | string | any | boolean;
 }

@@ -5,9 +5,7 @@ import {first} from 'rxjs';
 
 // service
 import {AuthenticationService} from 'src/app/core/service/auth.service';
-import {IUser} from "../../core/interfaces/user";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
-import {VoucherTemp} from "../../core/interfaces/voucher";
 
 // types
 

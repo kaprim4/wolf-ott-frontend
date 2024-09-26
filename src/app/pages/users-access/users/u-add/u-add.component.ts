@@ -6,10 +6,6 @@ import {EventService} from "../../../../core/service/event.service";
 import {UserService} from "../../../../core/service/user.service";
 import {Router} from "@angular/router";
 import {InputProps, InputPropsTypesEnum} from "../../../../core/interfaces/input_props";
-import {GasStation} from "../../../../core/interfaces/gas_station";
-import {GasStationService} from "../../../../core/service/gas-station.service";
-import {RoleService} from "../../../../core/service/role.service";
-import {Role} from "../../../../core/interfaces/role";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
 import * as moment from "moment";
@@ -25,18 +21,7 @@ export class UAddComponent implements OnInit {
 
     @Input()
     user: IUser = {
-        createdAt: "",
-        email: "",
-        firstName: "",
-        id: 0,
-        isActivated: false,
-        isDeleted: false,
-        lastLogin: "",
-        lastName: "",
-        password: "",
-        role: undefined,
-        updatedAt: "",
-        username: ""
+        credits: 0, dateRegistered: "", email: "", id: 0, ip: "", lastLogin: "", notes: "", status: false, username: ""
     }
 
     @ViewChild('successSwal')
@@ -48,32 +33,28 @@ export class UAddComponent implements OnInit {
     constructor(
         private eventService: EventService,
         private userService: UserService,
-        private gasStationService: GasStationService,
-        private roleService: RoleService,
         private router: Router,
         private fb: FormBuilder
     ) {
     }
 
     entityElm: IFormType = {
-        label: 'Utilisateur',
+        label: 'Users',
         entity: 'user'
     }
-    title: string = 'Nouvelle entrée' + (this.entityElm.entity ? ' (' + this.entityElm.label + ')' : '');
-    gasStationList: GasStation[] = [];
-    roleList: Role[] = [];
+    title: string = 'New entry' + (this.entityElm.entity ? ' (' + this.entityElm.label + ')' : '');
     objectProps: InputProps[] = [];
 
     addForm: FormGroup = this.fb.group({
+        credits: ['', [Validators.required]],
+        dateRegistered: "",
+        email: ['', [Validators.required]],
         id: [this.user.id],
-        role_id: ['', [Validators.required]],
-        gas_station_id: ['', Validators.required],
-        firstName: ['', Validators.required],
-        lastName: ['', Validators.required],
-        email: ['', Validators.required],
-        username: ['', Validators.required],
-        password: ['', Validators.required],
-        isActivated: [false]
+        ip: "",
+        lastLogin: "",
+        notes: "",
+        status: [false],
+        username: ['', [Validators.required]],
     });
     formSubmitted: boolean = false;
     error: string = '';
@@ -82,53 +63,8 @@ export class UAddComponent implements OnInit {
     initFieldsConfig(): void {
         this.objectProps = [
             {
-                input: 'role_id',
-                label: 'Rôle',
-                type: InputPropsTypesEnum.S,
-                value: this.user.role?.id,
-                joinTable: this.roleList,
-                joinTableId: 'id',
-                joinTableIdLabel: 'libelle'
-            },
-            // {
-            //     input: 'gas_station_id',
-            //     label: 'Station',
-            //     type: InputPropsTypesEnum.S,
-            //     value: this.user.gasStation?.id,
-            //     joinTable: this.gasStationList,
-            //     joinTableId: 'id',
-            //     joinTableIdLabel: 'libelle'
-            // },
-            {
-                input: 'firstName',
-                label: 'Nom',
-                type: InputPropsTypesEnum.T,
-                value: this.user.firstName,
-                joinTable: [],
-                joinTableId: '',
-                joinTableIdLabel: ''
-            },
-            {
-                input: 'lastName',
-                label: 'Prénom',
-                type: InputPropsTypesEnum.T,
-                value: this.user.lastName,
-                joinTable: [],
-                joinTableId: '',
-                joinTableIdLabel: ''
-            },
-            {
-                input: 'email',
-                label: 'E-mail',
-                type: InputPropsTypesEnum.E,
-                value: this.user.email,
-                joinTable: [],
-                joinTableId: '',
-                joinTableIdLabel: ''
-            },
-            {
                 input: 'username',
-                label: 'Identifiant',
+                label: 'username',
                 type: InputPropsTypesEnum.T,
                 value: this.user.username,
                 joinTable: [],
@@ -136,19 +72,64 @@ export class UAddComponent implements OnInit {
                 joinTableIdLabel: ''
             },
             {
-                input: 'password',
-                label: 'Mot de passe',
-                type: InputPropsTypesEnum.P,
-                value: this.user.password,
+                input: 'email',
+                label: 'email',
+                type: InputPropsTypesEnum.E,
+                value: this.user.email,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
             },
             {
-                input: 'isActivated',
-                label: 'Est-t-il activé ?',
+                input: 'credits',
+                label: 'credits',
+                type: InputPropsTypesEnum.T,
+                value: this.user.credits,
+                joinTable: [],
+                joinTableId: '',
+                joinTableIdLabel: ''
+            },
+            {
+                input: 'notes',
+                label: 'notes',
+                type: InputPropsTypesEnum.T,
+                value: this.user.notes,
+                joinTable: [],
+                joinTableId: '',
+                joinTableIdLabel: ''
+            },
+            {
+                input: 'ip',
+                label: 'ip',
+                type: InputPropsTypesEnum.T,
+                value: this.user.ip,
+                joinTable: [],
+                joinTableId: '',
+                joinTableIdLabel: ''
+            },
+            {
+                input: 'dateRegistered',
+                label: 'dateRegistered',
+                type: InputPropsTypesEnum.D,
+                value: this.user.dateRegistered,
+                joinTable: [],
+                joinTableId: '',
+                joinTableIdLabel: ''
+            },
+            {
+                input: 'lastLogin',
+                label: 'lastLogin',
+                type: InputPropsTypesEnum.D,
+                value: this.user.lastLogin,
+                joinTable: [],
+                joinTableId: '',
+                joinTableIdLabel: ''
+            },
+            {
+                input: 'status',
+                label: 'status',
                 type: InputPropsTypesEnum.C,
-                value: this.user.isActivated,
+                value: this.user.status,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
@@ -156,60 +137,17 @@ export class UAddComponent implements OnInit {
         ]
     }
 
-    private _fetchGasStationData() {
-        this.gasStationService.getGasStations()?.subscribe(
-            (data: HttpResponse<any>) => {
-                if (data.status === 200 || data.status === 202) {
-                    console.log(`Got a successfull status code: ${data.status}`);
-                }
-                if (data.body) {
-                    this.gasStationList = data.body;
-                    this.initFieldsConfig();
-                }
-                console.log('This contains body: ', data.body);
-            },
-            (err: HttpErrorResponse) => {
-                if (err.status === 403 || err.status === 404) {
-                    console.error(`${err.status} status code caught`);
-                }
-            }
-        );
-    }
-
-    private _fetchRoleData() {
-        this.roleService.getRoles()?.subscribe(
-            (data: HttpResponse<any>) => {
-                if (data.status === 200 || data.status === 202) {
-                    console.log(`Got a successfull status code: ${data.status}`);
-                }
-                if (data.body) {
-                    this.roleList = data.body;
-                    this.initFieldsConfig();
-                }
-                console.log('This contains body: ', data.body);
-            },
-            (err: HttpErrorResponse) => {
-                if (err.status === 403 || err.status === 404) {
-                    console.error(`${err.status} status code caught`);
-                }
-            }
-        );
-    }
-
     private updateFormValues() {
         this.user = {
-            id: this.addForm.controls['id'].value,
-            role: this.addForm.controls['role_id'].value,
-            lastLogin: "",
-            firstName: this.addForm.controls['firstName'].value,
-            lastName: this.addForm.controls['lastName'].value,
+            credits: this.addForm.controls['credits'].value,
+            dateRegistered: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
             email: this.addForm.controls['email'].value,
+            id: this.addForm.controls['id'].value,
+            ip: this.addForm.controls['ip'].value,
+            lastLogin: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
+            notes: this.addForm.controls['notes'].value,
+            status: false,
             username: this.addForm.controls['username'].value,
-            password: this.addForm.controls['password'].value,
-            isActivated: this.addForm.controls['isActivated'].value,
-            isDeleted: false,
-            createdAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
-            updatedAt: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
         }
     }
 
@@ -219,15 +157,13 @@ export class UAddComponent implements OnInit {
 
     ngOnInit(): void {
         this.eventService.broadcast(EventType.CHANGE_PAGE_TITLE, {
-            title: "Liste des utilisateurs",
+            title: "User list",
             breadCrumbItems: [
-                {label: 'Utilisateurs & Accès', path: '.'},
-                {label: 'Liste des utilisateurs', path: '.', active: true},
-                {label: 'Ajouter un utilisateur', path: '.', active: true}
+                {label: 'Users', path: '.'},
+                {label: 'User list', path: '.', active: true},
+                {label: 'add user', path: '.', active: true}
             ]
         });
-        this._fetchGasStationData();
-        this._fetchRoleData();
     }
 
     async onSubmit() {

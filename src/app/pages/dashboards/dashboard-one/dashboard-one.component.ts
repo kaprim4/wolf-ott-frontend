@@ -11,12 +11,11 @@ import {Message, Project} from './dashboard.model';
 
 // data
 import {MESSAGES, PROJECTS} from './data';
-import {GasStationService} from "../../../core/service/gas-station.service";
 import {AuthenticationService} from "../../../core/service/auth.service";
 import {TokenService} from "../../../core/service/token.service";
-import {Region} from "../../../core/interfaces/region";
-import {GasStation} from "../../../core/interfaces/gas_station";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import {UserService} from "../../../core/service/user.service";
+import {IUser} from "../../../core/interfaces/user";
 
 @Component({
     selector: 'app-dashboard-1',
@@ -27,7 +26,7 @@ export class DashboardOneComponent implements OnInit {
 
     messages: Message[] = [];
     recentProjects: Project[] = [];
-    gasStationList: GasStation[] = [];
+    records: IUser[] = [];
 
     loading:boolean = false;
     error:string = '';
@@ -36,7 +35,7 @@ export class DashboardOneComponent implements OnInit {
         private eventService: EventService,
         private authService: AuthenticationService,
         private tokenService: TokenService,
-        private gasStationService: GasStationService
+        private userService: UserService,
     ) {
     }
 
@@ -61,24 +60,15 @@ export class DashboardOneComponent implements OnInit {
     }
 
     private _fetchGasStationData() {
-        this.gasStationService.getGasStations()?.subscribe(
-            (data: HttpResponse<any>) => {
-                if (data.status === 200 || data.status === 202) {
-                    console.log(`Got a successfull status code: ${data.status}`);
-                }
-                if (data.body) {
-                    data.body.map((gasStation:GasStation, index:number)=>{
-                        if(gasStation.company.id == 2)
-                            this.gasStationList.push(gasStation);
-                    })
-                }
-                console.log('This contains body: ', data.body);
+        this.userService.getUsers('', 0, 100000)?.subscribe(
+            (pageData) => {
+                this.records = pageData.content;
+                this.loading = false;
+                console.log('This contains body: ', pageData);
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                    this.error = err.message;
-                    this.loading = false;
                 }
             }
         );

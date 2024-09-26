@@ -1,5 +1,4 @@
-import {Supervisor} from "../../../core/interfaces/supervisor";
-import {VoucherLine, VoucherTemp} from "../../../core/interfaces/voucher";
+
 
 interface InvoiceItem {
     id: number;
@@ -50,9 +49,6 @@ export interface Slip {
     supervisor: any,
     slipDate: string,
     signature: string,
-    vouchers1: VoucherTemp[],
-    vouchers2: VoucherTemp[],
-    vouchers3: VoucherTemp[],
     documentDate: string,
     sum: number[],
     sumLetters: string,

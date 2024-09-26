@@ -12,8 +12,6 @@ import {Column, DeleteEvent} from 'src/app/shared/advanced-table/advanced-table.
 import {IUser} from "../../../../core/interfaces/user";
 import * as moment from 'moment';
 import {IFormType} from "../../../../core/interfaces/formType";
-import {GasStation} from "../../../../core/interfaces/gas_station";
-import {Role} from "../../../../core/interfaces/role";
 import Swal from "sweetalert2";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
@@ -29,10 +27,16 @@ export class UIndexComponent implements OnInit {
     records: IUser[] = [];
     columns: Column[] = [];
     pageSizeOptions: number[] = [10, 25, 50, 100];
+
+    totalPages: number = 0;
+    totalElements: number = 0;
+    currentPage: number = 0;
+    pageSize: number = 10;
+
     loading: boolean = false;
     error: string = '';
     entityElm: IFormType = {
-        label: 'Utilisateur',
+        label: 'Uers',
         entity: 'user'
     }
 
@@ -44,32 +48,26 @@ export class UIndexComponent implements OnInit {
 
     ngOnInit(): void {
         this.eventService.broadcast(EventType.CHANGE_PAGE_TITLE, {
-            title: "Liste des utilisateurs",
+            title: "User list",
             breadCrumbItems: [
-                {label: 'Utilisateurs & Accès', path: '.'},
-                {label: 'Liste des utilisateurs', path: '.', active: true}
+                {label: 'Users', path: '.'},
+                {label: 'User list', path: '.', active: true}
             ]
         });
         this.loading = true;
-        this._fetchData();
+        this._fetchData('', 0, this.pageSize);
         this.initTableConfig();
     }
 
-    _fetchData(): void {
-        this.userService.getUsers()?.subscribe(
-            (data: HttpResponse<any>) => {
-                if (data.status === 200 || data.status === 202) {
-                    console.log(`Got a successfull status code: ${data.status}`);
-                }
-                if (data.body) {
-                    if (data.body && data.body.length > 0) {
-                        this.records = data.body;
-                        this.loading = false;
-                    } else {
-                        this.error = "La liste est vide.";
-                    }
-                }
-                console.log('This contains body: ', data.body);
+    _fetchData(search: string, page: number, size: number): void {
+        this.userService.getUsers(search, page, size)?.subscribe(
+            (pageData) => {
+                this.records = pageData.content;
+                this.totalPages = pageData.totalPages;
+                this.totalElements = pageData.totalElements;
+                this.currentPage = pageData.number;
+                this.loading = false;
+                console.log('This contains body: ', pageData);
             },
             (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
@@ -82,36 +80,36 @@ export class UIndexComponent implements OnInit {
     initTableConfig(): void {
         this.columns = [
             {name: 'id', label: '#', formatter: (record: IUser) => record.id},
-            {name: 'firstName', label: 'Nom', formatter: (record: IUser) => record.firstName},
-            {name: 'lastName', label: 'Prénom', formatter: (record: IUser) => record.lastName},
-            {name: 'username', label: 'Identifiant', formatter: (record: IUser) => record.username},
-            {name: 'email', label: 'E-mail', formatter: (record: IUser) => record.email},
-            {name: 'role', label: 'Rôle', formatter: (record: IUser) => record.role?.libelle},
+            {name: 'username', label: 'username', formatter: (record: IUser) => record.username},
+            {name: 'email', label: 'Email', formatter: (record: IUser) => record.email},
             {
-                name: 'isActivated', label: 'Activé ?', formatter: (record: IUser) => {
-                    return (record.isActivated ? '<span class="badge bg-success me-1">Oui</span>' : '<span class="badge bg-danger me-1">Non</span>')
+                name: 'dateRegistered', label: 'dateRegistered', formatter: (record: IUser) => {
+                    return moment(record.dateRegistered).format('d MMM YYYY')
+                }
+            },
+            {name: 'credits', label: 'credits', formatter: (record: IUser) => record.credits},
+            {name: 'notes', label: 'notes', formatter: (record: IUser) => record.notes},
+            {name: 'ip', label: 'ip', formatter: (record: IUser) => record.ip},
+            {
+                name: 'lastLogin', label: 'Last Login', formatter: (record: IUser) => {
+                    return moment(record.lastLogin).format('d MMM YYYY')
                 }
             },
             {
-                name: 'isDeleted', label: 'Supprimé ?', formatter: (record: IUser) => {
-                    return (record.isDeleted ? '<span class="badge bg-success me-1">Oui</span>' : '<span class="badge bg-danger me-1">Non</span>')
+                name: 'status', label: 'Activé ?', formatter: (record: IUser) => {
+                    return (record.status ? '<span class="badge bg-success me-1">Oui</span>' : '<span class="badge bg-danger me-1">Non</span>')
                 }
             },
-            {
-                name: 'createdAt', label: 'Créé le', formatter: (record: IUser) => {
-                    return moment(record.createdAt).format('d MMM YYYY')
-                }
-            }
         ];
     }
 
-    compare(v1: number | string | GasStation | Role | boolean, v2: number | string | GasStation | Role | boolean): any {
+    compare(v1: number | string | any | boolean, v2: number | string | any | boolean): any {
         return v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
     }
 
     onSort(event: SortEvent): void {
         if (event.direction === '') {
-            this._fetchData();
+            this._fetchData('', this.currentPage, this.pageSize);
         } else {
             this.records = [...this.records].sort((a, b) => {
                 const res = this.compare(a[event.column], b[event.column]);
@@ -121,26 +119,20 @@ export class UIndexComponent implements OnInit {
     }
 
     matches(row: IUser, term: string) {
-        return row.firstName.toLowerCase().includes(term)
-            || row.lastName.toLowerCase().includes(term)
+        return row.username.toLowerCase().includes(term)
             || row.email.toLowerCase().includes(term)
-            || row.role?.libelle.toLowerCase().includes(term)
-            || row.username.toLowerCase().includes(term);
+            || row.ip.toLowerCase().includes(term);
     }
 
     /**
      * Search Method
      */
     searchData(searchTerm: string): void {
-        if (searchTerm === '') {
-            this._fetchData();
-        } else {
-            this._fetchData();
-            let updatedData = this.records;
-            //  filter
-            updatedData = updatedData.filter(record => this.matches(record, searchTerm));
-            this.records = updatedData;
-        }
+        this._fetchData(searchTerm, this.currentPage, this.pageSize);
+        let updatedData = this.records;
+        //  filter
+        updatedData = updatedData.filter(record => this.matches(record, searchTerm));
+        this.records = updatedData;
     }
 
     deleteRow(deleteEvent: DeleteEvent) {
