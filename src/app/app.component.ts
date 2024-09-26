@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {TokenService} from "./core/service/token.service";
+import {environment} from "../environments/environment";
 
 @Component({
     selector: 'app-root',
@@ -7,7 +8,7 @@ import {TokenService} from "./core/service/token.service";
     styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-    title = 'Portail ENELP';
+    title = environment.APP_NAME;
 
     constructor(
         private tokenService: TokenService,

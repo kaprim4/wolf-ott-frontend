@@ -59,7 +59,7 @@ export class VoucherHeaderListComponent implements OnInit {
                     if (data.body && data.body.length > 0) {
                         this.records = [];
                         data.body.map((vhr: VoucherHeaderResponse) => {
-                            if (vhr.voucherHeader.gasStation.id == this.tokenService.getPayload().gas_station_id && vhr.voucherHeader.isDayOver) {
+                            if (vhr.voucherHeader.gasStation.id == this.tokenService.getPayload().iat && vhr.voucherHeader.isDayOver) {
                                 this.records.push(vhr);
                             }
                         });

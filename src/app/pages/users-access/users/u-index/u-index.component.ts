@@ -87,7 +87,6 @@ export class UIndexComponent implements OnInit {
             {name: 'username', label: 'Identifiant', formatter: (record: IUser) => record.username},
             {name: 'email', label: 'E-mail', formatter: (record: IUser) => record.email},
             {name: 'role', label: 'Rôle', formatter: (record: IUser) => record.role?.libelle},
-            {name: 'gasStation', label: 'Station', formatter: (record: IUser) => record.gasStation?.libelle},
             {
                 name: 'isActivated', label: 'Activé ?', formatter: (record: IUser) => {
                     return (record.isActivated ? '<span class="badge bg-success me-1">Oui</span>' : '<span class="badge bg-danger me-1">Non</span>')

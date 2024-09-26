@@ -16,17 +16,17 @@ export class AuthGuard implements CanActivate {
 
     token: ITokenUser = {
         email: "",
+        email_verified: false,
         exp: 0,
-        firstName: "",
-        gas_station_code_sap: "",
-        gas_station_id: 0,
+        family_name: "",
+        given_name: "",
         iat: 0,
-        id: 0,
-        lastName: "",
-        role_id: 0,
-        role_name: "",
-        username: ""
-
+        name: "",
+        preferred_username: "",
+        role: undefined,
+        role_access: undefined,
+        scope: "",
+        sid: ""
     }
 
     canActivate(

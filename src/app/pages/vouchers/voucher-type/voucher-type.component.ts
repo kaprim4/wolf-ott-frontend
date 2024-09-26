@@ -91,7 +91,7 @@ export class VoucherTypeComponent implements OnInit {
                     if (data.body && data.body.length > 0) {
                         this.records = [];
                         data.body.map((voucherHeaderResponse: VoucherHeaderResponse) => {
-                            if (voucherHeaderResponse.voucherHeader.gasStation.id == this.tokenService.getPayload().gas_station_id) {
+                            if (voucherHeaderResponse.voucherHeader.gasStation.id == this.tokenService.getPayload().iat) {
                                 this.records.push(voucherHeaderResponse);
                             }
                         });
@@ -113,7 +113,7 @@ export class VoucherTypeComponent implements OnInit {
     }
 
     private _fetchGasStationData() {
-        this.gasStationService.getGasStation(this.tokenService.getPayload().gas_station_id)?.subscribe(
+        this.gasStationService.getGasStation(this.tokenService.getPayload().iat)?.subscribe(
             (data: HttpResponse<any>) => {
                 if (data.status === 200 || data.status === 202) {
                     console.log(`Got a successfull status code: ${data.status}`);
@@ -135,7 +135,7 @@ export class VoucherTypeComponent implements OnInit {
     }
 
     private _fetchVoucherHeaderData() {
-        this.voucherHeaderService.getNextVoucherHeader(this.tokenService.getPayload().gas_station_id)?.subscribe(
+        this.voucherHeaderService.getNextVoucherHeader(this.tokenService.getPayload().iat)?.subscribe(
             (data: HttpResponse<any>) => {
                 if (data.status === 200 || data.status === 202) {
                     console.log(`Got a successfull status code: ${data.status}`);
@@ -270,7 +270,7 @@ export class VoucherTypeComponent implements OnInit {
             }).then((re) => {
                 if (re.isConfirmed) {
                     this.loadingForm = true;
-                    this.voucherHeaderService.getLastVoucherHeaderOpened(this.tokenService.getPayload().gas_station_id).subscribe(
+                    this.voucherHeaderService.getLastVoucherHeaderOpened(this.tokenService.getPayload().iat).subscribe(
                         (data: HttpResponse<any>) => {
                             if (data.status === 200 || data.status === 202) {
                                 console.log(`getLastVoucherHeaderOpened has successfull status code: ${data.status}`);

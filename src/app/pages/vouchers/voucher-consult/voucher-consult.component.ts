@@ -143,7 +143,7 @@ export class VoucherConsultComponent implements OnInit {
                 }
             )
         } else {
-            this.voucherHeaderService.getLastVoucherHeaderOpened(this.tokenService.getPayload().gas_station_id).subscribe(
+            this.voucherHeaderService.getLastVoucherHeaderOpened(this.tokenService.getPayload().iat).subscribe(
                 (data: HttpResponse<any>) => {
                     if (data.status === 200 || data.status === 202) {
                         console.log(`getLastVoucherHeaderOpened has successfull status code: ${data.status}`);
@@ -183,7 +183,7 @@ export class VoucherConsultComponent implements OnInit {
                     if (data.body && data.body.length > 0) {
                         data.body.map((voucher: VoucherTemp) => {
                             //if (voucher.voucherType.id == this.voucherType_id)
-                            if (voucher.voucherHeader.gasStation.id == this.tokenService.getPayload().gas_station_id) {
+                            if (voucher.voucherHeader.gasStation.id == this.tokenService.getPayload().iat) {
                                 this.records.push(voucher);
                             }
                         });

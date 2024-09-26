@@ -25,18 +25,18 @@ export class UEditComponent implements OnInit {
 
     @Input()
     user: IUser = {
-        id: 0,
-        role: null,
-        gasStation: null,
-        firstName: "",
-        lastName: "",
+        createdAt: "",
         email: "",
-        username: "",
-        password: "",
+        firstName: "",
+        id: 0,
         isActivated: false,
         isDeleted: false,
-        createdAt: "",
+        lastLogin: "",
+        lastName: "",
+        password: "",
+        role: undefined,
         updatedAt: "",
+        username: ""
     }
 
     @ViewChild('successSwal')
@@ -88,15 +88,15 @@ export class UEditComponent implements OnInit {
                 joinTableId: 'id',
                 joinTableIdLabel: 'libelle'
             },
-            {
-                input: 'gas_station_id',
-                label: 'Station',
-                type: InputPropsTypesEnum.S,
-                value: this.user.gasStation?.id,
-                joinTable: this.gasStationList,
-                joinTableId: 'id',
-                joinTableIdLabel: 'libelle'
-            },
+            // {
+            //     input: 'gas_station_id',
+            //     label: 'Station',
+            //     type: InputPropsTypesEnum.S,
+            //     value: this.user.gasStation?.id,
+            //     joinTable: this.gasStationList,
+            //     joinTableId: 'id',
+            //     joinTableIdLabel: 'libelle'
+            // },
             {
                 input: 'firstName',
                 label: 'Nom',
@@ -155,7 +155,7 @@ export class UEditComponent implements OnInit {
         this.editForm = this.fb.group({
             id: [this.user.id],
             role_id: [this.user.role?.id, [Validators.required]],
-            gas_station_id: [this.user.gasStation?.id, Validators.required],
+            //gas_station_id: [this.user.gasStation?.id, Validators.required],
             firstName: [this.user.firstName, Validators.required],
             lastName: [this.user.lastName, Validators.required],
             email: [this.user.email, Validators.required],
@@ -277,7 +277,7 @@ export class UEditComponent implements OnInit {
                                             this.user = {
                                                 id: this.editForm.controls['id'].value,
                                                 role: role,
-                                                gasStation: gas_station,
+                                                lastLogin: "",
                                                 firstName: this.editForm.controls['firstName'].value,
                                                 lastName: this.editForm.controls['lastName'].value,
                                                 email: this.editForm.controls['email'].value,

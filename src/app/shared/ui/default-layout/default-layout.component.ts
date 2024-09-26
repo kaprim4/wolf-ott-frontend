@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {environment} from "../../../../environments/environment";
 
 @Component({
     selector: 'app-default-layout',
@@ -9,6 +10,12 @@ export class DefaultLayoutComponent implements OnInit {
 
     @Input() hasLogo?: boolean = true;
     @Input() cardClass?: string = '';
+
+    currYear: number = new Date().getFullYear();
+    today: Date = new Date();
+    APP_NAME = environment.APP_NAME;
+    APP_EDITOR_NAME = environment.APP_EDITOR_NAME;
+    APP_EDITOR_LINK = environment.APP_EDITOR_LINK;
 
     constructor() {
     }

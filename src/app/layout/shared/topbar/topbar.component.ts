@@ -29,7 +29,7 @@ export class TopbarComponent implements OnInit {
     // output events
     @Output() mobileMenuButtonClicked = new EventEmitter<void>();
 
-    no_profile_img = './assets/images/logo.png';
+    no_profile_img = './assets/images/no_image.png';
 
     constructor(
         private authService: AuthenticationService,

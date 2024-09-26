@@ -111,7 +111,7 @@ export class GrabVouchersComponent implements OnInit {
     }
 
     _fetchVoucherHeader(): void {
-        this.voucherHeaderService.getLastVoucherHeaderOpened(this.tokenService.getPayload().gas_station_id).subscribe(
+        this.voucherHeaderService.getLastVoucherHeaderOpened(this.tokenService.getPayload().iat).subscribe(
             (data: HttpResponse<any>) => {
                 if (data.status === 200 || data.status === 202) {
                     console.log(`getLastVoucherHeaderOpened has successfull status code: ${data.status}`);

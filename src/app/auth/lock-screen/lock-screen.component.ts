@@ -43,7 +43,7 @@ export class LockScreenComponent implements OnInit {
     onSubmit(): void {
         this.formSubmitted = true;
         if (this.lockScreenForm.valid) {
-            let username = this.tokenService.getPayload().username;
+            let username = this.tokenService.getPayload().name;
             let password = this.formValues['password'].value;
             this.authService.login(username, password).subscribe(
                 (data: HttpResponse<any>) => {

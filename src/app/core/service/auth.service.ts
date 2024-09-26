@@ -9,7 +9,7 @@ import {TokenService} from "./token.service";
 @Injectable({providedIn: 'root'})
 export class AuthenticationService {
 
-    private apiServerUrl = environment.apiBaseUrl;
+    private apiServerUrl = `${environment.apiBaseUrl}/api/v1/auth`;
     private header1: HttpHeaders;
 
     constructor(
@@ -22,7 +22,7 @@ export class AuthenticationService {
 
     login(username: string, password: string): Observable<HttpResponse<IToken>> {
         return this.http.post<IToken>(
-            `${this.apiServerUrl}/api/v1/auth/signin`,
+            `${this.apiServerUrl}/login`,
             {username, password},
             {headers: this.header1, observe: 'response'},
         );
@@ -31,7 +31,7 @@ export class AuthenticationService {
     signup(name: string, username: string, password: string): Observable<HttpResponse<IUser>> {
         console.log("signup_username:", username);
         console.log("signup_password:", password);
-        console.log("API_URL:", `${this.apiServerUrl}/api/v1/auth/signup`);
+        console.log("API_URL:", `${this.apiServerUrl}/signup`);
         return this.http.post<IUser>(
             `${this.apiServerUrl}/api/v1/auth/signup`,
             {name, username, password},

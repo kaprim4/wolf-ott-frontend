@@ -9,6 +9,7 @@ import {TokenService} from "../../core/service/token.service";
 import {IToken} from "../../core/interfaces/token";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 import {GasStation} from "../../core/interfaces/gas_station";
+import {environment} from "../../../environments/environment";
 
 // types
 
@@ -24,6 +25,10 @@ export class LoginComponent implements OnInit {
         password: ''
     }
 
+    currYear: number = new Date().getFullYear();
+    today: Date = new Date();
+    APP_NAME = environment.APP_NAME;
+
     constructor(
         private authService: AuthenticationService,
         private tokenService: TokenService,
@@ -32,8 +37,8 @@ export class LoginComponent implements OnInit {
     }
 
     loginForm: FormGroup = this.fb.group({
-        username: ['adminENELP', [Validators.required]],
-        password: ['000000', Validators.required]
+        username: ['ghostspack', [Validators.required]],
+        password: ['Blackhandler1020@@', Validators.required]
     });
     formSubmitted: boolean = false;
     error: string = '';
@@ -59,8 +64,8 @@ export class LoginComponent implements OnInit {
                         console.log(`Got a successfull status code: ${data.status}`);
                     }
                     if (data.body) {
-                        console.log("login token:", data.body.token)
-                        this.tokenService.saveToken(data.body.token)
+                        console.log("login token:", data.body.access_token)
+                        this.tokenService.saveToken(data.body.access_token)
                     }
                     console.log('This contains body: ', data.body);
                 },

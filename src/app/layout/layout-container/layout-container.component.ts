@@ -35,7 +35,7 @@ export class LayoutContainerComponent implements OnInit {
         // listen to event and change the layout configuarations
         this.eventService.on(EventType.CHANGE_LAYOUT).subscribe(({payload}) => {
             this.layoutType = payload as LayoutType;
-            // this.setLayoutConfig();
+            this.setLayoutConfig();
         });
 
         this.eventService.on(EventType.CHANGE_LAYOUT_COLOR).subscribe(({payload}) => {

@@ -80,7 +80,7 @@ export class PdfGenerationComponent implements OnInit {
     chunk: number = 14;
 
     private _fetchGasStation() {
-        this.gasStationService.getGasStation(this.tokenService.getPayload().gas_station_id).subscribe(
+        this.gasStationService.getGasStation(this.tokenService.getPayload().iat).subscribe(
             (data: HttpResponse<any>) => {
                 if (data.status === 200 || data.status === 202) {
                     console.log(`getGasStation a successfull status code: ${data.status}`);

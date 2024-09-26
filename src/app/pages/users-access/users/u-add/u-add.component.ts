@@ -25,18 +25,18 @@ export class UAddComponent implements OnInit {
 
     @Input()
     user: IUser = {
-        id: 0,
-        role: null,
-        gasStation: null,
-        firstName: "",
-        lastName: "",
+        createdAt: "",
         email: "",
-        username: "",
-        password: "",
+        firstName: "",
+        id: 0,
         isActivated: false,
         isDeleted: false,
-        createdAt: "",
+        lastLogin: "",
+        lastName: "",
+        password: "",
+        role: undefined,
         updatedAt: "",
+        username: ""
     }
 
     @ViewChild('successSwal')
@@ -90,15 +90,15 @@ export class UAddComponent implements OnInit {
                 joinTableId: 'id',
                 joinTableIdLabel: 'libelle'
             },
-            {
-                input: 'gas_station_id',
-                label: 'Station',
-                type: InputPropsTypesEnum.S,
-                value: this.user.gasStation?.id,
-                joinTable: this.gasStationList,
-                joinTableId: 'id',
-                joinTableIdLabel: 'libelle'
-            },
+            // {
+            //     input: 'gas_station_id',
+            //     label: 'Station',
+            //     type: InputPropsTypesEnum.S,
+            //     value: this.user.gasStation?.id,
+            //     joinTable: this.gasStationList,
+            //     joinTableId: 'id',
+            //     joinTableIdLabel: 'libelle'
+            // },
             {
                 input: 'firstName',
                 label: 'Nom',
@@ -200,7 +200,7 @@ export class UAddComponent implements OnInit {
         this.user = {
             id: this.addForm.controls['id'].value,
             role: this.addForm.controls['role_id'].value,
-            gasStation: this.addForm.controls['gas_station_id'].value,
+            lastLogin: "",
             firstName: this.addForm.controls['firstName'].value,
             lastName: this.addForm.controls['lastName'].value,
             email: this.addForm.controls['email'].value,

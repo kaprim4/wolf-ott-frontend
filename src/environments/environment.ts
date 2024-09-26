@@ -5,16 +5,16 @@
 export const environment = {
     production: false,
     GOOGLE_MAPS_API_KEY: 'AIzaSyDpgQMpcfx1QU-8SM-ljcgjG4xrYtIYby4',
-    apiBaseUrl: 'http://localhost:8080',
+    apiBaseUrl: 'http://localhost:8181',
     APP_ENV: "dev",
     APP_VERSION: "2.0.0",
-    APP_NAME: "PORTAIL ENELP",
-    APP_DESCRIPTION: "Suivi & Tableaux de bord des projets de création de nouvelles stations-service WINXO",
-    APP_EDITOR_NAME: "WINXO DSI",
-    APP_EDITOR_LINK: "https://winxo-wincard.com/",
+    APP_NAME: "WOLF OTT",
+    APP_DESCRIPTION: "",
+    APP_EDITOR_NAME: "LHOTSE AGENCY",
+    APP_EDITOR_LINK: "https://lhotse.agency/",
     APP_TIMEZONE: "Africa/Casablanca",
     APP_LOCAL: "fr-FR",
-    SERVER_NAME: "www.winxo.com"
+    SERVER_NAME: "www.wolf-ott.com"
 };
 
 /*
