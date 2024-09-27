@@ -36,7 +36,7 @@ export class UIndexComponent implements OnInit {
     loading: boolean = false;
     error: string = '';
     entityElm: IFormType = {
-        label: 'Uers',
+        label: 'User',
         entity: 'user'
     }
 
@@ -51,7 +51,7 @@ export class UIndexComponent implements OnInit {
             title: "User list",
             breadCrumbItems: [
                 {label: 'Users', path: '.'},
-                {label: 'User list', path: '.', active: true}
+                {label: 'list', path: '.', active: true}
             ]
         });
         this.loading = true;
@@ -84,7 +84,7 @@ export class UIndexComponent implements OnInit {
             {name: 'email', label: 'Email', formatter: (record: IUser) => record.email},
             {
                 name: 'dateRegistered', label: 'dateRegistered', formatter: (record: IUser) => {
-                    return moment(record.dateRegistered).format('d MMM YYYY')
+                    return moment(record.dateRegistered).format('D MMM YYYY')
                 }
             },
             {name: 'credits', label: 'credits', formatter: (record: IUser) => record.credits},
@@ -92,7 +92,7 @@ export class UIndexComponent implements OnInit {
             {name: 'ip', label: 'ip', formatter: (record: IUser) => record.ip},
             {
                 name: 'lastLogin', label: 'Last Login', formatter: (record: IUser) => {
-                    return moment(record.lastLogin).format('d MMM YYYY')
+                    return moment(record.lastLogin).format('D MMM YYYY')
                 }
             },
             {

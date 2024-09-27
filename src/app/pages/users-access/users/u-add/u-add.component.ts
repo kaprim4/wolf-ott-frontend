@@ -47,7 +47,7 @@ export class UAddComponent implements OnInit {
 
     addForm: FormGroup = this.fb.group({
         credits: ['', [Validators.required]],
-        dateRegistered: "",
+        dateRegistered: moment.now(),
         email: ['', [Validators.required]],
         id: [this.user.id],
         ip: "",
@@ -64,7 +64,7 @@ export class UAddComponent implements OnInit {
         this.objectProps = [
             {
                 input: 'username',
-                label: 'username',
+                label: 'Username',
                 type: InputPropsTypesEnum.T,
                 value: this.user.username,
                 joinTable: [],
@@ -73,7 +73,7 @@ export class UAddComponent implements OnInit {
             },
             {
                 input: 'email',
-                label: 'email',
+                label: 'Email',
                 type: InputPropsTypesEnum.E,
                 value: this.user.email,
                 joinTable: [],
@@ -82,7 +82,7 @@ export class UAddComponent implements OnInit {
             },
             {
                 input: 'credits',
-                label: 'credits',
+                label: 'Credits',
                 type: InputPropsTypesEnum.T,
                 value: this.user.credits,
                 joinTable: [],
@@ -91,7 +91,7 @@ export class UAddComponent implements OnInit {
             },
             {
                 input: 'notes',
-                label: 'notes',
+                label: 'Notes',
                 type: InputPropsTypesEnum.T,
                 value: this.user.notes,
                 joinTable: [],
@@ -100,7 +100,7 @@ export class UAddComponent implements OnInit {
             },
             {
                 input: 'ip',
-                label: 'ip',
+                label: 'Ip',
                 type: InputPropsTypesEnum.T,
                 value: this.user.ip,
                 joinTable: [],
@@ -109,8 +109,8 @@ export class UAddComponent implements OnInit {
             },
             {
                 input: 'dateRegistered',
-                label: 'dateRegistered',
-                type: InputPropsTypesEnum.D,
+                label: 'Date Registered',
+                type: InputPropsTypesEnum.DT,
                 value: this.user.dateRegistered,
                 joinTable: [],
                 joinTableId: '',
@@ -118,8 +118,8 @@ export class UAddComponent implements OnInit {
             },
             {
                 input: 'lastLogin',
-                label: 'lastLogin',
-                type: InputPropsTypesEnum.D,
+                label: 'Last Login',
+                type: InputPropsTypesEnum.DT,
                 value: this.user.lastLogin,
                 joinTable: [],
                 joinTableId: '',
@@ -127,7 +127,7 @@ export class UAddComponent implements OnInit {
             },
             {
                 input: 'status',
-                label: 'status',
+                label: 'Status',
                 type: InputPropsTypesEnum.C,
                 value: this.user.status,
                 joinTable: [],
@@ -140,11 +140,11 @@ export class UAddComponent implements OnInit {
     private updateFormValues() {
         this.user = {
             credits: this.addForm.controls['credits'].value,
-            dateRegistered: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
+            dateRegistered: this.addForm.controls['dateRegistered'].value,
             email: this.addForm.controls['email'].value,
             id: this.addForm.controls['id'].value,
             ip: this.addForm.controls['ip'].value,
-            lastLogin: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
+            lastLogin: this.addForm.controls['lastLogin'].value,
             notes: this.addForm.controls['notes'].value,
             status: false,
             username: this.addForm.controls['username'].value,
@@ -164,6 +164,7 @@ export class UAddComponent implements OnInit {
                 {label: 'add user', path: '.', active: true}
             ]
         });
+        this.initFieldsConfig();
     }
 
     async onSubmit() {

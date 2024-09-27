@@ -29,7 +29,7 @@ export class LeftSidebarComponent implements OnInit {
     activeMenuItems: string[] = [];
     loggedInUser: any;
     menuItems: MenuItem[] = [];
-    no_profile_img: string = "./assets/images/logo.png";
+    no_profile_img: string = "./assets/images/wolf_logo.png";
 
     constructor(
         router: Router,
@@ -125,7 +125,7 @@ export class LeftSidebarComponent implements OnInit {
                             {
                                 key: 'user-line-list',
                                 label: 'Manage Lines',
-                                url: '/line/user/list',
+                                url: '/line/user/',
                                 parentKey: 'user-line',
                             },
                         ]
@@ -144,13 +144,13 @@ export class LeftSidebarComponent implements OnInit {
                             {
                                 key: 'mag-trial',
                                 url: '/base-ui/buttons',
-                                label: '/line/mag/add',
+                                label: '/line/mag/trial',
                                 parentKey: 'mag-device',
                             },
                             {
                                 key: 'mag-list',
                                 label: 'Manage MAG Lines',
-                                url: '/line/mag/add',
+                                url: '/line/mag/',
                                 parentKey: 'mag-device',
                             },
                         ]
@@ -170,13 +170,13 @@ export class LeftSidebarComponent implements OnInit {
                             {
                                 key: 'enigma-trial',
                                 label: 'Generate Trial Device',
-                                url: '/line/enigma/add',
+                                url: '/line/enigma/trial',
                                 parentKey: 'enigma-device',
                             },
                             {
                                 key: 'enigma-list',
                                 label: 'Manage ENIGMA Lines',
-                                url: '/line/enigma/add',
+                                url: '/line/enigma/',
                                 parentKey: 'enigma-device',
                             },
                         ]

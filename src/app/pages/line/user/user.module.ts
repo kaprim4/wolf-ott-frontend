@@ -6,6 +6,11 @@ import { AddComponent } from './add/add.component';
 import { TrialComponent } from './trial/trial.component';
 import { ListComponent } from './list/list.component';
 import { EditComponent } from './edit/edit.component';
+import {AdvancedTableModule} from "../../../shared/advanced-table/advanced-table.module";
+import {NgbAlertModule} from "@ng-bootstrap/ng-bootstrap";
+import {UiModule} from "../../../shared/ui/ui.module";
+import {ReactiveFormsModule} from "@angular/forms";
+import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";
 
 
 @NgModule({
@@ -15,9 +20,14 @@ import { EditComponent } from './edit/edit.component';
     ListComponent,
     EditComponent
   ],
-  imports: [
-    CommonModule,
-    UserRoutingModule
-  ]
+    imports: [
+        CommonModule,
+        UserRoutingModule,
+        AdvancedTableModule,
+        NgbAlertModule,
+        UiModule,
+        ReactiveFormsModule,
+        SweetAlert2Module
+    ]
 })
 export class UserModule { }

@@ -6,7 +6,7 @@
             <img [src]="loggedInUser?.avatar ? loggedInUser?.avatar : no_profile_img"
                  alt="{{loggedInUser?.firstName}} {{loggedInUser?.lastName}}"
                  title="{{loggedInUser?.firstName}} {{loggedInUser?.lastName}}"
-                 class="rounded-circle img-thumbnail avatar-md" />
+                 class="rounded-circle img-thumbnail avatar-md" height="200" />
             <div ngbDropdown>
                 <a href="javascript: void(0);" class="user-name dropdown-toggle h5 mt-2 mb-1 d-block" id="profileMenu"
                     ngbDropdownToggle>

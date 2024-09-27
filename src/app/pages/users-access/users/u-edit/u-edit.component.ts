@@ -12,6 +12,8 @@ import * as moment from "moment/moment";
 import {now} from "moment/moment";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 
+moment.locale('fr');
+
 @Component({
     selector: 'app-u-edit',
     templateUrl: './u-edit.component.html',
@@ -45,12 +47,12 @@ export class UEditComponent implements OnInit {
 
     editForm: FormGroup = this.fb.group({
         credits: ['', [Validators.required]],
-        dateRegistered: "",
+        dateRegistered: [''],
         email: ['', [Validators.required]],
         id: [this.user.id],
-        ip: "",
-        lastLogin: "",
-        notes: "",
+        ip: [''],
+        lastLogin: [''],
+        notes: [''],
         status:  [false],
         username: ['', [Validators.required]],
     });
@@ -62,7 +64,7 @@ export class UEditComponent implements OnInit {
         this.objectProps = [
             {
                 input: 'username',
-                label: 'username',
+                label: 'Username',
                 type: InputPropsTypesEnum.T,
                 value: this.user.username,
                 joinTable: [],
@@ -71,7 +73,7 @@ export class UEditComponent implements OnInit {
             },
             {
                 input: 'email',
-                label: 'email',
+                label: 'Email',
                 type: InputPropsTypesEnum.E,
                 value: this.user.email,
                 joinTable: [],
@@ -80,7 +82,7 @@ export class UEditComponent implements OnInit {
             },
             {
                 input: 'credits',
-                label: 'credits',
+                label: 'Credits',
                 type: InputPropsTypesEnum.T,
                 value: this.user.credits,
                 joinTable: [],
@@ -89,7 +91,7 @@ export class UEditComponent implements OnInit {
             },
             {
                 input: 'notes',
-                label: 'notes',
+                label: 'Notes',
                 type: InputPropsTypesEnum.T,
                 value: this.user.notes,
                 joinTable: [],
@@ -98,7 +100,7 @@ export class UEditComponent implements OnInit {
             },
             {
                 input: 'ip',
-                label: 'ip',
+                label: 'Ip',
                 type: InputPropsTypesEnum.T,
                 value: this.user.ip,
                 joinTable: [],
@@ -107,8 +109,8 @@ export class UEditComponent implements OnInit {
             },
             {
                 input: 'dateRegistered',
-                label: 'dateRegistered',
-                type: InputPropsTypesEnum.D,
+                label: 'Date Registered',
+                type: InputPropsTypesEnum.DT,
                 value: this.user.dateRegistered,
                 joinTable: [],
                 joinTableId: '',
@@ -116,8 +118,8 @@ export class UEditComponent implements OnInit {
             },
             {
                 input: 'lastLogin',
-                label: 'lastLogin',
-                type: InputPropsTypesEnum.D,
+                label: 'Last Login',
+                type: InputPropsTypesEnum.DT,
                 value: this.user.lastLogin,
                 joinTable: [],
                 joinTableId: '',
@@ -125,7 +127,7 @@ export class UEditComponent implements OnInit {
             },
             {
                 input: 'status',
-                label: 'status',
+                label: 'Status',
                 type: InputPropsTypesEnum.C,
                 value: this.user.status,
                 joinTable: [],

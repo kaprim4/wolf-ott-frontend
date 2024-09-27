@@ -16,4 +16,5 @@ export enum InputPropsTypesEnum {
     S = 'select',
     C = 'checkbox',
     D = 'date',
+    DT = 'datetime',
 }
