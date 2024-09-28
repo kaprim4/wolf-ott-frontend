@@ -60,12 +60,12 @@ export class ListComponent implements OnInit {
     }
 
     _fetchData(search: string, page: number, size: number): void {
-        this.lineService.getLines(search, page, size)?.subscribe(
+        this.lineService.getAllLines(search)?.subscribe(
             (pageData) => {
-                this.records = pageData.content;
-                this.totalPages = pageData.totalPages;
-                this.totalElements = pageData.totalElements;
-                this.currentPage = pageData.number;
+                this.records = pageData;// pageData.content;
+                // this.totalPages = pageData.totalPages;
+                // this.totalElements = pageData.totalElements;
+                // this.currentPage = pageData.number;
                 this.loading = false;
                 console.log('This contains body: ', pageData);
             },

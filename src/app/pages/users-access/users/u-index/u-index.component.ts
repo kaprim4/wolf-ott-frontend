@@ -60,12 +60,12 @@ export class UIndexComponent implements OnInit {
     }
 
     _fetchData(search: string, page: number, size: number): void {
-        this.userService.getUsers(search, page, size)?.subscribe(
-            (pageData) => {
-                this.records = pageData.content;
-                this.totalPages = pageData.totalPages;
-                this.totalElements = pageData.totalElements;
-                this.currentPage = pageData.number;
+        this.userService.getAllUsers(search)?.subscribe(
+            (pageData:IUser[]) => {
+                this.records = pageData; // pageData.content;
+                // this.totalPages = pageData.totalPages;
+                // this.totalElements = pageData.totalElements;
+                // this.currentPage = pageData.number;
                 this.loading = false;
                 console.log('This contains body: ', pageData);
             },

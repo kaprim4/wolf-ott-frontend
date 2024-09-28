@@ -24,6 +24,19 @@ export class LineService {
         this.header1 = this.header1.append('Authorization', `Bearer ${this.tokenService.getToken()}`);
     }
 
+    public getAllLines(search: string): Observable<Array<ILine>> {
+        return this.http.get<Array<ILine>>(`${this.apiServerUrl}/api/v1/lines/list`, {
+            params: {
+                search: search,
+            },
+            observe: 'response'
+        }).pipe(
+            map((response: HttpResponse<Array<ILine>>) => {
+                return response.body as Array<ILine>;  // Extract the page body
+            })
+        );
+    }
+    
     public getLines(search: string, page: number, size: number): Observable<Page<ILine>> {
         return this.http.get<Page<ILine>>(`${this.apiServerUrl}/api/v1/lines`, {
             params: {

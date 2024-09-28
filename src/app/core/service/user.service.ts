@@ -3,67 +3,44 @@ import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 
 // types
 import {Observable} from "rxjs";
-import {environment} from "../../../environments/environment";
 import {IUser} from "../interfaces/user";
 import {TokenService} from "./token.service";
 import {Page} from "../interfaces/formType";
-import {map} from "rxjs/operators";
+import { BaseService } from './base.service';
 
 @Injectable({providedIn: 'root'})
-export class UserService {
-
-    private apiServerUrl = environment.apiBaseUrl;
-    private header1: HttpHeaders;
+export class UserService extends BaseService<IUser> {
 
     constructor(
-        private http: HttpClient,
-        private tokenService: TokenService
+        httpClient: HttpClient,
+        tokenService: TokenService
     ) {
-        this.header1 = new HttpHeaders();
-        this.header1 = this.header1.append('Content-Type', 'application/json');
-        this.header1 = this.header1.append('Authorization', `Bearer ${this.tokenService.getToken()}`);
+        super(httpClient, tokenService);
+        this.endpoint = "users";
     }
+  
 
+    public getAllUsers(search: string): Observable<Array<IUser>> {
+        return this.getAllAsList<IUser>(search);
+    }
+    
     public getUsers(search: string, page: number, size: number): Observable<Page<IUser>> {
-        return this.http.get<Page<IUser>>(`${this.apiServerUrl}/api/v1/users`, {
-            params: {
-                search: search,
-                page: page.toString(),
-                size: size.toString(),
-            },
-            observe: 'response'
-        }).pipe(
-            map((response: HttpResponse<Page<IUser>>) => {
-                return response.body as Page<IUser>;  // Extract the page body
-            })
-        );
+        return this.getAllAsPage<IUser>(search, page, size);
     }
 
     public getUser(id_user: number): Observable<HttpResponse<IUser>> {
-        return this.http.get<IUser>(
-            `${this.apiServerUrl}/api/v1/users/${id_user}`,
-            {headers: this.header1, observe: 'response'},
-        );
+        return this.getOneById(id_user);
     }
 
-    public addUser(user1: IUser): Observable<HttpResponse<IUser>> {
-        return this.http.post<IUser>(
-            `${this.apiServerUrl}/api/v1/users`, user1,
-            {headers: this.header1, observe: 'response'},
-        );
+    public addUser(user: IUser): Observable<HttpResponse<IUser>> {
+        return this.add(user);
     }
 
-    public updateUser(user1: IUser): Observable<HttpResponse<IUser>> {
-        return this.http.put<IUser>(
-            `${this.apiServerUrl}/api/v1/users/update`, user1,
-            {headers: this.header1, observe: 'response'},
-        );
+    public updateUser(user: IUser): Observable<HttpResponse<IUser>> {
+        return this.update(user.id, user);
     }
 
     public deleteUser(id: number): Observable<HttpResponse<void>> {
-        return this.http.delete<void>(
-            `${this.apiServerUrl}/api/v1/users/delete/${id}`,
-            {headers: this.header1, observe: 'response'},
-        );
+        return this.delete<void>(id);
     }
 }
