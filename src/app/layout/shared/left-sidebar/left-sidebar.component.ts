@@ -181,6 +181,26 @@ export class LeftSidebarComponent implements OnInit {
                             },
                         ]
                     },
+                    {
+                        key: 'line-presets',
+                        label: 'Presets',
+                        url: '/base-ui/buttons',
+                        parentKey: 'preset',
+                        children: [
+                            {
+                                key: 'preset-create',
+                                label: 'Add Preset',
+                                url: '/line/presets/add',
+                                parentKey: 'line-presets',
+                            },
+                            {
+                                key: 'preset-list',
+                                label: 'Manage Presets',
+                                url: '/line/presets/',
+                                parentKey: 'line-presets',
+                            },
+                        ]
+                    },
                 ]
             },
             {
