@@ -1,4 +1,4 @@
-interface Preset {
+export interface IPreset {
     id: number;
     presetName: string;
     presetDescription: string;

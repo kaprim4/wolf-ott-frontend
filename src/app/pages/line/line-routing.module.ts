@@ -14,6 +14,10 @@ const routes: Routes = [
         path: 'enigma', loadChildren: () => import('./enigma/enigma.module')
             .then(m => m.EnigmaModule)
     },
+    {
+        path: 'presets', loadChildren: () => import('./preset/preset.module')
+            .then(m => m.PresetModule)
+    },
 ];
 
 @NgModule({

@@ -13,7 +13,7 @@ export class LineService extends BaseService<ILine> {
 
     constructor(httpClient: HttpClient, tokenService: TokenService) {
         super(httpClient, tokenService);
-        this.endpoint = 'presets';
+        this.endpoint = 'lines';
     }
 
     public getAllLines(search: string): Observable<Array<ILine>> {
