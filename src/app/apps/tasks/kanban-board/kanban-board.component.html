@@ -97,14 +97,11 @@
                     (click)="openModal('Completed')"><i class="mdi mdi-plus-circle"></i> Add New</a>
             </div>
         </div>
-
     </div><!-- end col -->
-
 </div><!-- end row -->
 
 
 <ng-template #KanbanTask let-task="task">
-
     <div class="kanban-box">
         <div class="checkbox-wrapper float-start">
             <div class="form-check form-check-success ">
@@ -113,7 +110,6 @@
                 <label></label>
             </div>
         </div>
-
         <div class="kanban-detail">
             <span class="badge bg-danger float-end" *ngIf="task.priority==='Urgent'">Urgent</span>
             <span class="badge bg-warning float-end" *ngIf="task.priority==='High'">High</span>
@@ -142,7 +138,6 @@
 
 <ng-template #content let-modal>
     <div class="modal-header">
-
         <h4 class="modal-title" id="myCenterModalLabel">Add New</h4>
         <button type="button" class="btn-close float-end" aria-label="Close" (click)="modal.dismiss('')">
         </button>

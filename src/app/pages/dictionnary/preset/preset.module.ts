@@ -5,10 +5,11 @@ import { PresetEditComponent } from './preset-edit/preset-edit.component';
 import { PresetCreateComponent } from './preset-create/preset-create.component';
 import { PresetRoutingModule } from './preset-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import {NgbAlertModule, NgbDropdownModule, NgbTooltipModule} from '@ng-bootstrap/ng-bootstrap';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { AdvancedTableModule } from 'src/app/shared/advanced-table/advanced-table.module';
 import { UiModule } from 'src/app/shared/ui/ui.module';
+import {SortablejsModule} from "ngx-sortablejs";
 
 
 
@@ -18,15 +19,18 @@ import { UiModule } from 'src/app/shared/ui/ui.module';
     PresetEditComponent,
     PresetCreateComponent
   ],
-  imports: [
-    CommonModule,
-    PresetRoutingModule,
-    AdvancedTableModule,
-    UiModule,
-    NgbAlertModule,
-    FormsModule,
-    ReactiveFormsModule,
-    SweetAlert2Module
-  ]
+    imports: [
+        CommonModule,
+        PresetRoutingModule,
+        AdvancedTableModule,
+        UiModule,
+        NgbAlertModule,
+        FormsModule,
+        ReactiveFormsModule,
+        SweetAlert2Module,
+        NgbDropdownModule,
+        SortablejsModule,
+        NgbTooltipModule
+    ]
 })
 export class PresetModule { }

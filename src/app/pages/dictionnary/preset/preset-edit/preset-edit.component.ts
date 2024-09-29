@@ -13,7 +13,10 @@ import {IPreset} from 'src/app/core/interfaces/ipreset';
 import {IBouquet} from 'src/app/core/interfaces/ibouquet';
 import {EventService} from 'src/app/core/service/event.service';
 import {PresetService} from 'src/app/core/service/preset.service';
-import {BouquetsService} from 'src/app/core/service/bouquets.service'; // Import your bouquet service
+import {BouquetsService} from 'src/app/core/service/bouquets.service';
+import {TaskItem} from "../../../../apps/tasks/tasks.model";
+import {KANBANTASKS} from "../../../../apps/tasks/data";
+import {SortableOptions} from "sortablejs"; // Import your bouquet service
 
 @Component({
     selector: 'app-preset-edit',
@@ -50,9 +53,12 @@ export class PresetEditComponent implements OnInit {
         (this.entityElm.entity ? ' (' + this.entityElm.label + ')' : '');
 
     objectProps: InputProps[] = [];
+
     allBouquets: IBouquet[] = [];
     selectedBouquets: number[] = [];
     availableBouquets: number[] = [];
+    options: SortableOptions = {};
+    newBouquetStatus: string = 'availableBouquets';
 
     editForm = this.fb.group({
         id: [{value: null, disabled: true}, Validators.required],
@@ -79,6 +85,9 @@ export class PresetEditComponent implements OnInit {
                 {label: 'edit preset', path: '.', active: true},
             ],
         });
+        this.options = {
+            group: 'preset-bouquet'
+        }
         this.loading = true;
         this._fetchData();
         this._fetchBouquets(); // Fetch bouquets when initializing
@@ -144,14 +153,6 @@ export class PresetEditComponent implements OnInit {
         return this.editForm.controls;
     }
 
-    async onSubmit() {
-        this.formSubmitted = true;
-        if (this.editForm.valid) {
-            this.loading = true;
-            this.preset.bouquets = this.selectedBouquets;
-        }
-    }
-
     initFieldsConfig(): void {
         this.objectProps = [
             {
@@ -205,17 +206,30 @@ export class PresetEditComponent implements OnInit {
         });
     }
 
-    get selectedBouquetsList(): IBouquet[] {
-        return this.allBouquets.filter(bouquet =>
-            this.selectedBouquets.includes(bouquet.id)
-        ).sort((a, b) => a.bouquetOrder - b.bouquetOrder);
-    }
-
     get availableBouquetsList(): IBouquet[] {
-        return this.allBouquets
+        const bouquets = this.allBouquets
             .filter(bouquet => this.availableBouquets.includes(bouquet.id))
             .sort((a, b) => a.bouquetOrder - b.bouquetOrder);
+        console.log("availableBouquetsList:",bouquets);
+        return bouquets;
     }
 
+    get selectedBouquetsList(): IBouquet[] {
+        const bouquets = this.allBouquets.filter(bouquet =>
+            this.selectedBouquets.includes(bouquet.id)
+        ).sort((a, b) => a.bouquetOrder - b.bouquetOrder);
+        console.log("selectedBouquetsList:",bouquets);
+        return bouquets;
+    }
 
+    async onSubmit() {
+        this.formSubmitted = true;
+        if (this.editForm.valid) {
+            this.loading = true;
+            this.preset.bouquets = this.selectedBouquets;
+
+        }
+    }
+
+    protected readonly self = self;
 }
