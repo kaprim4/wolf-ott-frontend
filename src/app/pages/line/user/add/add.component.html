@@ -1,1 +1,154 @@
-<p>add works!</p>
+<div class="row">
+    <div class="col-xl-12">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="header-title mb-3">Add Line Wizard</h4>
+          <form [formGroup]="addLineForm">
+            <div id="progressWizard">
+              <ul #progressWizard="ngbNav" ngbNav [(activeId)]="currentStep" class="nav-pills nav-justified bg-light form-wizard-header mb-3">
+                <li [ngbNavItem]="1">
+                  <a ngbNavLink>
+                    <i class="mdi mdi-account-circle me-1"></i>
+                    <span class="d-none d-sm-inline">Details</span>
+                  </a>
+                  <ng-template ngbNavContent>
+                    <div class="row" formGroupName="details">
+                        <div class="row col-12">
+                            <div class="row mb-3">
+                                <label class="col-md-3 col-form-label" for="username">Username</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" id="username" name="username" formControlName="username">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-md-3 col-form-label" for="password">Password</label>
+                                <div class="col-md-9">
+                                    <input type="password" class="form-control" id="password" name="password" formControlName="password">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-md-3 col-form-label" for="owner">Owner</label>
+                                <div class="col-md-9">
+                                    <select2 [data]="select2Users" formControlName="owner" id="owner" name="owner" placeholder="Select Owner"></select2>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-md-3 col-form-label" for="package">Package</label>
+                                <div class="col-md-9">
+                                    <select2 [data]="select2Packages" (ngModelChange)="onPackageChange()" formControlName="package" id="package" name="package" placeholder="Select Package"></select2>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="row col-6 mb-3">
+                                    <label class="col-md-6 col-form-label" for="packageCost">Package Cost</label>
+                                    <div class="col-md-6" style="padding-left: 25px;">
+                                        <input type="number" class="form-control" id="packageCost" name="packageCost" formControlName="packageCost" [disabled]="true">
+                                    </div>
+                                </div>
+                                <div class="row col-6 mb-3">
+                                    <label class="col-md-6 col-form-label" for="duration">Duration</label>
+                                    <div class="col-md-6 ml-3" style="padding-left: 25px;">
+                                        <input type="number" class="form-control" id="duration" name="duration" formControlName="duration" [disabled]="true">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="row col-6 mb-3">
+                                    <label class="col-md-6 col-form-label" for="maxConnections">Max Connections</label>
+                                    <div class="col-md-6" style="padding-left: 25px;">
+                                        <input type="number" class="form-control" id="maxConnections" name="maxConnections" formControlName="maxConnections" [disabled]="true">
+                                    </div>
+                                </div>
+                                <div class="row col-6 mb-3">
+                                    <label class="col-md-6 col-form-label" for="expirationDate">Expiration Date</label>
+                                    <div class="col-md-6" style="padding-left: 25px;">
+                                        <input type="date" class="form-control" id="expirationDate" name="expirationDate" formControlName="expirationDate" [disabled]="true">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-md-3 col-form-label" for="expirationDate">Contact Email</label>
+                                <div class="col-md-9">
+                                    <input type="email" class="form-control" id="contactEmail" name="contactEmail" formControlName="contactEmail">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-md-3 col-form-label" for="expirationDate">Reseller Notes</label>
+                                <div class="col-md-9">
+                                    <textarea  class="form-control" id="resellerNotes" name="resellerNotes"  formControlName="resellerNotes"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </ng-template>
+                </li>
+                <li [ngbNavItem]="2">
+                  <a ngbNavLink>
+                    <i class="mdi mdi-shield-lock me-1"></i>
+                    <span class="d-none d-sm-inline">Restrictions</span>
+                  </a>
+                  <ng-template ngbNavContent>
+                    <div class="row" formGroupName="restrictions">
+                      <div class="col-12">
+                        <div class="mb-3">
+                          <label>Allowed IP Addresses</label>
+                          <input type="text" formControlName="allowedIPs" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                          <label>Allowed User-Agents</label>
+                          <input type="text" formControlName="allowedUserAgents" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                          <label>Bypass UA Restrictions</label>
+                          <input type="checkbox" formControlName="bypassUARestrictions">
+                        </div>
+                        <div class="mb-3">
+                          <label>Lock to ISP</label>
+                          <input type="checkbox" formControlName="lockToISP">
+                        </div>
+                        <div class="mb-3">
+                          <label>Current ISP</label>
+                          <input type="text" formControlName="currentISP" class="form-control">
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </li>
+                <li [ngbNavItem]="3">
+                  <a ngbNavLink>
+                    <i class="mdi mdi-checkbox-marked-circle-outline me-1"></i>
+                    <span class="d-none d-sm-inline">Reviews</span>
+                  </a>
+                  <ng-template ngbNavContent>
+                    <div class="row" formGroupName="reviews">
+                      <div class="col-12">
+                        <h5>Select Bouquets</h5>
+                        <!-- <div *ngFor="let bouquet of bouquets">
+                            <input 
+                            type="checkbox" 
+                            [value]="bouquet.id" 
+                            (change)="toggleBouquet(bouquet.id, $event.target.checked)">
+                          {{ bouquet.bouquetName }}
+                        </div> -->
+                      </div>
+                    </div>
+                  </ng-template>
+                </li>
+              </ul>
+              <div [ngbNavOutlet]="progressWizard"></div>
+              <ul class="list-inline mb-0 wizard">
+                <li class="previous list-inline-item">
+                  <button class="btn btn-secondary" [disabled]="currentStep === 1" (click)="currentStep = currentStep - 1">Previous</button>
+                </li>
+                <li class="next list-inline-item float-end">
+                  <button type="button" (click)="currentStep = currentStep + 1" class="btn btn-secondary" *ngIf="currentStep < 3">Next</button>
+                  <button type="button" (click)="submitForm()" class="btn btn-secondary" *ngIf="currentStep === 3">Submit</button>
+                </li>
+              </ul>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  

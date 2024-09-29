@@ -20,8 +20,8 @@ export class UserService extends BaseService<IUser> {
     }
   
 
-    public getAllUsers(search: string): Observable<Array<IUser>> {
-        return this.getAllAsList<IUser>(search);
+    public getAllUsers(search?: string): Observable<Array<IUser>> {
+        return this.getAllAsList<IUser>(search || "");
     }
     
     public getUsers(search: string, page: number, size: number): Observable<Page<IUser>> {
