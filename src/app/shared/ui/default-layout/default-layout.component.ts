@@ -14,6 +14,7 @@ export class DefaultLayoutComponent implements OnInit {
     currYear: number = new Date().getFullYear();
     today: Date = new Date();
     APP_NAME = environment.APP_NAME;
+    APP_DESCRIPTION = environment.APP_DESCRIPTION;
     APP_EDITOR_NAME = environment.APP_EDITOR_NAME;
     APP_EDITOR_LINK = environment.APP_EDITOR_LINK;
 
