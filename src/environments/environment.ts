@@ -1,27 +1,15 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
-
 export const environment = {
     production: false,
     GOOGLE_MAPS_API_KEY: 'AIzaSyDpgQMpcfx1QU-8SM-ljcgjG4xrYtIYby4',
+    //apiBaseUrl: 'http://212.237.231.147:30100',
     apiBaseUrl: 'http://localhost:8181',
     APP_ENV: "dev",
     APP_VERSION: "2.0.0",
-    APP_NAME: "WOLF OTT",
-    APP_DESCRIPTION: "",
+    APP_NAME: "WOLF OTT Manager Pro",
+    APP_DESCRIPTION: "IPTV services with an all-in-one platform that simplifies control, distribution, and monitoring of your live streams.",
     APP_EDITOR_NAME: "LHOTSE AGENCY",
     APP_EDITOR_LINK: "https://lhotse.agency/",
     APP_TIMEZONE: "Africa/Casablanca",
     APP_LOCAL: "fr-FR",
-    SERVER_NAME: "www.wolf-ott.com"
+    SERVER_NAME: "www.lhotse.agency"
 };
-
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
