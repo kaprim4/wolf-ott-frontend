@@ -18,12 +18,11 @@ export class UserService extends BaseService<IUser> {
         super(httpClient, tokenService);
         this.endpoint = "users";
     }
-  
 
     public getAllUsers(search: string): Observable<Array<IUser>> {
         return this.getAllAsList<IUser>(search);
     }
-    
+
     public getUsers(search: string, page: number, size: number): Observable<Page<IUser>> {
         return this.getAllAsPage<IUser>(search, page, size);
     }

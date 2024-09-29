@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { TokenService } from './token.service';
 import { Observable, map } from 'rxjs';
 import { Page } from '../interfaces/formType';
-import { IPreset } from '../interfaces/ipreset';
 import { BaseService } from './base.service';
+import {IPreset} from "../interfaces/ipreset";
 
 @Injectable({
     providedIn: 'root',

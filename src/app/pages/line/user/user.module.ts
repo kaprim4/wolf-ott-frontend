@@ -7,7 +7,7 @@ import { TrialComponent } from './trial/trial.component';
 import { ListComponent } from './list/list.component';
 import { EditComponent } from './edit/edit.component';
 import {AdvancedTableModule} from "../../../shared/advanced-table/advanced-table.module";
-import {NgbAlertModule} from "@ng-bootstrap/ng-bootstrap";
+import {NgbAlertModule, NgbNavModule, NgbProgressbarModule} from "@ng-bootstrap/ng-bootstrap";
 import {UiModule} from "../../../shared/ui/ui.module";
 import {ReactiveFormsModule} from "@angular/forms";
 import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";
@@ -27,7 +27,9 @@ import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";
         NgbAlertModule,
         UiModule,
         ReactiveFormsModule,
-        SweetAlert2Module
+        SweetAlert2Module,
+        NgbNavModule,
+        NgbProgressbarModule
     ]
 })
 export class UserModule { }

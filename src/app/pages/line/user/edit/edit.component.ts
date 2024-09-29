@@ -15,25 +15,53 @@ import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 moment.locale('fr');
 
 @Component({
-  selector: 'app-edit',
-  templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss']
+    selector: 'app-edit',
+    templateUrl: './edit.component.html',
+    styleUrls: ['./edit.component.scss']
 })
 export class EditComponent implements OnInit {
     @Input()
     line: ILine = {
-        active: 0,
-        connections: 0,
-        expiration: "",
+        accessToken: "",
+        adminEnabled: 0,
+        adminNotes: "",
+        allowedIps: "",
+        allowedOutputs: "",
+        allowedUa: "",
+        asNumber: "",
+        bouquet: "",
+        bypassUa: false,
+        contact: "",
+        createdAt: "",
+        enabled: 0,
+        expDate: "",
+        forceServerId: 0,
+        forcedCountry: "",
         id: 0,
-        lastConnection: "",
-        online: false,
-        owner: "",
+        isE2: false,
+        isIsplock: false,
+        isMag: false,
+        isRestreamer: false,
+        isStalker: false,
+        isTrial: false,
+        ispDesc: "",
+        lastActivity: "",
+        lastActivityArray: "",
+        lastExpirationVideo: "",
+        lastIp: "",
+        maxConnections: 0,
+        memberId: 0,
+        packageId: "",
+        pairId: "",
         password: "",
-        status: 0,
-        trial: false,
+        playToken: "",
+        resellerNotes: "",
+        updated: "",
         username: ""
     }
+
+    progressWizardForm !: FormGroup;
+    activeWizard: number = 1;
 
     @ViewChild('successSwal')
     public readonly successSwal!: SwalComponent;
@@ -52,30 +80,43 @@ export class EditComponent implements OnInit {
 
     entityElm: IFormType = {label: 'Lines', entity: 'line'}
     title: string = 'Edit this entry' + (this.entityElm.entity ? ' (' + this.entityElm.label + ')' : '');
-    objectProps: InputProps[] = [];
+    accountProps: InputProps[] = [];
+    restrictionsProps: InputProps[] = [];
+    reviewPurchaseProps: InputProps[] = [];
 
-    editForm: FormGroup = this.fb.group({
-        active: [0],
-        connections: [0],
-        expiration: [""],
-        id: [this.line.id],
-        lastConnection: [""],
-        online: [false],
-        owner: ['', [Validators.required]],
-        password: ['', [Validators.required]],
-        status: [0],
-        trial: [false],
-        username: ['', [Validators.required]],
-    });
     formSubmitted: boolean = false;
     error: string = '';
     loading: boolean = false;
 
     initFieldsConfig(): void {
-        this.objectProps = [
+        this.progressWizardForm = this.fb.group({
+            account: this.fb.group({
+                username: [this.line.username, Validators.required],
+                password: [this.line.password, Validators.required],
+                memberId: [this.line.memberId],
+                packageId: [this.line.packageId],
+                maxConnections: [this.line.maxConnections, Validators.required],
+                expDate: [this.line.expDate, Validators.required],
+                contact: [this.line.contact],
+                resellerNotes: [this.line.resellerNotes],
+            }),
+            restrictions: this.fb.group({
+                allowedIps: [this.line.allowedIps],
+                allowedUa: [this.line.allowedUa],
+                bypassUa: [this.line.bypassUa],
+                isIsplock: [this.line.isIsplock],
+                ispDesc: [this.line.ispDesc],
+            }),
+            reviewPurchase: this.fb.group({
+
+            }),
+            acceptTerms: [false, Validators.requiredTrue]
+        });
+
+        this.accountProps = [
             {
                 input: 'username',
-                label: 'username',
+                label: 'Username',
                 type: InputPropsTypesEnum.T,
                 value: this.line.username,
                 joinTable: [],
@@ -92,91 +133,112 @@ export class EditComponent implements OnInit {
                 joinTableIdLabel: ''
             },
             {
-                input: 'owner',
+                input: 'memberId',
                 label: 'owner',
                 type: InputPropsTypesEnum.T,
-                value: this.line.owner,
+                value: this.line.memberId,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
             },
             {
-                input: 'status',
-                label: 'status',
+                input: 'packageId',
+                label: 'Original Package',
                 type: InputPropsTypesEnum.T,
-                value: this.line.status,
+                value: this.line.packageId,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
             },
             {
-                input: 'online',
-                label: 'online',
+                input: 'maxConnections',
+                label: 'Max Connections',
                 type: InputPropsTypesEnum.T,
-                value: this.line.online,
+                value: this.line.maxConnections,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
             },
             {
-                input: 'trial',
-                label: 'trial',
+                input: 'expDate',
+                label: 'Expiration Date',
+                type: InputPropsTypesEnum.D,
+                value: this.line.expDate,
+                joinTable: [],
+                joinTableId: '',
+                joinTableIdLabel: ''
+            },
+            {
+                input: 'contact',
+                label: 'Contact Email',
                 type: InputPropsTypesEnum.T,
-                value: this.line.trial,
+                value: this.line.contact,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
             },
             {
-                input: 'active',
-                label: 'active',
-                type: InputPropsTypesEnum.T,
-                value: this.line.active,
-                joinTable: [],
-                joinTableId: '',
-                joinTableIdLabel: ''
-            },
-            {
-                input: 'expiration',
-                label: 'expiration',
-                type: InputPropsTypesEnum.T,
-                value: this.line.expiration,
-                joinTable: [],
-                joinTableId: '',
-                joinTableIdLabel: ''
-            },
-            {
-                input: 'lastConnection',
-                label: 'lastConnection',
-                type: InputPropsTypesEnum.H,
-                value: this.line.lastConnection,
-                joinTable: [],
-                joinTableId: '',
-                joinTableIdLabel: ''
-            },
-            {
-                input: 'connections',
-                label: 'connections',
-                type: InputPropsTypesEnum.H,
-                value: this.line.connections,
+                input: 'resellerNotes',
+                label: 'Reseller Notes',
+                type: InputPropsTypesEnum.TA,
+                value: this.line.resellerNotes,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
             },
         ];
-        this.editForm = this.fb.group({
-            active: [this.line.active],
-            connections: [this.line.connections],
-            expiration: [this.line.expiration],
-            id: [this.line.id],
-            lastConnection: [this.line.lastConnection],
-            online: [this.line.online],
-            owner: [this.line.owner, [Validators.required]],
-            password: [this.line.password, [Validators.required]],
-            status: [this.line.status],
-            trial: [this.line.trial],
-            username: [this.line.username, [Validators.required]],
-        });
+
+        this.restrictionsProps = [
+            {
+                input: 'allowedIps[]',
+                label: 'Allowed IP Addresses',
+                type: InputPropsTypesEnum.T,
+                value: this.line.allowedIps,
+                joinTable: [],
+                joinTableId: '',
+                joinTableIdLabel: ''
+            },
+            {
+                input: 'allowedUa[]',
+                label: 'Allowed User-Agents',
+                type: InputPropsTypesEnum.T,
+                value: this.line.allowedUa,
+                joinTable: [],
+                joinTableId: '',
+                joinTableIdLabel: ''
+            },
+            {
+                input: 'bypassUa',
+                label: 'Bypass UA Restrictions',
+                type: InputPropsTypesEnum.C,
+                value: this.line.bypassUa,
+                joinTable: [],
+                joinTableId: '',
+                joinTableIdLabel: ''
+            },
+            {
+                input: 'isIsplock',
+                label: 'Lock to ISP',
+                type: InputPropsTypesEnum.C,
+                value: this.line.isIsplock,
+                joinTable: [],
+                joinTableId: '',
+                joinTableIdLabel: ''
+            },
+            {
+                input: 'ispDesc',
+                label: 'Lock to ISP',
+                type: InputPropsTypesEnum.T,
+                value: this.line.ispDesc,
+                joinTable: [],
+                joinTableId: '',
+                joinTableIdLabel: ''
+            },
+        ];
+
+        this.reviewPurchaseProps = [
+
+        ];
     }
 
     private _fetchData() {
@@ -208,16 +270,16 @@ export class EditComponent implements OnInit {
     }
 
     get formValues() {
-        return this.editForm.controls;
+        return this.progressWizardForm.controls;
     }
 
     ngOnInit(): void {
         this.eventService.broadcast(EventType.CHANGE_PAGE_TITLE, {
-            title: "Line list",
+            title: "Edit line",
             breadCrumbItems: [
                 {label: 'Lines', path: '.'},
                 {label: 'Line list', path: '.'},
-                {label: 'edit line', path: '.', active: true}
+                {label: 'Edit line', path: '.', active: true}
             ]
         });
         this.loading = true;
@@ -226,7 +288,7 @@ export class EditComponent implements OnInit {
 
     async onSubmit() {
         this.formSubmitted = true;
-        if (this.editForm.valid) {
+        if (this.progressWizardForm.valid) {
             this.loading = true;
             // this.roleService.getRole(this.editForm.controls['role_id'].value).subscribe(
             //     (data: HttpResponse<any>) => {
