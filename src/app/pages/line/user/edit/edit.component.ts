@@ -258,34 +258,20 @@ export class EditComponent implements OnInit {
     }
 
     private _fetchUserData(search: string): void {
-        this.userService.getAllUsers(search)?.subscribe(
-            (pageData:IUser[]) => {
-                this.userList = pageData; // pageData.content;
-                console.log('_fetchUserData contains : ', pageData);
-                this._fetchPackageData('');
-            },
-            (err: HttpErrorResponse) => {
-                if (err.status === 403 || err.status === 404) {
-                    console.error(`${err.status} status code caught`);
-                }
-            }
-        );
+        this.userService.getAllUsers(search)?.subscribe(users => {
+            this.userList = users;
+            console.log('_fetchUserData contains : ', users);
+            this._fetchPackageData('');
+        });
     }
 
-    private _fetchPackageData(search: string): void {
-        this.packageService.getAllPackages(search)?.subscribe(
-            (pageData:IPackage[]) => {
-                this.packageList = pageData; // pageData.content;
-                console.log('_fetchPackageData contains : ', pageData);
-                this._fetchData();
-                this.loading = true;
-            },
-            (err: HttpErrorResponse) => {
-                if (err.status === 403 || err.status === 404) {
-                    console.error(`${err.status} status code caught`);
-                }
-            }
-        );
+    private _fetchPackageData(search: string) {
+        this.packageService.getAllPackages(search)?.subscribe(packages => {
+            this.packageList = packages;
+            console.log('_fetchPackageData contains : ', packages);
+            this._fetchData();
+            this.loading = true;
+        });
     }
 
     private _fetchData() {
