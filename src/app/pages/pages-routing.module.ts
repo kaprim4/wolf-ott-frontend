@@ -7,11 +7,11 @@ const routes: Routes = [
         loadChildren: () => import('./dashboards/dashboards.module')
             .then(m => m.DashboardsModule)
     },
-    // {
-    //     path: 'dictionnary',
-    //     loadChildren: () => import('./dictionnary/dictionnary.module')
-    //         .then(m => m.DictionnaryModule)
-    // },
+    {
+        path: 'dictionnary',
+        loadChildren: () => import('./dictionnary/dictionnary.module')
+            .then(m => m.DictionnaryModule)
+    },
     {
         path: 'users-access',
         loadChildren: () => import('./users-access/users-access.module')

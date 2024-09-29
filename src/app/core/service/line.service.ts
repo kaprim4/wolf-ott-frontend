@@ -19,7 +19,7 @@ export class LineService extends BaseService<ILine> {
     public getAllLines(search: string): Observable<Array<ILine>> {
         return this.getAllAsList<ILine>(search);
     }
-    
+
     public getLines(search: string, page: number, size: number): Observable<Page<ILine>> {
         return this.getAllAsPage<ILine>(search, page, size);
     }

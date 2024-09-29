@@ -12,12 +12,10 @@ export enum InputPropsTypesEnum {
     T = 'text',
     E = 'email',
     P = 'password',
+    TA = 'textarea',
     H = 'hidden',
     S = 'select',
     C = 'checkbox',
     D = 'date',
     DT = 'datetime',
-    DATE = "DATE",
-    SELECT = "SELECT",
-    BOOLEAN = "BOOLEAN",
 }

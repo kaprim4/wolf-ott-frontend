@@ -8,6 +8,7 @@ import { ListComponent } from './list/list.component';
 import { EditComponent } from './edit/edit.component';
 import {AdvancedTableModule} from "../../../shared/advanced-table/advanced-table.module";
 import {NgbAlertModule, NgbNavModule, NgbProgressbarModule} from "@ng-bootstrap/ng-bootstrap";
+import {NgbAlertModule, NgbNavModule, NgbProgressbarModule} from "@ng-bootstrap/ng-bootstrap";
 import {UiModule} from "../../../shared/ui/ui.module";
 import {ReactiveFormsModule} from "@angular/forms";
 import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";

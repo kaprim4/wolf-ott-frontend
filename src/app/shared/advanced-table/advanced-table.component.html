@@ -77,12 +77,12 @@
                         <button *ngIf="canEdit" [routerLink]="['edit', record.id]" type="button" class="btn btn-purple btn-xs rounded-pill waves-effect waves-light">
                             <span class="btn-label">
                                 <i class="mdi mdi-circle-edit-outline"></i>
-                            </span>Modifier
+                            </span>Edit
                         </button>
                         <button *ngIf="canDelete" (click)="deleteRow({index: i, id: record.id})" type="button" class="btn btn-danger btn-xs rounded-pill waves-effect waves-light">
                             <span class="btn-label">
                                 <i class="mdi mdi-close-circle-outline"></i>
-                            </span>Supprimer
+                            </span>Del
                         </button>
                     </div>
                 </div>

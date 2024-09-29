@@ -11,29 +11,60 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import * as moment from "moment/moment";
 import {now} from "moment/moment";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import {UserService} from "../../../../core/service/user.service";
+import {IUser} from "../../../../core/interfaces/user";
+import {PackageService} from "../../../../core/service/user.package.service";
+import {IPackage} from "../../../../core/interfaces/ipackage";
 
 moment.locale('fr');
 
 @Component({
-  selector: 'app-edit',
-  templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss']
+    selector: 'app-edit',
+    templateUrl: './edit.component.html',
+    styleUrls: ['./edit.component.scss']
 })
 export class EditComponent implements OnInit {
     @Input()
     line: ILine = {
-        active: 0,
-        connections: 0,
-        expiration: "",
+        accessToken: "",
+        adminEnabled: 0,
+        adminNotes: "",
+        allowedIps: "",
+        allowedOutputs: "",
+        allowedUa: "",
+        asNumber: "",
+        bouquet: "",
+        bypassUa: false,
+        contact: "",
+        createdAt: "",
+        enabled: 0,
+        expDate: "",
+        forceServerId: 0,
+        forcedCountry: "",
         id: 0,
-        lastConnection: "",
-        online: false,
-        owner: "",
+        isE2: false,
+        isIsplock: false,
+        isMag: false,
+        isRestreamer: false,
+        isStalker: false,
+        isTrial: false,
+        ispDesc: "",
+        lastActivity: "",
+        lastActivityArray: "",
+        lastExpirationVideo: "",
+        lastIp: "",
+        maxConnections: 0,
+        memberId: 0,
+        packageId: "",
+        pairId: "",
         password: "",
-        status: 0,
-        trial: false,
+        playToken: "",
+        resellerNotes: "",
+        updated: "",
         username: ""
     }
+
+    activeWizard: number = 1;
 
     @ViewChild('successSwal')
     public readonly successSwal!: SwalComponent;
@@ -44,6 +75,8 @@ export class EditComponent implements OnInit {
     constructor(
         private eventService: EventService,
         private lineService: LineService,
+        private userService: UserService,
+        private packageService: PackageService,
         private router: Router,
         private activated: ActivatedRoute,
         private fb: FormBuilder
@@ -52,30 +85,39 @@ export class EditComponent implements OnInit {
 
     entityElm: IFormType = {label: 'Lines', entity: 'line'}
     title: string = 'Edit this entry' + (this.entityElm.entity ? ' (' + this.entityElm.label + ')' : '');
-    objectProps: InputProps[] = [];
 
-    editForm: FormGroup = this.fb.group({
-        active: [0],
-        connections: [0],
-        expiration: [""],
-        id: [this.line.id],
-        lastConnection: [""],
-        online: [false],
-        owner: ['', [Validators.required]],
-        password: ['', [Validators.required]],
-        status: [0],
-        trial: [false],
-        username: ['', [Validators.required]],
+    userList: IUser[] = [];
+    packageList: IPackage[] = [];
+    accountProps: InputProps[] = [];
+    restrictionsProps: InputProps[] = [];
+    reviewPurchaseProps: InputProps[] = [];
+
+    editForm = this.fb.group({
+        username: ["", Validators.required],
+        password: ["", Validators.required],
+        memberId: [""],
+        packageId: [""],
+        maxConnections: [0, Validators.required],
+        expDate: ["", Validators.required],
+        contact: [""],
+        resellerNotes: [""],
+        allowedIps: ["[]"],
+        allowedUa: ["[]"],
+        bypassUa: [false],
+        isIsplock: [false],
+        ispDesc: [""],
+        acceptTerms: [false, Validators.requiredTrue],
     });
     formSubmitted: boolean = false;
     error: string = '';
     loading: boolean = false;
 
     initFieldsConfig(): void {
-        this.objectProps = [
+
+        this.accountProps = [
             {
                 input: 'username',
-                label: 'username',
+                label: 'Username',
                 type: InputPropsTypesEnum.T,
                 value: this.line.username,
                 joinTable: [],
@@ -92,90 +134,143 @@ export class EditComponent implements OnInit {
                 joinTableIdLabel: ''
             },
             {
-                input: 'owner',
+                input: 'memberId',
                 label: 'owner',
+                type: InputPropsTypesEnum.S,
+                value: this.line.memberId,
+                joinTable: this.userList,
+                joinTableId: 'id',
+                joinTableIdLabel: 'username'
+            },
+            {
+                input: 'packageId',
+                label: 'Original Package',
+                type: InputPropsTypesEnum.S,
+                value: this.line.packageId,
+                joinTable: this.packageList,
+                joinTableId: 'id',
+                joinTableIdLabel: 'packageName',
+            },
+            {
+                input: 'maxConnections',
+                label: 'Max Connections',
                 type: InputPropsTypesEnum.T,
-                value: this.line.owner,
+                value: this.line.maxConnections,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
             },
             {
-                input: 'status',
-                label: 'status',
+                input: 'expDate',
+                label: 'Expiration Date',
+                type: InputPropsTypesEnum.D,
+                value: this.line.expDate,
+                joinTable: [],
+                joinTableId: '',
+                joinTableIdLabel: ''
+            },
+            {
+                input: 'contact',
+                label: 'Contact Email',
                 type: InputPropsTypesEnum.T,
-                value: this.line.status,
+                value: this.line.contact,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
             },
             {
-                input: 'online',
-                label: 'online',
-                type: InputPropsTypesEnum.T,
-                value: this.line.online,
-                joinTable: [],
-                joinTableId: '',
-                joinTableIdLabel: ''
-            },
-            {
-                input: 'trial',
-                label: 'trial',
-                type: InputPropsTypesEnum.T,
-                value: this.line.trial,
-                joinTable: [],
-                joinTableId: '',
-                joinTableIdLabel: ''
-            },
-            {
-                input: 'active',
-                label: 'active',
-                type: InputPropsTypesEnum.T,
-                value: this.line.active,
-                joinTable: [],
-                joinTableId: '',
-                joinTableIdLabel: ''
-            },
-            {
-                input: 'expiration',
-                label: 'expiration',
-                type: InputPropsTypesEnum.T,
-                value: this.line.expiration,
-                joinTable: [],
-                joinTableId: '',
-                joinTableIdLabel: ''
-            },
-            {
-                input: 'lastConnection',
-                label: 'lastConnection',
-                type: InputPropsTypesEnum.H,
-                value: this.line.lastConnection,
-                joinTable: [],
-                joinTableId: '',
-                joinTableIdLabel: ''
-            },
-            {
-                input: 'connections',
-                label: 'connections',
-                type: InputPropsTypesEnum.H,
-                value: this.line.connections,
+                input: 'resellerNotes',
+                label: 'Reseller Notes',
+                type: InputPropsTypesEnum.TA,
+                value: this.line.resellerNotes,
                 joinTable: [],
                 joinTableId: '',
                 joinTableIdLabel: ''
             },
         ];
+
+        this.restrictionsProps = [
+            {
+                input: 'allowedIps',
+                label: 'Allowed IP Addresses',
+                type: InputPropsTypesEnum.T,
+                value: this.line.allowedIps,
+                joinTable: [],
+                joinTableId: '',
+                joinTableIdLabel: ''
+            },
+            {
+                input: 'allowedUa',
+                label: 'Allowed User-Agents',
+                type: InputPropsTypesEnum.T,
+                value: this.line.allowedUa,
+                joinTable: [],
+                joinTableId: '',
+                joinTableIdLabel: ''
+            },
+            {
+                input: 'bypassUa',
+                label: 'Bypass UA Restrictions',
+                type: InputPropsTypesEnum.C,
+                value: this.line.bypassUa,
+                joinTable: [],
+                joinTableId: '',
+                joinTableIdLabel: ''
+            },
+            {
+                input: 'isIsplock',
+                label: 'Lock to ISP',
+                type: InputPropsTypesEnum.C,
+                value: this.line.isIsplock,
+                joinTable: [],
+                joinTableId: '',
+                joinTableIdLabel: ''
+            },
+            {
+                input: 'ispDesc',
+                label: 'Lock to ISP',
+                type: InputPropsTypesEnum.TA,
+                value: this.line.ispDesc,
+                joinTable: [],
+                joinTableId: '',
+                joinTableIdLabel: ''
+            },
+        ];
+
+        this.reviewPurchaseProps = [];
+
         this.editForm = this.fb.group({
-            active: [this.line.active],
-            connections: [this.line.connections],
-            expiration: [this.line.expiration],
-            id: [this.line.id],
-            lastConnection: [this.line.lastConnection],
-            online: [this.line.online],
-            owner: [this.line.owner, [Validators.required]],
-            password: [this.line.password, [Validators.required]],
-            status: [this.line.status],
-            trial: [this.line.trial],
-            username: [this.line.username, [Validators.required]],
+            username: [this.line.username, Validators.required],
+            password: [this.line.password, Validators.required],
+            memberId: [this.line.memberId],
+            packageId: [this.line.packageId],
+            maxConnections: [this.line.maxConnections, Validators.required],
+            expDate: [this.line.expDate, Validators.required],
+            contact: [this.line.contact],
+            resellerNotes: [this.line.resellerNotes],
+            allowedIps: [this.line.allowedIps],
+            allowedUa: [this.line.allowedUa],
+            bypassUa: [this.line.bypassUa],
+            isIsplock: [this.line.isIsplock],
+            ispDesc: [this.line.ispDesc],
+            acceptTerms: [false, Validators.requiredTrue],
+        });
+    }
+
+    private _fetchUserData(search: string): void {
+        this.userService.getAllUsers(search)?.subscribe(users => {
+            this.userList = users;
+            console.log('_fetchUserData contains : ', users);
+            this._fetchPackageData('');
+        });
+    }
+
+    private _fetchPackageData(search: string) {
+        this.packageService.getAllPackages(search)?.subscribe(packages => {
+            this.packageList = packages;
+            console.log('_fetchPackageData contains : ', packages);
+            this._fetchData();
+            this.loading = true;
         });
     }
 
@@ -193,7 +288,7 @@ export class EditComponent implements OnInit {
                         this.initFieldsConfig();
 
                     }
-                    console.log('This contains body: ', data.body);
+                    console.log('_fetchData contains : ', data.body);
                 },
                 (err: HttpErrorResponse) => {
                     if (err.status === 403 || err.status === 404) {
@@ -213,15 +308,14 @@ export class EditComponent implements OnInit {
 
     ngOnInit(): void {
         this.eventService.broadcast(EventType.CHANGE_PAGE_TITLE, {
-            title: "Line list",
+            title: "Edit line",
             breadCrumbItems: [
                 {label: 'Lines', path: '.'},
                 {label: 'Line list', path: '.'},
-                {label: 'edit line', path: '.', active: true}
+                {label: 'Edit line', path: '.', active: true}
             ]
         });
-        this.loading = true;
-        this._fetchData();
+        this._fetchUserData('');
     }
 
     async onSubmit() {
