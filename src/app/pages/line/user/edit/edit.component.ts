@@ -11,6 +11,10 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import * as moment from "moment/moment";
 import {now} from "moment/moment";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import {UserService} from "../../../../core/service/user.service";
+import {IUser} from "../../../../core/interfaces/user";
+import {PackageService} from "../../../../core/service/user.package.service";
+import {IPackage} from "../../../../core/interfaces/ipackage";
 
 moment.locale('fr');
 
@@ -60,7 +64,6 @@ export class EditComponent implements OnInit {
         username: ""
     }
 
-    progressWizardForm !: FormGroup;
     activeWizard: number = 1;
 
     @ViewChild('successSwal')
@@ -72,6 +75,8 @@ export class EditComponent implements OnInit {
     constructor(
         private eventService: EventService,
         private lineService: LineService,
+        private userService: UserService,
+        private packageService: PackageService,
         private router: Router,
         private activated: ActivatedRoute,
         private fb: FormBuilder
@@ -80,38 +85,34 @@ export class EditComponent implements OnInit {
 
     entityElm: IFormType = {label: 'Lines', entity: 'line'}
     title: string = 'Edit this entry' + (this.entityElm.entity ? ' (' + this.entityElm.label + ')' : '');
+
+    userList: IUser[] = [];
+    packageList: IPackage[] = [];
     accountProps: InputProps[] = [];
     restrictionsProps: InputProps[] = [];
     reviewPurchaseProps: InputProps[] = [];
 
+    editForm = this.fb.group({
+        username: ["", Validators.required],
+        password: ["", Validators.required],
+        memberId: [""],
+        packageId: [""],
+        maxConnections: [0, Validators.required],
+        expDate: ["", Validators.required],
+        contact: [""],
+        resellerNotes: [""],
+        allowedIps: ["[]"],
+        allowedUa: ["[]"],
+        bypassUa: [false],
+        isIsplock: [false],
+        ispDesc: [""],
+        acceptTerms: [false, Validators.requiredTrue],
+    });
     formSubmitted: boolean = false;
     error: string = '';
     loading: boolean = false;
 
     initFieldsConfig(): void {
-        this.progressWizardForm = this.fb.group({
-            account: this.fb.group({
-                username: [this.line.username, Validators.required],
-                password: [this.line.password, Validators.required],
-                memberId: [this.line.memberId],
-                packageId: [this.line.packageId],
-                maxConnections: [this.line.maxConnections, Validators.required],
-                expDate: [this.line.expDate, Validators.required],
-                contact: [this.line.contact],
-                resellerNotes: [this.line.resellerNotes],
-            }),
-            restrictions: this.fb.group({
-                allowedIps: [this.line.allowedIps],
-                allowedUa: [this.line.allowedUa],
-                bypassUa: [this.line.bypassUa],
-                isIsplock: [this.line.isIsplock],
-                ispDesc: [this.line.ispDesc],
-            }),
-            reviewPurchase: this.fb.group({
-
-            }),
-            acceptTerms: [false, Validators.requiredTrue]
-        });
 
         this.accountProps = [
             {
@@ -135,20 +136,20 @@ export class EditComponent implements OnInit {
             {
                 input: 'memberId',
                 label: 'owner',
-                type: InputPropsTypesEnum.T,
+                type: InputPropsTypesEnum.S,
                 value: this.line.memberId,
-                joinTable: [],
-                joinTableId: '',
-                joinTableIdLabel: ''
+                joinTable: this.userList,
+                joinTableId: 'id',
+                joinTableIdLabel: 'username'
             },
             {
                 input: 'packageId',
                 label: 'Original Package',
-                type: InputPropsTypesEnum.T,
+                type: InputPropsTypesEnum.S,
                 value: this.line.packageId,
-                joinTable: [],
-                joinTableId: '',
-                joinTableIdLabel: ''
+                joinTable: this.packageList,
+                joinTableId: 'id',
+                joinTableIdLabel: 'packageName',
             },
             {
                 input: 'maxConnections',
@@ -190,7 +191,7 @@ export class EditComponent implements OnInit {
 
         this.restrictionsProps = [
             {
-                input: 'allowedIps[]',
+                input: 'allowedIps',
                 label: 'Allowed IP Addresses',
                 type: InputPropsTypesEnum.T,
                 value: this.line.allowedIps,
@@ -199,7 +200,7 @@ export class EditComponent implements OnInit {
                 joinTableIdLabel: ''
             },
             {
-                input: 'allowedUa[]',
+                input: 'allowedUa',
                 label: 'Allowed User-Agents',
                 type: InputPropsTypesEnum.T,
                 value: this.line.allowedUa,
@@ -228,7 +229,7 @@ export class EditComponent implements OnInit {
             {
                 input: 'ispDesc',
                 label: 'Lock to ISP',
-                type: InputPropsTypesEnum.T,
+                type: InputPropsTypesEnum.TA,
                 value: this.line.ispDesc,
                 joinTable: [],
                 joinTableId: '',
@@ -236,9 +237,55 @@ export class EditComponent implements OnInit {
             },
         ];
 
-        this.reviewPurchaseProps = [
+        this.reviewPurchaseProps = [];
 
-        ];
+        this.editForm = this.fb.group({
+            username: [this.line.username, Validators.required],
+            password: [this.line.password, Validators.required],
+            memberId: [this.line.memberId],
+            packageId: [this.line.packageId],
+            maxConnections: [this.line.maxConnections, Validators.required],
+            expDate: [this.line.expDate, Validators.required],
+            contact: [this.line.contact],
+            resellerNotes: [this.line.resellerNotes],
+            allowedIps: [this.line.allowedIps],
+            allowedUa: [this.line.allowedUa],
+            bypassUa: [this.line.bypassUa],
+            isIsplock: [this.line.isIsplock],
+            ispDesc: [this.line.ispDesc],
+            acceptTerms: [false, Validators.requiredTrue],
+        });
+    }
+
+    private _fetchUserData(search: string): void {
+        this.userService.getAllUsers(search)?.subscribe(
+            (pageData:IUser[]) => {
+                this.userList = pageData; // pageData.content;
+                console.log('_fetchUserData contains : ', pageData);
+                this._fetchPackageData('');
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
+        );
+    }
+
+    private _fetchPackageData(search: string): void {
+        this.packageService.getAllPackages(search)?.subscribe(
+            (pageData:IPackage[]) => {
+                this.packageList = pageData; // pageData.content;
+                console.log('_fetchPackageData contains : ', pageData);
+                this._fetchData();
+                this.loading = true;
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                }
+            }
+        );
     }
 
     private _fetchData() {
@@ -255,7 +302,7 @@ export class EditComponent implements OnInit {
                         this.initFieldsConfig();
 
                     }
-                    console.log('This contains body: ', data.body);
+                    console.log('_fetchData contains : ', data.body);
                 },
                 (err: HttpErrorResponse) => {
                     if (err.status === 403 || err.status === 404) {
@@ -270,7 +317,7 @@ export class EditComponent implements OnInit {
     }
 
     get formValues() {
-        return this.progressWizardForm.controls;
+        return this.editForm.controls;
     }
 
     ngOnInit(): void {
@@ -282,13 +329,12 @@ export class EditComponent implements OnInit {
                 {label: 'Edit line', path: '.', active: true}
             ]
         });
-        this.loading = true;
-        this._fetchData();
+        this._fetchUserData('');
     }
 
     async onSubmit() {
         this.formSubmitted = true;
-        if (this.progressWizardForm.valid) {
+        if (this.editForm.valid) {
             this.loading = true;
             // this.roleService.getRole(this.editForm.controls['role_id'].value).subscribe(
             //     (data: HttpResponse<any>) => {
