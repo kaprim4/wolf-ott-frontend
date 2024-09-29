@@ -15,8 +15,8 @@ export class BouquetsService extends BaseService<IBouquet> {
         this.endpoint = 'bouquets';
     }
 
-    public getAllBouquets(search: string): Observable<Array<IBouquet>> {
-        return this.getAllAsList<IBouquet>(search);
+    public getAllBouquets(search?: string): Observable<Array<IBouquet>> {
+        return this.getAllAsList<IBouquet>(search || "");
     }
 
     public getBouquets(

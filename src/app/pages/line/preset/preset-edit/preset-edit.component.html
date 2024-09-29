@@ -19,7 +19,7 @@
                     {{ error }}
                 </ngb-alert>
                 <div id="{{entityElm.entity}}" class="row">
-                    <div class="position-relative col-md-6 col-lg-4 mb-5" *ngFor="let prop of objectProps">
+                    <div class="position-relative col-md-6 col-lg-4 mb-2" *ngFor="let prop of objectProps">
                         <label *ngIf="!['hidden'].includes(prop.type)" for="{{entityElm.entity}}_{{prop.input}}" class="form-label">{{prop.label}}</label>
 
                         <input *ngIf="['text', 'hidden'].includes(prop.type)" class="form-control" 
@@ -38,13 +38,13 @@
                                formControlName="{{prop.input}}" 
                                [ngClass]="{'is-invalid':formSubmitted && editForm.get(prop.input)?.invalid}" /> -->
 
-                        <input *ngIf="['datetime'].includes(prop.type)" class="form-control" 
+                        <!-- <input *ngIf="['datetime'].includes(prop.type)" class="form-control" 
                                type="datetime-local" 
                                id="{{entityElm.entity}}_{{prop.input}}" 
                                required 
                                placeholder="Entrez votre date et heure" 
                                formControlName="{{prop.input}}" 
-                               [ngClass]="{'is-invalid':formSubmitted && editForm.get(prop.input)?.invalid}" />
+                               [ngClass]="{'is-invalid':formSubmitted && editForm.get(prop.input)?.invalid}" /> -->
 
                         <div *ngIf="['checkbox'].includes(prop.type)" class="form-switch">
                             <div class="form-check">
@@ -86,7 +86,38 @@
                     </div>
                 </div>
             </div>
+
+            <p class="text-muted"></p>
+            <div class="live-preview">
+                <app-ui-preloader [display]="loading"></app-ui-preloader>
+                <ngb-alert [dismissible]="false" type="danger" *ngIf="error">
+                    {{ error }}
+                </ngb-alert>
+                
+                <!-- Existing form fields -->
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <h4>Tous les Bouquets</h4>
+                        <select multiple class="form-control" [(ngModel)]="availableBouquets" #availableList>
+                            <option *ngFor="let bouquet of availableBouquetsList" [value]="bouquet.id">{{ bouquet.bouquetName }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 text-center mt-2">
+                        <button (click)="moveToPreset()" class="btn btn-primary" style="margin:5px"> &gt; </button>
+                        <br>
+                        <button (click)="moveToAvailable()" class="btn btn-primary" style="margin:5px"> &lt; </button>
+                    </div>
+                    <div class="col-md-5">
+                        <h4>Bouquets Selection</h4>
+                        <select multiple class="form-control" [(ngModel)]="selectedBouquets" #presetList>
+                            <option *ngFor="let bouquet of selectedBouquetsList" [value]="bouquet.id">{{ bouquet.bouquetName }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
+
         <!-- end card body -->
         <!-- start card footer -->
         <div class="card-footer overflow-hidden">
