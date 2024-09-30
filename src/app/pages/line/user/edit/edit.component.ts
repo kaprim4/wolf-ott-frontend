@@ -7,7 +7,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {EventType} from "../../../../core/constants/events";
 import {InputProps, InputPropsTypesEnum} from "../../../../core/interfaces/input_props";
 import {SwalComponent} from "@sweetalert2/ngx-sweetalert2";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import * as moment from "moment/moment";
 import {now} from "moment/moment";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
@@ -108,7 +108,7 @@ export class EditComponent implements OnInit {
         bypassUa: [false],
         isIsplock: [false],
         ispDesc: [""],
-        acceptTerms: [false, Validators.requiredTrue],
+        acceptTerms: [false], //  Validators.requiredTrue
     });
     formSubmitted: boolean = false;
     error: string = '';
@@ -255,7 +255,7 @@ export class EditComponent implements OnInit {
             bypassUa: [this.line.bypassUa],
             isIsplock: [this.line.isIsplock],
             ispDesc: [this.line.ispDesc],
-            acceptTerms: [false, Validators.requiredTrue],
+            acceptTerms: [false], // , Validators.requiredTrue
         });
     }
 
@@ -339,81 +339,28 @@ export class EditComponent implements OnInit {
         this.formSubmitted = true;
         if (this.editForm.valid) {
             this.loading = true;
-            // this.roleService.getRole(this.editForm.controls['role_id'].value).subscribe(
-            //     (data: HttpResponse<any>) => {
-            //         if (data.status === 200 || data.status === 202) {
-            //             console.log(`Got a successfull status code: ${data.status}`);
-            //         }
-            //         if (data.body) {
-            //             role = data.body;
-            //             if (role) {
-            //                 this.gasStationService.getGasStation(this.editForm.controls['gas_station_id'].value).subscribe(
-            //                     (data2: HttpResponse<any>) => {
-            //                         if (data2.status === 200 || data2.status === 202) {
-            //                             console.log(`Got a successfull status code: ${data2.status}`);
-            //                         }
-            //                         if (data2.body) {
-            //                             gas_station = data2.body;
-            //                             if (gas_station) {
-            //                                 this.line = {
-            //                                     credits: this.editForm.controls['credits'].value,
-            //                                     dateRegistered: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
-            //                                     email: this.editForm.controls['email'].value,
-            //                                     id: this.editForm.controls['id'].value,
-            //                                     ip: this.editForm.controls['ip'].value,
-            //                                     lastLogin: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
-            //                                     notes: this.editForm.controls['notes'].value,
-            //                                     status: false,
-            //                                     linename:this.editForm.controls['linename'].value,
-            //                                 }
-            //                                 this.lineService.updateLine(this.line).subscribe(
-            //                                     (data3: HttpResponse<any>) => {
-            //                                         if (data3.status === 200 || data3.status === 202) {
-            //                                             console.log(`Got a successfull status code: ${data3.status}`);
-            //                                         }
-            //                                         if (data3.body) {
-            //                                             this.successSwal.fire().then(() => {
-            //                                                 this.router.navigate(['lines-access/' + this.entityElm.entity + 's'])
-            //                                             });
-            //                                         }
-            //                                         console.log('This contains body: ', data.body);
-            //                                     },
-            //                                     (err: HttpErrorResponse) => {
-            //                                         if (err.status === 403 || err.status === 404) {
-            //                                             console.error(`${err.status} status code caught`);
-            //                                             this.errorSwal.fire().then((r) => {
-            //                                                 this.error = err.message;
-            //                                                 console.log(err.message);
-            //                                             });
-            //                                         }
-            //                                     },
-            //                                     (): void => {
-            //                                         this.loading = false;
-            //                                     }
-            //                                 )
-            //                                 console.log(this.line)
-            //                             } else {
-            //                                 this.errorSwal.fire().then(r => this.loading = false);
-            //                             }
-            //                         }
-            //                         console.log('This contains body: ', data2.body);
-            //                     },
-            //                     (err: HttpErrorResponse) => {
-            //                         if (err.status === 403 || err.status === 404) {
-            //                             console.error(`${err.status} status code caught`);
-            //                         }
-            //                     }
-            //                 );
-            //             }
-            //         }
-            //         console.log('This contains body: ', data.body);
-            //     },
-            //     (err: HttpErrorResponse) => {
-            //         if (err.status === 403 || err.status === 404) {
-            //             console.error(`${err.status} status code caught`);
-            //         }
-            //     }
-            // );
+            let line:ILine = this.editForm.value as ILine;
+            let id = Number(this.activated.snapshot.paramMap.get('id'));
+            this.lineService.updateLine(id, line).subscribe(
+                (res) => {
+                    this.loading = false;
+                    console.log("Line updated successfully", res);
+                    
+                }
+            );
+
         }
+
     }
+
+    getFormValidationErrors() {
+        Object.keys(this.editForm.controls).forEach(key => {
+          const controlErrors: ValidationErrors | null = this.editForm.controls[key].errors;
+          if (controlErrors != null) {
+            Object.keys(controlErrors).forEach(keyError => {
+             console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
+            });
+          }
+        });
+      }
 }

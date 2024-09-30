@@ -37,8 +37,8 @@ export class LineService extends BaseService<ILine> {
         return this.add<ILine>(line);
     }
 
-    public updateLine(line: ILine): Observable<HttpResponse<ILine>> {
-        return this.update<ILine>(line.id, line);
+    public updateLine(id_line:number, line: ILine): Observable<HttpResponse<ILine>> {
+        return this.update<ILine>(id_line, line);
     }
 
     public deleteLine(id: number): Observable<HttpResponse<void>> {
