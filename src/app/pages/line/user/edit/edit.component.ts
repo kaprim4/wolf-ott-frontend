@@ -193,18 +193,18 @@ export class EditComponent implements OnInit {
             {
                 input: 'allowedIps',
                 label: 'Allowed IP Addresses',
-                type: InputPropsTypesEnum.T,
-                value: this.line.allowedIps,
-                joinTable: [],
+                type: InputPropsTypesEnum.L,
+                value: JSON.parse(this.line.allowedIps),
+                joinTable: JSON.parse(this.line.allowedIps),
                 joinTableId: '',
                 joinTableIdLabel: ''
             },
             {
                 input: 'allowedUa',
                 label: 'Allowed User-Agents',
-                type: InputPropsTypesEnum.T,
-                value: this.line.allowedUa,
-                joinTable: [],
+                type: InputPropsTypesEnum.L,
+                value: JSON.parse(this.line.allowedUa),
+                joinTable: JSON.parse(this.line.allowedUa),
                 joinTableId: '',
                 joinTableIdLabel: ''
             },
