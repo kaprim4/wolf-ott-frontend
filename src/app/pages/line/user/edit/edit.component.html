@@ -146,6 +146,26 @@
                                         Veuillez saisir une valeur valide.
                                     </div>
                                 </div>
+                                <table>
+                                    <thead>
+                                        <th>ID</th>
+                                        <th>Bouquet Name</th>
+                                        <th>Streams</th>
+                                        <th>Movies</th>
+                                        <th>Series</th>
+                                        <th>Stations</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let bouquet of lineBouquets">
+                                            <td>{{ bouquet.id }}</td>
+                                            <td>{{ bouquet.bouquetName }}</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div> <!-- end row -->
                         </ng-template>
                     </li>

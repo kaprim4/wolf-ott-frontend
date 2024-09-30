@@ -7,6 +7,7 @@ import {ILine} from "../interfaces/line";
 import {TokenService} from "./token.service";
 import {Page} from "../interfaces/formType";
 import { BaseService } from './base.service';
+import { IBouquet } from '../interfaces/ibouquet';
 
 @Injectable({providedIn: 'root'})
 export class LineService extends BaseService<ILine> {
@@ -26,6 +27,10 @@ export class LineService extends BaseService<ILine> {
 
     public getLine(id_line: number): Observable<HttpResponse<ILine>> {
         return this.getOneById<ILine>(id_line);
+    }
+
+    public getLineBouquets(id_line: number): Observable<HttpResponse<Array<IBouquet>>> {
+        return this.httpClient.get<Array<IBouquet>>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/${id_line}/bouquets`, {headers: this.headers, observe: 'response'});
     }
 
     public addLine(line: ILine): Observable<HttpResponse<ILine>> {

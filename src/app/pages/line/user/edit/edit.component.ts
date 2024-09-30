@@ -15,6 +15,7 @@ import {UserService} from "../../../../core/service/user.service";
 import {IUser} from "../../../../core/interfaces/user";
 import {PackageService} from "../../../../core/service/user.package.service";
 import {IPackage} from "../../../../core/interfaces/ipackage";
+import { IBouquet } from 'src/app/core/interfaces/ibouquet';
 
 moment.locale('fr');
 
@@ -88,6 +89,7 @@ export class EditComponent implements OnInit {
 
     userList: IUser[] = [];
     packageList: IPackage[] = [];
+    bouquetsList: IBouquet[] = [];
     accountProps: InputProps[] = [];
     restrictionsProps: InputProps[] = [];
     reviewPurchaseProps: InputProps[] = [];
@@ -274,6 +276,15 @@ export class EditComponent implements OnInit {
         });
     }
 
+    private _fetchBouquetData(line_id: number) {
+        this.lineService.getLineBouquets(line_id)?.subscribe(res => {
+            this.bouquetsList = res.body || [];
+            console.log('_fetchPackageData contains : ', res.body);
+            this._fetchData();
+            this.loading = true;
+        });
+    }
+
     private _fetchData() {
         let id = Number(this.activated.snapshot.paramMap.get('id'));
         if (id) {
@@ -316,6 +327,12 @@ export class EditComponent implements OnInit {
             ]
         });
         this._fetchUserData('');
+        let id = Number(this.activated.snapshot.paramMap.get('id'));
+        this._fetchBouquetData(id);
+    }
+
+    get lineBouquets(){
+        return this.bouquetsList.sort((a, b) => a.bouquetOrder > b.bouquetOrder ? 1 : -1);
     }
 
     async onSubmit() {
