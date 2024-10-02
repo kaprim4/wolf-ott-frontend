@@ -193,85 +193,55 @@ export class UEditComponent implements OnInit {
         this._fetchData();
     }
 
+    private updateFormValues() {
+        this.user = {
+            credits: this.editForm.controls['credits'].value,
+            dateRegistered: this.editForm.controls['dateRegistered'].value,
+            email: this.editForm.controls['email'].value,
+            id: this.editForm.controls['id'].value,
+            ip: this.editForm.controls['ip'].value,
+            lastLogin: this.editForm.controls['lastLogin'].value,
+            notes: this.editForm.controls['notes'].value,
+            status: false,
+            username: this.editForm.controls['username'].value,
+        }
+    }
+
     async onSubmit() {
         this.formSubmitted = true;
         if (this.editForm.valid) {
             this.loading = true;
-            // this.roleService.getRole(this.editForm.controls['role_id'].value).subscribe(
-            //     (data: HttpResponse<any>) => {
-            //         if (data.status === 200 || data.status === 202) {
-            //             console.log(`Got a successfull status code: ${data.status}`);
-            //         }
-            //         if (data.body) {
-            //             role = data.body;
-            //             if (role) {
-            //                 this.gasStationService.getGasStation(this.editForm.controls['gas_station_id'].value).subscribe(
-            //                     (data2: HttpResponse<any>) => {
-            //                         if (data2.status === 200 || data2.status === 202) {
-            //                             console.log(`Got a successfull status code: ${data2.status}`);
-            //                         }
-            //                         if (data2.body) {
-            //                             gas_station = data2.body;
-            //                             if (gas_station) {
-            //                                 this.user = {
-            //                                     credits: this.editForm.controls['credits'].value,
-            //                                     dateRegistered: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
-            //                                     email: this.editForm.controls['email'].value,
-            //                                     id: this.editForm.controls['id'].value,
-            //                                     ip: this.editForm.controls['ip'].value,
-            //                                     lastLogin: moment(now()).format('Y-M-DTHH:mm:ss').toString(),
-            //                                     notes: this.editForm.controls['notes'].value,
-            //                                     status: false,
-            //                                     username:this.editForm.controls['username'].value,
-            //                                 }
-            //                                 this.userService.updateUser(this.user).subscribe(
-            //                                     (data3: HttpResponse<any>) => {
-            //                                         if (data3.status === 200 || data3.status === 202) {
-            //                                             console.log(`Got a successfull status code: ${data3.status}`);
-            //                                         }
-            //                                         if (data3.body) {
-            //                                             this.successSwal.fire().then(() => {
-            //                                                 this.router.navigate(['users-access/' + this.entityElm.entity + 's'])
-            //                                             });
-            //                                         }
-            //                                         console.log('This contains body: ', data.body);
-            //                                     },
-            //                                     (err: HttpErrorResponse) => {
-            //                                         if (err.status === 403 || err.status === 404) {
-            //                                             console.error(`${err.status} status code caught`);
-            //                                             this.errorSwal.fire().then((r) => {
-            //                                                 this.error = err.message;
-            //                                                 console.log(err.message);
-            //                                             });
-            //                                         }
-            //                                     },
-            //                                     (): void => {
-            //                                         this.loading = false;
-            //                                     }
-            //                                 )
-            //                                 console.log(this.user)
-            //                             } else {
-            //                                 this.errorSwal.fire().then(r => this.loading = false);
-            //                             }
-            //                         }
-            //                         console.log('This contains body: ', data2.body);
-            //                     },
-            //                     (err: HttpErrorResponse) => {
-            //                         if (err.status === 403 || err.status === 404) {
-            //                             console.error(`${err.status} status code caught`);
-            //                         }
-            //                     }
-            //                 );
-            //             }
-            //         }
-            //         console.log('This contains body: ', data.body);
-            //     },
-            //     (err: HttpErrorResponse) => {
-            //         if (err.status === 403 || err.status === 404) {
-            //             console.error(`${err.status} status code caught`);
-            //         }
-            //     }
-            // );
+            this.updateFormValues();
+            console.log(this.user);
+            if (this.user) {
+                this.userService.updateUser(this.user).subscribe(
+                    (data: HttpResponse<any>) => {
+                        if (data.status === 200 || data.status === 202) {
+                            console.log(`Got a successfull status code: ${data.status}`);
+                        }
+                        if (data.body) {
+                            this.successSwal.fire().then(() => {
+                                this.router.navigate(['users-access/' + this.entityElm.entity + 's'])
+                            });
+                        }
+                        console.log('This contains body: ', data.body);
+                    },
+                    (err: HttpErrorResponse) => {
+                        if (err.status === 403 || err.status === 404) {
+                            console.error(`${err.status} status code caught`);
+                            this.errorSwal.fire().then((r) => {
+                                this.error = err.message;
+                                console.log(err.message);
+                            });
+                        }
+                    },
+                    (): void => {
+                        this.loading = false;
+                    }
+                )
+            } else {
+                this.errorSwal.fire().then(r => this.loading = false);
+            }
         }
     }
 }
