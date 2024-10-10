@@ -1,0 +1,45 @@
+<mat-card class="cardWithShadow">
+  <mat-card-header>
+    <div class="d-flex align-items-center justify-content-between w-100">
+      <div>
+        <mat-card-title>Customers</mat-card-title>
+        <mat-card-subtitle class="mat-body-1">Last 7 days</mat-card-subtitle>
+      </div>
+      <div class="text-right">
+        <mat-card-title>6,380</mat-card-title>
+        <span
+          class="bg-light-success text-success border-success border rounded f-w-600 p-6 p-y-2 f-s-12"
+          >+26.5%</span
+        >
+      </div>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="m-t-35 m-b-24">
+      <apx-chart
+        [series]="customersChart.series"
+        [chart]="customersChart.chart"
+        [colors]="customersChart.colors"
+        [stroke]="customersChart.stroke"
+        [fill]="customersChart.fill"
+        [markers]="customersChart.markers"
+        [tooltip]="customersChart.tooltip"
+       
+      ></apx-chart>
+    </div>
+    <div class="d-flex align-items-center justify-content-between w-100">
+      <div class="d-flex align-items-center">
+        <span class="mat-body-1">April 07 - April 14</span>
+      </div>
+      <span>6,380</span>
+    </div>
+    <div
+      class="d-flex align-items-center justify-content-between w-100 m-t-10 p-b-10"
+    >
+      <div class="d-flex align-items-center">
+        <span class="mat-body-1">Last Week</span>
+      </div>
+      <span>4,298</span>
+    </div>
+  </mat-card-content>
+</mat-card>

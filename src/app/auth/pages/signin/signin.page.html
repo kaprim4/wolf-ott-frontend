@@ -1,0 +1,69 @@
+<mat-card class="cardWithShadow boxed-auth">
+    <mat-card-content class="p-32">
+      <div class="text-center">
+        @if(options.theme === 'light') {
+        <a [routerLink]="['/dashboards/dashboard1']">
+          <img
+            src="./assets/images/logos/dark-logo.svg"
+            class="align-middle m-2"
+            alt="logo"
+          />
+        </a>
+        } @if(options.theme === 'dark') {
+        <a [routerLink]="['/dashboards/dashboard1']">
+          <img
+            src="./assets/images/logos/light-logo.svg"
+            class="align-middle m-2"
+            alt="logo"
+          />
+        </a>
+        }
+      </div>
+
+      <div class="row m-t-24 custom-row">
+        <div class="col-12 col-sm-6">
+          <button mat-stroked-button class="w-100">
+            <div class="d-flex align-items-center">
+              <img
+                src="/assets/images/svgs/google-icon.svg"
+                alt="google"
+                width="16"
+                class="m-r-8"
+              />
+               Google
+            </div>
+          </button>
+        </div>
+        <div class="col-12 col-sm-6">
+          <button
+            mat-stroked-button
+            class="w-100 d-flex align-items-center"
+          >
+            <div class="d-flex align-items-center">
+              <img
+                src="/assets/images/svgs/facebook-icon.svg"
+                alt="facebook"
+                width="40"
+                class="m-r-4"
+              />
+               Facebook
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <div class="or-border m-t-30">or sign in with</div>
+
+      <auth-signin-form></auth-signin-form>
+
+      <span class="d-block f-w-500 text-center m-t-24"
+        >New to Spike?
+        <a
+          [routerLink]="['/authentication/boxed-register']"
+          class="text-decoration-none text-primary f-w-500 f-s-14"
+        >
+          Create an account</a
+        >
+      </span>
+    </mat-card-content>
+  </mat-card>

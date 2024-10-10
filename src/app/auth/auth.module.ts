@@ -1,33 +1,24 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {ReactiveFormsModule} from '@angular/forms';
-import {NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
-import {UiModule} from '../shared/ui/ui.module';
-import {AuthRoutingModule} from './auth-routing.module';
-import {LoginComponent} from './login/login.component';
-import {RegisterComponent} from './register/register.component';
-import {RecoverPasswordComponent} from './recover-password/recover-password.component';
-import {LockScreenComponent} from './lock-screen/lock-screen.component';
-import {ConfirmMailComponent} from './confirm-mail/confirm-mail.component';
-import {LogoutComponent} from './logout/logout.component';
-
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { SigninPage } from './pages/signin/signin.page';
+import { SignupPage } from './pages/signup/signup.page';
+import { SigninFormComponent } from './forms/signin-form/signin-form.component';
+import { SignupFormComponent } from './forms/signup-form/signup-form.component';
+import { AuthRoutes } from './auth.routes';
+import { RouterModule } from '@angular/router';
+import { MaterialModule } from '../material.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AuthClassicLayout } from './layouts/auth-classic-layout/classic.layout';
+import { AuthModernLayout } from './layouts/auth-modern-layout/modern.layout';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
-    declarations: [
-        LoginComponent,
-        RegisterComponent,
-        RecoverPasswordComponent,
-        LockScreenComponent,
-        ConfirmMailComponent,
-        LogoutComponent
-    ],
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        NgbAlertModule,
-        UiModule,
-        AuthRoutingModule
-    ]
+  declarations: [SigninPage, SignupPage, SigninFormComponent, SignupFormComponent, AuthClassicLayout, AuthModernLayout],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(AuthRoutes),
+    SharedModule
+  ],
+  exports: [RouterModule]
 })
-export class AuthModule {
-}
+export class AuthModule { }

@@ -1,0 +1,73 @@
+<mat-card class="cardWithShadow">
+  <mat-card-header>
+    <mat-card-title>Congratulations Jonathan</mat-card-title>
+    <mat-card-subtitle class="mat-body-1"
+      >You have done 38% more sales</mat-card-subtitle
+    >
+  </mat-card-header>
+  <mat-card-content class="p-b-30 position-relative">
+    @for(stat of stats; track stat.title) {
+    <div class="m-t-24">
+      <div class="d-flex align-items-center">
+        <span
+          class="text-{{ stat.color }} bg-light-{{
+            stat.color
+          }} rounded-circle icon-46 d-flex align-items-center justify-content-center"
+        >
+          <i-tabler name="{{ stat.icon }}" class="icon-22 d-flex"></i-tabler>
+        </span>
+
+        <div class="m-l-16 m-r-auto">
+          <h6 class="mat-subtitle-1 f-s-16 f-w-600">{{ stat.title }}</h6>
+          <span class="mat-body-1">{{ stat.subtitle }}</span>
+        </div>
+      </div>
+    </div>
+    }
+
+    <img
+      src="assets/images/backgrounds/man-working-on-laptop.png"
+      alt="welcome-bg"
+      class="congrats-bg d-none d-lg-flex"
+    />
+  </mat-card-content>
+  <mat-divider></mat-divider>
+  <mat-card-header>
+    <div class="d-flex w-100">
+      <div>
+        <mat-card-title>Total Orders</mat-card-title>
+        <mat-card-subtitle class="mat-body-1"
+          >Weekly order updates</mat-card-subtitle
+        >
+      </div>
+      <div class="m-l-auto">
+        <mat-form-field class="theme-select" appearance="outline">
+          <mat-select value="mar">
+            @for(month of months; track month.value) {
+            <mat-option [value]="month.value">
+              {{ month.viewValue }}
+            </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="row">
+      <div class="col-sm-12">
+        <apx-chart
+          [series]="revenueChart.series"
+          [dataLabels]="revenueChart.dataLabels"
+          [chart]="revenueChart.chart"
+          [legend]="revenueChart.legend"
+          [stroke]="revenueChart.stroke"
+          [grid]="revenueChart.grid"
+          [xaxis]="revenueChart.xaxis"
+          [yaxis]="revenueChart.yaxis"
+          [tooltip]="revenueChart.tooltip"
+        ></apx-chart>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

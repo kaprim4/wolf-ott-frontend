@@ -1,0 +1,48 @@
+<mat-card class="cardWithShadow">
+  <mat-card-header>
+    <div class="d-flex align-items-center justify-content-between w-100">
+      <div>
+        <mat-card-title>Payments</mat-card-title>
+        <mat-card-subtitle class="mat-body-1">Last 7 days</mat-card-subtitle>
+      </div>
+      <div class="text-right">
+        <mat-card-title>12,389</mat-card-title>
+        <span
+          class="bg-light-warning text-warning border-warning border rounded f-w-600 p-6 p-y-2 f-s-12"
+          >-3.8%</span
+        >
+      </div>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="rounded-bars">
+      <apx-chart
+        [series]="paymentsChart.series"
+        [dataLabels]="paymentsChart.dataLabels"
+        [chart]="paymentsChart.chart"
+        [legend]="paymentsChart.legend"
+        [colors]="paymentsChart.colors"
+        [stroke]="paymentsChart.stroke"
+        [tooltip]="paymentsChart.tooltip"
+        [grid]="paymentsChart.grid"
+        [xaxis]="paymentsChart.xaxis"
+        [yaxis]="paymentsChart.yaxis"
+        [plotOptions]="paymentsChart.plotOptions"
+      ></apx-chart>
+    </div>
+    <div class="d-flex align-items-center justify-content-between w-100">
+      <div class="d-flex align-items-center">
+        <i-tabler name="circle" class="icon-16 d-flex m-r-6 text-primary"></i-tabler>
+        <span class="mat-body-1">Paypal</span>
+      </div>
+      <span>52%</span>
+    </div>
+    <div class="d-flex align-items-center justify-content-between w-100 m-t-10 p-b-10">
+        <div class="d-flex align-items-center">
+          <i-tabler name="circle" class="icon-16 d-flex m-r-6 text-light-secondary"></i-tabler>
+          <span class="mat-body-1">Credit Card</span>
+        </div>
+        <span>48%</span>
+      </div>
+  </mat-card-content>
+</mat-card>

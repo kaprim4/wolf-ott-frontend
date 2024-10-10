@@ -1,21 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {TokenService} from "./core/service/token.service";
-import {environment} from "../environments/environment";
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
+  selector: 'app-root',
+  standalone: true,
+  imports: [RouterOutlet],
+  templateUrl: './app.component.html',
 })
-export class AppComponent implements OnInit {
-    title = environment.APP_NAME;
-
-    constructor(
-        private tokenService: TokenService,
-    ) {
-    }
-
-    ngOnInit(): void {
-
-    }
+export class AppComponent {
+  title = 'Spike Angular Admin Template';
 }

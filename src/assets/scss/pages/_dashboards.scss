@@ -1,0 +1,210 @@
+// dashboard 1
+
+.congrats-bg {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+}
+
+.social-chips {
+  &.small {
+    img {
+      margin-left: -15px;
+    }
+  }
+  img,
+  .plus-btn {
+    margin-left: -9px;
+    border: 2px solid $white;
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}
+
+.text-truncate-2 {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  max-width: 215px;
+  width: 100%;
+}
+
+#vector-map {
+  &.sm-map {
+    margin-top: -60px;
+  }
+  .dx-export-menu,
+  .dxm-title,
+  .dxm-legend,
+  .dxm-control-bar,
+  tspan {
+    display: none !important;
+  }
+  .dxm-background {
+    stroke-width: 0;
+    fill: transparent;
+  }
+  .dxm-layer path {
+    stroke-width: 0;
+    fill: $light-accent;
+  }
+}
+
+.minus-img {
+  margin-bottom: -65px !important;
+}
+
+// theme select
+.theme-select {
+  width: 125px;
+  height: 36px;
+  .mat-form-field-infix {
+    padding: 6px 0 1px !important;
+  }
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+  .mdc-text-field--outlined .mdc-notched-outline .mdc-notched-outline__leading {
+    border-top-left-radius: $border-radius;
+    border-bottom-left-radius: $border-radius;
+    border-color: $borderColor;
+  }
+  .mdc-text-field--outlined
+    .mdc-notched-outline
+    .mdc-notched-outline__trailing {
+    border-top-right-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+    border-color: $borderColor;
+  }
+  .mat-mdc-form-field-flex {
+    height: 36px;
+    align-items: center;
+  }
+}
+
+// dashboard 2
+.welcome-img {
+  position: absolute;
+  right: -33px;
+  bottom: -30px;
+}
+
+.top-img {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}
+
+.custom-tabs {
+  .mat-mdc-tab-body-content {
+    overflow: unset;
+  }
+  .mat-mdc-tab-ripple {
+    border-radius: $border-radius;
+  }
+  .mat-mdc-tab {
+    border-radius: $border-radius;
+    .mdc-tab-indicator {
+      display: none;
+    }
+    &.mdc-tab--active {
+      background-color: $primary;
+      .mdc-tab__text-label {
+        color: $white;
+      }
+      &:hover,
+      &:focus {
+        .mdc-tab__text-label {
+          color: $white !important;
+        }
+      }
+    }
+  }
+}
+
+.timeline-border {
+  border-radius: $border-radius;
+  &.timeline-border-primary {
+    border-left: 5px solid $primary;
+  }
+  &.timeline-border-success {
+    border-left: 5px solid $success;
+  }
+  &.timeline-border-error {
+    border-left: 5px solid $error;
+  }
+  &.timeline-border-accent {
+    border-left: 5px solid $accent;
+  }
+}
+
+.rounded-bars
+  .apexcharts-bar-series.apexcharts-plot-series
+  .apexcharts-series
+  path {
+  clip-path: inset(0 0 5% 0 round 20px);
+}
+
+
+.timeline {
+  position: relative;
+  .timeline-item {
+    position: relative;
+    height: 70px;
+    .time {
+      padding: 6px 16px 6px 0;
+      min-width: 90px;
+      flex-shrink: 0;
+    }
+    .desc {
+      padding: 6px 16px;
+    }
+    .timline-border {
+      width: 1px;
+      height: 100%;
+      background-color: $borderColor;
+      flex-shrink: 0;
+    }
+    .point {
+      flex-direction: column;
+      .timeline-badge {
+        width: 12px;
+        height: 12px;
+        border-radius: 50px;
+        background-color: transparent;
+        flex-shrink: 0;
+        &.border-primary {
+          border: 2px solid $primary;
+        }
+        &.border-accent {
+          border: 2px solid $accent;
+        }
+        &.border-success {
+          border: 2px solid $success;
+        }
+        &.border-warning {
+          border: 2px solid $warning;
+        }
+        &.border-error {
+          border: 2px solid $error;
+        }
+      }
+
+      .timeline-border {
+        width: 1px;
+        height: 100%;
+        background-color: $borderColor;
+        flex-shrink: 0;
+      }
+    }
+    &:last-child {
+      .timeline-border {
+        display: none !important;
+      }
+    }
+  }
+}
