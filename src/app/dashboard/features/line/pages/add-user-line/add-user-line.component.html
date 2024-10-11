@@ -1,0 +1,139 @@
+<mat-card class="cardWithShadow theme-card">
+    <mat-card-header>
+        <div class="w-100 d-flex justify-content-between align-items-center">
+            <h4 class="mat-subtitle-2 f-s-18 f-w-600 m-b-0">
+                <mat-card-title>Add User Line</mat-card-title>
+            </h4>
+            <div class="text-right">
+                <a
+                    routerLink="/apps/lines/users"
+                    mat-stroked-button
+                    color="warn"
+                    class="m-r-10"
+                >
+                    Cancel
+                </a>
+                <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="$event.preventDefault(); saveDetail()"
+                    [disabled]="addForm.invalid"
+                >
+                    Save Line
+                </button>
+            </div>
+        </div>
+    </mat-card-header>
+      
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0ms">
+        <mat-tab label="Details">
+            <mat-card-content class="b-t-1">
+                <form [formGroup]="addForm" (ngSubmit)="saveDetail()">
+                    <div class="row">
+                        <div class="col-sm-4 d-flex align-items-center">
+                            <mat-label class="mat-subtitle-2 f-w-600">Username</mat-label>
+                        </div>
+                        <div class="col-sm-8">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <input matInput placeholder="Enter Username" formControlName="username" required />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                
+                    <div class="row">
+                        <div class="col-sm-4 d-flex align-items-center">
+                            <mat-label class="mat-subtitle-2 f-w-600">Password</mat-label>
+                        </div>
+                        <div class="col-sm-8">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <input matInput type="password" placeholder="Enter Password" formControlName="password" required />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                
+                    <div class="row">
+                        <div class="col-sm-4 d-flex align-items-center">
+                            <mat-label class="mat-subtitle-2 f-w-600">Owner</mat-label>
+                        </div>
+                        <div class="col-sm-8">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <input matInput placeholder="Enter Owner" formControlName="owner" required />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                
+                    <div class="row">
+                        <div class="col-sm-4 d-flex align-items-center">
+                            <mat-label class="mat-subtitle-2 f-w-600">Package</mat-label>
+                        </div>
+                        <div class="col-sm-8">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <input matInput placeholder="Enter Package" formControlName="package" required />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                
+                    <!-- New Row for Package Cost and Duration -->
+                    <div class="row">
+                        <div class="col-sm-4 d-flex align-items-center">
+                            <mat-label class="mat-subtitle-2 f-w-600">Package Cost</mat-label>
+                        </div>
+                        <div class="col-sm-3">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <input matInput type="number" placeholder="Enter Package Cost" formControlName="packageCost" required />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-2 d-flex align-items-center">
+                            <mat-label class="mat-subtitle-2 f-w-600">Duration</mat-label>
+                        </div>
+                        <div class="col-sm-3">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <input matInput placeholder="Enter Duration" formControlName="duration" required />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                
+                    <!-- New Row for Max Connections and Expiration Date -->
+                    <div class="row">
+                        <div class="col-sm-4 d-flex align-items-center">
+                            <mat-label class="mat-subtitle-2 f-w-600">Max Connections</mat-label>
+                        </div>
+                        <div class="col-sm-3">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <input matInput type="number" placeholder="Enter Max Connections" formControlName="maxConnections" required />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-2 d-flex align-items-center">
+                            <mat-label class="mat-subtitle-2 f-w-600">Expiration Date</mat-label>
+                        </div>
+                        <div class="col-sm-3">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <input matInput type="date" placeholder="Enter Expiration Date" formControlName="expirationDate" required />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                
+                    <div class="row">
+                        <div class="col-sm-4 d-flex align-items-center">
+                            <mat-label class="mat-subtitle-2 f-w-600">Reseller Notes</mat-label>
+                        </div>
+                        <div class="col-sm-8">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <textarea matInput placeholder="Enter Reseller Notes" rows="4" formControlName="resellerNotes"></textarea>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </form>
+                
+            </mat-card-content>
+        </mat-tab>
+        <mat-tab label="Restrictions">
+            <!-- Restrictions content here -->
+        </mat-tab>
+        <mat-tab label="Review Purchase">
+            <!-- Review Purchase content here -->
+        </mat-tab>
+    </mat-tab-group>
+</mat-card>
+
+   

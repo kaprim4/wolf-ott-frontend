@@ -7,14 +7,6 @@ import { UserService } from 'src/app/shared/services/user.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
-interface topcards {
-  id: number;
-  icon: string;
-  color: string;
-  title: string;
-  subtitle: string;
-}
-
 @Component({
   selector: 'app-add-user',
   templateUrl: './add-user.component.html',
