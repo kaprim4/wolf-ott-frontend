@@ -1,0 +1,16 @@
+.card-fixed-width {
+    width: 300px;
+  }
+  
+  .card-fixed-height .mat-card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+  }
+  
+  .card-fixed-height h6 {
+    overflow: hidden; /* Hide overflow if the subtitle is too long */
+    text-overflow: ellipsis; /* Add ellipsis if text is cut off */
+    white-space: nowrap; /* Prevent line breaks */
+  }
+  

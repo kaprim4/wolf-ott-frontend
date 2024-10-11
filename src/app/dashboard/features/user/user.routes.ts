@@ -19,12 +19,12 @@ export const UserRoutes: Routes = [
         component: UsersListComponent
       },
       {
-        path: ':id',
-        component: ViewUserComponent
-      },
-      {
         path: 'add',
         component: AddUserComponent
+      },
+      {
+        path: ':id',
+        component: ViewUserComponent
       },
     ],
   },
