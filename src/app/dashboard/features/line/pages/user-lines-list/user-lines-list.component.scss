@@ -1,0 +1,23 @@
+.mat-table th.mat-header-cell, 
+.mat-table td.mat-cell {
+  padding: 2px 4px; /* Adjust these values as needed */
+}
+
+.mat-table th.mat-header-cell {
+  font-size: 12px; /* Optional: Adjust font size */
+}
+
+.mat-table td.mat-cell {
+  font-size: 12px; /* Optional: Adjust font size */
+}
+
+.mat-table {
+  overflow-x: auto; /* Allows horizontal scrolling if needed */
+}
+.table-responsive td{
+    padding: 4px;
+}
+
+.mdc-data-table__header-cell{
+    padding: 0 4px;
+}
