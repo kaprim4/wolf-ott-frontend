@@ -33,8 +33,8 @@ export class UserService extends CrudService<IUser> {
     );
   }
 
-  public getUser(id_user: number): Observable<HttpResponse<IUser>> {
-    return this.getOneById(id_user);
+  public getUser<T extends IUser>(id_user: number): Observable<T> {
+    return this.getOneById(id_user).pipe(map(res => res.body as T));
   }
 
   public addUser(user: IUser): Observable<HttpResponse<IUser>> {

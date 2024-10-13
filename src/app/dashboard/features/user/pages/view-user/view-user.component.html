@@ -1,1 +1,140 @@
-<p>view-user works!</p>
+<mat-card class="cardWithShadow theme-card">
+    <mat-card-header>
+        <div class="w-100 d-flex justify-content-between align-items-center">
+          <h4 class="mat-subtitle-2 f-s-18 f-w-600 m-b-0">
+            <mat-card-title>Edit User</mat-card-title>
+          </h4>
+          <div class="text-right">
+            <a
+              routerLink="/apps/users"
+              mat-stroked-button
+              color="warn"
+              class="m-r-10"
+            >
+              Cancel
+            </a>
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="$event.preventDefault(); saveDetail()"
+              [disabled]="userForm.invalid"
+            >
+              Save User
+            </button>
+          </div>
+        </div>
+      </mat-card-header>
+      
+      
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0ms">
+        <mat-tab label="Details">
+            <mat-card-content class="b-t-1">
+                <form [formGroup]="userForm" (ngSubmit)="saveDetail()">
+                    <div class="row">
+                      <div class="col-sm-4 d-flex align-items-center">
+                        <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Username</mat-label>
+                      </div>
+                      <div class="col-sm-8">
+                        <mat-form-field appearance="outline" class="w-100">
+                          <input matInput placeholder="Username" formControlName="username" required />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  
+                    <div class="row">
+                      <div class="col-sm-4 d-flex align-items-center">
+                        <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Email Address</mat-label>
+                      </div>
+                      <div class="col-sm-8">
+                        <mat-form-field appearance="outline" class="w-100">
+                          <input matInput type="email" placeholder="Enter Email" formControlName="email" required />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    
+                    <div class="row">
+                      <div class="col-sm-4 d-flex align-items-center">
+                        <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Password</mat-label>
+                      </div>
+                      <div class="col-sm-8">
+                        <mat-form-field appearance="outline" class="w-100">
+                          <input matInput type="password" placeholder="Password" formControlName="password" required />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  
+                    <div class="row">
+                      <div class="col-sm-4 d-flex align-items-center">
+                        <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Owner</mat-label>
+                      </div>
+                      <div class="col-sm-8">
+                        <mat-form-field appearance="outline" class="w-100">
+                          <input matInput placeholder="Select Owner" formControlName="ownerId" required />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  
+                    <div class="row">
+                      <div class="col-sm-4 d-flex align-items-center">
+                        <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Custom DNS</mat-label>
+                      </div>
+                      <div class="col-sm-8">
+                        <mat-form-field appearance="outline" class="w-100">
+                          <input matInput placeholder="Enter Reseller DNS" formControlName="resellerDns" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  
+                    <div class="row">
+                      <div class="col-sm-4 d-flex align-items-center">
+                        <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Notes</mat-label>
+                      </div>
+                      <div class="col-sm-8">
+                        <mat-form-field appearance="outline" class="w-100">
+                          <textarea matInput placeholder="Additional Notes" rows="4" formControlName="notes"></textarea>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  
+                    <!-- <div class="row justify-content-end">
+                      <div class="col-sm-8">
+                        <button mat-flat-button color="primary" type="submit" [disabled]="userForm.invalid">Create User</button>
+                      </div>
+                    </div> -->
+                  </form>
+                  
+              </mat-card-content>
+        </mat-tab>
+        <mat-tab label="Review Purchase">
+
+            <div class="row d-flex justify-content-around align-items-center p-24">
+                @for(metric of financialMetrics; track metric.title) {
+                  <div class="col-lg-3 col-sm-6 d-flex">
+                    <mat-card class="cardWithShadow text-center card-fixed-width ">
+                      <mat-card-content class="p-24">
+                        <div class="d-flex align-items-center">
+                          <span
+                            class="icon-50 bg-{{ metric.color }} text-white rounded-circle d-flex align-items-center justify-content-center"
+                          >
+                            <mat-icon class="f-s-24">{{ metric.icon }}</mat-icon>
+                          </span>
+                          <div class="m-l-12 text-left">
+                            <h4 class="mat-subtitle-2 f-s-20 f-w-400 m-t-8">
+                              {{ metric.title }}
+                            </h4>
+                            <h6 class="m-t-4 mat-subtitle-1 f-s-14 f-w-400 m-t-8 text-gray-100">
+                              {{ metric.subtitle }}
+                            </h6>
+                          </div>
+                        </div>
+                      </mat-card-content>
+                    </mat-card>
+                  </div>
+                }
+              </div>
+              
+        </mat-tab>
+    </mat-tab-group>
+    
+  </mat-card>
+  
