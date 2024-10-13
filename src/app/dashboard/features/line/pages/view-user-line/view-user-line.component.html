@@ -64,36 +64,36 @@
 
                     <div class="row">
                         <div class="col-sm-4 d-flex align-items-start">
-                            <mat-label class="mat-subtitle-2 f-w-600">Owner</mat-label>
+                          <mat-label class="mat-subtitle-2 f-w-600">Owner</mat-label>
                         </div>
                         <div class="col-sm-8">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <mat-select [(value)]="selectedOwner" (openedChange)="onOwnersDropdownOpened($event)" required>
-                                    <mat-select-trigger>
-                                        {{ selectedOwner ? selectedOwner.username : 'Select Owner' }}
-                                    </mat-select-trigger>
-                                    @if(dropdownOpened){
-                                        <mat-option appearance="outline" class="w-100">
-                                            <div>
-                                                <input
-                                                    matInput
-                                                    class="w-100"
-                                                    type="text"
-                                                    placeholder="Search"
-                                                    [(ngModel)]="ownerSearchTerm"
-                                                    (ngModelChange)="ownersFilterOptions()"
-                                                    (click)="$event.stopPropagation()"
-                                                />
-                                            </div>
-                                        </mat-option>
-                                    }
-                                    <mat-option *ngFor="let owner of filteredOwners" [value]="owner" (click)="$event.stopPropagation()">
-                                        {{ owner.username }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
+                          <mat-form-field appearance="outline" class="w-100">
+                            <mat-select formControlName="memberId" (openedChange)="onOwnersDropdownOpened($event)" required>
+                              <mat-select-trigger>
+                                {{ selectedOwner ? selectedOwner.username : 'Select Owner' }}
+                              </mat-select-trigger>
+                              @if(dropdownOpened){
+                                <mat-option appearance="outline" class="w-100" aria-disabled="true">
+                                    <input
+                                    matInput
+                                    class="w-100"
+                                    type="text"
+                                    placeholder="Search"
+                                    [(ngModel)]="ownerSearchTerm"
+                                    (ngModelChange)="ownersFilterOptions()"
+                                    (click)="$event.stopPropagation()"
+                                    />
+                                </mat-option>
+                            }
+                            @for(owner of filteredOwners; track owner.id){
+                              <mat-option [value]="owner.id">
+                                {{ owner.username }}
+                              </mat-option>
+                            }
+                            </mat-select>
+                          </mat-form-field>
                         </div>
-                    </div>
+                      </div>
                     
                     <!--                 
                     <div class="row">
@@ -114,7 +114,8 @@
                         </div>
                         <div class="col-sm-8">
                             <mat-form-field appearance="outline" class="w-100">
-                                <mat-select [(value)]="selectedPackage" (openedChange)="onPackagesDropdownOpened($event)" required>
+                                <!-- <mat-select [(value)]="selectedPackage" (openedChange)="onPackagesDropdownOpened($event)" required> -->
+                                <mat-select formControlName="packageId" (openedChange)="onPackagesDropdownOpened($event)" required>
                                     <mat-select-trigger>
                                         {{ selectedPackage ? selectedPackage.packageName : 'Select Package' }}
                                     </mat-select-trigger>
