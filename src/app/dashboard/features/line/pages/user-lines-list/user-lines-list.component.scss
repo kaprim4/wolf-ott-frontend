@@ -21,3 +21,23 @@
 .mdc-data-table__header-cell{
     padding: 0 4px;
 }
+
+.mat-mdc-snack-bar-container {
+  &.info-snackbar {
+    --mdc-snackbar-container-color: #2196f3;
+    --mat-mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
+  }
+
+  &.warning-snackbar {
+    --mdc-snackbar-container-color: #f3ad21;
+    --mat-mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
+  }
+
+  &.danger-snackbar {
+    --mdc-snackbar-container-color: rgb(243, 68, 33);
+    --mat-mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
+  }
+}

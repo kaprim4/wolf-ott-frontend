@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CrudService } from './crud.service';
-import { ILine } from '../models/line';
+import { ILine, LineDetail } from '../models/line';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { JwtService } from './jwt.service';
 import { map, Observable } from 'rxjs';
@@ -33,8 +33,8 @@ export class LineService extends CrudService<ILine> {
     );
   }
 
-  public getLine(id_line: number): Observable<HttpResponse<ILine>> {
-    return this.getOneById(id_line);
+  public getLine<T extends ILine>(id_line: number): Observable<T> {
+    return this.getOneById(id_line).pipe(map(res => res.body as T));
   }
 
   public addLine(line: ILine): Observable<HttpResponse<ILine>> {

@@ -207,18 +207,18 @@
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Allowed IP's</mat-label>
                                 <mat-chip-grid #chipGrid aria-label="Enter fruits">
-                                  @for(ip of allowedIps; track ip.name) {
+                                  @for(ip of allowedIps; track ip?.value) {
                                   <mat-chip-row
-                                    (removed)="removeAllowedIp(ip)"
+                                    (removed)="removeAllowedIp(ip?.value)"
                                     [editable]="true"
-                                    (edited)="editAllowedIp(ip, $event)"
-                                    [aria-description]="'press enter to edit ' + ip.name"
+                                    (edited)="editAllowedIp(ip?.value, $event)"
+                                    [aria-description]="'press enter to edit ' + ip?.value"
                                     class="f-s-14"
                                   >
-                                    {{ ip.name }}
+                                    {{ ip.value }}
                                     <button
                                       matChipRemove
-                                      [attr.aria-label]="'remove ' + ip.name"
+                                      [attr.aria-label]="'remove ' + ip?.value"
                                     >
                                       <mat-icon>cancel</mat-icon>
                                     </button>
@@ -245,18 +245,18 @@
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Allowed Agent's</mat-label>
                                 <mat-chip-grid #agentChipGrid aria-label="Enter fruits">
-                                  @for(agent of allowedAgents; track agent.name) {
+                                  @for(agent of allowedAgents; track agent.value) {
                                   <mat-chip-row
-                                    (removed)="removeAllowedAgent(agent)"
+                                    (removed)="removeAllowedAgent(agent.value)"
                                     [editable]="true"
-                                    (edited)="editAllowedAgent(agent, $event)"
-                                    [aria-description]="'press enter to edit ' + agent.name"
+                                    (edited)="editAllowedAgent(agent.value, $event)"
+                                    [aria-description]="'press enter to edit ' + agent.value"
                                     class="f-s-14"
                                   >
-                                    {{ agent.name }}
+                                    {{ agent.value }}
                                     <button
                                       matChipRemove
-                                      [attr.aria-label]="'remove ' + agent.name"
+                                      [attr.aria-label]="'remove ' + agent.value"
                                     >
                                       <mat-icon>cancel</mat-icon>
                                     </button>
@@ -412,8 +412,8 @@
                         </td>
                       </ng-container>
               
-                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                      <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="bouquetsSelection.toggle(row)"></tr>
+                      <tr mat-header-row *matHeaderRowDef="bouquetsDisplayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: bouquetsDisplayedColumns" (click)="bouquetsSelection.toggle(row)"></tr>
                     </table>
                   </div>
                 </mat-card-content>
