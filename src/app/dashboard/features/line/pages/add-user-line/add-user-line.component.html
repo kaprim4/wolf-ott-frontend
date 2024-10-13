@@ -68,28 +68,34 @@
                         </div>
                         <div class="col-sm-8">
                             <mat-form-field appearance="outline" class="w-100">
-                                <!-- <input matInput placeholder="Enter Owner" formControlName="owner" required /> -->
-                                <input
-                                type="text"
-                                placeholder="Enter Owner"
-                                aria-label="Number"
-                                matInput
-                                formControlName="owner" 
-                                [matAutocomplete]="auto"
-                                required
-                              />
-                              <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                                @for(firstoption of filteredOptions | async; track firstoption) {
-                                    <mat-option [value]="firstoption">
-                                    {{ firstoption }}
+                                <mat-select [(value)]="selectedOwner" (openedChange)="onOwnersDropdownOpened($event)" required>
+                                    <mat-select-trigger>
+                                        {{ selectedOwner ? selectedOwner.username : 'Select Owner' }}
+                                    </mat-select-trigger>
+                                    @if(dropdownOpened){
+                                        <mat-option appearance="outline" class="w-100">
+                                            <div>
+                                                <input
+                                                    matInput
+                                                    class="w-100"
+                                                    type="text"
+                                                    placeholder="Search"
+                                                    [(ngModel)]="ownerSearchTerm"
+                                                    (ngModelChange)="ownersFilterOptions()"
+                                                    (click)="$event.stopPropagation()"
+                                                />
+                                            </div>
+                                        </mat-option>
+                                    }
+                                    <mat-option *ngFor="let owner of filteredOwners" [value]="owner" (click)="$event.stopPropagation()">
+                                        {{ owner.username }}
                                     </mat-option>
-                                }
-                              </mat-autocomplete>
+                                </mat-select>
                             </mat-form-field>
                         </div>
-                       
                     </div>
-                
+                    
+                    <!--                 
                     <div class="row">
                         <div class="col-sm-4 d-flex align-items-start">
                             <mat-label class="mat-subtitle-2 f-w-600">Package</mat-label>
@@ -100,7 +106,41 @@
                             </mat-form-field>
                         </div>
                     </div>
-                
+                    -->
+
+                    <div class="row">
+                        <div class="col-sm-4 d-flex align-items-start">
+                            <mat-label class="mat-subtitle-2 f-w-600">Package</mat-label>
+                        </div>
+                        <div class="col-sm-8">
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-select [(value)]="selectedPackage" (openedChange)="onPackagesDropdownOpened($event)" required>
+                                    <mat-select-trigger>
+                                        {{ selectedPackage ? selectedPackage.packageName : 'Select Package' }}
+                                    </mat-select-trigger>
+                                    @if(dropdownOpened){
+                                        <mat-option appearance="outline" class="w-100" aria-disabled="true">
+                                            <div>
+                                                <input
+                                                    matInput
+                                                    class="w-100"
+                                                    type="text"
+                                                    placeholder="Search"
+                                                    [(ngModel)]="packageSearchTerm"
+                                                    (ngModelChange)="packagesFilterOptions()"
+                                                    (click)="$event.stopPropagation()"
+                                                />
+                                            </div>
+                                        </mat-option>
+                                    }
+                                    <mat-option *ngFor="let pkg of filteredPackages" [value]="pkg" (click)="$event.stopPropagation()">
+                                        {{ pkg.packageName }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
                     <!-- New Row for Package Cost and Duration -->
                     <div class="row">
                         <div class="col-sm-4 d-flex align-items-start">
@@ -293,17 +333,17 @@
               <mat-card class="">
                 <mat-card-content>
                   <div class="table-responsive">
-                    <table mat-table [dataSource]="dataSource" class="w-100">
+                    <table mat-table [dataSource]="bouquetsDataSource" class="w-100">
                       <!-- Checkbox Column -->
                       <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef class="p-l-0">
-                          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-                            color="primary" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="bouquetsSelection.hasValue() && isAllSelected()"
+                            color="primary" [indeterminate]="bouquetsSelection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
                           </mat-checkbox>
                         </th>
                         <td mat-cell *matCellDef="let row" class="p-l-0">
-                          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                            color="primary" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? bouquetsSelection.toggle(row) : null"
+                            color="primary" [checked]="bouquetsSelection.isSelected(row)" [aria-label]="checkboxLabel(row)">
                           </mat-checkbox>
                         </td>
                       </ng-container>
@@ -314,7 +354,7 @@
                           Bouquet Name
                         </th>
                         <td mat-cell *matCellDef="let element" class="mat-body-1">
-                          {{ element.productName }}
+                          {{ element.bouquetName }}
                         </td>
                       </ng-container>
               
@@ -373,7 +413,7 @@
                       </ng-container>
               
                       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                      <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="selection.toggle(row)"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="bouquetsSelection.toggle(row)"></tr>
                     </table>
                   </div>
                 </mat-card-content>
