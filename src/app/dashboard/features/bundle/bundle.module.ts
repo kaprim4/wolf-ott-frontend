@@ -5,11 +5,12 @@ import { bundleRoutes } from './bundle.routes';
 import { PackagesListComponent } from './packages-list/packages-list.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { BouquetsListComponent } from './bouquets-list/bouquets-list.component';
+import { PresetsListComponent } from './presets-list/presets-list.component';
 
 
 
 @NgModule({
-  declarations: [PackagesListComponent, BouquetsListComponent],
+  declarations: [PackagesListComponent, BouquetsListComponent, PresetsListComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(bundleRoutes),
