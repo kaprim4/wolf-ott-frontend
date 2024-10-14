@@ -1,1 +1,90 @@
-<p>packages-list works!</p>
+<mat-card class="cardWithShadow">
+    <mat-card-content>
+      <div class="row justify-content-between gap-16">
+        <div class="col-sm-4">
+          <mat-form-field appearance="outline" class="w-100 hide-hint">
+            <input
+              matInput
+              placeholder="Search Package"
+              (keyup)="filter($any($event.target).value)"
+            />
+            <mat-icon matSuffix>
+              <i-tabler name="search" class="icon-20"></i-tabler>
+            </mat-icon>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4 d-flex align-items-center justify-content-end">
+          <a
+            mat-button
+            [routerLink]="['/apps/packages/add']"
+            mat-flat-button
+            color="primary">Add Package</a>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  
+  <mat-card class="cardWithShadow">
+    <div class="table-responsive">
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        matSort
+        class="no-wrap m-t-0 v-middle w-100"
+      >
+        <ng-container matColumnDef="chk">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox color="primary"></mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let element" class="f-s-14">
+            <mat-checkbox [(ngModel)]="element.completed" color="primary"></mat-checkbox>
+          </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Id</th>
+          <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.id }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="packageName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Package Name</th>
+          <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.packageName }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="trialDuration">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Trial DurationIn</th>
+          <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.trialDuration + ' ' + element.trialDurationIn }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="officialDuration">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Official Duration</th>
+          <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.officialDuration + ' ' + element.officialDurationIn }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="isRestreamer">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Restreamer</th>
+          <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.isRestreamer | date }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef class="f-w-600 f-s-15">Action</th>
+          <td mat-cell *matCellDef="let element" class="f-s-14 d-flex">
+            <a mat-icon-button [routerLink]="['/apps/packages/', element.id]" class="d-flex align-items-center justify-content-center">
+              <i-tabler name="eye" class="icon-18 d-flex align-items-center"></i-tabler>
+            </a>
+            <button mat-icon-button (click)="deletePackage(element.id)" class="d-flex align-items-center justify-content-center" title="delete">
+              <i-tabler name="trash" class="icon-18 d-flex align-items-center"></i-tabler>
+            </button>
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+      <mat-paginator
+        [pageSizeOptions]="[10, 25, 50]"
+        showFirstLastButtons>
+      </mat-paginator>
+    </div>
+  </mat-card>
+  
