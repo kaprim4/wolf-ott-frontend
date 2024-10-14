@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {
+    FormControl,
     UntypedFormBuilder,
     UntypedFormGroup,
     Validators,
@@ -53,6 +54,10 @@ export class AddUserLineComponent implements OnInit {
     dropdownOpened = false;
     addOnBlur = true;
     readonly separatorKeysCodes = [ENTER, COMMA] as const;
+
+    ownerSearchCtrl = new FormControl();
+    packageSearchCtrl = new FormControl();
+
     // allowedIps: { value: string }[] = [
     //     { value: '127.0.0.1' },
     //     { value: '192.168.1.1' },
@@ -103,6 +108,21 @@ export class AddUserLineComponent implements OnInit {
             contact: ['', [Validators.required, Validators.email]],
             resellerNotes: [''],
         });
+
+        this.ownerSearchCtrl.valueChanges.pipe(
+            startWith(''),
+            map(value => this.filterOwners(value))
+        ).subscribe(filtered => {
+            this.filteredOwners = filtered;
+        });
+
+        this.packageSearchCtrl.valueChanges.pipe(
+            startWith(''),
+            map(value => this.filterPackages(value))
+        ).subscribe(filtered => {
+            this.filteredPackages = filtered;
+        });
+        
     }
 
     ngOnInit(): void {
@@ -142,6 +162,16 @@ export class AddUserLineComponent implements OnInit {
                     selectedBouquets
                 );
             });
+    }
+
+    private filterOwners(value: string): any[] {
+        const filterValue = value?.toLowerCase();
+        return this.owners.filter(owner => owner?.username?.toLowerCase().includes(filterValue));
+    }
+
+    private filterPackages(value: string): any[] {
+        const filterValue = value?.toLowerCase();
+        return this.packages.filter(pkg => pkg?.packageName?.toLowerCase().includes(filterValue));
     }
 
     ownersFilterOptions() {

@@ -62,7 +62,7 @@
                         </div>
                     </div> -->
 
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-sm-4 d-flex align-items-start">
                             <mat-label class="mat-subtitle-2 f-w-600">Owner</mat-label>
                         </div>
@@ -93,7 +93,33 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                    </div>
+                    </div> -->
+
+                    <div class="row">
+                      <div class="col-sm-4 d-flex align-items-start">
+                          <mat-label class="mat-subtitle-2 f-w-600">Owners</mat-label>
+                      </div>
+                      <div class="col-sm-8">
+                          <mat-form-field appearance="outline" class="w-100">
+                              <mat-select [(ngModel)]="selectedOwner" (openedChange)="onOwnersDropdownOpened($event)" required>
+                                  <mat-select-trigger>
+                                      {{ selectedOwner ? selectedOwner.username : 'Select Owner' }}
+                                  </mat-select-trigger>
+                  
+                                  <ngx-mat-select-search 
+                                      [formControl]="ownerSearchCtrl" 
+                                      placeholderLabel="Search" 
+                                      noEntriesFoundLabel="No options found">
+                                  </ngx-mat-select-search>
+                  
+                                  <mat-option *ngFor="let owner of filteredOwners" [value]="owner" (click)="$event.stopPropagation()">
+                                      {{ owner.username }}
+                                  </mat-option>
+                              </mat-select>
+                          </mat-form-field>
+                      </div>
+                  </div>
+                  
                     
                     <!--                 
                     <div class="row">
@@ -108,7 +134,7 @@
                     </div>
                     -->
 
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-sm-4 d-flex align-items-start">
                             <mat-label class="mat-subtitle-2 f-w-600">Package</mat-label>
                         </div>
@@ -139,7 +165,33 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                    </div>
+                    </div> -->
+
+                    <div class="row">
+                      <div class="col-sm-4 d-flex align-items-start">
+                          <mat-label class="mat-subtitle-2 f-w-600">PAckages</mat-label>
+                      </div>
+                      <div class="col-sm-8">
+                          <mat-form-field appearance="outline" class="w-100">
+                              <mat-select [(ngModel)]="selectedPackage" (openedChange)="onPackagesDropdownOpened($event)" required>
+                                  <mat-select-trigger>
+                                      {{ selectedPackage ? selectedPackage.packageName : 'Select Owner' }}
+                                  </mat-select-trigger>
+                  
+                                  <ngx-mat-select-search 
+                                      [formControl]="packageSearchCtrl" 
+                                      placeholderLabel="Search" 
+                                      noEntriesFoundLabel="No options found">
+                                  </ngx-mat-select-search>
+                  
+                                  <mat-option *ngFor="let pkg of filteredPackages" [value]="pkg" (click)="$event.stopPropagation()">
+                                      {{ pkg.packageName }}
+                                  </mat-option>
+                              </mat-select>
+                          </mat-form-field>
+                      </div>
+                  </div>
+                  
 
                     <!-- New Row for Package Cost and Duration -->
                     <div class="row">

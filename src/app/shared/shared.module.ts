@@ -8,6 +8,8 @@ import { UserService } from './services/user.service';
 import { PackageService } from './services/package.service';
 import { BouquetService } from './services/bouquet.service';
 
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+
 
 
 @NgModule({
@@ -22,13 +24,15 @@ import { BouquetService } from './services/bouquet.service';
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    TablerIconsModule
+    TablerIconsModule,
+    NgxMatSelectSearchModule
   ],
   exports: [
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
     TablerIconsModule,
+    NgxMatSelectSearchModule
   ]
 })
 export class SharedModule { }
