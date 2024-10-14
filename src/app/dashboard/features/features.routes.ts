@@ -27,6 +27,10 @@ export const FeatureRoutes: Routes = [
         path: 'logs',
         loadChildren: () => import('./log/log.module').then(module => module.LogModule)
       },
+      {
+        path: 'bundles',
+        loadChildren: () => import('./bundle/bundle.module').then(module => module.BundleModule)
+      },
     ],
   },
 ];

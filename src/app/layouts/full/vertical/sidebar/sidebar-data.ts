@@ -115,4 +115,30 @@ export const navItems: NavItem[] = [
       },
     ],
   },
+  {
+    displayName: 'Bundles',
+    iconName: 'packages',
+    bgcolor: 'success',
+    route: '/apps/bundles',
+    children: [
+      {
+        displayName: 'Packages',
+        iconName: 'point',
+        bgcolor: 'tranparent',
+        route: '/apps/bundles/packages/list',
+      },
+      {
+        displayName: 'Bouquets',
+        iconName: 'point',
+        bgcolor: 'tranparent',
+        route: '/apps/bundles/bouquets/list',
+      },
+      {
+        displayName: 'Presets',
+        iconName: 'point',
+        bgcolor: 'tranparent',
+        route: '/apps/bundles/presets/list',
+      },
+    ],
+  },
 ];
