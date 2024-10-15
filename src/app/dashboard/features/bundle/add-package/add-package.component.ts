@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { order } from 'src/app/pages/apps/invoice/invoice';
-
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { PackageService } from 'src/app/shared/services/package.service';
@@ -134,21 +132,9 @@ bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
   ////////////////////////////////////////////////////////////////////
 
   saveDetail(): void {
-    // tslint:disable-next-line - Disables all
-    for (
-      let t = 0;
-      t < (<UntypedFormArray>this.addForm.get('rows')).length;
-      t++
-    ) {
-      const o: order = new order();
-      o.itemName = this.addForm.get('rows')?.value[t].itemName;
-      o.unitPrice = this.addForm.get('rows')?.value[t].unitPrice;
-      o.units = this.addForm.get('rows')?.value[t].units;
-      o.unitTotalPrice = o.units * o.unitPrice;
-    }
-    // this.dialog.open(PackageDialogComponent);
+
     this.packageService.addPackage(this.package);
-    this.router.navigate(['/apps/bundles/packages']);
+    this.router.navigate(['/apps/bundles/packages/list']);
   }
 
 

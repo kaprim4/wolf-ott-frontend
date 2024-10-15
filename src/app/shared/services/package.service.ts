@@ -33,8 +33,10 @@ export class PackageService extends CrudService<IPackage> {
     );
   }
 
-  public getPackage(id_package: number): Observable<HttpResponse<IPackage>> {
-    return this.getOneById(id_package);
+  public getPackage<T extends IPackage>(id_package: number): Observable<T> {
+    return this.getOneById(id_package).pipe(
+      map(pkg => pkg.body as T)
+    );
   }
 
   public addPackage(pkg: IPackage): Observable<HttpResponse<IPackage>> {

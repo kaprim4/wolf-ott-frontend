@@ -7,11 +7,12 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { BouquetsListComponent } from './bouquets-list/bouquets-list.component';
 import { PresetsListComponent } from './presets-list/presets-list.component';
 import { AddPackageComponent } from './add-package/add-package.component';
+import { ViewPackageComponent } from './view-package/view-package.component';
 
 
 
 @NgModule({
-  declarations: [PackagesListComponent, BouquetsListComponent, PresetsListComponent, AddPackageComponent],
+  declarations: [PackagesListComponent, BouquetsListComponent, PresetsListComponent, AddPackageComponent, ViewPackageComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(bundleRoutes),
