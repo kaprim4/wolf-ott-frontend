@@ -8,3 +8,12 @@ export interface PresetList extends IPreset {
     status: boolean,
     createdAt: Date
 }
+
+export interface PresetDetail extends IPreset {
+    presetName: string,
+    presetDescription: string,
+    status: boolean,
+    bouquets: number[],
+    createdAt: Date,
+    updatedAt: Date
+}

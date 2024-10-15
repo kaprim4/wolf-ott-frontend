@@ -10,11 +10,12 @@ import { AddPackageComponent } from './add-package/add-package.component';
 import { ViewPackageComponent } from './view-package/view-package.component';
 import { AddBouquetComponent } from './add-bouquet/add-bouquet.component';
 import { ViewBouquetComponent } from './view-bouquet/view-bouquet.component';
+import { AddPresetComponent } from './add-preset/add-preset.component';
 
 
 
 @NgModule({
-  declarations: [PackagesListComponent, BouquetsListComponent, PresetsListComponent, AddPackageComponent, ViewPackageComponent, AddBouquetComponent, ViewBouquetComponent],
+  declarations: [PackagesListComponent, BouquetsListComponent, PresetsListComponent, AddPackageComponent, ViewPackageComponent, AddBouquetComponent, ViewBouquetComponent, AddPresetComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(bundleRoutes),
