@@ -1,1 +1,206 @@
-<p>add-package works!</p>
+<mat-card class="cardWithShadow theme-card">
+    <mat-card-header>
+        <div class="w-100 d-flex justify-content-between align-items-center">
+          <h4 class="mat-subtitle-2 f-s-18 f-w-600 m-b-0">
+            <mat-card-title>Add Package</mat-card-title>
+          </h4>
+          <div class="text-right">
+            <a
+              routerLink="/apps/bundles/packages"
+              mat-stroked-button
+              color="warn"
+              class="m-r-10"
+            >
+              Cancel
+            </a>
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="$event.preventDefault(); saveDetail()"
+              [disabled]="addForm.invalid"
+            >
+              Save Package
+            </button>
+          </div>
+        </div>
+      </mat-card-header>
+      
+      
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0ms">
+        <mat-tab label="Details">
+            <mat-card-content class="b-t-1">
+                <form #packageForm="ngForm" (ngSubmit)="saveDetail()">
+                  <div class="row">
+                    <div class="col-sm-4 d-flex align-items-center">
+                      <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Package Name</mat-label>
+                    </div>
+                    <div class="col-sm-8">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <input matInput placeholder="Packagename" name="packagename" [(ngModel)]="package.packageName" required />
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-sm-4 d-flex align-items-start">
+                        <mat-label class="mat-subtitle-2 f-w-600">Official Duration</mat-label>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <input matInput type="number" placeholder="Enter Duration" [(ngModel)]="package.officialDuration" required />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-2 d-flex align-items-start">
+                        <mat-label class="mat-subtitle-2 f-w-600">Unit</mat-label>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-select  name="pkg-duration-unit" [(ngModel)]="package.officialDurationIn">
+                                <mat-option value="hour">Hour</mat-option>
+                                <mat-option value="day">Day</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4 d-flex align-items-center">
+                      <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Official Corst</mat-label>
+                    </div>
+                    <div class="col-sm-8">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <input matInput placeholder="Packagename" name="packagename" [(ngModel)]="package.officialCredits" required />
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-sm-4 d-flex align-items-start">
+                        <mat-label class="mat-subtitle-2 f-w-600">Trial Duration</mat-label>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <input matInput type="number" placeholder="Enter Duration" [(ngModel)]="package.trialDuration" required />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-2 d-flex align-items-start">
+                        <mat-label class="mat-subtitle-2 f-w-600">Unit</mat-label>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-select  name="pkg-duration-unit" [(ngModel)]="package.trialDurationIn">
+                                <mat-option value="hour">Hour</mat-option>
+                                <mat-option value="day">Day</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4 d-flex align-items-center">
+                      <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Trial Corst</mat-label>
+                    </div>
+                    <div class="col-sm-8">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <input matInput placeholder="Packagename" name="packagename" [(ngModel)]="package.trialCredits" required />
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                </form>
+              </mat-card-content>
+        </mat-tab>
+        <mat-tab label="Bouquets">
+            <mat-card class="">
+                <mat-card-content>
+                  <div class="table-responsive">
+                    <table mat-table [dataSource]="bouquetsDataSource" class="w-100">
+                      <!-- Checkbox Column -->
+                      <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef class="p-l-0">
+                          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="bouquetsSelection.hasValue() && isAllSelected()"
+                            color="primary" [indeterminate]="bouquetsSelection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                          </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let row" class="p-l-0">
+                          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? bouquetsSelection.toggle(row) : null"
+                            color="primary" [checked]="bouquetsSelection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                          </mat-checkbox>
+                        </td>
+                      </ng-container>
+
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Bouquet Name
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          {{ element.bouquetName }}
+                        </td>
+                      </ng-container>
+              
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="streams">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Streams
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          <!-- {{ element.productName }} -->
+                            0
+                        </td>
+                      </ng-container>
+
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="movies">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Movies
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          <!-- {{ element.productName }} -->
+                            0
+                        </td>
+                      </ng-container>
+
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="series">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Series
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          <!-- {{ element.productName }} -->
+                            0
+                        </td>
+                      </ng-container>
+
+                       <!-- Name Column -->
+                       <ng-container matColumnDef="stations">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Stations
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          <!-- {{ element.productName }} -->
+                            0
+                        </td>
+                      </ng-container>
+              
+                      <!-- Symbol Column -->
+                      <ng-container matColumnDef="budget">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Budget
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          ${{ element.budget }}k
+                        </td>
+                      </ng-container>
+              
+                      <tr mat-header-row *matHeaderRowDef="bouquetsDisplayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: bouquetsDisplayedColumns" (click)="bouquetsSelection.toggle(row)"></tr>
+                    </table>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+        </mat-tab>
+    </mat-tab-group>
+    
+  </mat-card>
+  
