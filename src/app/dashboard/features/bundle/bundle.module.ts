@@ -9,11 +9,12 @@ import { PresetsListComponent } from './presets-list/presets-list.component';
 import { AddPackageComponent } from './add-package/add-package.component';
 import { ViewPackageComponent } from './view-package/view-package.component';
 import { AddBouquetComponent } from './add-bouquet/add-bouquet.component';
+import { ViewBouquetComponent } from './view-bouquet/view-bouquet.component';
 
 
 
 @NgModule({
-  declarations: [PackagesListComponent, BouquetsListComponent, PresetsListComponent, AddPackageComponent, ViewPackageComponent, AddBouquetComponent],
+  declarations: [PackagesListComponent, BouquetsListComponent, PresetsListComponent, AddPackageComponent, ViewPackageComponent, AddBouquetComponent, ViewBouquetComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(bundleRoutes),

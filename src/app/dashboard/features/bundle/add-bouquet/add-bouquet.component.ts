@@ -1,18 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {
-    UntypedFormArray,
-    UntypedFormBuilder,
-    UntypedFormGroup,
-    Validators,
-} from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
-import {
-    BouquetDetail,
-    BouquetList,
-    IBouquet,
-} from 'src/app/shared/models/bouquet';
+import { BouquetDetail } from 'src/app/shared/models/bouquet';
 import { MatTableDataSource } from '@angular/material/table';
 import { BouquetService } from 'src/app/shared/services/bouquet.service';
 import { BouquetFactory } from 'src/app/shared/factories/bouquet.factory';
@@ -33,22 +24,22 @@ export class AddBouquetComponent implements OnInit {
     ];
 
     seriesDisplayedColumns: string[] = [
-      'select',
-      'name',
-      'category',
-      'connections',
-      // 'budget',
-      // 'actions',
-  ];
+        'select',
+        'name',
+        'category',
+        'connections',
+        // 'budget',
+        // 'actions',
+    ];
 
-  stationDisplayedColumns: string[] = [
-    'select',
-    'name',
-    'category',
-    'connections',
-    // 'budget',
-    // 'actions',
-];
+    stationDisplayedColumns: string[] = [
+        'select',
+        'name',
+        'category',
+        'connections',
+        // 'budget',
+        // 'actions',
+    ];
 
     streams: any[];
     streamsSelection = new SelectionModel<any>(true, []);
