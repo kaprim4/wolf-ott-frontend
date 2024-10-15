@@ -33,8 +33,8 @@ export class PresetService extends CrudService<IPreset> {
     );
   }
 
-  public getPreset(id_preset: number): Observable<HttpResponse<IPreset>> {
-    return this.getOneById(id_preset);
+  public getPreset<T extends IPreset>(id_preset: number): Observable<T> {
+    return this.getOneById(id_preset).pipe(map(res => res.body as T));
   }
 
   public addPreset(pkg: IPreset): Observable<HttpResponse<IPreset>> {
