@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CoreService} from 'src/app/services/core.service';
 import {FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule, FormBuilder} from '@angular/forms';
 import {ActivatedRoute, Router, RouterModule} from '@angular/router';
@@ -8,6 +8,7 @@ import {ICredential} from "../../../shared/models/credential";
 import {TokenService} from "../../../shared/services/token.service";
 import {AuthenticationService} from "../../../shared/services/auth.service";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import {ComponentClass} from "devextreme/core/dom_component";
 
 @Component({
     selector: 'app-side-login',
@@ -15,7 +16,7 @@ import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
     imports: [RouterModule, MaterialModule, FormsModule, ReactiveFormsModule],
     templateUrl: './side-login.component.html',
 })
-export class AppSideLoginComponent {
+export class AppSideLoginComponent implements OnInit {
     options = this.settings.getOptions();
 
     form: ICredential = {
@@ -36,8 +37,8 @@ export class AppSideLoginComponent {
     }
 
     loginForm: FormGroup = this.fb.group({
-        username: ['ghostspack', [Validators.required]],
-        password: ['Blackhandler1020@@', Validators.required]
+        username: ['ghostspack', [Validators.required, Validators.minLength(6)]],
+        password: ['Blackhandler1020@@', [Validators.required]]
     });
     formSubmitted: boolean = false;
     error: string = '';

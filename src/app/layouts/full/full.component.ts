@@ -20,6 +20,9 @@ import {AppHorizontalHeaderComponent} from './horizontal/header/header.component
 import {AppHorizontalSidebarComponent} from './horizontal/sidebar/sidebar.component';
 import {AppBreadcrumbComponent} from './shared/breadcrumb/breadcrumb.component';
 import {CustomizerComponent} from './shared/customizer/customizer.component';
+import {AuthenticationService} from "../../shared/services/auth.service";
+import {TokenService} from "../../shared/services/token.service";
+import {environment} from "../../../environments/environment";
 
 const MOBILE_VIEW = 'screen and (max-width: 768px)';
 const TABLET_VIEW = 'screen and (min-width: 769px) and (max-width: 1024px)';
@@ -67,10 +70,13 @@ export class FullComponent implements OnInit {
 
     @ViewChild('leftsidenav')
     public sidenav: MatSidenav;
+
     resView = false;
+
     @ViewChild('content', {static: true}) content!: MatSidenavContent;
     //get options from service
     options = this.settings.getOptions();
+
     private layoutChangesSubscription = Subscription.EMPTY;
     private isMobileScreen = false;
     private isContentWidthFixed = true;
@@ -84,6 +90,13 @@ export class FullComponent implements OnInit {
     get isTablet(): boolean {
         return this.resView;
     }
+
+    currYear: number = new Date().getFullYear();
+    today: Date = new Date();
+    APP_NAME = environment.APP_NAME;
+    no_profile_img = './assets/images/no_image.png';
+    pageTitle: string = '';
+    loggedInUser: any;
 
     // for mobile app sidebar
     apps: apps[] = [
@@ -189,6 +202,8 @@ export class FullComponent implements OnInit {
     ];
 
     constructor(
+        private authService: AuthenticationService,
+        private tokenService: TokenService,
         private settings: CoreService,
         private mediaMatcher: MediaMatcher,
         private router: Router,
@@ -221,6 +236,7 @@ export class FullComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.loggedInUser = this.tokenService.getPayload();
     }
 
     ngOnDestroy() {

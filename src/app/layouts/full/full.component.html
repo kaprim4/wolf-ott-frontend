@@ -33,11 +33,11 @@
         <div class="bg-light-primary d-flex align-items-center rounded p-24">
           <img src="/assets/images/profile/user5.jpg" class="rounded-circle" width="45" />
           <div class="m-l-16">
-            <h5 class="f-s-18 m-0 f-w-600 m-b-4">Mike</h5>
-            <span class="f-s-14">Admin</span>
+            <h5 class="f-s-18 m-0 f-w-600 m-b-4">{{loggedInUser?.name}}</h5>
+            <span class="f-s-14">{{loggedInUser?.role}}</span>
           </div>
           <div class="m-l-auto">
-            <a mat-icon-button [routerLink]="['/authentication/login']" class="d-flex justify-content-center">
+            <a mat-icon-button [routerLink]="['/authentication/logout']" class="d-flex justify-content-center">
               <i-tabler name="power" class="text-primary icon-18 d-flex"></i-tabler>
             </a>
           </div>
