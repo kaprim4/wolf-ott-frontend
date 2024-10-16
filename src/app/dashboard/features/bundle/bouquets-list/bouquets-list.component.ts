@@ -1,8 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { catchError, of, Subject } from 'rxjs';
+import { catchError, debounceTime, of, Subject, switchMap } from 'rxjs';
 import { BouquetList } from 'src/app/shared/models/bouquet';
 import { Page } from 'src/app/shared/models/page';
 import { BouquetService } from 'src/app/shared/services/bouquet.service';
@@ -12,7 +12,7 @@ import { BouquetService } from 'src/app/shared/services/bouquet.service';
   templateUrl: './bouquets-list.component.html',
   styleUrl: './bouquets-list.component.scss'
 })
-export class BouquetsListComponent {
+export class BouquetsListComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
     'chk',
     'id',
@@ -41,11 +41,26 @@ export class BouquetsListComponent {
   constructor(private bouquetService: BouquetService) {
     this.loadBouquets();
   }
+  ngOnInit(): void {
+    this.loadBouquets();
+    // Subscribe to search input changes
+    this.searchSubject.pipe(
+        debounceTime(300), // Wait for 300ms pause in events
+        switchMap(searchTerm => this.bouquetService.getBouquets<BouquetList>(searchTerm, this.pageIndex, this.pageSize))
+    ).subscribe(response => {
+        this.dataSource.data = response.content;
+        this.totalElements = response.totalElements;
+    });
+}
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
+ngAfterViewInit(): void {
+    // this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-  }
+
+    this.sort.sortChange.subscribe(() => this.loadBouquets());
+    this.paginator.page.subscribe(() => this.loadBouquets());
+}
+
 
   filter(filterValue: string): void {
     this.dataSource.filter = filterValue.trim().toLowerCase();
