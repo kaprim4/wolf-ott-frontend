@@ -1,8 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { catchError, of, Subject } from 'rxjs';
+import { catchError, debounceTime, of, Subject, switchMap } from 'rxjs';
 import { PackageList } from 'src/app/shared/models/package';
 import { Page } from 'src/app/shared/models/page';
 import { PackageService } from 'src/app/shared/services/package.service';
@@ -12,7 +12,7 @@ import { PackageService } from 'src/app/shared/services/package.service';
   templateUrl: './packages-list.component.html',
   styleUrl: './packages-list.component.scss'
 })
-export class PackagesListComponent {
+export class PackagesListComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
     'chk',
     'id',
@@ -40,11 +40,26 @@ export class PackagesListComponent {
   constructor(private packageService: PackageService) {
     this.loadPackages();
   }
+  ngOnInit(): void {
+    this.loadPackages();
+    // Subscribe to search input changes
+    this.searchSubject.pipe(
+        debounceTime(300), // Wait for 300ms pause in events
+        switchMap(searchTerm => this.packageService.getPackages<PackageList>(searchTerm, this.pageIndex, this.pageSize))
+    ).subscribe(response => {
+        this.dataSource.data = response.content;
+        this.totalElements = response.totalElements;
+    });
+}
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
+ngAfterViewInit(): void {
+    // this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-  }
+
+    this.sort.sortChange.subscribe(() => this.loadPackages());
+    this.paginator.page.subscribe(() => this.loadPackages());
+}
+
 
   filter(filterValue: string): void {
     this.dataSource.filter = filterValue.trim().toLowerCase();

@@ -81,9 +81,11 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
-      <mat-paginator
-        [pageSizeOptions]="[10, 25, 50]"
-        showFirstLastButtons>
+      <mat-paginator  [length]="totalElements" 
+                      [pageSize]="pageSize" 
+                      [pageSizeOptions]="[5, 10, 25]" 
+                      (page)="loadPackages()"
+                      showFirstLastButtons>
       </mat-paginator>
     </div>
   </mat-card>
