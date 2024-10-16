@@ -10,27 +10,25 @@ import { CoreService } from 'src/app/services/core.service';
       <div class="branding">
           @if (options.theme === 'light') {
               <a href="/">
-                  <img
-                      src="./assets/images/logos/dark-logo.svg"
-                      class="align-middle m-2"
-                      alt="logo"
-                  />
+                  <img src="./assets/images/wolf_logo.png" class="align-middle" alt="logo" width="75"/>
+                  <img src="./assets/images/logo-dark.png" class="align-middle" alt="logo" height="80"/>
               </a>
           }
           @if (options.theme === 'dark') {
               <a href="/">
-                  <img
-                      src="./assets/images/logos/light-logo.svg"
-                      class="align-middle m-2"
-                      alt="logo"
-                  />
+                  <img src="./assets/images/wolf_logo.png" class="align-middle" alt="logo" width="75"/>
+                  <img src="./assets/images/logo-light.png" class="align-middle" alt="logo" height="40"/>
               </a>
           }
       </div>
   `,
 })
 export class BrandingComponent {
+
   options = this.settings.getOptions();
 
-  constructor(private settings: CoreService) { }
+  constructor(
+      private settings: CoreService
+  ) {
+  }
 }

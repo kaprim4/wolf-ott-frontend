@@ -7,13 +7,13 @@
                     <div class="row">
                         <div class="col-lg-6 align-items-center justify-content-center">
                             @if (options.theme === 'light') {
-                                <a [routerLink]="['/dashboards/dashboard1']" class="m-t-20 d-flex">
+                                <a [routerLink]="['/dashboard']" class="m-t-20 d-flex">
                                     <img src="./assets/images/wolf_logo.png" class="align-middle m-2" alt="logo" width="100"/>
                                     <img src="./assets/images/logo-dark.png" class="align-middle m-2" alt="logo" height="80"/>
                                 </a>
                             }
                             @if (options.theme === 'dark') {
-                                <a [routerLink]="['/dashboards/dashboard1']" class="m-t-20 d-flex">
+                                <a [routerLink]="['/dashboard']" class="m-t-20 d-flex">
                                     <img src="./assets/images/wolf_logo.png" class="align-middle m-2" alt="logo" width="100"/>
                                     <img src="./assets/images/logo-light.png" class="align-middle m-2" alt="logo" height="80"/>
                                 </a>
@@ -94,7 +94,7 @@
 
                                             <div class="d-block d-lg-flex align-items-center m-b-12">
                                                 <mat-checkbox color="primary">Remember this Device</mat-checkbox>
-                                                <a [routerLink]="['/authentication/side-forgot-pwd']"
+                                                <a [routerLink]="['/auth/forgot-password']"
                                                    class="text-primary f-w-600 text-decoration-none m-l-auto d-block f-s-14">Forgot
                                                     Password
                                                     ?</a>

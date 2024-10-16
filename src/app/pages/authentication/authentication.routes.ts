@@ -4,12 +4,18 @@ import {AppErrorComponent} from './error/error.component';
 import {AppMaintenanceComponent} from './maintenance/maintenance.component';
 import {AppSideLoginComponent} from './side-login/side-login.component';
 import {AppSideTwoStepsComponent} from './side-two-steps/side-two-steps.component';
+import {LogoutComponent} from "./logout/logout.component";
+import {AppSideForgotPasswordComponent} from "./side-forgot-password/side-forgot-password.component";
 
 
 export const AuthenticationRoutes: Routes = [
     {
         path: '',
         children: [
+            {
+                path: '',
+                component: AppSideLoginComponent,
+            },
             {
                 path: 'error',
                 component: AppErrorComponent,
@@ -23,12 +29,12 @@ export const AuthenticationRoutes: Routes = [
                 component: AppSideLoginComponent,
             },
             {
-                path: 'side-two-steps',
-                component: AppSideTwoStepsComponent,
+                path: 'forgot-password',
+                component: AppSideForgotPasswordComponent,
             },
             {
                 path: 'logout',
-                component: AppSideLoginComponent,
+                component: LogoutComponent,
             },
         ],
     },

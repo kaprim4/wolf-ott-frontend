@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
     HttpRequest,
     HttpHandler,
@@ -6,7 +6,7 @@ import {
     HttpInterceptor,
     HTTP_INTERCEPTORS
 } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
+import {catchError, Observable, throwError} from 'rxjs';
 import {TokenService} from "../shared/services/token.service";
 import {ApiErrorService} from "../shared/services/api-error.service";
 
@@ -16,21 +16,22 @@ export class TokenInterceptor implements HttpInterceptor {
     constructor(
         private tokenService: TokenService,
         private apiErrorService: ApiErrorService
-    ) {}
+    ) {
+    }
 
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         //console.log(request)
         const token = this.tokenService.getToken()
         // SI token à insérer dans le header
-        if(token !== null){
+        if (token !== null) {
             let clone = request.clone({
-                headers: request.headers.set('Authorization', 'bearer '+token)
+                headers: request.headers.set('Authorization', 'bearer ' + token)
             })
             //console.log("clone:", clone)
             return next.handle(clone).pipe(
                 catchError(error => {
                     console.log(error)
-                    if(error.status === 401){
+                    if (error.status === 401) {
                         this.tokenService.clearTokenExpired()
                     }
                     this.apiErrorService.sendError(error.error.message)

@@ -1,30 +1,61 @@
-import { Component } from '@angular/core';
-import { CoreService } from 'src/app/services/core.service';
-import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { MaterialModule } from '../../../material.module';
+import {Component, OnInit} from '@angular/core';
+import {CoreService} from 'src/app/services/core.service';
+import {FormGroup, Validators, FormsModule, ReactiveFormsModule, FormBuilder} from '@angular/forms';
+import {ActivatedRoute, Router, RouterModule} from '@angular/router';
+import {MaterialModule} from '../../../material.module';
+import {AuthenticationService} from "../../../shared/services/auth.service";
+import {TokenService} from "../../../shared/services/token.service";
+import {environment} from "../../../../environments/environment";
 
 @Component({
-  selector: 'app-side-forgot-password',
-  standalone: true,
-  imports: [RouterModule, MaterialModule, FormsModule, ReactiveFormsModule],
-  templateUrl: './side-forgot-password.component.html',
+    selector: 'app-side-forgot-password',
+    standalone: true,
+    imports: [RouterModule, MaterialModule, FormsModule, ReactiveFormsModule],
+    templateUrl: './side-forgot-password.component.html',
 })
-export class AppSideForgotPasswordComponent {
-  options = this.settings.getOptions();
+export class AppSideForgotPasswordComponent implements OnInit {
+    options = this.settings.getOptions();
 
-  constructor(private settings: CoreService, private router: Router) {}
+    currYear: number = new Date().getFullYear();
+    today: Date = new Date();
+    APP_NAME = environment.APP_NAME;
 
-  form = new FormGroup({
-    email: new FormControl('', [Validators.required]),
-  });
+    constructor(
+        private settings: CoreService,
+        private authService: AuthenticationService,
+        private tokenService: TokenService,
+        private route: ActivatedRoute,
+        private fb: FormBuilder,
+        private router: Router
+    ) {
+    }
 
-  get f() {
-    return this.form.controls;
-  }
 
-  submit() {
-    // console.log(this.form.value);
-    this.router.navigate(['/dashboards/dashboard1']);
-  }
+    forgotPasswordForm: FormGroup = this.fb.group({
+        email: ['', [Validators.required, Validators.email]]
+    });
+
+    formSubmitted: boolean = false;
+    error: string = '';
+    returnUrl: string = '/';
+    loading: boolean = false;
+
+
+    ngOnInit(): void {
+        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || this.returnUrl;
+    }
+
+    get formValues() {
+        return this.forgotPasswordForm.controls;
+    }
+
+    onSubmit(): void {
+        this.formSubmitted = true;
+        if (this.forgotPasswordForm.valid) {
+            this.loading = true;
+            this.router.navigate(['/auth/login']).then(r =>
+                console.log("Forgot Password Form.")
+            )
+        }
+    }
 }
