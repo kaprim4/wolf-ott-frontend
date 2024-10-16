@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { OverviewComponent } from './pages/overview/overview.component';
-import { SettingsComponent } from './pages/settings/settings.component';
 import {AppDashboard1Component} from "../pages/dashboards/dashboard1/dashboard1.component";
 
 

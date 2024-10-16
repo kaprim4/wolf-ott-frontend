@@ -14,26 +14,44 @@ export const AuthenticationRoutes: Routes = [
         children: [
             {
                 path: '',
+                data: {
+                    title: 'login',
+                },
                 component: AppSideLoginComponent,
             },
             {
                 path: 'error',
+                data: {
+                    title: 'error',
+                },
                 component: AppErrorComponent,
             },
             {
                 path: 'maintenance',
+                data: {
+                    title: 'maintenance',
+                },
                 component: AppMaintenanceComponent,
             },
             {
                 path: 'login',
+                data: {
+                    title: 'login',
+                },
                 component: AppSideLoginComponent,
             },
             {
                 path: 'forgot-password',
+                data: {
+                    title: 'forgot password',
+                },
                 component: AppSideForgotPasswordComponent,
             },
             {
                 path: 'logout',
+                data: {
+                    title: 'logout',
+                },
                 component: LogoutComponent,
             },
         ],
