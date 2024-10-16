@@ -33,8 +33,10 @@ export class BouquetService extends CrudService<IBouquet> {
     );
   }
 
-  public getBouquet(id_bouquet: number): Observable<HttpResponse<IBouquet>> {
-    return this.getOneById(id_bouquet);
+  public getBouquet<T extends IBouquet>(id_bouquet: number): Observable<T> {
+    return this.getOneById(id_bouquet).pipe(
+      map(res => res.body as T)
+    );
   }
 
   public addBouquet(bouquet: IBouquet): Observable<HttpResponse<IBouquet>> {

@@ -1,1 +1,325 @@
-<p>add-bouquet works!</p>
+<mat-card class="cardWithShadow theme-card">
+    <mat-card-header>
+        <div class="w-100 d-flex justify-content-between align-items-center">
+          <h4 class="mat-subtitle-2 f-s-18 f-w-600 m-b-0">
+            <mat-card-title>Add Bouquet</mat-card-title>
+          </h4>
+          <div class="text-right">
+            <a
+              routerLink="/apps/bundles/bouquets/list"
+              mat-stroked-button
+              color="warn"
+              class="m-r-10"
+            >
+              Cancel
+            </a>
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="$event.preventDefault(); saveDetail()"
+              [disabled]="addForm.invalid"
+            >
+              Save Bouquet
+            </button>
+          </div>
+        </div>
+      </mat-card-header>
+      
+      
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0ms">
+        <mat-tab label="Details">
+            <mat-card-content class="b-t-1">
+                <form #bouquetForm="ngForm" (ngSubmit)="saveDetail()">
+                  <div class="row">
+                    <div class="col-sm-4 d-flex align-items-center">
+                      <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Bouquet Name</mat-label>
+                    </div>
+                    <div class="col-sm-8">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <input matInput placeholder="Enter Bouquet Name" name="bouquetName" [(ngModel)]="bouquet.bouquetName" required />
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+
+                </form>
+              </mat-card-content>
+        </mat-tab>
+        
+        <mat-tab label="Streams">
+            <mat-card class="">
+                <mat-card-content>
+                  <div class="table-responsive">
+                    <table mat-table [dataSource]="streamsDataSource" class="w-100">
+                      <!-- Checkbox Column -->
+                      <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef class="p-l-0">
+                          <mat-checkbox (change)="$event ? masterStreamsToggle() : null" [checked]="streamsSelection.hasValue() && isAllStationsSelected()"
+                            color="primary" [indeterminate]="streamsSelection.hasValue() && !isAllStreamsSelected()" [aria-label]="checkboxStreamLabel()">
+                          </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let row" class="p-l-0">
+                          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? streamsSelection.toggle(row) : null"
+                            color="primary" [checked]="streamsSelection.isSelected(row)" [aria-label]="checkboxStreamLabel(row)">
+                          </mat-checkbox>
+                        </td>
+                      </ng-container>
+
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Stream Name
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          {{ element.streamName }}
+                        </td>
+                      </ng-container>
+              
+                      <ng-container matColumnDef="category">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Category
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          {{ 'Test' }}
+                        </td>
+                      </ng-container>
+              
+
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="connections">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Connections
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          <!-- {{ element.productName }} -->
+                            0
+                        </td>
+                      </ng-container>
+
+                      
+                      <!-- Symbol Column -->
+                      <ng-container matColumnDef="budget">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Budget
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          ${{ element.budget }}k
+                        </td>
+                      </ng-container>
+              
+                      <tr mat-header-row *matHeaderRowDef="moviesDisplayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: moviesDisplayedColumns" (click)="moviesSelection.toggle(row)"></tr>
+                    </table>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+        </mat-tab>
+        
+        <mat-tab label="Movies">
+            <mat-card class="">
+                <mat-card-content>
+                  <div class="table-responsive">
+                    <table mat-table [dataSource]="moviesDataSource" class="w-100">
+                      <!-- Checkbox Column -->
+                      <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef class="p-l-0">
+                          <mat-checkbox (change)="$event ? masterMoviesToggle() : null" [checked]="moviesSelection.hasValue() && isAllMoviesSelected()"
+                            color="primary" [indeterminate]="moviesSelection.hasValue() && !isAllMoviesSelected()" [aria-label]="checkboxMovieLabel()">
+                          </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let row" class="p-l-0">
+                          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? moviesSelection.toggle(row) : null"
+                            color="primary" [checked]="moviesSelection.isSelected(row)" [aria-label]="checkboxMovieLabel(row)">
+                          </mat-checkbox>
+                        </td>
+                      </ng-container>
+
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Movie Name
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          {{ element.movieName }}
+                        </td>
+                      </ng-container>
+              
+                      <ng-container matColumnDef="category">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Category
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          {{ 'Test' }}
+                        </td>
+                      </ng-container>
+              
+
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="connections">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Connections
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          <!-- {{ element.productName }} -->
+                            0
+                        </td>
+                      </ng-container>
+
+                      
+                      <!-- Symbol Column -->
+                      <ng-container matColumnDef="budget">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Budget
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          ${{ element.budget }}k
+                        </td>
+                      </ng-container>
+              
+                      <tr mat-header-row *matHeaderRowDef="moviesDisplayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: moviesDisplayedColumns" (click)="moviesSelection.toggle(row)"></tr>
+                    </table>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+        </mat-tab>
+        <mat-tab label="Series">
+            <mat-card class="">
+                <mat-card-content>
+                  <div class="table-responsive">
+                    <table mat-table [dataSource]="seriesDataSource" class="w-100">
+                      <!-- Checkbox Column -->
+                      <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef class="p-l-0">
+                          <mat-checkbox (change)="$event ? masterSeriesToggle() : null" [checked]="seriesSelection.hasValue() && isAllSeriesSelected()"
+                            color="primary" [indeterminate]="seriesSelection.hasValue() && !isAllSeriesSelected()" [aria-label]="checkboxSerieLabel()">
+                          </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let row" class="p-l-0">
+                          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? seriesSelection.toggle(row) : null"
+                            color="primary" [checked]="seriesSelection.isSelected(row)" [aria-label]="checkboxSerieLabel(row)">
+                          </mat-checkbox>
+                        </td>
+                      </ng-container>
+
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Serie Name
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          {{ element.serieName }}
+                        </td>
+                      </ng-container>
+              
+                      <ng-container matColumnDef="category">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Category
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          {{ 'Test' }}
+                        </td>
+                      </ng-container>
+              
+
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="connections">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Connections
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          <!-- {{ element.productName }} -->
+                            0
+                        </td>
+                      </ng-container>
+
+                      
+                      <!-- Symbol Column -->
+                      <ng-container matColumnDef="budget">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Budget
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          ${{ element.budget }}k
+                        </td>
+                      </ng-container>
+              
+                      <tr mat-header-row *matHeaderRowDef="moviesDisplayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: moviesDisplayedColumns" (click)="seriesSelection.toggle(row)"></tr>
+                    </table>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+        </mat-tab>
+        <mat-tab label="Station">
+            <mat-card class="">
+                <mat-card-content>
+                  <div class="table-responsive">
+                    <table mat-table [dataSource]="stationsDataSource" class="w-100">
+                      <!-- Checkbox Column -->
+                      <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef class="p-l-0">
+                          <mat-checkbox (change)="$event ? masterStationsToggle() : null" [checked]="stationsSelection.hasValue() && isAllStationsSelected()"
+                            color="primary" [indeterminate]="seriesSelection.hasValue() && !isAllStationsSelected()" [aria-label]="checkboxStationLabel()">
+                          </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let row" class="p-l-0">
+                          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? seriesSelection.toggle(row) : null"
+                            color="primary" [checked]="stationsSelection.isSelected(row)" [aria-label]="checkboxStationLabel(row)">
+                          </mat-checkbox>
+                        </td>
+                      </ng-container>
+
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Station Name
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          {{ element.stationName }}
+                        </td>
+                      </ng-container>
+              
+                      <ng-container matColumnDef="category">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Category
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          {{ 'Test' }}
+                        </td>
+                      </ng-container>
+              
+
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="connections">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Connections
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          <!-- {{ element.productName }} -->
+                            0
+                        </td>
+                      </ng-container>
+
+                      
+                      <!-- Symbol Column -->
+                      <ng-container matColumnDef="budget">
+                        <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
+                          Budget
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="mat-body-1">
+                          ${{ element.budget }}k
+                        </td>
+                      </ng-container>
+              
+                      <tr mat-header-row *matHeaderRowDef="moviesDisplayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: stationDisplayedColumns" (click)="stationsSelection.toggle(row)"></tr>
+                    </table>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+        </mat-tab>
+    </mat-tab-group>
+    
+  </mat-card>
+  
