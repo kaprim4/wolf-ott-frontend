@@ -1,9 +1,32 @@
+
 export interface IUser {
     id: number;
     username: string;
 }
 
-export interface UserList extends IUser {
+
+export interface ITokenUser {
+    "exp": number;
+    "iat": number;
+    "role_access": role_access | any,
+    "role": string | any,
+    "scope": string;
+    "sid": string;
+    "email_verified": boolean,
+    "name": string;
+    "preferred_username": string;
+    "given_name": string;
+    "family_name": string;
+    "email": string;
+}
+
+export interface role_access {
+    "roles": string[];
+}
+
+export interface UserList{
+    id: number;
+    username: string;
     email: string;
     credits: number;
     dateRegistered: string;
@@ -16,6 +39,8 @@ export interface UserList extends IUser {
 }
 
 export interface UserDetail extends IUser {
+    id: number;
+    username: string;
     password?: string,
     email?: string;
     ip?: string;
