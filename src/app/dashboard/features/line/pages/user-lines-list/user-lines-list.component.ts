@@ -1,8 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Subject, catchError, of } from 'rxjs';
+import { Subject, catchError, debounceTime, of, switchMap } from 'rxjs';
 import { LineList } from 'src/app/shared/models/line';
 import { Page } from 'src/app/shared/models/page';
 import { LineService } from 'src/app/shared/services/line.service';
@@ -12,7 +12,7 @@ import { LineService } from 'src/app/shared/services/line.service';
   templateUrl: './user-lines-list.component.html',
   styleUrl: './user-lines-list.component.scss'
 })
-export class UserLinesListComponent {
+export class UserLinesListComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
     'chk',
     'id',
@@ -45,13 +45,27 @@ export class UserLinesListComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(private lineService: LineService) {
+    // this.loadLines();
+  }
+  ngOnInit(): void {
     this.loadLines();
-  }
+    // Subscribe to search input changes
+    this.searchSubject.pipe(
+        debounceTime(300), // Wait for 300ms pause in events
+        switchMap(searchTerm => this.lineService.getLines<LineList>(searchTerm, this.pageIndex, this.pageSize))
+    ).subscribe(response => {
+        this.dataSource.data = response.content;
+        this.totalElements = response.totalElements;
+    });
+}
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
+ngAfterViewInit(): void {
+    // this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-  }
+
+    this.sort.sortChange.subscribe(() => this.loadLines());
+    this.paginator.page.subscribe(() => this.loadLines());
+}
 
   filter(filterValue: string): void {
     this.dataSource.filter = filterValue.trim().toLowerCase();
