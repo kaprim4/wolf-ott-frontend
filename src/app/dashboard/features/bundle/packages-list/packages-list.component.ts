@@ -76,7 +76,8 @@ ngAfterViewInit(): void {
   loadPackages(): void {
     const page = this.paginator?.pageIndex || this.pageIndex;
     const size = this.paginator?.pageSize || this.pageSize;
-
+    this.loading = true;
+    
     this.packageService.getPackages<PackageList>('', page, size).pipe(
       catchError(error => {
         console.error('Failed to load packages', error);

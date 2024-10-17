@@ -77,8 +77,8 @@ ngAfterViewInit(): void {
   loadUsers(): void {
     const page = (this.paginator?.pageIndex || this.pageIndex);
     const size = (this.paginator?.pageSize || this.pageSize);
-  
     this.loading = true; // Start loading
+    
     this.userService.getUsers<UserList>('', page, size).pipe(
       catchError(error => {
         console.error('Failed to load users', error);
