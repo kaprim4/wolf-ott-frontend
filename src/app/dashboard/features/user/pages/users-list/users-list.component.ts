@@ -92,4 +92,7 @@ ngAfterViewInit(): void {
     });
   }
   
+  // get loading():boolean{
+  //   return this.userLoading || this.ownersLoading;
+  // }
 }
