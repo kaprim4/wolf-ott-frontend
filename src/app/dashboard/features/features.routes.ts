@@ -29,9 +29,6 @@ export const FeatureRoutes: Routes = [
             },
             {
                 path: 'contents',
-                data: {
-                    title: 'Contents',
-                },
                 loadChildren: () => import('./content/content.module').then(module => module.ContentModule)
             },
             {
