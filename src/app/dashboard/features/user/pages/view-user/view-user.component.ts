@@ -14,7 +14,9 @@ import { map, startWith } from 'rxjs';
     styleUrl: './view-user.component.scss'
 })
 export class ViewUserComponent implements OnInit {
+    
     id: number;
+
     financialMetrics: any[] = [
         {
             color: 'primary',
@@ -50,6 +52,8 @@ export class ViewUserComponent implements OnInit {
     readonly separatorKeysCodes = [ENTER, COMMA] as const;
     ownerSearchCtrl = new FormControl();
 
+    userLoading: boolean;
+    ownersLoading: boolean;
 
     constructor(
         private fb: UntypedFormBuilder,
@@ -72,16 +76,19 @@ export class ViewUserComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.userLoading = true;
         this.userService.getUser<UserDetail>(this.id).subscribe(user => {
             this.user = user;
             this.initializeForm(user);
+            this.userLoading = false;
         });
 
+        this.ownersLoading = true;
         this.userService.getAllUsers<UserList>().subscribe((users: UserList[]) => {
             this.owners = users;
             this.filteredOwners = this.owners;
             console.log("Selected Owner", this.selectedOwner);
-            
+            this.ownersLoading = false;
         });
     }
 
@@ -129,5 +136,9 @@ export class ViewUserComponent implements OnInit {
       
       get selectedOwner():IUser {
         return this.owners.find(owner => owner.id == this.user.ownerId) as IUser;
+      }
+
+      get loading():boolean{
+        return this.userLoading || this.ownersLoading;
       }
 }
