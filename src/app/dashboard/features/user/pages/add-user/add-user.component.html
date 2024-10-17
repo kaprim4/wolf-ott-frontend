@@ -36,7 +36,7 @@
                     </div>
                     <div class="col-sm-8">
                       <mat-form-field appearance="outline" class="w-100">
-                        <input matInput placeholder="Username" name="username" [(ngModel)]="user.username" required />
+                        <input matInput placeholder="Username" name="username" [(ngModel)]="user.username" />
                       </mat-form-field>
                     </div>
                   </div>
@@ -47,7 +47,7 @@
                     </div>
                     <div class="col-sm-8">
                       <mat-form-field appearance="outline" class="w-100">
-                        <input matInput type="email" placeholder="Enter Email" name="email" [(ngModel)]="user.email" required />
+                        <input matInput type="email" placeholder="Enter Email" name="email" [(ngModel)]="user.email" />
                       </mat-form-field>
                     </div>
                   </div>
@@ -58,22 +58,46 @@
                     </div>
                     <div class="col-sm-8">
                       <mat-form-field appearance="outline" class="w-100">
-                        <input matInput type="password" placeholder="Password" name="password" [(ngModel)]="user.password" required />
+                        <input matInput type="text" placeholder="Password" name="password" [(ngModel)]="user.password" />
                       </mat-form-field>
                     </div>
                   </div>
             
                   
-                  <div class="row">
+                  <!-- <div class="row">
                     <div class="col-sm-4 d-flex align-items-center">
                       <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Owner</mat-label>
                     </div>
                     <div class="col-sm-8">
                       <mat-form-field appearance="outline" class="w-100">
-                        <input matInput placeholder="Select Owner" name="owner" [(ngModel)]="user.ownerId" required />
+                        <input matInput placeholder="Select Owner" name="owner" [(ngModel)]="user.ownerId" />
                       </mat-form-field>
                     </div>
-                  </div> 
+                  </div>  -->
+
+                  <div class="row">
+                    <div class="col-sm-4 d-flex align-items-start">
+                        <mat-label class="mat-subtitle-2 f-w-600">Owner</mat-label>
+                    </div>
+                    <div class="col-sm-8">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-select [(ngModel)]="user.ownerId" name="owner" (openedChange)="onOwnersDropdownOpened($event)" required placeholder="Select Owner">
+                                <mat-select-trigger>
+                                    {{ selectedOwner ? selectedOwner.username : 'Select Owner' }}
+                                </mat-select-trigger>
+                                
+                                <mat-option>
+                                  <ngx-mat-select-search [formControl]="ownerSearchCtrl" placeholderLabel="Search" noEntriesFoundLabel="No options found"></ngx-mat-select-search>
+                                </mat-option>
+
+                                <mat-option *ngFor="let owner of filteredOwners" [value]="owner.id" (click)="$event.stopPropagation()">
+                                    {{ owner.username }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                
                  
             
                   <div class="row">

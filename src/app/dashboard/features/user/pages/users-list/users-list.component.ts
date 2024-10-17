@@ -15,7 +15,7 @@ import { UserService } from 'src/app/shared/services/user.service';
 export class UsersListComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [
-    'chk',
+    // 'chk',
     'id',
     'username',
     'ip',
