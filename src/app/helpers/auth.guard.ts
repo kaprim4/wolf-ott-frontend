@@ -18,7 +18,8 @@ export class AuthGuard implements CanActivate {
     constructor(
         private router: Router,
         private tokenService: TokenService
-    ) {}
+    ) {
+    }
 
     token: ITokenUser = {
         email: "",
@@ -45,14 +46,14 @@ export class AuthGuard implements CanActivate {
             if (this.tokenService.tokenExpired()) {
                 console.log("expired");
                 this.tokenService.clearToken();
-                this.router.navigate(['/authentication/login']);
+                this.router.navigate(['/auth/login']);
                 return false; // Rediriger et empêcher l'activation
             } else {
                 console.log("valide");
                 return true;
             }
         } else {
-            this.router.navigate(['/authentication/login']);
+            this.router.navigate(['/auth/login']);
             return false;
         }
     }

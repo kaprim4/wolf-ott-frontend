@@ -8,6 +8,7 @@ export const routes: Routes = [
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full',
+        title: 'Dashboard'
     },
     {
         path: '',
@@ -38,7 +39,7 @@ export const routes: Routes = [
         component: BlankComponent,
         children: [
             {
-                path: 'authentication',
+                path: 'auth',
                 loadChildren: () =>
                     import('./pages/authentication/authentication.routes').then(
                         (m) => m.AuthenticationRoutes
@@ -53,8 +54,8 @@ export const routes: Routes = [
             },
         ],
     },
-    // {
-    //     path: '**',
-    //     redirectTo: 'authentication/error',
-    // },
+    {
+        path: '**',
+        redirectTo: 'authentication/error',
+    },
 ];

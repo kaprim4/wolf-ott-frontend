@@ -3,22 +3,21 @@
         <div class="position-relative shaper-wrapper">
             <div class="w-100 position-relative rounded bg-white auth-card">
                 <div class="auth-body">
-                    @if (options.theme === 'light') {
-                        <a [routerLink]="['/dashboards/dashboard1']" class="m-t-20 d-flex">
-                            <img src="./assets/images/logos/dark-logo.svg" class="align-middle m-2" alt="logo"/>
-                        </a>
-                    }
-                    @if (options.theme === 'dark') {
-                        <a [routerLink]="['/dashboards/dashboard1']" class="m-t-20 d-flex">
-                            <img src="./assets/images/logos/light-logo.svg" class="align-middle m-2" alt="logo"/>
-                        </a>
-                    }
 
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-6 align-items-center justify-content-center">
+                            @if (options.theme === 'light') {
+                                <a [routerLink]="['/dashboard']" class="m-t-20 d-flex">
+                                    <img src="./assets/images/wolf_text_logo.png" class="align-middle m-2" alt="logo" height="140"/>
+                                 </a>
+                            }
+                            @if (options.theme === 'dark') {
+                                <a [routerLink]="['/dashboard']" class="m-t-20 d-flex">
+                                    <img src="./assets/images/wolf_text_logo.png" class="align-middle m-2" alt="logo" height="140"/>
+                                </a>
+                            }
                             <div class="align-items-center justify-content-center d-none d-lg-flex">
-                                <img src="/assets/images/backgrounds/login3-bg.png" alt="login"
-                                     style="max-width: 500px"/>
+                                <img src="/assets/images/backgrounds/login3-bg.png" alt="login" style="max-width: 500px"/>
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -26,7 +25,7 @@
                                 <div class="row justify-content-center w-100">
                                     <div class="col-lg-11">
                                         <h4 class="f-w-700 f-s-30 m-0 m-t-20 lh-base">
-                                            Welcome to Spike Admin
+                                            {{ APP_NAME }}
                                         </h4>
                                         <span class="f-s-14 d-block mat-body-1 m-t-8">Authentification</span>
 
@@ -62,13 +61,13 @@
                                                 @if (formSubmitted && formValues['username'].invalid) {
                                                     <mat-hint class="m-b-16 error-msg">
                                                         @if (formValues['username'].errors &&
-                                                        formValues['username'].errors?.['required']) {
+                                                        formValues['username'].errors['required']) {
                                                             <div class="text-error">Username is required.</div>
                                                         }
                                                         @if (formValues['username'].errors &&
-                                                        formValues['username'].errors?.['minlength']) {
+                                                        formValues['username'].errors['minlength']) {
                                                             <div class="text-error">
-                                                                Username should be 6 character.
+                                                                Username should be min 6 characters.
                                                             </div>
                                                         }
                                                     </mat-hint>
@@ -83,7 +82,7 @@
                                                 @if (formSubmitted && formValues['password'].invalid) {
                                                     <mat-hint class="m-b-16 error-msg">
                                                         @if (formValues['password'].errors &&
-                                                        formValues['password'].errors?.['required']) {
+                                                        formValues['password'].errors['required']) {
                                                             <div class="text-error">Password is required.</div>
                                                         }
                                                     </mat-hint>
@@ -92,7 +91,7 @@
 
                                             <div class="d-block d-lg-flex align-items-center m-b-12">
                                                 <mat-checkbox color="primary">Remember this Device</mat-checkbox>
-                                                <a [routerLink]="['/authentication/side-forgot-pwd']"
+                                                <a [routerLink]="['/auth/forgot-password']"
                                                    class="text-primary f-w-600 text-decoration-none m-l-auto d-block f-s-14">Forgot
                                                     Password
                                                     ?</a>
@@ -103,11 +102,11 @@
                                             </button>
                                             <!-- input -->
                                         </form>
-                                        <span class="d-block f-w-500 d-block m-t-24">New to Spike?
-                      <a [routerLink]="['/authentication/side-register']"
-                         class="text-decoration-none text-primary f-w-500 f-s-14">
-                        Create an account</a>
-                    </span>
+<!--                                        <span class="d-block f-w-500 d-block m-t-24">New to Spike?-->
+<!--                      <a [routerLink]="['/authentication/side-register']"-->
+<!--                         class="text-decoration-none text-primary f-w-500 f-s-14">-->
+<!--                        Create an account</a>-->
+<!--                    </span>-->
                                     </div>
                                 </div>
                             </div>

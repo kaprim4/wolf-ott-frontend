@@ -8,12 +8,16 @@ import {jwtDecode} from "jwt-decode";
 })
 export class TokenService {
 
-    constructor(private router: Router) {
+    constructor(
+        private router: Router
+    ) {
     }
 
     saveToken(token: string): void {
         localStorage.setItem('token', token)
-        this.router.navigate(['dashboard'])
+        this.router.navigate(['dashboard']).then(r =>
+            console.log("Save Token : ", token)
+        );
     }
 
     isLogged(): boolean {
@@ -23,12 +27,16 @@ export class TokenService {
 
     clearToken(): void {
         localStorage.removeItem('token')
-        this.router.navigate(['/authentication/logout'])
+        this.router.navigate(['/auth/login']).then(r =>
+            console.log("Clear Token : ", localStorage.getItem('token'))
+        )
     }
 
     clearTokenExpired(): void {
         localStorage.removeItem('token')
-        this.router.navigate(['/authentication/logout'])
+        this.router.navigate(['/auth/logout']).then(r =>
+            console.log("Clear Token Expired : ", localStorage.getItem('token'))
+        )
     }
 
     getToken(): string {
