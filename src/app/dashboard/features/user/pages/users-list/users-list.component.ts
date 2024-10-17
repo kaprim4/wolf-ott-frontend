@@ -15,7 +15,7 @@ import { UserService } from 'src/app/shared/services/user.service';
 export class UsersListComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [
-    'chk',
+    // 'chk',
     'id',
     'username',
     'ip',
@@ -77,8 +77,8 @@ ngAfterViewInit(): void {
   loadUsers(): void {
     const page = (this.paginator?.pageIndex || this.pageIndex);
     const size = (this.paginator?.pageSize || this.pageSize);
-  
     this.loading = true; // Start loading
+    
     this.userService.getUsers<UserList>('', page, size).pipe(
       catchError(error => {
         console.error('Failed to load users', error);
@@ -92,4 +92,7 @@ ngAfterViewInit(): void {
     });
   }
   
+  // get loading():boolean{
+  //   return this.userLoading || this.ownersLoading;
+  // }
 }

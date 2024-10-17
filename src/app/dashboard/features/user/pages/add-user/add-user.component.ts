@@ -1,18 +1,19 @@
-import { Component } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { order } from 'src/app/pages/apps/invoice/invoice';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { UserDialogComponent } from '../user-dialog/user-dialog.component';
-import { UserDetail } from 'src/app/shared/models/user';
+import { IUser, UserDetail, UserList } from 'src/app/shared/models/user';
 import { UserService } from 'src/app/shared/services/user.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { map, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-add-user',
   templateUrl: './add-user.component.html',
   styleUrl: './add-user.component.scss'
 })
-export class AddUserComponent {
+export class AddUserComponent implements OnInit {
 
   financialMetrics: any[] = [
     {
@@ -40,10 +41,14 @@ export class AddUserComponent {
   rows: UntypedFormArray;
   user: UserDetail  = { id: 0, username: ''};
 
-  ///////////////////////////////////////////////////////////
-  subTotal = 0;
-  vat = 0;
-  grandTotal = 0;
+  owners: UserList[] = [];
+  filteredOwners: UserList[] = [];
+  // selectedOwner: IUser;
+  ownerSearchTerm = '';
+  dropdownOpened = false;
+  addOnBlur = true;
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  ownerSearchCtrl = new FormControl();
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -51,81 +56,57 @@ export class AddUserComponent {
     private router: Router,
     public dialog: MatDialog
   ) {
-    // tslint:disable-next-line - Disables all
     this.user.id = 0;
-    ///////////////////////////////////////////////////////////
-
     this.addForm = this.fb.group({});
-
-    this.rows = this.fb.array([]);
-    this.addForm.addControl('rows', this.rows);
-    this.rows.push(this.createItemFormGroup());
+    this.ownerSearchCtrl.valueChanges.pipe(
+      startWith(''),
+      map(value => this.filterOwners(value))
+  ).subscribe(filtered => {
+      this.filteredOwners = filtered;
+  });
   }
-
-  ////////////////////////////////////////////////////////////////////////////////////
-  onAddRow(): void {
-    this.rows.push(this.createItemFormGroup());
-  }
-
-  onRemoveRow(rowIndex: number): void {
-    const totalCostOfItem =
-      this.addForm.get('rows')?.value[rowIndex].unitPrice *
-      this.addForm.get('rows')?.value[rowIndex].units;
-
-    this.subTotal = this.subTotal - totalCostOfItem;
-    this.vat = this.subTotal / 10;
-    this.grandTotal = this.subTotal + this.vat;
-    this.rows.removeAt(rowIndex);
-  }
-
-  createItemFormGroup(): UntypedFormGroup {
-    return this.fb.group({
-      itemName: ['', Validators.required],
-      units: ['', Validators.required],
-      unitPrice: ['', Validators.required],
-      itemTotal: ['0'],
+  ngOnInit(): void {
+    this.userService.getAllUsers<UserList>().subscribe((users: UserList[]) => {
+        this.owners = users;
+        this.filteredOwners = this.owners;
+        console.log("Selected Owner", this.selectedOwner);
+        
     });
-  }
 
-  itemsChanged(): void {
-    let total: number = 0;
-    // tslint:disable-next-line - Disables all
-    for (
-      let t = 0;
-      t < (<UntypedFormArray>this.addForm.get('rows')).length;
-      t++
-    ) {
-      if (
-        this.addForm.get('rows')?.value[t].unitPrice !== '' &&
-        this.addForm.get('rows')?.value[t].units
-      ) {
-        total =
-          this.addForm.get('rows')?.value[t].unitPrice *
-            this.addForm.get('rows')?.value[t].units +
-          total;
-      }
-    }
-    this.subTotal = total;
-    this.vat = this.subTotal / 10;
-    this.grandTotal = this.subTotal + this.vat;
   }
-  ////////////////////////////////////////////////////////////////////
 
   saveDetail(): void {
-    // tslint:disable-next-line - Disables all
-    for (
-      let t = 0;
-      t < (<UntypedFormArray>this.addForm.get('rows')).length;
-      t++
-    ) {
-      const o: order = new order();
-      o.itemName = this.addForm.get('rows')?.value[t].itemName;
-      o.unitPrice = this.addForm.get('rows')?.value[t].unitPrice;
-      o.units = this.addForm.get('rows')?.value[t].units;
-      o.unitTotalPrice = o.units * o.unitPrice;
-    }
-    this.dialog.open(UserDialogComponent);
-    this.userService.addUser(this.user);
-    this.router.navigate(['/apps/users']);
+    this.user.ownerId = this.selectedOwner.id;
+    console.log("Save User", this.user);
+    // this.dialog.open(UserDialogComponent);
+    // this.userService.addUser(this.user);
+    // this.router.navigate(['/apps/users']);
+
+    
   }
+
+  private filterOwners(value: string): any[] {
+    const filterValue = value?.toLowerCase();
+    return this.owners.filter(owner => owner?.username?.toLowerCase().includes(filterValue));
+}
+
+ownersFilterOptions() {
+  const searchTermLower = this.ownerSearchTerm.toLowerCase();
+  this.filteredOwners = this.owners.filter((owner) =>
+      owner?.username?.toLowerCase().includes(searchTermLower)
+  );
+}
+
+onOwnersDropdownOpened(opened: boolean) {
+  this.dropdownOpened = opened;
+  if (opened) {
+      // Reset search term and filter options when the dropdown opens
+      this.ownerSearchTerm = '';
+      this.ownersFilterOptions();
+  }
+}
+
+get selectedOwner():IUser {
+  return this.owners.find(owner => owner.id == this.user.ownerId) as IUser;
+}
 }

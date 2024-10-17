@@ -82,6 +82,7 @@ ngAfterViewInit(): void {
   loadLines(): void {
     const page = this.paginator?.pageIndex || this.pageIndex;
     const size = this.paginator?.pageSize || this.pageSize;
+    this.loading = true;
 
     this.lineService.getLines<LineList>('', page, size).pipe(
       catchError(error => {

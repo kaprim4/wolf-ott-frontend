@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
-import {order} from 'src/app/pages/apps/invoice/invoice';
+import {FormControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {UserDialogComponent} from '../user-dialog/user-dialog.component';
 import {UserService} from 'src/app/shared/services/user.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
-import {UserDetail} from "../../../../../shared/models/user";
+import {IUser, UserDetail, UserList} from "../../../../../shared/models/user";
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { map, startWith } from 'rxjs';
 
 @Component({
     selector: 'app-view-user',
@@ -13,7 +14,9 @@ import {UserDetail} from "../../../../../shared/models/user";
     styleUrl: './view-user.component.scss'
 })
 export class ViewUserComponent implements OnInit {
+    
     id: number;
+
     financialMetrics: any[] = [
         {
             color: 'primary',
@@ -40,10 +43,17 @@ export class ViewUserComponent implements OnInit {
     rows: UntypedFormArray;
     user: UserDetail = {id: 0, username: ''};
 
-    ///////////////////////////////////////////////////////////
-    subTotal = 0;
-    vat = 0;
-    grandTotal = 0;
+    owners: UserList[] = [];
+    filteredOwners: UserList[] = [];
+    // selectedOwner: IUser;
+    ownerSearchTerm = '';
+    dropdownOpened = false;
+    addOnBlur = true;
+    readonly separatorKeysCodes = [ENTER, COMMA] as const;
+    ownerSearchCtrl = new FormControl();
+
+    userLoading: boolean;
+    ownersLoading: boolean;
 
     constructor(
         private fb: UntypedFormBuilder,
@@ -57,14 +67,29 @@ export class ViewUserComponent implements OnInit {
         ) as unknown as number;
         this.initializeForm({id: this.id, username: ''})
 
-
+        this.ownerSearchCtrl.valueChanges.pipe(
+            startWith(''),
+            map(value => this.filterOwners(value))
+        ).subscribe(filtered => {
+            this.filteredOwners = filtered;
+        });
     }
 
     ngOnInit(): void {
+        this.userLoading = true;
         this.userService.getUser<UserDetail>(this.id).subscribe(user => {
             this.user = user;
             this.initializeForm(user);
-        })
+            this.userLoading = false;
+        });
+
+        this.ownersLoading = true;
+        this.userService.getAllUsers<UserList>().subscribe((users: UserList[]) => {
+            this.owners = users;
+            this.filteredOwners = this.owners;
+            console.log("Selected Owner", this.selectedOwner);
+            this.ownersLoading = false;
+        });
     }
 
     initializeForm(user: UserDetail): void {
@@ -79,75 +104,41 @@ export class ViewUserComponent implements OnInit {
             rows: this.fb.array([]) // Initialize rows here
         });
 
-        this.rows = this.userForm.get('rows') as UntypedFormArray;
-        this.rows.push(this.createItemFormGroup());
     }
-
-
-    onAddRow(): void {
-        this.rows.push(this.createItemFormGroup());
-    }
-
-    onRemoveRow(rowIndex: number): void {
-        const totalCostOfItem =
-            this.userForm.get('rows')?.value[rowIndex].unitPrice *
-            this.userForm.get('rows')?.value[rowIndex].units;
-
-        this.subTotal = this.subTotal - totalCostOfItem;
-        this.vat = this.subTotal / 10;
-        this.grandTotal = this.subTotal + this.vat;
-        this.rows.removeAt(rowIndex);
-    }
-
-    createItemFormGroup(): UntypedFormGroup {
-        return this.fb.group({
-            itemName: ['', Validators.required],
-            units: ['', Validators.required],
-            unitPrice: ['', Validators.required],
-            itemTotal: ['0'],
-        });
-    }
-
-    itemsChanged(): void {
-        let total: number = 0;
-        // tslint:disable-next-line - Disables all
-        for (
-            let t = 0;
-            t < (<UntypedFormArray>this.userForm.get('rows')).length;
-            t++
-        ) {
-            if (
-                this.userForm.get('rows')?.value[t].unitPrice !== '' &&
-                this.userForm.get('rows')?.value[t].units
-            ) {
-                total =
-                    this.userForm.get('rows')?.value[t].unitPrice *
-                    this.userForm.get('rows')?.value[t].units +
-                    total;
-            }
-        }
-        this.subTotal = total;
-        this.vat = this.subTotal / 10;
-        this.grandTotal = this.subTotal + this.vat;
-    }
-
-    ////////////////////////////////////////////////////////////////////
 
     saveDetail(): void {
-        // tslint:disable-next-line - Disables all
-        for (
-            let t = 0;
-            t < (<UntypedFormArray>this.userForm.get('rows')).length;
-            t++
-        ) {
-            const o: order = new order();
-            o.itemName = this.userForm.get('rows')?.value[t].itemName;
-            o.unitPrice = this.userForm.get('rows')?.value[t].unitPrice;
-            o.units = this.userForm.get('rows')?.value[t].units;
-            o.unitTotalPrice = o.units * o.unitPrice;
-        }
-        this.dialog.open(UserDialogComponent);
-        this.userService.addUser(this.user);
+        // this.dialog.open(UserDialogComponent);
+        this.user.id = this.id
+        this.userService.updateUser(this.user);
         this.router.navigate(['/apps/users']);
     }
+
+    private filterOwners(value: string): any[] {
+        const filterValue = value?.toLowerCase();
+        return this.owners.filter(owner => owner?.username?.toLowerCase().includes(filterValue));
+    }
+
+    ownersFilterOptions() {
+        const searchTermLower = this.ownerSearchTerm.toLowerCase();
+        this.filteredOwners = this.owners.filter((owner) =>
+            owner?.username?.toLowerCase().includes(searchTermLower)
+        );
+      }
+      
+      onOwnersDropdownOpened(opened: boolean) {
+        this.dropdownOpened = opened;
+        if (opened) {
+            // Reset search term and filter options when the dropdown opens
+            this.ownerSearchTerm = '';
+            this.ownersFilterOptions();
+        }
+      }
+      
+      get selectedOwner():IUser {
+        return this.owners.find(owner => owner.id == this.user.ownerId) as IUser;
+      }
+
+      get loading():boolean{
+        return this.userLoading || this.ownersLoading;
+      }
 }

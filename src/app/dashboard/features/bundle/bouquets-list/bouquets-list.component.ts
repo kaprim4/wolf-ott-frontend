@@ -77,7 +77,8 @@ ngAfterViewInit(): void {
   loadBouquets(): void {
     const page = this.paginator?.pageIndex || this.pageIndex;
     const size = this.paginator?.pageSize || this.pageSize;
-
+    this.loading = true;
+    
     this.bouquetService.getBouquets<BouquetList>('', page, size).pipe(
       catchError(error => {
         console.error('Failed to load bouquets', error);

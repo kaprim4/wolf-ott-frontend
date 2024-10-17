@@ -1,4 +1,7 @@
 <mat-card class="cardWithShadow">
+  @if(loading){
+    <mat-progress-bar mode="query"></mat-progress-bar>
+  }
     <mat-card-content>
       <div class="row justify-content-between gap-16">
         <div class="col-sm-4">

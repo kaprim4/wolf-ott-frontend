@@ -75,6 +75,7 @@ ngAfterViewInit(): void {
   loadPresets(): void {
     const page = this.paginator?.pageIndex || this.pageIndex;
     const size = this.paginator?.pageSize || this.pageSize;
+    this.loading = true;
 
     this.presetService.getPresets<PresetList>('', page, size).pipe(
       catchError(error => {
