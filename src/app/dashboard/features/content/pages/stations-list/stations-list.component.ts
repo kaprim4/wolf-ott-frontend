@@ -16,12 +16,11 @@ export class StationsListComponent implements OnInit, AfterViewInit {
     displayedColumns: string[] = [
         'chk',
         'id',
-        'stationname',
-        'ip',
-        'status',
-        'lastLogin',
+        'name',
+        'category',
         'action',
     ];
+
 
     dataSource = new MatTableDataSource<StationList>([]);
     totalElements = 0;
