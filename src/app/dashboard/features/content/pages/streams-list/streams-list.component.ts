@@ -16,10 +16,8 @@ export class StreamsListComponent implements OnInit, AfterViewInit {
     displayedColumns: string[] = [
         'chk',
         'id',
-        'streamname',
-        'ip',
-        'status',
-        'lastLogin',
+        'name',
+        'category',
         'action',
     ];
 
