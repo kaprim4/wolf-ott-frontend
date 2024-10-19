@@ -16,10 +16,8 @@ export class MoviesListComponent implements OnInit, AfterViewInit {
     displayedColumns: string[] = [
         'chk',
         'id',
-        'moviename',
-        'ip',
-        'status',
-        'lastLogin',
+        'name',
+        'category',
         'action',
     ];
 
