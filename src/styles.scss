@@ -2,3 +2,9 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.mdc-snackbar__label,
+.mat-mdc-snackbar-surface {
+  padding: 0 !important; /* Remove default padding */
+}
+  

@@ -1,0 +1,79 @@
+.notification {
+    padding: 8px 16px; /* Internal padding for your custom notification */
+    border-radius: 4px;
+    color: white;
+    display: flex; /* Align items */
+    justify-content: space-between; /* Space between message and button */
+    align-items: center; /* Center vertically */
+
+    .msg{
+        margin-right: 20px;
+    }
+  }
+  
+  .info {
+    background-color: #2196F3; /* Blue */
+  }
+  
+  .warning {
+    background-color: #FF9800; /* Orange */
+  }
+  
+  .error {
+    background-color: #F44336; /* Red */
+  }
+  
+  .success {
+    background-color: #4CAF50; /* Green */
+  }
+  
+
+  .close-button {
+    background: none; /* No background */
+    border: none; /* No border */
+    color: white; /* Button color */
+    cursor: pointer; /* Pointer cursor */
+    font-size: 16px; /* Font size */
+    // margin-left: 10px; /* Space from message */
+    // position: absolute; /* Positioning for the button */
+    // right: 0; /* Align right */
+    // top: 50%; /* Center vertically */
+    // transform: translateY(-50%); /* Adjust for vertical centering */
+  }
+  
+
+  .spinner-container {
+    position: relative; /* Position for the spinner */
+    display: flex; /* Align items */
+    justify-content: center;;
+    align-items: center; /* Center vertically */
+    padding: 10px;
+
+    cursor: pointer;
+    &:hover{
+        background: #fff;
+        border-radius: 50%;
+
+        .close-button{
+            color: #F44336;
+        }
+    }
+  }
+
+  .spinner{
+    position: absolute; /* Positioning for the button */
+    // right: -30%; /* Align right */
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%) translateX(0%); /* Adjust for vertical centering */
+  }
+
+  .mat-progress-spinner {
+    // Make the spinner white
+    circle {
+      stroke: white; // Change the stroke color to white
+    }
+  
+    // Rotate the spinner counter-clockwise
+    transform: rotate(180deg);
+  }
+  

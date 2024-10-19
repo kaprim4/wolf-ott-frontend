@@ -1,0 +1,17 @@
+<div [ngClass]="['notification', data.type]">
+    <span class="msg">{{ data.message }}</span>
+    <div class="spinner-container" (click)="close()">
+      <mat-progress-spinner mode="determinate"
+                            class="spinner"
+                            [value]="progress"
+                            diameter="32"
+                            color="accent"
+                            [style.display]="progress === 100 ? 'none' : 'block'">
+      </mat-progress-spinner>
+      <!-- (click)="close()" -->
+      <button class="close-button" >
+        ✖
+      </button>
+    </div>
+  </div>
+  
