@@ -56,7 +56,7 @@
 
             <ng-container matColumnDef="category">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Category</th>
-                <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.categories }}</td>
+                <td mat-cell *matCellDef="let element" class="f-s-14">{{ getCategories(element.categories) }}</td>
             </ng-container>
 
             <ng-container matColumnDef="status">

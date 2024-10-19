@@ -6,6 +6,8 @@ import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {MovieService} from "../../../../../shared/services/movie.service";
 import {Page} from "../../../../../shared/models/page";
+import { CategoryService } from 'src/app/shared/services/category.service';
+import { CategoryList } from 'src/app/shared/models/category';
 
 @Component({
   selector: 'app-movies-list',
@@ -35,7 +37,9 @@ export class MoviesListComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    constructor(private movieService: MovieService) {
+    categories: CategoryList[] = [];
+
+    constructor(private movieService: MovieService, private categoryService: CategoryService) {
         // this.loadMovies();
     }
 
@@ -48,6 +52,10 @@ export class MoviesListComponent implements OnInit, AfterViewInit {
         ).subscribe(response => {
             this.dataSource.data = response.content;
             this.totalElements = response.totalElements;
+        });
+
+        this.categoryService.getAllCategories<CategoryList>().subscribe(categories => {
+            this.categories = categories;
         });
     }
 
@@ -79,6 +87,13 @@ export class MoviesListComponent implements OnInit, AfterViewInit {
             this.totalElements = pageResponse.totalElements;
             this.loading = false;
         });
+        
+    }
+
+    getCategories(idx: number[]):string {
+        return this.categories.filter(category => idx.includes(category.id))
+                              .map(category => category.name)
+                              .join(', ');
     }
 
 }

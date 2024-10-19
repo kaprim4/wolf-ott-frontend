@@ -6,6 +6,8 @@ import { catchError, debounceTime, of, Subject, switchMap } from 'rxjs';
 import { Page } from 'src/app/shared/models/page';
 import {StreamService} from "../../../../../shared/services/stream.service";
 import {StreamList} from "../../../../../shared/models/stream";
+import { CategoryService } from 'src/app/shared/services/category.service';
+import { CategoryList } from 'src/app/shared/models/category';
 
 @Component({
     selector: 'app-streams-list',
@@ -35,7 +37,9 @@ export class StreamsListComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    constructor(private streamService: StreamService) {
+    categories: CategoryList[] = [];
+
+    constructor(private streamService: StreamService, private categoryService: CategoryService) {
         // this.loadStreams();
     }
 
@@ -48,6 +52,10 @@ export class StreamsListComponent implements OnInit, AfterViewInit {
         ).subscribe(response => {
             this.dataSource.data = response.content;
             this.totalElements = response.totalElements;
+        });
+
+        this.categoryService.getAllCategories<CategoryList>().subscribe(categories => {
+            this.categories = categories;
         });
     }
 
@@ -81,4 +89,9 @@ export class StreamsListComponent implements OnInit, AfterViewInit {
         });
     }
 
+    getCategories(idx: number[]):string {
+        return this.categories.filter(category => idx.includes(category.id))
+                              .map(category => category.name)
+                              .join(', ');
+    }
 }

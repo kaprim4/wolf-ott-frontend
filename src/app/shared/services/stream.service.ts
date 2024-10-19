@@ -15,7 +15,7 @@ export class StreamService extends CrudService<IStream> {
         jwtService: JwtService
     ) {
         super(httpClient, jwtService);
-        this.endpoint = "streams";
+        this.endpoint = "streams/types/live";
     }
 
     public getAllStreams<T extends IStream>(search?: string): Observable<T[]> {

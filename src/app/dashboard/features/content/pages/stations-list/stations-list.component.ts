@@ -6,6 +6,8 @@ import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {StationService} from "../../../../../shared/services/station.service";
 import {Page} from "../../../../../shared/models/page";
+import { CategoryService } from 'src/app/shared/services/category.service';
+import { CategoryList } from 'src/app/shared/models/category';
 
 @Component({
   selector: 'app-stations-list',
@@ -36,7 +38,9 @@ export class StationsListComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    constructor(private stationService: StationService) {
+    categories: CategoryList[] = [];
+
+    constructor(private stationService: StationService, private categoryService: CategoryService) {
         // this.loadStations();
     }
 
@@ -49,6 +53,10 @@ export class StationsListComponent implements OnInit, AfterViewInit {
         ).subscribe(response => {
             this.dataSource.data = response.content;
             this.totalElements = response.totalElements;
+        });
+
+        this.categoryService.getAllCategories<CategoryList>().subscribe(categories => {
+            this.categories = categories;
         });
     }
 
@@ -80,6 +88,12 @@ export class StationsListComponent implements OnInit, AfterViewInit {
             this.totalElements = pageResponse.totalElements;
             this.loading = false;
         });
+    }
+
+    getCategories(idx: number[]):string {
+        return this.categories.filter(category => idx.includes(category.id))
+                              .map(category => category.name)
+                              .join(', ');
     }
 
 }
