@@ -4,16 +4,9 @@ export interface IChannel {
     channelname: string;
 }
 
-export interface ChannelList{
+export interface ChannelList extends IChannel{
     id: number;
-    channelname: string;
-    email: string;
-    credits: number;
-    dateRegistered: string;
-    notes: string;
-    ip: string;
-    lastLogin: string;
-    status: boolean;
-
+    name: string,
+    categories: number[],
     [key: string]: number | string | any | boolean;
 }

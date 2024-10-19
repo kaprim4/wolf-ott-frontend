@@ -1,4 +1,33 @@
 <mat-card class="cardWithShadow">
+    @if(loading){
+        <mat-progress-bar mode="query"></mat-progress-bar>
+    }
+        <mat-card-content>
+        <div class="row justify-content-between gap-16">
+            <div class="col-sm-4">
+            <mat-form-field appearance="outline" class="w-100 hide-hint">
+                <input
+                matInput
+                placeholder="Search Line"
+                (keyup)="filter($any($event.target).value)"
+                />
+                <mat-icon matSuffix>
+                <i-tabler name="search" class="icon-20"></i-tabler>
+                </mat-icon>
+            </mat-form-field>
+            </div>
+            <!-- <div class="col-sm-4 d-flex align-items-center justify-content-end">
+            <a
+                mat-button
+                [routerLink]="['/apps/content/channels/add']"
+                mat-flat-button
+                color="primary">Add Line</a>
+            </div> -->
+        </div>
+    </mat-card-content>
+</mat-card>
+    
+<mat-card class="cardWithShadow">
     <div class="table-responsive">
         <table
             mat-table
@@ -20,12 +49,12 @@
                 <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.id }}</td>
             </ng-container>
 
-            <ng-container matColumnDef="channelname">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Channelname</th>
-                <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.channelname }}</td>
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Channel</th>
+                <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.name }}</td>
             </ng-container>
 
-            <ng-container matColumnDef="ip">
+            <ng-container matColumnDef="category">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">IP</th>
                 <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.ip }}</td>
             </ng-container>
@@ -45,7 +74,7 @@
             </ng-container>
 
             <ng-container matColumnDef="action">
-                <th mat-header-cell *matHeaderCellDef class="f-w-600 f-s-15">Kill</th>
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 f-s-15">Actions</th>
                 <td mat-cell *matCellDef="let element" class="f-s-14 d-flex">
                     <a mat-icon-button [routerLink]="['/contents/channels/', element.id]" class="d-flex align-items-center justify-content-center">
                         <i-tabler name="eye" class="icon-18 d-flex align-items-center"></i-tabler>

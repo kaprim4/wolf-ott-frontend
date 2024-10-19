@@ -16,10 +16,8 @@ export class ChannelsListComponent implements OnInit, AfterViewInit {
     displayedColumns: string[] = [
         'chk',
         'id',
-        'channelname',
-        'ip',
-        'status',
-        'lastLogin',
+        'name',
+        'category',
         'action',
     ];
 

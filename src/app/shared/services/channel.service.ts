@@ -15,7 +15,7 @@ export class ChannelService extends CrudService<IChannel> {
         jwtService: JwtService
     ) {
         super(httpClient, jwtService);
-        this.endpoint = "channels";
+        this.endpoint = "streams/types/created_live";
     }
 
     public getAllChannels<T extends IChannel>(search?: string): Observable<T[]> {
