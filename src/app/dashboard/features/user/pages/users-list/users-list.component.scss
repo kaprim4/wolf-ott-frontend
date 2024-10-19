@@ -1,0 +1,28 @@
+.user-list-placeholder {
+    background-color: #f0f0f0; /* Light gray background */
+    height: 20px; /* Height for the placeholder */
+    margin: 8px 0; /* Margin between placeholders */
+    border-radius: 4px; /* Rounded corners */
+    animation: pulse 1.5s infinite; /* Pulsing effect */
+  }
+  
+  .user-list-error {
+    color: #d9534f; /* Bootstrap danger color */
+    font-weight: bold; /* Bold text for visibility */
+    text-align: center; /* Center the text */
+    padding: 16px; /* Padding around the error message */
+  }
+  
+  /* Pulsing animation for the placeholders */
+  @keyframes pulse {
+    0% {
+      background-color: #f0f0f0;
+    }
+    50% {
+      background-color: #e0e0e0; /* Darker gray */
+    }
+    100% {
+      background-color: #f0f0f0;
+    }
+  }
+  

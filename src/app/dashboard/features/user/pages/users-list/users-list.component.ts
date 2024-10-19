@@ -1,10 +1,13 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { catchError, debounceTime, of, Subject, switchMap } from 'rxjs';
+import { ToastComponent } from 'src/app/shared/components/toast/toast.component';
 import { Page } from 'src/app/shared/models/page';
 import { IUser, UserList } from 'src/app/shared/models/user';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 import { UserService } from 'src/app/shared/services/user.service';
 
 @Component({
@@ -38,20 +41,35 @@ export class UsersListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private userService: UserService) {
+  durationInSeconds = 5;
+
+  horizontalPosition: MatSnackBarHorizontalPosition = 'start';
+  verticalPosition: MatSnackBarVerticalPosition = 'bottom';
+
+  constructor(private userService: UserService, private notificationService: NotificationService) {
     // this.loadUsers();
   }
 
   ngOnInit(): void {
     this.loadUsers();
+    /*
     // Subscribe to search input changes
     this.searchSubject.pipe(
         debounceTime(300), // Wait for 300ms pause in events
-        switchMap(searchTerm => this.userService.getUsers<UserList>(searchTerm, this.pageIndex, this.pageSize))
+        switchMap(searchTerm => this.userService.getUsers<UserList>(searchTerm, this.pageIndex, this.pageSize)),
+        catchError(error => {
+          console.error('Search error:', error);
+          // Optionally, you could return an empty data source or show a user-friendly message
+
+          this.notificationService.error('Failed to load users. Please try again.');
+          
+          return of({ content: [], totalElements: 0 } as unknown as Page<UserList>);
+      })
     ).subscribe(response => {
         this.dataSource.data = response.content;
         this.totalElements = response.totalElements;
     });
+    */
 }
 
 ngAfterViewInit(): void {
@@ -83,12 +101,15 @@ ngAfterViewInit(): void {
       catchError(error => {
         console.error('Failed to load users', error);
         this.loading = false;
-        return of({ content: [], totalElements: 0, totalPages: 0, size: 0, number: 0 } as Page<UserList>);
+        this.notificationService.error('Failed to load users. Please try again.');
+        // return of({ content: [], totalElements: 0, totalPages: 0, size: 0, number: 0 } as Page<UserList>);
+        throw error;
       })
     ).subscribe(pageResponse => {
       this.dataSource.data = pageResponse.content;
       this.totalElements = pageResponse.totalElements;
       this.loading = false;
+      // this.notificationService.success('User loaded successfully!');
     });
   }
   
