@@ -15,7 +15,7 @@ export class StationService extends CrudService<IStation> {
         jwtService: JwtService
     ) {
         super(httpClient, jwtService);
-        this.endpoint = "stations";
+        this.endpoint = "streams/types/radio_streams";
     }
 
     public getAllStations<T extends IStation>(search?: string): Observable<T[]> {

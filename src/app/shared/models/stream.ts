@@ -4,16 +4,10 @@ export interface IStream {
     streamname: string;
 }
 
-export interface StreamList{
+export interface StreamList extends IStream {
     id: number;
-    streamname: string;
-    email: string;
-    credits: number;
-    dateRegistered: string;
-    notes: string;
-    ip: string;
-    lastLogin: string;
-    status: boolean;
+    name: string;
+    categories: number[],
 
     [key: string]: number | string | any | boolean;
 }

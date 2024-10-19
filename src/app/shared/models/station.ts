@@ -4,16 +4,10 @@ export interface IStation {
     stationname: string;
 }
 
-export interface StationList{
+export interface StationList extends IStation {
     id: number;
-    stationname: string;
-    email: string;
-    credits: number;
-    dateRegistered: string;
-    notes: string;
-    ip: string;
-    lastLogin: string;
-    status: boolean;
+    name: string;
+    categories: number[],
 
     [key: string]: number | string | any | boolean;
 }

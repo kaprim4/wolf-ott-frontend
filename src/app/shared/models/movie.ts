@@ -4,16 +4,10 @@ export interface IMovie {
     moviename: string;
 }
 
-export interface MovieList{
+export interface MovieList extends IMovie {
     id: number;
-    moviename: string;
-    email: string;
-    credits: number;
-    dateRegistered: string;
-    notes: string;
-    ip: string;
-    lastLogin: string;
-    status: boolean;
+    name: string;
+    categories: number[];
 
     [key: string]: number | string | any | boolean;
 }

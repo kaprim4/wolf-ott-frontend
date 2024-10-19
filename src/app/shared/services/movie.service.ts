@@ -15,7 +15,7 @@ export class MovieService extends CrudService<IMovie> {
         jwtService: JwtService
     ) {
         super(httpClient, jwtService);
-        this.endpoint = "movies";
+        this.endpoint = "streams/types/movie";
     }
 
     public getAllMovies<T extends IMovie>(search?: string): Observable<T[]> {
