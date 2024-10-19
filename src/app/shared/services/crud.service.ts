@@ -11,7 +11,7 @@ import {Page} from '../models/page';
 export abstract class CrudService<T> {
 
     protected apiBaseUrl = environment.apiBaseUrl;
-    protected endpoint!: string;
+    protected endpoint: string;
     protected headers: HttpHeaders;
 
     constructor(
