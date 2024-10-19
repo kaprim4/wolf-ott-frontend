@@ -21,7 +21,7 @@ export class EnigmaService extends CrudService<IEnigma> {
 
   public getAllEnigmas<T extends IEnigma>(search?: string): Observable<T[]> {
     return this.getAllAsList<T>(search || "").pipe(
-        map((bouquets: (IEnigma | T)[]) => bouquets as T[]) // Type assertion
+        map((enigmas: (IEnigma | T)[]) => enigmas as T[]) // Type assertion
     );
 }
 
@@ -34,18 +34,18 @@ public getEnigmas<T extends IEnigma>(search: string, page: number, size: number)
     );
 }
 
-public getEnigma<T extends IEnigma>(id_bouquet: number): Observable<T> {
-    return this.getOneById(id_bouquet).pipe(
+public getEnigma<T extends IEnigma>(id_enigma: number): Observable<T> {
+    return this.getOneById(id_enigma).pipe(
         map(res => res.body as T)
     );
 }
 
-public addEnigma(bouquet: IEnigma): Observable<HttpResponse<IEnigma>> {
-    return this.add(bouquet);
+public addEnigma(enigma: IEnigma): Observable<HttpResponse<IEnigma>> {
+    return this.add(enigma);
 }
 
-public updateEnigma(bouquet: IEnigma): Observable<HttpResponse<IEnigma>> {
-    return this.update(bouquet.id, bouquet);
+public updateEnigma(enigma: IEnigma): Observable<HttpResponse<IEnigma>> {
+    return this.update(enigma.id, enigma);
 }
 
 public deleteEnigma(id: number): Observable<HttpResponse<void>> {
