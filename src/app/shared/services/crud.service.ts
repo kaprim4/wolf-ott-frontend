@@ -8,7 +8,7 @@ import {Page} from '../models/page';
 @Injectable({
     providedIn: 'root'
 })
-export class CrudService<T> {
+export abstract class CrudService<T> {
 
     protected apiBaseUrl = environment.apiBaseUrl;
     protected endpoint!: string;
