@@ -16,10 +16,10 @@ export class EpisodesListComponent implements OnInit, AfterViewInit {
     displayedColumns: string[] = [
         'chk',
         'id',
-        'episodename',
-        'ip',
-        'status',
-        'lastLogin',
+        'title',
+        'season',
+        'number',
+        'serie',
         'action',
     ];
 
