@@ -6,6 +6,7 @@ import { Subject, catchError, debounceTime, of, switchMap } from 'rxjs';
 import { MagList } from 'src/app/shared/models/mag';
 import { Page } from 'src/app/shared/models/page';
 import { MagService } from 'src/app/shared/services/mag.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 @Component({
   selector: 'app-mag-devices-list',
@@ -40,7 +41,7 @@ export class MagDevicesListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private magService: MagService) {
+  constructor(private magService: MagService, private notificationService: NotificationService) {
     // this.loadMags();
   }
   ngOnInit(): void {
@@ -84,6 +85,7 @@ ngAfterViewInit(): void {
       catchError(error => {
         console.error('Failed to load lines', error);
         this.loading = false;
+        this.notificationService.error('Failed to load mag devices. Please try again.');
         return of({ content: [], totalPages: 0, totalElements: 0, size: 0, number:0 } as Page<MagList>);
       })
     ).subscribe(pageResponse => {

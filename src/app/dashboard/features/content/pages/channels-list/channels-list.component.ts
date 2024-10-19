@@ -6,6 +6,7 @@ import { catchError, debounceTime, of, Subject, switchMap } from 'rxjs';
 import { Page } from 'src/app/shared/models/page';
 import {ChannelService} from "../../../../../shared/services/channel.service";
 import {ChannelList} from "../../../../../shared/models/channel";
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 @Component({
   selector: 'app-channels-list',
@@ -35,7 +36,7 @@ export class ChannelsListComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    constructor(private channelService: ChannelService) {
+    constructor(private channelService: ChannelService, private notificationService: NotificationService) {
         // this.loadChannels();
     }
 
@@ -72,6 +73,7 @@ export class ChannelsListComponent implements OnInit, AfterViewInit {
             catchError(error => {
                 console.error('Failed to load channels', error);
                 this.loading = false;
+                this.notificationService.error('Failed to load channels. Please try again.');
                 return of({ content: [], totalElements: 0, totalPages: 0, size: 0, number: 0 } as Page<ChannelList>);
             })
         ).subscribe(pageResponse => {

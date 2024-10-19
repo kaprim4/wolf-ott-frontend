@@ -8,6 +8,7 @@ import {StationService} from "../../../../../shared/services/station.service";
 import {Page} from "../../../../../shared/models/page";
 import { CategoryService } from 'src/app/shared/services/category.service';
 import { CategoryList } from 'src/app/shared/models/category';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 @Component({
   selector: 'app-stations-list',
@@ -40,7 +41,7 @@ export class StationsListComponent implements OnInit, AfterViewInit {
 
     categories: CategoryList[] = [];
 
-    constructor(private stationService: StationService, private categoryService: CategoryService) {
+    constructor(private stationService: StationService, private categoryService: CategoryService, private notificationService: NotificationService) {
         // this.loadStations();
     }
 
@@ -81,6 +82,7 @@ export class StationsListComponent implements OnInit, AfterViewInit {
             catchError(error => {
                 console.error('Failed to load stations', error);
                 this.loading = false;
+                this.notificationService.error('Failed to load stations. Please try again.');
                 return of({ content: [], totalElements: 0, totalPages: 0, size: 0, number: 0 } as Page<StationList>);
             })
         ).subscribe(pageResponse => {

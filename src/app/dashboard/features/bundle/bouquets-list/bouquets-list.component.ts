@@ -6,6 +6,7 @@ import { catchError, debounceTime, of, Subject, switchMap } from 'rxjs';
 import { BouquetList } from 'src/app/shared/models/bouquet';
 import { Page } from 'src/app/shared/models/page';
 import { BouquetService } from 'src/app/shared/services/bouquet.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 @Component({
   selector: 'app-bouquets-list',
@@ -38,7 +39,7 @@ export class BouquetsListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private bouquetService: BouquetService) {
+  constructor(private bouquetService: BouquetService, private notificationService: NotificationService) {
     this.loadBouquets();
   }
   ngOnInit(): void {
@@ -83,6 +84,7 @@ ngAfterViewInit(): void {
       catchError(error => {
         console.error('Failed to load bouquets', error);
         this.loading = false;
+        this.notificationService.error('Failed to load bouquets. Please try again.');
         return of({ content: [], totalPages: 0, totalElements: 0, size: 0, number:0 } as Page<BouquetList>);
       })
     ).subscribe(pageResponse => {

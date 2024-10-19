@@ -6,6 +6,7 @@ import { Subject, catchError, debounceTime, of, switchMap } from 'rxjs';
 import { LineList } from 'src/app/shared/models/line';
 import { Page } from 'src/app/shared/models/page';
 import { LineService } from 'src/app/shared/services/line.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 @Component({
   selector: 'app-user-lines-list',
@@ -44,7 +45,7 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private lineService: LineService) {
+  constructor(private lineService: LineService, private notificationService: NotificationService) {
     // this.loadLines();
   }
   ngOnInit(): void {
@@ -88,6 +89,7 @@ ngAfterViewInit(): void {
       catchError(error => {
         console.error('Failed to load lines', error);
         this.loading = false;
+        this.notificationService.error('Failed to load lines. Please try again.');
         return of({ content: [], totalPages: 0, totalElements: 0, size: 0, number:0 } as Page<LineList>);
       })
     ).subscribe(pageResponse => {

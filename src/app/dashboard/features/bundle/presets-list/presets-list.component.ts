@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { catchError, debounceTime, of, Subject, switchMap } from 'rxjs';
 import { Page } from 'src/app/shared/models/page';
 import { PresetList } from 'src/app/shared/models/preset';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 import { PresetService } from 'src/app/shared/services/preset.service';
 
 @Component({
@@ -37,7 +38,7 @@ export class PresetsListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private presetService: PresetService) {
+  constructor(private presetService: PresetService, private notificationService: NotificationService) {
     this.loadPresets();
   }
   ngOnInit(): void {
@@ -81,6 +82,7 @@ ngAfterViewInit(): void {
       catchError(error => {
         console.error('Failed to load presets', error);
         this.loading = false;
+        this.notificationService.error('Failed to load presets. Please try again.');
         return of({ content: [], totalPages: 0, totalElements: 0, size: 0, number:0 } as Page<PresetList>);
       })
     ).subscribe(pageResponse => {

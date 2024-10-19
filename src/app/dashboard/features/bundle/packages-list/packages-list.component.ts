@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { catchError, debounceTime, of, Subject, switchMap } from 'rxjs';
 import { PackageList } from 'src/app/shared/models/package';
 import { Page } from 'src/app/shared/models/page';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 import { PackageService } from 'src/app/shared/services/package.service';
 
 @Component({
@@ -37,7 +38,7 @@ export class PackagesListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private packageService: PackageService) {
+  constructor(private packageService: PackageService, private notificationService: NotificationService) {
     this.loadPackages();
   }
   ngOnInit(): void {
@@ -82,6 +83,7 @@ ngAfterViewInit(): void {
       catchError(error => {
         console.error('Failed to load packages', error);
         this.loading = false;
+        this.notificationService.error('Failed to load packages. Please try again.');
         return of({ content: [], totalPages: 0, totalElements: 0, size: 0, number:0 } as Page<PackageList>);
       })
     ).subscribe(pageResponse => {
