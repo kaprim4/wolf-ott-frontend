@@ -57,8 +57,8 @@ ngAfterViewInit(): void {
     // this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-    this.sort.sortChange.subscribe(() => this.loadPackages());
-    this.paginator.page.subscribe(() => this.loadPackages());
+    this.sort?.sortChange.subscribe(() => this.loadPackages());
+    this.paginator?.page.subscribe(() => this.loadPackages());
 }
 
 

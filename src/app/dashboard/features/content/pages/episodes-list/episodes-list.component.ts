@@ -58,8 +58,8 @@ export class EpisodesListComponent implements OnInit, AfterViewInit {
         // this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 
-        this.sort.sortChange.subscribe(() => this.loadEpisodes());
-        this.paginator.page.subscribe(() => this.loadEpisodes());
+        this.sort?.sortChange.subscribe(() => this.loadEpisodes());
+        this.paginator?.page.subscribe(() => this.loadEpisodes());
     }
 
     filter(filterValue: string): void {

@@ -64,8 +64,8 @@ export class MoviesListComponent implements OnInit, AfterViewInit {
         // this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 
-        this.sort.sortChange.subscribe(() => this.loadMovies());
-        this.paginator.page.subscribe(() => this.loadMovies());
+        this.sort?.sortChange.subscribe(() => this.loadMovies());
+        this.paginator?.page.subscribe(() => this.loadMovies());
     }
 
     filter(filterValue: string): void {

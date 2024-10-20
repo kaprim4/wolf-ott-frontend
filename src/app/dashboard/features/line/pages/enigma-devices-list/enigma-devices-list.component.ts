@@ -60,8 +60,8 @@ ngAfterViewInit(): void {
     // this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-    this.sort.sortChange.subscribe(() => this.loadEnigmas());
-    this.paginator.page.subscribe(() => this.loadEnigmas());
+    this.sort?.sortChange.subscribe(() => this.loadEnigmas());
+    this.paginator?.page.subscribe(() => this.loadEnigmas());
 }
 
   filter(filterValue: string): void {

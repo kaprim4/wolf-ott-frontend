@@ -65,8 +65,8 @@ export class StationsListComponent implements OnInit, AfterViewInit {
         // this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 
-        this.sort.sortChange.subscribe(() => this.loadStations());
-        this.paginator.page.subscribe(() => this.loadStations());
+        this.sort?.sortChange.subscribe(() => this.loadStations());
+        this.paginator?.page.subscribe(() => this.loadStations());
     }
 
     filter(filterValue: string): void {

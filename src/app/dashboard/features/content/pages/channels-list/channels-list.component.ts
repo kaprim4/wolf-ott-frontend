@@ -56,8 +56,8 @@ export class ChannelsListComponent implements OnInit, AfterViewInit {
         // this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 
-        this.sort.sortChange.subscribe(() => this.loadChannels());
-        this.paginator.page.subscribe(() => this.loadChannels());
+        this.sort?.sortChange.subscribe(() => this.loadChannels());
+        this.paginator?.page.subscribe(() => this.loadChannels());
     }
 
     filter(filterValue: string): void {

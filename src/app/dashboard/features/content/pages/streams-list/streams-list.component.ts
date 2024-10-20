@@ -64,8 +64,8 @@ export class StreamsListComponent implements OnInit, AfterViewInit {
         // this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 
-        this.sort.sortChange.subscribe(() => this.loadStreams());
-        this.paginator.page.subscribe(() => this.loadStreams());
+        this.sort?.sortChange.subscribe(() => this.loadStreams());
+        this.paginator?.page.subscribe(() => this.loadStreams());
     }
 
     filter(filterValue: string): void {
