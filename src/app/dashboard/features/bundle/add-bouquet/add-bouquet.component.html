@@ -47,6 +47,9 @@
         </mat-tab>
         
         <mat-tab label="Streams">
+          @if(loadingStreams){
+            <mat-progress-bar mode="query"></mat-progress-bar>
+          }
             <mat-card class="">
                 <mat-card-content>
                   <div class="table-responsive">
@@ -54,7 +57,7 @@
                       <!-- Checkbox Column -->
                       <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef class="p-l-0">
-                          <mat-checkbox (change)="$event ? masterStreamsToggle() : null" [checked]="streamsSelection.hasValue() && isAllStationsSelected()"
+                          <mat-checkbox (change)="$event ? masterStreamsToggle() : null" [checked]="streamsSelection.hasValue() && isAllStreamsSelected()"
                             color="primary" [indeterminate]="streamsSelection.hasValue() && !isAllStreamsSelected()" [aria-label]="checkboxStreamLabel()">
                           </mat-checkbox>
                         </th>
@@ -71,7 +74,7 @@
                           Stream Name
                         </th>
                         <td mat-cell *matCellDef="let element" class="mat-body-1">
-                          {{ element.streamName }}
+                          {{ element.name }}
                         </td>
                       </ng-container>
               
@@ -80,7 +83,7 @@
                           Category
                         </th>
                         <td mat-cell *matCellDef="let element" class="mat-body-1">
-                          {{ 'Test' }}
+                          {{ getCategories(element.categories) }}
                         </td>
                       </ng-container>
               
@@ -111,11 +114,20 @@
                       <tr mat-row *matRowDef="let row; columns: moviesDisplayedColumns" (click)="moviesSelection.toggle(row)"></tr>
                     </table>
                   </div>
+                  <mat-paginator [length]="streamsTotalElements"
+                            [pageSize]="streamsSize"
+                            [pageSizeOptions]="[5, 10, 25]"
+                            (page)="loadStreams()"
+                            showFirstLastButtons>
+                </mat-paginator>
                 </mat-card-content>
               </mat-card>
         </mat-tab>
         
         <mat-tab label="Movies">
+          @if(loadingMovies){
+            <mat-progress-bar mode="query"></mat-progress-bar>
+          }
             <mat-card class="">
                 <mat-card-content>
                   <div class="table-responsive">
@@ -140,7 +152,7 @@
                           Movie Name
                         </th>
                         <td mat-cell *matCellDef="let element" class="mat-body-1">
-                          {{ element.movieName }}
+                          {{ element.name }}
                         </td>
                       </ng-container>
               
@@ -149,7 +161,7 @@
                           Category
                         </th>
                         <td mat-cell *matCellDef="let element" class="mat-body-1">
-                          {{ 'Test' }}
+                          {{ getCategories(element.categories) }}
                         </td>
                       </ng-container>
               
@@ -180,10 +192,19 @@
                       <tr mat-row *matRowDef="let row; columns: moviesDisplayedColumns" (click)="moviesSelection.toggle(row)"></tr>
                     </table>
                   </div>
+                  <mat-paginator [length]="moviesTotalElements"
+                            [pageSize]="moviesSize"
+                            [pageSizeOptions]="[5, 10, 25]"
+                            (page)="loadMovies()"
+                            showFirstLastButtons>
+                </mat-paginator>
                 </mat-card-content>
               </mat-card>
         </mat-tab>
         <mat-tab label="Series">
+          @if(loadingSeries){
+            <mat-progress-bar mode="query"></mat-progress-bar>
+          }
             <mat-card class="">
                 <mat-card-content>
                   <div class="table-responsive">
@@ -205,10 +226,10 @@
                       <!-- Name Column -->
                       <ng-container matColumnDef="name">
                         <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
-                          Serie Name
+                          Serie Title
                         </th>
                         <td mat-cell *matCellDef="let element" class="mat-body-1">
-                          {{ element.serieName }}
+                          {{ element.title }}
                         </td>
                       </ng-container>
               
@@ -217,7 +238,7 @@
                           Category
                         </th>
                         <td mat-cell *matCellDef="let element" class="mat-body-1">
-                          {{ 'Test' }}
+                          {{ getCategories(element.categories) }}
                         </td>
                       </ng-container>
               
@@ -248,10 +269,19 @@
                       <tr mat-row *matRowDef="let row; columns: moviesDisplayedColumns" (click)="seriesSelection.toggle(row)"></tr>
                     </table>
                   </div>
+                  <mat-paginator [length]="seriesTotalElements"
+                            [pageSize]="seriesSize"
+                            [pageSizeOptions]="[5, 10, 25]"
+                            (page)="loadSeries()"
+                            showFirstLastButtons>
+                </mat-paginator>
                 </mat-card-content>
               </mat-card>
         </mat-tab>
         <mat-tab label="Station">
+          @if(loadingStations){
+            <mat-progress-bar mode="query"></mat-progress-bar>
+          }
             <mat-card class="">
                 <mat-card-content>
                   <div class="table-responsive">
@@ -276,7 +306,7 @@
                           Station Name
                         </th>
                         <td mat-cell *matCellDef="let element" class="mat-body-1">
-                          {{ element.stationName }}
+                          {{ element.name }}
                         </td>
                       </ng-container>
               
@@ -285,7 +315,7 @@
                           Category
                         </th>
                         <td mat-cell *matCellDef="let element" class="mat-body-1">
-                          {{ 'Test' }}
+                          {{ getCategories(element.categories) }}
                         </td>
                       </ng-container>
               
@@ -316,6 +346,12 @@
                       <tr mat-row *matRowDef="let row; columns: stationDisplayedColumns" (click)="stationsSelection.toggle(row)"></tr>
                     </table>
                   </div>
+                  <mat-paginator [length]="stationsTotalElements"
+                            [pageSize]="stationsSize"
+                            [pageSizeOptions]="[5, 10, 25]"
+                            (page)="loadStations()"
+                            showFirstLastButtons>
+                </mat-paginator>
                 </mat-card-content>
               </mat-card>
         </mat-tab>
