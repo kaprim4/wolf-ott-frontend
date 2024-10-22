@@ -3,7 +3,7 @@ import {
     Output,
     EventEmitter,
     Input,
-    ViewEncapsulation,
+    ViewEncapsulation, OnInit,
 } from '@angular/core';
 import {CoreService} from 'src/app/services/core.service';
 import {MatDialog} from '@angular/material/dialog';
@@ -20,6 +20,9 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {AuthenticationService} from "../../../../shared/services/auth.service";
 import {TokenService} from "../../../../shared/services/token.service";
+import {UserService} from "../../../../shared/services/user.service";
+import {LineDetail} from "../../../../shared/models/line";
+import {UserDetail} from "../../../../shared/models/user";
 
 interface notifications {
     id: number;
@@ -68,7 +71,7 @@ interface quicklinks {
     templateUrl: './header.component.html',
     encapsulation: ViewEncapsulation.None,
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit{
     searchText: string = '';
     navItems = navItems;
 
@@ -92,6 +95,7 @@ export class HeaderComponent {
     no_profile_img = './assets/images/no_image.png';
     pageTitle: string = '';
     loggedInUser: any;
+    user: any;
 
     public languages: any[] = [
         {
@@ -122,7 +126,8 @@ export class HeaderComponent {
         private tokenService: TokenService,
         private vsidenav: CoreService,
         public dialog: MatDialog,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private userService: UserService
     ) {
         translate.setDefaultLang('en');
     }
@@ -142,6 +147,9 @@ export class HeaderComponent {
 
     ngOnInit(): void {
         this.loggedInUser = this.tokenService.getPayload();
+        this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
+            this.user = user;
+        });
     }
 
     notifications: notifications[] = [

@@ -122,7 +122,7 @@ export class AddUserLineComponent implements OnInit {
         ).subscribe(filtered => {
             this.filteredPackages = filtered;
         });
-        
+
     }
 
     ngOnInit(): void {
@@ -288,7 +288,7 @@ export class AddUserLineComponent implements OnInit {
       }
       event.chipInput!.clear(); // Clear the input value
   }
-  
+
 
     removeAllowedIp(ip: string): void {
         const currentIps = this.allowedIps; // Get current allowed IPs

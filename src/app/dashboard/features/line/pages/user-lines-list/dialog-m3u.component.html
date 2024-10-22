@@ -1,0 +1,47 @@
+<mat-card class="cardWithShadow theme-card">
+    <mat-card-header>
+        <mat-card-title class="m-b-0" style="color:white;">
+            Download Playlist
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="b-t-1">
+        <form>
+            <div class="row">
+                <div class="col-sm-4 d-flex align-items-start">
+                    <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">
+                        Email
+                    </mat-label>
+                </div>
+                <div class="col-sm-8">
+                    <mat-form-field appearance="outline" class="w-100" color="primary">
+                        <input matInput />
+                        <mat-hint> We'll never share your email with anyone else.</mat-hint>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 d-flex align-items-start">
+                    <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block m-t-12">
+                        Password
+                    </mat-label>
+                </div>
+                <div class="col-sm-8">
+                    <mat-form-field appearance="outline" class="w-100" color="primary">
+                        <input matInput type="password" />
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="m-t-12">
+                <button mat-flat-button color="warn">
+                    Copy
+                </button>
+                <button mat-flat-button color="primary" class="m-l-10">
+                    Download
+                </button>
+                <button mat-flat-button color="secondary" class="m-l-10" mat-dialog-close cdkFocusInitial>
+                    Close
+                </button>
+            </div>
+        </form>
+    </mat-card-content>
+</mat-card>

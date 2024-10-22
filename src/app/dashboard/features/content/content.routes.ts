@@ -6,11 +6,9 @@ import {EpisodesListComponent} from './pages/episodes-list/episodes-list.compone
 import {StationsListComponent} from './pages/stations-list/stations-list.component';
 import {TvGuidesListComponent} from './pages/tv-guides-list/tv-guides-list.component';
 
-
 export const ContentRoutes: Routes = [
     {
         path: '',
-        // component: AuthClassicLayout,
         children: [
             {
                 path: '',

@@ -24,7 +24,7 @@
             </div>
         </div>
     </mat-card-header>
-      
+
     <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0ms">
         <mat-tab label="Details">
             <mat-card-content class="b-t-1">
@@ -35,22 +35,22 @@
                         </div>
                         <div class="col-sm-8">
                             <mat-form-field appearance="outline" class="w-100">
-                                <input matInput placeholder="Enter Username" formControlName="username" required />
+                                <input matInput placeholder="Auto-generate if blank" formControlName="username" required />
                             </mat-form-field>
                         </div>
                     </div>
-                
+
                     <div class="row">
                         <div class="col-sm-4 d-flex align-items-start">
                             <mat-label class="mat-subtitle-2 f-w-600">Password</mat-label>
                         </div>
                         <div class="col-sm-8">
                             <mat-form-field appearance="outline" class="w-100">
-                                <input matInput type="text" placeholder="Enter Password" formControlName="password" required />
+                                <input matInput type="text" placeholder="Auto-generate if blank" formControlName="password" required />
                             </mat-form-field>
                         </div>
                     </div>
-                
+
                     <!-- <div class="row">
                         <div class="col-sm-4 d-flex align-items-start">
                             <mat-label class="mat-subtitle-2 f-w-600">Owner</mat-label>
@@ -105,13 +105,13 @@
                                   <mat-select-trigger>
                                       {{ selectedOwner ? selectedOwner.username : 'Select Owner' }}
                                   </mat-select-trigger>
-                  
-                                  <ngx-mat-select-search 
-                                      [formControl]="ownerSearchCtrl" 
-                                      placeholderLabel="Search" 
+
+                                  <ngx-mat-select-search
+                                      [formControl]="ownerSearchCtrl"
+                                      placeholderLabel="Search"
                                       noEntriesFoundLabel="No options found">
                                   </ngx-mat-select-search>
-                  
+
                                   <mat-option *ngFor="let owner of filteredOwners" [value]="owner" (click)="$event.stopPropagation()">
                                       {{ owner.username }}
                                   </mat-option>
@@ -119,9 +119,9 @@
                           </mat-form-field>
                       </div>
                   </div>
-                  
-                    
-                    <!--                 
+
+
+                    <!--
                     <div class="row">
                         <div class="col-sm-4 d-flex align-items-start">
                             <mat-label class="mat-subtitle-2 f-w-600">Package</mat-label>
@@ -177,13 +177,13 @@
                                   <mat-select-trigger>
                                       {{ selectedPackage ? selectedPackage.packageName : 'Select PAckage' }}
                                   </mat-select-trigger>
-                  
-                                  <ngx-mat-select-search 
-                                      [formControl]="packageSearchCtrl" 
-                                      placeholderLabel="Search" 
+
+                                  <ngx-mat-select-search
+                                      [formControl]="packageSearchCtrl"
+                                      placeholderLabel="Search"
                                       noEntriesFoundLabel="No options found">
                                   </ngx-mat-select-search>
-                  
+
                                   <mat-option *ngFor="let pkg of filteredPackages" [value]="pkg" (click)="$event.stopPropagation()">
                                       {{ pkg.packageName }}
                                   </mat-option>
@@ -191,7 +191,7 @@
                           </mat-form-field>
                       </div>
                   </div>
-                  
+
 
                     <!-- New Row for Package Cost and Duration -->
                     <div class="row">
@@ -212,7 +212,7 @@
                             </mat-form-field>
                         </div>
                     </div>
-                
+
                     <!-- New Row for Max Connections and Expiration Date -->
                     <div class="row">
                         <div class="col-sm-4 d-flex align-items-start">
@@ -232,7 +232,7 @@
                             </mat-form-field>
                         </div>
                     </div>
-                
+
                     <div class="row">
                         <div class="col-sm-4 d-flex align-items-start">
                             <mat-label class="mat-subtitle-2 f-w-600">Reseller Notes</mat-label>
@@ -244,7 +244,7 @@
                         </div>
                     </div>
                 </form>
-                
+
             </mat-card-content>
         </mat-tab>
         <mat-tab label="Restrictions">
@@ -276,7 +276,7 @@
                                     </button>
                                   </mat-chip-row>
                                   }
-                  
+
                                   <input
                                     placeholder="Add ip..."
                                     [matChipInputFor]="chipGrid"
@@ -314,7 +314,7 @@
                                     </button>
                                   </mat-chip-row>
                                   }
-                  
+
                                   <input
                                     placeholder="Add agent..."
                                     [matChipInputFor]="agentChipGrid"
@@ -354,7 +354,7 @@
                     </div>
                 </form>
             </mat-card-content>
-            
+
         </mat-tab>
         <mat-tab label="Review Purchase">
             <div class="row d-flex justify-content-around align-items-center m-t-24">
@@ -409,7 +409,7 @@
                           {{ element.bouquetName }}
                         </td>
                       </ng-container>
-              
+
                       <!-- Name Column -->
                       <ng-container matColumnDef="streams">
                         <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
@@ -453,7 +453,7 @@
                             0
                         </td>
                       </ng-container>
-              
+
                       <!-- Symbol Column -->
                       <ng-container matColumnDef="budget">
                         <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
@@ -463,7 +463,7 @@
                           ${{ element.budget }}k
                         </td>
                       </ng-container>
-              
+
                       <tr mat-header-row *matHeaderRowDef="bouquetsDisplayedColumns"></tr>
                       <tr mat-row *matRowDef="let row; columns: bouquetsDisplayedColumns" (click)="bouquetsSelection.toggle(row)"></tr>
                     </table>
@@ -474,4 +474,3 @@
     </mat-tab-group>
 </mat-card>
 
-   
