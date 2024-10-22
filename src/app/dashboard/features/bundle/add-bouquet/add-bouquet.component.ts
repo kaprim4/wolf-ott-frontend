@@ -42,7 +42,7 @@ export class AddBouquetComponent implements OnInit, AfterViewInit {
         'select',
         'name',
         'category',
-        'connections',
+        // 'connections',
         // 'budget',
         // 'actions',
     ];
@@ -51,7 +51,7 @@ export class AddBouquetComponent implements OnInit, AfterViewInit {
         'select',
         'name',
         'category',
-        'connections',
+        // 'connections',
         // 'budget',
         // 'actions',
     ];
