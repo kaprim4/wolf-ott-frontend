@@ -5,43 +5,29 @@
         </mat-card-title>
     </mat-card-header>
     <mat-card-content class="b-t-1">
-        <form>
-            <div class="row">
-                <div class="col-sm-4 d-flex align-items-start">
-                    <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">
-                        Email
-                    </mat-label>
-                </div>
-                <div class="col-sm-8">
-                    <mat-form-field appearance="outline" class="w-100" color="primary">
-                        <input matInput />
-                        <mat-hint> We'll never share your email with anyone else.</mat-hint>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4 d-flex align-items-start">
-                    <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block m-t-12">
-                        Password
-                    </mat-label>
-                </div>
-                <div class="col-sm-8">
-                    <mat-form-field appearance="outline" class="w-100" color="primary">
-                        <input matInput type="password" />
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="m-t-12">
-                <button mat-flat-button color="warn">
-                    Copy
-                </button>
-                <button mat-flat-button color="primary" class="m-l-10">
-                    Download
-                </button>
-                <button mat-flat-button color="secondary" class="m-l-10" mat-dialog-close cdkFocusInitial>
-                    Close
-                </button>
-            </div>
-        </form>
+        <div class="input-group">
+            <mat-form-field appearance="outline" class="w-100" color="primary">
+                <mat-label>Playlist URL</mat-label>
+                <input matInput type="text" [value]="playlistUrl" disabled>
+            </mat-form-field>
+            <button class="action-btn" mat-icon-button (click)="copyToClipboard(playlistUrl)">
+                <mat-icon>content_copy</mat-icon>
+            </button>
+            <button class="action-btn" mat-icon-button (click)="downloadM3U(playlistUrl)">
+                <mat-icon>download</mat-icon>
+            </button>
+        </div>
+        <div class="input-group">
+            <mat-form-field appearance="outline" class="w-100" color="primary">
+                <mat-label>Download URL</mat-label>
+                <input matInput type="text" [value]="downloadUrl" disabled>
+            </mat-form-field>
+            <button class="action-btn" mat-icon-button (click)="copyToClipboard(downloadUrl)">
+                <mat-icon>content_copy</mat-icon>
+            </button>
+            <button class="action-btn" mat-icon-button (click)="downloadM3U(downloadUrl)">
+                <mat-icon>download</mat-icon>
+            </button>
+        </div>
     </mat-card-content>
 </mat-card>
