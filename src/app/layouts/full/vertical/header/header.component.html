@@ -246,7 +246,7 @@
     <!-- --------------------------------------------------------------- -->
     <mat-chip class="m-l-10 f-s-14" style="letter-spacing: 2px;" matTooltip="Owner balance">
         <img matChipAvatar src="/assets/images/svgs/icon-dd-invoice.svg" alt="Owner balance"/>
-        {{ user.credits | formatAmount:2:'USD' }}
+        {{ user?.credits || 0 | formatAmount:2:'USD' }}
     </mat-chip>
 
     <!-- --------------------------------------------------------------- -->
