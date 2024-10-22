@@ -1,7 +1,7 @@
 
 export interface IStream {
     id: number;
-    streamname: string;
+    name: string;
 }
 
 export interface StreamList extends IStream {

@@ -1,14 +1,14 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
-import { catchError, debounceTime, of, Subject, switchMap } from 'rxjs';
-import { Page } from 'src/app/shared/models/page';
+import {catchError, debounceTime, of, Subject, switchMap} from 'rxjs';
+import {Page} from 'src/app/shared/models/page';
 import {StreamService} from "../../../../../shared/services/stream.service";
 import {StreamList} from "../../../../../shared/models/stream";
-import { CategoryService } from 'src/app/shared/services/category.service';
-import { CategoryList } from 'src/app/shared/models/category';
-import { NotificationService } from 'src/app/shared/services/notification.service';
+import {CategoryService} from 'src/app/shared/services/category.service';
+import {CategoryList} from 'src/app/shared/models/category';
+import {NotificationService} from 'src/app/shared/services/notification.service';
 
 @Component({
     selector: 'app-streams-list',
@@ -82,7 +82,7 @@ export class StreamsListComponent implements OnInit, AfterViewInit {
                 console.error('Failed to load streams', error);
                 this.loading = false;
                 this.notificationService.error('Failed to load streams. Please try again.');
-                return of({ content: [], totalElements: 0, totalPages: 0, size: 0, number: 0 } as Page<StreamList>);
+                return of({content: [], totalElements: 0, totalPages: 0, size: 0, number: 0} as Page<StreamList>);
             })
         ).subscribe(pageResponse => {
             this.dataSource.data = pageResponse.content;
@@ -91,9 +91,9 @@ export class StreamsListComponent implements OnInit, AfterViewInit {
         });
     }
 
-    getCategories(idx: number[]):string {
+    getCategories(idx: number[]): string {
         return this.categories.filter(category => idx.includes(category.id))
-                              .map(category => category.name)
-                              .join(', ');
+            .map(category => category.name)
+            .join(', ');
     }
 }

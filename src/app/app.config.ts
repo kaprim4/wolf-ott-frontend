@@ -38,6 +38,7 @@ export function HttpLoaderFactory(http: HttpClient): any {
 }
 
 import {NgxEchartsModule} from 'ngx-echarts';
+import {FormatAmountPipe} from "./helpers/format-amount.pipe";
 
 export const appConfig: ApplicationConfig = {
     providers: [

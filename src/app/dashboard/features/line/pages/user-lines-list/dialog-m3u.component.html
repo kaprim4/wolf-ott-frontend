@@ -1,0 +1,41 @@
+<h5 mat-dialog-title class="mat-subtitle-1">Download Playlist</h5>
+<div mat-dialog-content class="mat-subtitle-2 lh-16">
+    <div class="row">
+        <div class="col-sm-4 d-flex align-items-start">
+            <mat-label class="mat-subtitle-2 f-w-600">Format</mat-label>
+        </div>
+        <div class="col-sm-8">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-select formControlName="memberId" (openedChange)="onOwnersDropdownOpened($event)" required>
+                    <mat-select-trigger>
+                        {{ selectedOwner ? selectedOwner.username : 'Select Owner' }}
+                    </mat-select-trigger>
+                    @if (dropdownOpened) {
+                        <mat-option appearance="outline" class="w-100" aria-disabled="true">
+                            <input
+                                matInput
+                                class="w-100"
+                                type="text"
+                                placeholder="Search"
+                                [(ngModel)]="ownerSearchTerm"
+                                (ngModelChange)="ownersFilterOptions()"
+                                (click)="$event.stopPropagation()"
+                            />
+                        </mat-option>
+                    }
+                    @for (owner of filteredOwners; track owner.id) {
+                        <mat-option [value]="owner.id">
+                            {{ owner.username }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions class="p-24 p-t-0">
+    <button mat-stroked-button color="warn" mat-dialog-close>No</button>
+    <button mat-flat-button color="primary" mat-dialog-close cdkFocusInitial>
+        Ok
+    </button>
+</div>

@@ -11,19 +11,28 @@ export const navItems: NavItem[] = [
         route: '/dashboard',
     },
     {
+        displayName: 'Quick M3U',
+        subtext: 'Generate a M3U link',
+        iconName: 'comet',
+        bgcolor: 'warning',
+        route: '/quick-m3u',
+        chip: true,
+        chipContent: 'New',
+        chipClass: 'warning',
+    },
+    {
         navCap: 'Apps',
     },
     {
         displayName: 'Users',
         iconName: 'user-shield',
-        bgcolor: 'warning',
-        route: '/apps/users',
+        bgcolor: 'primary',
+        route: '/apps/users/list',
     },
     {
         displayName: 'Lines',
         iconName: 'timeline-event',
-        bgcolor: 'success',
-        route: '/apps/lines',
+        bgcolor: 'primary',
         children: [
             {
                 displayName: 'User Lines',
@@ -48,8 +57,7 @@ export const navItems: NavItem[] = [
     {
         displayName: 'Contents',
         iconName: 'satellite',
-        bgcolor: 'success',
-        route: '/apps/contents',
+        bgcolor: 'primary',
         children: [
             {
                 displayName: 'Streams',
@@ -92,8 +100,7 @@ export const navItems: NavItem[] = [
     {
         displayName: 'Logs',
         iconName: 'chart-donut-3',
-        bgcolor: 'success',
-        route: '/apps/logs',
+        bgcolor: 'primary',
         children: [
             {
                 displayName: 'Live Connections',
@@ -119,7 +126,6 @@ export const navItems: NavItem[] = [
         displayName: 'Bundles',
         iconName: 'packages',
         bgcolor: 'success',
-        route: '/apps/bundles',
         children: [
             {
                 displayName: 'Packages',

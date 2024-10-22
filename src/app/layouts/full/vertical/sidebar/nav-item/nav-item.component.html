@@ -4,18 +4,13 @@
     </div>
 }
 @if (!item.navCap && !item.external && !item.twoLines) {
-    <a
-        mat-list-item
-        (click)="onItemSelected(item)"
-        [ngClass]="{
+    <a mat-list-item (click)="onItemSelected(item)" [ngClass]="{
       'mat-toolbar mat-primary activeMenu': item.route
         ? router.isActive(item.route, true)
         : false,
       expanded: expanded,
       disabled: item.disabled
-    }"
-        class="menu-list-item {{ item.bgcolor }}"
-    >
+    }" class="menu-list-item {{ item.bgcolor }}">
         <i-tabler
             class="routeIcon"
             name="{{ item.iconName }}"
