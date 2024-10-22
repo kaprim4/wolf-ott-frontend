@@ -127,7 +127,7 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
         exitAnimationDuration: string
     ): void {
         this.dialog.open(AppDialogOverviewComponent, {
-            width: '290px',
+            width: '400px',
             enterAnimationDuration,
             exitAnimationDuration,
         });
