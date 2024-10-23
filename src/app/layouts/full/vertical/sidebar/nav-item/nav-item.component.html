@@ -19,11 +19,11 @@
         <span class="hide-menu">{{ item.displayName | translate }}</span>
         @if (item.children && item.children.length) {
             <span class="arrow-icon" fxFlex>
-      <span fxFlex></span>
-      <mat-icon [@indicatorRotate]="expanded ? 'expanded' : 'collapsed'">
-        expand_more
-      </mat-icon>
-    </span>
+                <span fxFlex></span>
+                <mat-icon [@indicatorRotate]="expanded ? 'expanded' : 'collapsed'">
+                    expand_more
+                </mat-icon>
+            </span>
         }
         @if (item.chip) {
             <span>

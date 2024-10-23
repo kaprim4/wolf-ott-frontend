@@ -53,3 +53,11 @@ export interface LineDetail extends ILine {
     lastActivityArray: string; // Consider parsing this if needed
     updated: number | null; // Consider converting to Date in your application logic
 }
+
+export interface CreateLine extends ILine {
+    username: string,
+    password: string,
+    packageId: number,
+    isTrial: boolean,
+    bouquets: string
+}

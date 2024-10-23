@@ -1,3 +1,6 @@
+import { ComponentType } from "@angular/cdk/portal";
+import { Component } from "@angular/core";
+
 export interface NavItem {
     displayName?: string;
     disabled?: boolean;
@@ -13,4 +16,6 @@ export interface NavItem {
     children?: NavItem[];
     ddType?: string;
     bgcolor?:string;
+    onClick?: Function;
+    openDialog?: ComponentType<unknown>;
 }

@@ -1,0 +1,71 @@
+<mat-card class="cardWithShadow theme-card">
+    @if(loading){
+        <mat-progress-bar mode="query"></mat-progress-bar>
+    }
+    <mat-card-header>
+        <mat-card-title class="m-b-0" style="color:white;">
+            Quick M3U
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="b-t-1">
+        @if(lineCreated){
+            <div class="input-group">
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <mat-label>Playlist URL</mat-label>
+                    <input matInput type="text" [value]="playlistUrl" disabled>
+                </mat-form-field>
+                <button class="action-btn" mat-icon-button (click)="copyToClipboard(playlistUrl)">
+                    <mat-icon>content_copy</mat-icon>
+                </button>
+                <button class="action-btn" mat-icon-button (click)="downloadM3U(playlistUrl)">
+                    <mat-icon>download</mat-icon>
+                </button>
+            </div>
+            <div class="input-group">
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <mat-label>Download URL</mat-label>
+                    <input matInput type="text" [value]="downloadUrl" disabled>
+                </mat-form-field>
+                <button class="action-btn" mat-icon-button (click)="copyToClipboard(downloadUrl)">
+                    <mat-icon>content_copy</mat-icon>
+                </button>
+                <button class="action-btn" mat-icon-button (click)="downloadM3U(downloadUrl)">
+                    <mat-icon>download</mat-icon>
+                </button>
+            </div>
+        } @else {
+
+            <div>
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-select [(ngModel)]="selectedPackage" (openedChange)="onPackagesDropdownOpened($event)" required>
+                        <mat-select-trigger>
+                            {{ selectedPackage ? selectedPackage.packageName : 'Select PAckage' }}
+                        </mat-select-trigger>
+
+                        <ngx-mat-select-search
+                            [formControl]="packageSearchCtrl"
+                            placeholderLabel="Search"
+                            noEntriesFoundLabel="No options found">
+                        </ngx-mat-select-search>
+
+                        <mat-option *ngFor="let pkg of filteredPackages" [value]="pkg" (click)="$event.stopPropagation()">
+                            {{ pkg.packageName }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label class="mat-subtitle-2 f-w-600">Username</mat-label>
+                    <input matInput placeholder="Auto-generate if blank" [(ngModel)]="username" required />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label class="mat-subtitle-2 f-w-600">Password</mat-label>
+                    <input matInput placeholder="Auto-generate if blank" [(ngModel)]="password" required />
+                </mat-form-field>
+
+                <button mat-raised-button color="primary" class="w-100 f-s-15 f-w-800" (click)="createLine()" [disabled]="canCreate">Create Line</button>
+            </div>
+        }
+    </mat-card-content>
+</mat-card>

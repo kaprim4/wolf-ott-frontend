@@ -1,0 +1,15 @@
+.input-group {
+    display: flex;
+    align-items: center;
+    // margin-bottom: 16px; /* Adjust spacing between rows */
+}
+
+.mat-form-field {
+    flex: 1; /* Take up remaining space */
+    margin-right: 8px; /* Space between input and buttons */
+}
+
+.action-btn {
+    transform: translateY(-25%);
+    margin-left: 12px;
+}

@@ -1,6 +1,9 @@
 import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {environment} from "../environments/environment";
+import { StorageService } from './shared/services/storage.service';
+import { MatDialog } from '@angular/material/dialog';
+import { LineService } from './shared/services/line.service';
 
 @Component({
     selector: 'app-root',
@@ -10,4 +13,6 @@ import {environment} from "../environments/environment";
 })
 export class AppComponent {
     title = environment.APP_NAME;
+
+    constructor(){}
 }

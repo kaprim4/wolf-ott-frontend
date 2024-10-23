@@ -1,3 +1,4 @@
+import { QuickM3uComponent } from 'src/app/shared/components/quick-m3u/quick-m3u.component';
 import {NavItem} from './nav-item/nav-item';
 
 export const navItems: NavItem[] = [
@@ -19,6 +20,8 @@ export const navItems: NavItem[] = [
         chip: true,
         chipContent: 'New',
         chipClass: 'warning',
+        // onClick: () => { window.localStorage.setItem('openQuickM3U', 'true') },
+        openDialog: QuickM3uComponent
     },
     {
         navCap: 'Apps',

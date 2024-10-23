@@ -21,6 +21,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {TablerIconsModule} from 'angular-tabler-icons';
 import {MaterialModule} from 'src/app/material.module';
 import {CommonModule} from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-nav-item',
@@ -52,7 +53,8 @@ export class AppNavItemComponent implements OnChanges {
 
     constructor(
         public navService: NavService,
-        public router: Router
+        public router: Router,
+        private dialog: MatDialog
     ) {
         if (this.depth === undefined) {
             this.depth = 0;
@@ -71,6 +73,14 @@ export class AppNavItemComponent implements OnChanges {
     }
 
     onItemSelected(item: NavItem) {
+        if(item.openDialog)
+            this.dialog.open(item.openDialog, {
+                width: '600px'
+            })
+        if(item.onClick)
+            item.onClick();
+        if(!item.route)
+            return;
         if (!item.children || !item.children.length) {
             this.router.navigate([item.route]);
 
