@@ -46,32 +46,37 @@
                         </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="id">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Id</th>
-                        <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.id }}</td>
+                    <ng-container matColumnDef="reseller">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Reseller</th>
+                        <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.owner_username }}</td>
                     </ng-container>
 
-                    <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Stream</th>
-                        <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.name }}</td>
+                    <ng-container matColumnDef="line">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Line / User</th>
+                        <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.line_username }}</td>
                     </ng-container>
 
-                    <ng-container matColumnDef="category">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Category</th>
-                        <td mat-cell *matCellDef="let element" class="f-s-14">{{ getCategories(element.categories) }}</td>
+                    <ng-container matColumnDef="action_package">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Action</th>
+                        <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.action }}</td>
                     </ng-container>
 
-                    <ng-container matColumnDef="status">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Status</th>
+                    <ng-container matColumnDef="cost">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Cost</th>
                         <td mat-cell *matCellDef="let element" class="f-s-14">
                 <span class="p-x-8 p-y-4 bg-light f-w-600 rounded-pill f-s-12">
-                    {{ element.status ? 'Active' : 'Inactive' }}
+                    {{ element.cost }}
                 </span>
                         </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="lastLogin">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Last Login</th>
+                    <ng-container matColumnDef="credit">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Credit Remain</th>
+                        <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.credit }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="date">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Date</th>
                         <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.lastLogin | date }}</td>
                     </ng-container>
 
@@ -91,7 +96,7 @@
                 <mat-paginator [length]="totalElements"
                                [pageSize]="pageSize"
                                [pageSizeOptions]="[5, 10, 25]"
-                               (page)="loadStreams()"
+                               (page)="loadLogs()"
                                showFirstLastButtons>
                 </mat-paginator>
             </div>
