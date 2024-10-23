@@ -9,6 +9,9 @@ import {CreateLine, ILine, LineList} from '../../models/line';
 import {NotificationService} from '../../services/notification.service';
 import {catchError, finalize, tap, throwError} from 'rxjs';
 import {ToastrService} from "ngx-toastr";
+import {UserDetail} from "../../models/user";
+import {UserService} from "../../services/user.service";
+import {TokenService} from "../../services/token.service";
 
 @Component({
     selector: 'app-quick-m3u',
@@ -31,12 +34,16 @@ export class QuickM3uComponent implements OnInit {
 
     server: string = "http://r2u.tech:80/";
     isLoading: boolean = false;
+    loggedInUser: any;
+    user: any;
 
     constructor(
         private lineService: LineService,
         private packageService: PackageService,
         private notificationService: NotificationService,
-        private toastr: ToastrService
+        private toastr: ToastrService,
+        private tokenService: TokenService,
+        private userService: UserService
     ) {
         this.username = LineService.generateRandomUsername();
         this.password = LineService.generateRandomPassword();
@@ -47,6 +54,10 @@ export class QuickM3uComponent implements OnInit {
             this.packages = list;
             this.filteredPackages = this.packages;
         })
+        this.loggedInUser = this.tokenService.getPayload();
+        this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
+            this.user = user;
+        });
     }
 
     createLine() {
@@ -57,7 +68,8 @@ export class QuickM3uComponent implements OnInit {
             password: this.password,
             packageId: this.selectedPackage.id,
             isTrial: true,
-            bouquets: ''
+            bouquets: '',
+            memberId: this.user.id
         };
         this.lineService.addLine(line).pipe(
             tap(() => {

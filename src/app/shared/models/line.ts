@@ -57,6 +57,7 @@ export interface LineDetail extends ILine {
 export interface CreateLine extends ILine {
     username: string,
     password: string,
+    memberId: number;
     packageId: number,
     isTrial: boolean,
     bouquets: string
