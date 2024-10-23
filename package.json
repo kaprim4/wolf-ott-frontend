@@ -33,6 +33,9 @@
         "echarts": "^5.5.0",
         "echarts-gl": "^2.0.9",
         "echarts-stat": "^1.2.0",
+        "flag-icons": "^7.2.3",
+        "jwt-decode": "^4.0.0",
+        "moment": "^2.30.1",
         "ng-apexcharts": "^1.11.0",
         "ng2-search-filter": "^0.5.1",
         "ngx-echarts": "^18.0.0",
@@ -43,9 +46,7 @@
         "rxjs": "~7.8.1",
         "sass": "^1.77.6",
         "tslib": "^2.6.3",
-        "zone.js": "~0.14.7",
-        "jwt-decode": "^4.0.0",
-        "moment": "^2.30.1"
+        "zone.js": "~0.14.7"
     },
     "devDependencies": {
         "@angular-devkit/build-angular": "^18.0.3",

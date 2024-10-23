@@ -28,120 +28,96 @@
 </mat-card>
 
 <mat-card class="cardWithShadow">
-    @defer (on viewport) {
-        @if (!loading) {
-            <div class="table-responsive">
-                <table
-                    mat-table
-                    [dataSource]="dataSource"
-                    matSort
-                    class="no-wrap m-t-0 v-middle w-100"
-                >
-                    <ng-container matColumnDef="chk">
-                        <th mat-header-cell *matHeaderCellDef>
-                            <mat-checkbox color="primary"></mat-checkbox>
-                        </th>
-                        <td mat-cell *matCellDef="let element" class="f-s-14">
-                            <mat-checkbox [(ngModel)]="element.completed" color="primary"></mat-checkbox>
-                        </td>
-                    </ng-container>
+    <div class="table-responsive">
+        <table
+            mat-table
+            [dataSource]="dataSource"
+            matSort
+            class="no-wrap m-t-0 v-middle w-100"
+        >
+            <!-- <ng-container matColumnDef="chk">
+                <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox color="primary"></mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let element" class="f-s-14">
+                    <mat-checkbox [(ngModel)]="element.completed" color="primary"></mat-checkbox>
+                </td>
+            </ng-container> -->
 
-                    <ng-container matColumnDef="id">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Id</th>
-                        <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.id }}</td>
-                    </ng-container>
+            <ng-container matColumnDef="quality">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Quality</th>
+                <td mat-cell *matCellDef="let element" class="f-s-12">{{ element.quality }}</td>
+            </ng-container>
 
-                    <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Stream</th>
-                        <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.name }}</td>
-                    </ng-container>
+            <ng-container matColumnDef="line">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Line</th>
+                <td mat-cell *matCellDef="let element" class="f-s-12">{{ element.line_name }}</td>
+            </ng-container>
 
-                    <ng-container matColumnDef="category">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Category</th>
-                        <td mat-cell *matCellDef="let element" class="f-s-14">{{ getCategories(element.categories) }}</td>
-                    </ng-container>
+            <ng-container matColumnDef="stream">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Stream</th>
+                <td mat-cell *matCellDef="let element" class="f-s-12 text-truncate" style="max-width: 250px;">{{ element.stream_name }}</td>
+            </ng-container>
 
-                    <ng-container matColumnDef="status">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Status</th>
-                        <td mat-cell *matCellDef="let element" class="f-s-14">
-                <span class="p-x-8 p-y-4 bg-light f-w-600 rounded-pill f-s-12">
-                    {{ element.status ? 'Active' : 'Inactive' }}
-                </span>
-                        </td>
-                    </ng-container>
+            <!-- <ng-container matColumnDef="category">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Category</th>
+                <td mat-cell *matCellDef="let element" class="f-s-14">{{ getCategories(element.categories) }}</td>
+            </ng-container> -->
 
-                    <ng-container matColumnDef="lastLogin">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Last Login</th>
-                        <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.lastLogin | date }}</td>
-                    </ng-container>
+            <ng-container matColumnDef="player">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Player</th>
+                <td mat-cell *matCellDef="let element" class="f-s-12 text-truncate" style="max-width: 150px;">
+                    <span class="p-x-8 p-y-4 bg-light f-w-600 rounded-pill f-s-12">
+                        {{ element.player }}
+                    </span>
+                </td>
+            </ng-container>
 
-                    <ng-container matColumnDef="action">
-                        <th mat-header-cell *matHeaderCellDef class="f-w-600 f-s-15">Kill</th>
-                        <td mat-cell *matCellDef="let element" class="f-s-14 d-flex">
-                            <a mat-icon-button [routerLink]="['/apps/streams/', element.id]"
-                               class="d-flex align-items-center justify-content-center">
-                                <i-tabler name="eye" class="icon-18 d-flex align-items-center"></i-tabler>
-                            </a>
-                        </td>
-                    </ng-container>
+            <ng-container matColumnDef="isp">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">ISP</th>
+                <td mat-cell *matCellDef="let element" class="f-s-12">{{ element.isp }}</td>
+            </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-                </table>
-                <mat-paginator [length]="totalElements"
-                               [pageSize]="pageSize"
-                               [pageSizeOptions]="[5, 10, 25]"
-                               (page)="loadStreams()"
-                               showFirstLastButtons>
-                </mat-paginator>
-            </div>
-        }
-    }
-    @loading(after 100ms; minimum 1000ms) {
-        <span>loading...</span>
-        <span>loading...</span>
-        <span>loading...</span>
-        <span>loading...</span>
-        <span>loading...</span>
-        <span>loading...</span>
-        <span>loading...</span>
-        <span>loading...</span>
-        <span>loading...</span>
-        <table tyle="display: block; height: 50vh; width: 100%;">
-            <thead>
-                @for (column of displayedColumns; track $index) {
-                    @if(column === 'chk'){
-                        <th style="width: 25px;">
-                            <mat-checkbox color="primary"></mat-checkbox>
-                        </th>
-                    }@else{
-                        <th class="f-w-600 f-s-15">{{ column }}</th>
-                    }
-                }
-            </thead>
-            <tbody>
-                @for (item of [1,2,3,4,5,6,7,8,9]; track $index) {
-                    <tr>
-                        @for (column of displayedColumns; track $index) {
-                            @if(column === 'chk'){
-                                <td style="width: 25px;">
-                                    <mat-checkbox color="primary"></mat-checkbox>
-                                </td>
-                            }@else{
-                                <td style="padding: 0 5px;">
-                                    <div class="stream-list-placeholder"></div>
-                                </td>
-                            }
-                        }
-                    </tr>
-                }
-            </tbody>
+            <ng-container matColumnDef="ip">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">IP</th>
+                <td mat-cell *matCellDef="let element" class="f-s-12">
+                    <span [ngClass]="['fi', 'fi-'+element.country.toLowerCase()]"></span>
+                    <span class="m-l-4 f-w-800">{{ element.ip }}</span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="duration">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Duration</th>
+                <td mat-cell *matCellDef="let element" class="f-s-12">{{ calculateDuration(element.startAt, element.endAt) }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="output">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Player</th>
+                <td mat-cell *matCellDef="let element" class="f-s-12">
+                    <span class="p-x-8 p-y-4 bg-light f-w-600 rounded-pill f-s-12">
+                        {{ element.output }}
+                    </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 f-s-15">Actions</th>
+                <td mat-cell *matCellDef="let element" class="f-s-14 d-flex">
+                    <a mat-icon-button [routerLink]="['/apps/streams/', element.id]"
+                       class="d-flex align-items-center justify-content-center">
+                        <i-tabler name="eye" class="icon-18 d-flex align-items-center"></i-tabler>
+                    </a>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
-    }
-    @placeholder(minimum 100ms) {
-        <div class="stream-list-placeholder " style="height: 50vh; opacity: 50%;"></div>
-    }
-    @error {
-        <div>ops!!!</div>
-    }
+        <mat-paginator [length]="totalElements"
+                       [pageSize]="pageSize"
+                       [pageSizeOptions]="[5, 10, 25]"
+                       (page)="loadStreams()"
+                       showFirstLastButtons>
+        </mat-paginator>
+    </div>
 </mat-card>

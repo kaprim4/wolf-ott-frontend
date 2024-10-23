@@ -18,7 +18,7 @@ export class UserLogService extends CrudService<IUserLog>  {
     this.endpoint = "users/logs";
 }
 
-public getAllUsers<T extends IUserLog>(search?: string): Observable<T[]> {
+public getAllLogs<T extends IUserLog>(search?: string): Observable<T[]> {
     // return this.getAllAsList<T>(search || "").pipe(
     //     map((users: (IUserLog | T)[]) => users as T[]) // Type assertion
     // );
@@ -34,17 +34,17 @@ public getUserLogs<T extends IUserLog>(search: string, page: number, size: numbe
     );
 }
 
-public getUserLog<T extends IUserLog>(id_user: number): Observable<T> {
+public getUserLog<T extends IUserLog>(id_log: number): Observable<T> {
     // return this.getOneById(id_user).pipe(map(res => res.body as T));
     throw Error("Method not implimented")
 }
 
-public addUserLog(user: IUserLog): Observable<HttpResponse<IUserLog>> {
+public addUserLog(log: IUserLog): Observable<HttpResponse<IUserLog>> {
     // return this.add(user);
     throw Error("Method not implimented")
 }
 
-public updateUserLog(user: IUserLog): Observable<HttpResponse<IUserLog>> {
+public updateUserLog(log: IUserLog): Observable<HttpResponse<IUserLog>> {
     // return this.update(user.id, user);
     throw Error("Method not implimented")
 }

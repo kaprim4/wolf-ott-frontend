@@ -2,13 +2,12 @@ import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort, MatSortHeader} from "@angular/material/sort";
-import {StreamList} from "../../../../../shared/models/stream";
 import {catchError, debounceTime, of, Subject, switchMap} from "rxjs";
-import {CategoryList} from "../../../../../shared/models/category";
-import {StreamService} from "../../../../../shared/services/stream.service";
-import {CategoryService} from "../../../../../shared/services/category.service";
+
 import {NotificationService} from "../../../../../shared/services/notification.service";
 import {Page} from "../../../../../shared/models/page";
+import { LineActivityList } from 'src/app/shared/models/line-activity';
+import { LineActivityService } from 'src/app/shared/services/line-activity.service';
 
 @Component({
     selector: 'app-activity-logs-list',
@@ -17,18 +16,18 @@ import {Page} from "../../../../../shared/models/page";
 })
 export class ActivityLogsListComponent implements OnInit, AfterViewInit {
     displayedColumns: string[] = [
-        'Quality',
-        'Line',
-        'Stream',
-        'Player',
-        'ISP',
-        'IP',
-        'Duration',
-        'Output',
-        'Actions',
+        'quality',
+        'line',
+        'stream',
+        'player',
+        'isp',
+        'ip',
+        'duration',
+        'output',
+        'actions',
     ];
 
-    dataSource = new MatTableDataSource<StreamList>([]);
+    dataSource = new MatTableDataSource<LineActivityList>([]);
     totalElements = 0;
     pageSize = 10;
     pageIndex = 0;
@@ -42,11 +41,9 @@ export class ActivityLogsListComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    categories: CategoryList[] = [];
 
     constructor(
-        private streamService: StreamService,
-        private categoryService: CategoryService,
+        private activityService: LineActivityService,
         private notificationService: NotificationService
     ) {
         // this.loadStreams();
@@ -57,15 +54,12 @@ export class ActivityLogsListComponent implements OnInit, AfterViewInit {
         // Subscribe to search input changes
         this.searchSubject.pipe(
             debounceTime(300), // Wait for 300ms pause in events
-            switchMap(searchTerm => this.streamService.getStreams<StreamList>(searchTerm, this.pageIndex, this.pageSize))
+            switchMap(searchTerm => this.activityService.getLineActivities<LineActivityList>(searchTerm, this.pageIndex, this.pageSize))
         ).subscribe(response => {
             this.dataSource.data = response.content;
             this.totalElements = response.totalElements;
         });
 
-        this.categoryService.getAllCategories<CategoryList>().subscribe(categories => {
-            this.categories = categories;
-        });
     }
 
     ngAfterViewInit(): void {
@@ -85,12 +79,12 @@ export class ActivityLogsListComponent implements OnInit, AfterViewInit {
         const size = (this.paginator?.pageSize || this.pageSize);
 
         this.loading = true; // Start loading
-        this.streamService.getStreams<StreamList>('', page, size).pipe(
+        this.activityService.getLineActivities<LineActivityList>('', page, size).pipe(
             catchError(error => {
                 console.error('Failed to load streams', error);
                 this.loading = false;
                 this.notificationService.error('Failed to load streams. Please try again.');
-                return of({content: [], totalElements: 0, totalPages: 0, size: 0, number: 0} as Page<StreamList>);
+                return of({content: [], totalElements: 0, totalPages: 0, size: 0, number: 0} as Page<LineActivityList>);
             })
         ).subscribe(pageResponse => {
             this.dataSource.data = pageResponse.content;
@@ -99,9 +93,15 @@ export class ActivityLogsListComponent implements OnInit, AfterViewInit {
         });
     }
 
-    getCategories(idx: number[]): string {
-        return this.categories.filter(category => idx.includes(category.id))
-            .map(category => category.name)
-            .join(', ');
-    }
+    calculateDuration(startAt: string, endAt: string): string {
+        const start = new Date(startAt);
+        const end = new Date(endAt);
+        const duration = end.getTime() - start.getTime();
+    
+        // Calculate duration in hours and minutes
+        const hours = Math.floor(duration / (1000 * 60 * 60));
+        const minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
+    
+        return `${hours}h ${minutes}m`;
+      }
 }
