@@ -16,11 +16,10 @@ export const navItems: NavItem[] = [
         subtext: 'Generate a M3U link',
         iconName: 'comet',
         bgcolor: 'warning',
-        route: '/quick-m3u',
+        route: '',
         chip: true,
         chipContent: 'New',
         chipClass: 'warning',
-        // onClick: () => { window.localStorage.setItem('openQuickM3U', 'true') },
         openDialog: QuickM3uComponent
     },
     {

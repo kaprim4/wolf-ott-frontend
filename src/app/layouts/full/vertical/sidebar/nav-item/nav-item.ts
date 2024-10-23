@@ -16,6 +16,5 @@ export interface NavItem {
     children?: NavItem[];
     ddType?: string;
     bgcolor?:string;
-    onClick?: Function;
     openDialog?: ComponentType<unknown>;
 }

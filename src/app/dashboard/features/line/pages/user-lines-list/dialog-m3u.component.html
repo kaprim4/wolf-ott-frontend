@@ -4,22 +4,13 @@
             Download Playlist
         </mat-card-title>
     </mat-card-header>
+    @if (isDownloading) {
+        <mat-progress-bar mode="query"></mat-progress-bar>
+    }
     <mat-card-content class="b-t-1">
         <div class="input-group">
             <mat-form-field appearance="outline" class="w-100" color="primary">
                 <mat-label>Playlist URL</mat-label>
-                <input matInput type="text" [value]="playlistUrl" disabled>
-            </mat-form-field>
-            <button class="action-btn" mat-icon-button (click)="copyToClipboard(playlistUrl)">
-                <mat-icon>content_copy</mat-icon>
-            </button>
-            <button class="action-btn" mat-icon-button (click)="downloadM3U(playlistUrl)">
-                <mat-icon>download</mat-icon>
-            </button>
-        </div>
-        <div class="input-group">
-            <mat-form-field appearance="outline" class="w-100" color="primary">
-                <mat-label>Download URL</mat-label>
                 <input matInput type="text" [value]="downloadUrl" disabled>
             </mat-form-field>
             <button class="action-btn" mat-icon-button (click)="copyToClipboard(downloadUrl)">

@@ -73,14 +73,11 @@ export class AppNavItemComponent implements OnChanges {
     }
 
     onItemSelected(item: NavItem) {
-        if(item.openDialog)
+        if(item.openDialog){
             this.dialog.open(item.openDialog, {
                 width: '600px'
             })
-        if(item.onClick)
-            item.onClick();
-        if(!item.route)
-            return;
+        }
         if (!item.children || !item.children.length) {
             this.router.navigate([item.route]);
 
@@ -94,7 +91,7 @@ export class AppNavItemComponent implements OnChanges {
             left: 0,
             behavior: 'smooth',
         });
-        if (!this.expanded) {
+        if (!this.expanded){
             if (window.innerWidth < 1024) {
                 this.notify.emit();
             }

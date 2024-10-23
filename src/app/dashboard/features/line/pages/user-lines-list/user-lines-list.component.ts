@@ -24,6 +24,7 @@ import {MatOption} from "@angular/material/autocomplete";
 import {MatSelect, MatSelectTrigger} from "@angular/material/select";
 import {ReactiveFormsModule} from "@angular/forms";
 import {SharedModule} from "../../../../../shared/shared.module";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
     selector: 'app-user-lines-list',
@@ -144,20 +145,20 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
 @Component({
     selector: 'dialog-overview',
     styles: `.input-group {
-                display: flex;
-                align-items: center;
-                // margin-bottom: 16px; /* Adjust spacing between rows */
-            }
-            
-            .mat-form-field {
-                flex: 1; /* Take up remaining space */
-                margin-right: 8px; /* Space between input and buttons */
-            }
-            
-            .action-btn {
-                transform: translateY(-25%);
-                margin-left: 12px;
-            }`,
+        display: flex;
+        align-items: center;
+        // margin-bottom: 16px; /* Adjust spacing between rows */
+    }
+
+    .mat-form-field {
+        flex: 1; /* Take up remaining space */
+        margin-right: 8px; /* Space between input and buttons */
+    }
+
+    .action-btn {
+        transform: translateY(-25%);
+        margin-left: 12px;
+    }`,
     standalone: true,
     imports: [MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, MatButtonModule, MatFormField, MatInput, MatLabel, MatOption, MatSelect, MatSelectTrigger, ReactiveFormsModule, SharedModule],
     templateUrl: 'dialog-m3u.component.html',
@@ -165,59 +166,76 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
 export class AppDialogOverviewComponent {
     username: string = '';
     password: string = '';
+    server: string = "http://r2u.tech:80/";
+    isDownloading: boolean = false;
 
-    constructor(public dialogRef: MatDialogRef<AppDialogOverviewComponent>, @Inject(MAT_DIALOG_DATA) public data: { username: string; password: string }) {
+    constructor(
+        public dialogRef: MatDialogRef<AppDialogOverviewComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: {
+            username: string;
+            password: string
+        },
+        private toastr: ToastrService
+    ) {
         this.username = data.username;
         // console.log("Username :", this.username);
         this.password = data.password;
         // console.log("Password :", this.password);
     }
 
-    get playlistUrl(): string { return `http://r2u.tech/playlist/${this.username}/${this.password}/m3u_plus`; }
-    get downloadUrl(): string { return `http://r2u.tech/get.php?username=${this.username}&password=${this.password}&type=m3u_plus&output=mpegts`; }
+    get playlistUrl(): string {
+        return `${this.server}playlist/${this.username}/${this.password}/m3u_plus`;
+    }
+
+    get downloadUrl(): string {
+        return `${this.server}get.php?username=${this.username}&password=${this.password}&type=m3u_plus&output=mpegts`;
+    }
 
     copyToClipboard(url: string) {
+        this.isDownloading = true; // Démarrer le chargement
         navigator.clipboard.writeText(url).then(() => {
             console.log('Copied to clipboard: ', url);
+            this.toastr.success('Copied to clipboard.', 'Succès');
+            this.isDownloading = false; // Fin du chargement
         }).catch(err => {
             console.error('Could not copy: ', err);
+            this.toastr.error('Could not copy.', 'Erreur');
+            this.isDownloading = false; // Fin du chargement
         });
     }
 
     downloadM3U(url: string) {
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+        this.isDownloading = true; // Démarrer le chargement
+        this.toastr.info('Download in progress...', 'Download');
+        fetch(url).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // Get the filename from the Content-Disposition header
+            const contentDisposition = response.headers.get('Content-Disposition');
+            let filename = `playlist_${this.username}_plus.m3u`; // Default filename
+            if (contentDisposition) {
+                const matches = /filename[^;=\n]*=((['"]).*?\2|([^;\n]*))/i.exec(contentDisposition);
+                if (matches != null && matches[1]) {
+                    filename = matches[1].replace(/['"]/g, ''); // Clean up quotes
                 }
-    
-                // Get the filename from the Content-Disposition header
-                const contentDisposition = response.headers.get('Content-Disposition');
-                let filename = 'playlist.m3u'; // Default filename
-    
-                if (contentDisposition) {
-                    const matches = /filename[^;=\n]*=((['"]).*?\2|([^;\n]*))/i.exec(contentDisposition);
-                    if (matches != null && matches[1]) {
-                        filename = matches[1].replace(/['"]/g, ''); // Clean up quotes
-                    }
-                }
-    
-                return response.blob().then(blob => ({ blob, filename })); // Return both the Blob and the filename
-            })
-            .then(({ blob, filename }) => {
-                const link = document.createElement('a');
-                const blobUrl = window.URL.createObjectURL(blob); // Create a URL for the Blob
-                link.href = blobUrl;
-                link.download = filename; // Set the filename from response
-                document.body.appendChild(link);
-                link.click(); // Programmatically click the link to trigger the download
-                link.remove(); // Remove the link from the document
-                window.URL.revokeObjectURL(blobUrl); // Clean up the URL.createObjectURL
-            })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
-            });
+            }
+            return response.blob().then(blob => ({blob, filename})); // Return both the Blob and the filename
+        }).then(({blob, filename}) => {
+            const link = document.createElement('a');
+            const blobUrl = window.URL.createObjectURL(blob); // Create a URL for the Blob
+            link.href = blobUrl;
+            link.download = filename; // Set the filename from response
+            document.body.appendChild(link);
+            link.click(); // Programmatically click the link to trigger the download
+            link.remove(); // Remove the link from the document
+            window.URL.revokeObjectURL(blobUrl); // Clean up the URL.createObjectURL
+            this.isDownloading = false; // Fin du chargement
+            this.toastr.success('Download completed', 'Succès');
+        }).catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            this.isDownloading = false; // Fin du chargement même en cas d'erreur
+            this.toastr.error('Download failed', 'Erreur');
+        });
     }
-    
-    
 }

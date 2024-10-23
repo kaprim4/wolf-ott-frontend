@@ -1,139 +1,131 @@
 <mat-card class="cardWithShadow">
-  @if(loading){
-    <mat-progress-bar mode="query"></mat-progress-bar>
-  }
+    @if (loading) {
+        <mat-progress-bar mode="query"></mat-progress-bar>
+    }
     <mat-card-content>
-      <div class="row justify-content-between gap-16">
-        <div class="col-sm-4">
-          <mat-form-field appearance="outline" class="w-100 hide-hint">
-            <input
-              matInput
-              placeholder="Search Line"
-              (keyup)="filter($any($event.target).value)"
-            />
-            <mat-icon matSuffix>
-              <i-tabler name="search" class="icon-20"></i-tabler>
-            </mat-icon>
-          </mat-form-field>
+        <div class="row justify-content-between gap-16">
+            <div class="col-sm-4">
+                <mat-form-field appearance="outline" class="w-100 hide-hint">
+                    <input matInput placeholder="Search Line" (keyup)="filter($any($event.target).value)"/>
+                    <mat-icon matSuffix>
+                        <i-tabler name="search" class="icon-20"></i-tabler>
+                    </mat-icon>
+                </mat-form-field>
+            </div>
+            <div class="col-sm-4 d-flex align-items-center justify-content-end">
+                <a mat-button [routerLink]="['/apps/lines/users/add']" mat-flat-button color="primary">
+                    Add Line
+                </a>
+            </div>
         </div>
-        <div class="col-sm-4 d-flex align-items-center justify-content-end">
-          <a
-            mat-button
-            [routerLink]="['/apps/lines/users/add']"
-            mat-flat-button
-            color="primary">Add Line</a>
-        </div>
-      </div>
     </mat-card-content>
-  </mat-card>
+</mat-card>
 
-  <mat-card class="cardWithShadow">
+<mat-card class="cardWithShadow">
     <div class="table-responsive">
-      <table
-        mat-table
-        [dataSource]="dataSource"
-        matSort
-        class="no-wrap m-t-0 v-middle w-100"
-      >
-        <ng-container matColumnDef="chk">
-          <th mat-header-cell *matHeaderCellDef>
-            <mat-checkbox color="primary"></mat-checkbox>
-          </th>
-          <td mat-cell *matCellDef="let element" class="f-s-12">
-            <mat-checkbox [(ngModel)]="element.completed" color="primary"></mat-checkbox>
-          </td>
-        </ng-container>
+        <table mat-table [dataSource]="dataSource" matSort class="no-wrap m-t-0 v-middle w-100">
+            <ng-container matColumnDef="chk">
+                <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox color="primary"></mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let element" class="f-s-12">
+                    <mat-checkbox [(ngModel)]="element.completed" color="primary"></mat-checkbox>
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Id</th>
-          <td mat-cell *matCellDef="let element" class="f-s-12">{{ element.id }}</td>
-        </ng-container>
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Id</th>
+                <td mat-cell *matCellDef="let element" class="f-s-12">{{ element.id }}</td>
+            </ng-container>
 
-        <ng-container matColumnDef="username">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Username</th>
-          <td mat-cell *matCellDef="let element" class="f-s-12">{{ element.username }}</td>
-        </ng-container>
+            <ng-container matColumnDef="username">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Username</th>
+                <td mat-cell *matCellDef="let element" class="f-s-12">{{ element.username }}</td>
+            </ng-container>
 
-        <ng-container matColumnDef="password">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Password</th>
-          <td mat-cell *matCellDef="let element" class="f-s-12">{{ element.password }}</td>
-        </ng-container>
+            <ng-container matColumnDef="password">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Password</th>
+                <td mat-cell *matCellDef="let element" class="f-s-12">{{ element.password }}</td>
+            </ng-container>
 
-        <ng-container matColumnDef="owner">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Owner</th>
-          <td mat-cell *matCellDef="let element" class="f-s-12">{{ element.owner }}</td>
-        </ng-container>
+            <ng-container matColumnDef="owner">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Owner</th>
+                <td mat-cell *matCellDef="let element" class="f-s-12">{{ element.owner }}</td>
+            </ng-container>
 
-        <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Status</th>
-          <td mat-cell *matCellDef="let element" class="f-s-12">
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Status</th>
+                <td mat-cell *matCellDef="let element" class="f-s-12">
             <span class="p-x-8 p-y-4 bg-light f-w-600 rounded-pill f-s-9">
               {{ element.status ? 'Active' : 'Inactive' }}
             </span>
-          </td>
-        </ng-container>
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="online">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Online</th>
-          <td mat-cell *matCellDef="let element" class="f-s-12">
+            <ng-container matColumnDef="online">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Online</th>
+                <td mat-cell *matCellDef="let element" class="f-s-12">
             <span class="p-x-8 p-y-4 bg-light f-w-600 rounded-pill f-s-9">
               {{ element.online ? 'Active' : 'Inactive' }}
             </span>
-          </td>
-        </ng-container>
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="trial">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Trial</th>
-          <td mat-cell *matCellDef="let element" class="f-s-12">
+            <ng-container matColumnDef="trial">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Trial</th>
+                <td mat-cell *matCellDef="let element" class="f-s-12">
             <span class="p-x-8 p-y-4 bg-light f-w-600 rounded-pill f-s-9">
               {{ element.trial ? 'Active' : 'Inactive' }}
             </span>
-          </td>
-        </ng-container>
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="active">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Active</th>
-          <td mat-cell *matCellDef="let element" class="f-s-12">{{ element.active }}</td>
-        </ng-container>
+            <ng-container matColumnDef="active">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Active</th>
+                <td mat-cell *matCellDef="let element" class="f-s-12">{{ element.active }}</td>
+            </ng-container>
 
-        <ng-container matColumnDef="connections">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Connections</th>
-          <td mat-cell *matCellDef="let element" class="f-s-12">{{ element.connetions }}</td>
-        </ng-container>
+            <ng-container matColumnDef="connections">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Connections</th>
+                <td mat-cell *matCellDef="let element" class="f-s-12">{{ element.connetions }}</td>
+            </ng-container>
 
-        <ng-container matColumnDef="expiration">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Expiration</th>
-          <td mat-cell *matCellDef="let element" class="f-s-12">{{ element.expiration | date }}</td>
-        </ng-container>
+            <ng-container matColumnDef="expiration">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Expiration</th>
+                <td mat-cell *matCellDef="let element" class="f-s-12">{{ element.expiration | date }}</td>
+            </ng-container>
 
-        <ng-container matColumnDef="lastConnection">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Last Connection</th>
-          <td mat-cell *matCellDef="let element" class="f-s-12">{{ element.lastConnection | date }}</td>
-        </ng-container>
+            <ng-container matColumnDef="lastConnection">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Last Connection</th>
+                <td mat-cell *matCellDef="let element" class="f-s-12">{{ element.lastConnection | date }}</td>
+            </ng-container>
 
-        <ng-container matColumnDef="action">
-          <th mat-header-cell *matHeaderCellDef class="f-w-600 f-s-12">Action</th>
-          <td mat-cell *matCellDef="let element" class="f-s-11 d-flex">
-            <a mat-icon-button [routerLink]="['/apps/lines/users/', element.id]" class="d-flex align-items-center justify-content-center">
-              <i-tabler name="eye" class="icon-18 d-flex align-items-center"></i-tabler>
-            </a>
-              <button title="open dialog" mat-icon-button color="primary" (click)="openDialog(element.username, element.password)" class="w-100">
-                  <i-tabler name="download" class="icon-18 d-flex align-items-center"></i-tabler>
-              </button>
-            <button mat-icon-button (click)="deleteLine(element.id)" class="d-flex align-items-center justify-content-center" title="delete">
-              <i-tabler name="trash" class="icon-18 d-flex align-items-center"></i-tabler>
-            </button>
-          </td>
-        </ng-container>
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 f-s-12">Action</th>
+                <td mat-cell *matCellDef="let element" class="f-s-11 d-flex">
+                    <a mat-icon-button [routerLink]="['/apps/lines/users/', element.id]"
+                       class="d-flex align-items-center justify-content-center">
+                        <i-tabler name="eye" class="icon-18 d-flex align-items-center"></i-tabler>
+                    </a>
+                    <button title="open dialog" mat-icon-button color="primary"
+                            (click)="openDialog(element.username, element.password)" class="w-100">
+                        <i-tabler name="download" class="icon-18 d-flex align-items-center"></i-tabler>
+                    </button>
+                    <button mat-icon-button (click)="deleteLine(element.id)"
+                            class="d-flex align-items-center justify-content-center" title="delete">
+                        <i-tabler name="trash" class="icon-18 d-flex align-items-center"></i-tabler>
+                    </button>
+                </td>
+            </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
-      <mat-paginator  [length]="totalElements"
-                      [pageSize]="pageSize"
-                      [pageSizeOptions]="[5, 10, 25]"
-                      (page)="loadLines()"
-                      showFirstLastButtons>
-      </mat-paginator>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        <mat-paginator [length]="totalElements"
+                       [pageSize]="pageSize"
+                       [pageSizeOptions]="[5, 10, 25]"
+                       (page)="loadLines()"
+                       showFirstLastButtons>
+        </mat-paginator>
     </div>
-  </mat-card>
+</mat-card>

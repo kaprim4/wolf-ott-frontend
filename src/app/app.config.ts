@@ -39,6 +39,8 @@ export function HttpLoaderFactory(http: HttpClient): any {
 
 import {NgxEchartsModule} from 'ngx-echarts';
 import {FormatAmountPipe} from "./helpers/format-amount.pipe";
+import {ToastrModule} from "ngx-toastr";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -74,7 +76,9 @@ export const appConfig: ApplicationConfig = {
                     useFactory: HttpLoaderFactory,
                     deps: [HttpClient],
                 },
-            })
+            }),
+            BrowserAnimationsModule,
+            ToastrModule.forRoot()
         ),
     ],
 };

@@ -1,27 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {
     FormControl,
     UntypedFormBuilder,
     UntypedFormGroup,
     Validators,
 } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { MatChipInputEvent, MatChipEditedEvent } from '@angular/material/chips';
-import { MatTableDataSource } from '@angular/material/table';
-import { SelectionModel } from '@angular/cdk/collections';
-import { map, startWith, Observable } from 'rxjs';
-import { LineFactory } from 'src/app/shared/factories/line.factory';
-import { UserDialogComponent } from '../../../user/pages/user-dialog/user-dialog.component';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { LineDetail } from 'src/app/shared/models/line';
-import { BouquetList, IBouquet } from 'src/app/shared/models/bouquet';
-import { UserList } from 'src/app/shared/models/user';
-import { PackageList } from 'src/app/shared/models/package';
-import { LineService } from 'src/app/shared/services/line.service';
-import { PackageService } from 'src/app/shared/services/package.service';
-import { UserService } from 'src/app/shared/services/user.service';
-import { BouquetService } from 'src/app/shared/services/bouquet.service';
+import {MatDialog} from '@angular/material/dialog';
+import {Router} from '@angular/router';
+import {MatChipInputEvent, MatChipEditedEvent} from '@angular/material/chips';
+import {MatTableDataSource} from '@angular/material/table';
+import {SelectionModel} from '@angular/cdk/collections';
+import {map, startWith, Observable} from 'rxjs';
+import {LineFactory} from 'src/app/shared/factories/line.factory';
+import {UserDialogComponent} from '../../../user/pages/user-dialog/user-dialog.component';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {LineDetail} from 'src/app/shared/models/line';
+import {BouquetList, IBouquet} from 'src/app/shared/models/bouquet';
+import {UserList} from 'src/app/shared/models/user';
+import {PackageList} from 'src/app/shared/models/package';
+import {LineService} from 'src/app/shared/services/line.service';
+import {PackageService} from 'src/app/shared/services/package.service';
+import {UserService} from 'src/app/shared/services/user.service';
+import {BouquetService} from 'src/app/shared/services/bouquet.service';
+import {ToastrService} from "ngx-toastr";
 
 @Component({
     selector: 'app-add-user-line',
@@ -94,7 +95,8 @@ export class AddUserLineComponent implements OnInit {
         private packageService: PackageService,
         private bouquetService: BouquetService,
         private router: Router,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        private toastr: ToastrService
     ) {
         this.addForm = this.fb.group({
             username: ['', Validators.required],
@@ -191,7 +193,7 @@ export class AddUserLineComponent implements OnInit {
     addAllowedItem(event: MatChipInputEvent, list: { name: string }[]): void {
         const value = (event.value || '').trim();
         if (value) {
-            list.push({ name: value });
+            list.push({name: value});
         }
         event.chipInput!.clear();
     }
@@ -231,8 +233,10 @@ export class AddUserLineComponent implements OnInit {
             this.lineService.addLine(this.line);
             this.dialog.open(UserDialogComponent);
             this.router.navigate(['/apps/lines/users']);
+            this.toastr.success('Line added successfully.', 'Succès');
         } else {
             console.error('Form is invalid');
+            this.toastr.error('Form is invalid.', 'Erreur');
         }
     }
 
@@ -246,8 +250,8 @@ export class AddUserLineComponent implements OnInit {
         this.isAllSelected()
             ? this.bouquetsSelection.clear()
             : this.bouquetsDataSource.data.forEach((row) =>
-                  this.bouquetsSelection.select(row)
-              );
+                this.bouquetsSelection.select(row)
+            );
     }
 
     checkboxLabel(row?: BouquetList): string {
@@ -267,6 +271,7 @@ export class AddUserLineComponent implements OnInit {
             this.ownersFilterOptions();
         }
     }
+
     onPackagesDropdownOpened(opened: boolean) {
         this.dropdownOpened = opened;
         if (opened) {
@@ -275,19 +280,20 @@ export class AddUserLineComponent implements OnInit {
             this.packagesFilterOptions();
         }
     }
+
     addAllowedIp(event: MatChipInputEvent): void {
-      console.log("Start Add IP");
-      const value = (event.value || '').trim();
-      console.log("Get IP", value);
-      if (value) {
-          const currentIps = this.allowedIps; // Get current allowed IPs
-          console.log("Get CurrentIP's", currentIps);
-          currentIps.push({ value }); // Add new IP as an object
-          console.log("Get IP's", currentIps);
-          this.allowedIps = currentIps; // Update allowedIps using the setter
-      }
-      event.chipInput!.clear(); // Clear the input value
-  }
+        console.log("Start Add IP");
+        const value = (event.value || '').trim();
+        console.log("Get IP", value);
+        if (value) {
+            const currentIps = this.allowedIps; // Get current allowed IPs
+            console.log("Get CurrentIP's", currentIps);
+            currentIps.push({value}); // Add new IP as an object
+            console.log("Get IP's", currentIps);
+            this.allowedIps = currentIps; // Update allowedIps using the setter
+        }
+        event.chipInput!.clear(); // Clear the input value
+    }
 
 
     removeAllowedIp(ip: string): void {
@@ -319,7 +325,7 @@ export class AddUserLineComponent implements OnInit {
         const value = (event.value || '').trim();
         // Add our fruit
         if (value) {
-            this.allowedIps.push({ value });
+            this.allowedIps.push({value});
         }
         // Clear the input value
         event.chipInput!.clear();
@@ -333,14 +339,14 @@ export class AddUserLineComponent implements OnInit {
             return;
         }
         // Edit existing fruit
-        const index = this.allowedAgents.indexOf({ value: agent });
+        const index = this.allowedAgents.indexOf({value: agent});
         if (index >= 0) {
             this.allowedAgents[index].value = value;
         }
     }
 
     removeAllowedAgent(agent: string): void {
-        const index = this.allowedAgents.indexOf({ value: agent });
+        const index = this.allowedAgents.indexOf({value: agent});
         if (index >= 0) {
             this.allowedAgents.splice(index, 1);
         }
@@ -348,21 +354,25 @@ export class AddUserLineComponent implements OnInit {
 
     get allowedIps(): any[] {
         const allowedIps: any[] = this.line && this.line.allowedIps ? (JSON.parse(this.line.allowedIps).array as string[]) : [];
-        return allowedIps ? allowedIps.map((ip) => { value: ip; }) : [];
+        return allowedIps ? allowedIps.map((ip) => {
+            value: ip;
+        }) : [];
     }
 
     set allowedIps(ips: string[]) {
-      ips = ips.filter(ip => ip);
-      this.line.allowedIps = JSON.stringify({ array: ips });
+        ips = ips.filter(ip => ip);
+        this.line.allowedIps = JSON.stringify({array: ips});
     }
 
     get allowedAgents(): any[] {
-      const allowedAgents: any[] = this.line && this.line.allowedUa ? (JSON.parse(this.line.allowedUa).array as string[]) : [];
-      return allowedAgents ? allowedAgents.map((agent) => { value: agent; }) : [];
-  }
+        const allowedAgents: any[] = this.line && this.line.allowedUa ? (JSON.parse(this.line.allowedUa).array as string[]) : [];
+        return allowedAgents ? allowedAgents.map((agent) => {
+            value: agent;
+        }) : [];
+    }
 
-  set allowedAgents(agents: string[]) {
-    agents = agents.filter(agent => agent);
-    this.line.allowedUa = JSON.stringify({ array: agents });
-  }
+    set allowedAgents(agents: string[]) {
+        agents = agents.filter(agent => agent);
+        this.line.allowedUa = JSON.stringify({array: agents});
+    }
 }
