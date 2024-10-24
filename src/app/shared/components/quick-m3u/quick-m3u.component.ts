@@ -21,18 +21,14 @@ import {TokenService} from "../../services/token.service";
 export class QuickM3uComponent implements OnInit {
     username: string = '';
     password: string = '';
-
     lineCreated: boolean = false;
-
     packages: PackageList[] = [];
     filteredPackages: PackageList[] = [];
     selectedPackage: PackageList;
     packageSearchTerm = '';
     dropdownOpened = false;
-
     packageSearchCtrl = new FormControl();
-
-    server: string = "http://r2u.tech:80/";
+    server: string = "http://r2u.tech/";
     isLoading: boolean = false;
     loggedInUser: any;
     user: any;

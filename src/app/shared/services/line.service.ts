@@ -60,31 +60,29 @@ export class LineService extends CrudService<ILine> {
             const randomIndex = Math.floor(Math.random() * characters.length);
             username += characters[randomIndex];
         }
-
         return username;
     }
-    
+
     public static generateRandomPassword(length: number = 12): string {
         const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         const lowercase = 'abcdefghijklmnopqrstuvwxyz';
         const numbers = '0123456789';
         const specialChars = '!@#$%^*()_+-[]{}|;:<>';
         const allCharacters = uppercase + lowercase + numbers + specialChars;
-    
+
         let password = '';
         password += uppercase.charAt(Math.floor(Math.random() * uppercase.length)); // At least one uppercase
         password += lowercase.charAt(Math.floor(Math.random() * lowercase.length)); // At least one lowercase
         password += numbers.charAt(Math.floor(Math.random() * numbers.length)); // At least one number
         password += specialChars.charAt(Math.floor(Math.random() * specialChars.length)); // At least one special character
-    
+
         for (let i = 4; i < length; i++) {
             const randomIndex = Math.floor(Math.random() * allCharacters.length);
             password += allCharacters[randomIndex];
         }
-    
         // Shuffle the password to ensure randomness
         return password.split('').sort(() => 0.5 - Math.random()).join('');
     }
-    
-    
+
+
 }
