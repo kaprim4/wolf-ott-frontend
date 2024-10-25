@@ -1,156 +1,220 @@
-import { Component, ViewChild } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {
-  ApexChart,
-  ChartComponent,
-  ApexDataLabels,
-  ApexLegend,
-  ApexStroke,
-  ApexTooltip,
-  ApexAxisChartSeries,
-  ApexXAxis,
-  ApexYAxis,
-  ApexGrid,
-  ApexPlotOptions,
-  ApexFill,
-  ApexMarkers,
-  NgApexchartsModule,
+    ApexChart,
+    ChartComponent,
+    ApexDataLabels,
+    ApexLegend,
+    ApexStroke,
+    ApexTooltip,
+    ApexAxisChartSeries,
+    ApexXAxis,
+    ApexYAxis,
+    ApexGrid,
+    ApexPlotOptions,
+    ApexFill,
+    ApexMarkers,
+    NgApexchartsModule,
 } from 'ng-apexcharts';
-import { MaterialModule } from '../../../material.module';
-import { TablerIconsModule } from 'angular-tabler-icons';
+import {MaterialModule} from '../../../material.module';
+import {TablerIconsModule} from 'angular-tabler-icons';
+import {UserDetail} from "../../../shared/models/user";
+import {UserService} from "../../../shared/services/user.service";
+import {TokenService} from "../../../shared/services/token.service";
+import {StatsService} from "../../../shared/services/stats.service";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import {IDashboardStat} from "../../../shared/models/stats";
 
 interface month {
-  value: string;
-  viewValue: string;
+    value: string;
+    viewValue: string;
 }
 
 interface stats {
-  id: number;
-  color: string;
-  title: string;
-  subtitle: string;
-  icon: string;
+    id: number;
+    color: string;
+    title: string;
+    subtitle: string;
+    icon: string;
 }
 
 export interface revenueChart {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  dataLabels: ApexDataLabels;
-  plotOptions: ApexPlotOptions;
-  yaxis: ApexYAxis;
-  xaxis: ApexXAxis;
-  fill: ApexFill;
-  tooltip: ApexTooltip;
-  stroke: ApexStroke;
-  legend: ApexLegend;
-  grid: ApexGrid;
-  marker: ApexMarkers;
+    series: ApexAxisChartSeries;
+    chart: ApexChart;
+    dataLabels: ApexDataLabels;
+    plotOptions: ApexPlotOptions;
+    yaxis: ApexYAxis;
+    xaxis: ApexXAxis;
+    fill: ApexFill;
+    tooltip: ApexTooltip;
+    stroke: ApexStroke;
+    legend: ApexLegend;
+    grid: ApexGrid;
+    marker: ApexMarkers;
 }
 
 @Component({
-  selector: 'app-congratulate-card',
-  standalone: true,
-  imports: [NgApexchartsModule, MaterialModule, TablerIconsModule],
-  templateUrl: './congratulate-card.component.html',
+    selector: 'app-congratulate-card',
+    standalone: true,
+    imports: [NgApexchartsModule, MaterialModule, TablerIconsModule],
+    templateUrl: './congratulate-card.component.html',
 })
-export class AppCongratulateCardComponent {
-  @ViewChild('chart') chart: ChartComponent = Object.create(null);
+export class AppCongratulateCardComponent implements OnInit {
+    @ViewChild('chart') chart: ChartComponent = Object.create(null);
 
-  public revenueChart!: Partial<revenueChart> | any;
+    public revenueChart!: Partial<revenueChart> | any;
 
-  months: month[] = [
-    { value: 'mar', viewValue: 'March 2023' },
-    { value: 'apr', viewValue: 'April 2023' },
-    { value: 'june', viewValue: 'June 2023' },
-  ];
+    months: month[] = [
+        {value: 'mar', viewValue: 'March 2023'},
+        {value: 'apr', viewValue: 'April 2023'},
+        {value: 'june', viewValue: 'June 2023'},
+    ];
 
-  constructor() {
-    this.revenueChart = {
-      series: [
+    loggedInUser: any;
+    user: any;
+
+    openConnections: number = 0;
+    onlineUsers: number = 0;
+    activeAccounts: number = 0;
+    creditsAssigned: number = 0;
+    isStatLoading: boolean = false;
+
+    constructor(
+        private userService: UserService,
+        private tokenService: TokenService,
+        private statsService: StatsService
+    ) {
+        this.revenueChart = {
+            series: [
+                {
+                    name: '',
+                    data: [0, 20, 15, 19, 14, 25, 32],
+                    color: '#0085db',
+                },
+                {
+                    name: '',
+                    data: [0, 12, 19, 13, 26, 16, 25],
+                    color: '#46caeb',
+                },
+            ],
+
+            chart: {
+                type: 'line',
+                fontFamily: "inherit",
+                foreColor: '#adb0bb',
+                toolbar: {
+                    show: false,
+                },
+                height: 260,
+                stacked: false,
+            },
+
+            legend: {
+                show: false,
+            },
+            stroke: {
+                width: 3,
+                curve: "smooth",
+            },
+            grid: {
+                show: true,
+                borderColor: 'rgba(0,0,0,0.1)',
+                xaxis: {
+                    lines: {
+                        show: true,
+                    },
+                },
+            },
+            xaxis: {
+                axisBorder: {
+                    show: false,
+                },
+                labels: {
+                    show: true,
+                },
+                type: "category",
+                categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            },
+            yaxis: {
+                labels: {
+                    show: true,
+                    formatter: function (value: any) {
+                        return value + "k";
+                    },
+                },
+            },
+            tooltip: {
+                theme: "dark",
+                fillSeriesColor: false,
+            },
+        };
+    }
+
+    ngOnInit(): void {
+        this.loggedInUser = this.tokenService.getPayload();
+        this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
+            this.user = user;
+        });
+        this.getStats();
+    }
+
+    getStats(): void {
+        this.isStatLoading = true;
+        const rStart = Date.now();
+        this.statsService.getStats("dashboard").subscribe(
+            (data: HttpResponse<IDashboardStat>) => {
+                if (data.status === 200 || data.status === 202) {
+                    console.log(`Got a successfull status code: ${data.status}`);
+                }
+                if (data.body) {
+                    this.openConnections = data.body.open_connections;
+                    this.onlineUsers = data.body.online_users;
+                    this.activeAccounts = data.body.active_accounts;
+                    this.creditsAssigned = data.body.credits_assigned;
+                    const delay = 1000 - (Date.now() - rStart);
+                    setTimeout(() => this.getStats(), delay > 0 ? delay : 0);
+                }
+                console.log('This contains body: ', data.body);
+            },
+            (err: HttpErrorResponse) => {
+                if (err.status === 403 || err.status === 404) {
+                    console.error(`${err.status} status code caught`);
+                    setTimeout(() => this.getStats(), 1000);
+                    console.log(err.message)
+                }
+            }, ((): void => {
+                this.isStatLoading = false;
+            })
+        );
+    }
+
+    stats: stats[] = [
         {
-          name: '',
-          data: [0, 20, 15, 19, 14, 25, 32],
-          color: '#0085db',
+            id: 1,
+            color: 'success',
+            title: `${this.openConnections} Connections`,
+            subtitle: 'Live Connections',
+            icon: 'plug-connected',
         },
         {
-          name: '',
-          data: [0, 12, 19, 13, 26, 16, 25],
-          color: '#46caeb',
+            id: 2,
+            color: 'info',
+            title: `${this.onlineUsers} Line online`,
+            subtitle: 'Live Connections',
+            icon: 'users',
         },
-      ],
-
-      chart: {
-        type: 'line',
-        fontFamily: "inherit",
-        foreColor: '#adb0bb',
-        toolbar: {
-          show: false,
+        {
+            id: 3,
+            color: 'warning',
+            title: `${this.activeAccounts} Active Lines`,
+            subtitle: 'Manage Lines',
+            icon: 'activity-heartbeat',
         },
-        height: 260,
-        stacked: false,
-      },
-
-      legend: {
-        show: false,
-      },
-      stroke: {
-        width: 3,
-        curve: "smooth",
-      },
-      grid: {
-        show: true,
-        borderColor: 'rgba(0,0,0,0.1)',
-        xaxis: {
-          lines: {
-            show: true,
-          },
+        {
+            id: 4,
+            color: 'info',
+            title: `${this.creditsAssigned} Assigned Credits`,
+            subtitle: 'Users',
+            icon: 'coins',
         },
-      },
-      xaxis: {
-        axisBorder: {
-          show: false,
-        },
-        labels: {
-          show: true,
-        },
-        type: "category",
-        categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-      },
-      yaxis: {
-        labels: {
-          show: true,
-          formatter: function (value: any) {
-            return value + "k";
-          },
-        },
-      },
-      tooltip: {
-        theme: "dark",
-        fillSeriesColor: false,
-      },
-    };
-  }
-
-  stats: stats[] = [
-    {
-      id: 1,
-      color: 'success',
-      title: '64 new orders',
-      subtitle: 'Processing',
-      icon: 'shopping-bag',
-    },
-    {
-      id: 2,
-      color: 'warning',
-      title: '4 orders',
-      subtitle: 'On hold',
-      icon: 'player-pause',
-    },
-    {
-      id: 3,
-      color: 'info',
-      title: '12 orders',
-      subtitle: 'Delivered',
-      icon: 'trolley',
-    },
-  ];
+    ];
 }
