@@ -4,7 +4,11 @@ export interface IBouquet {
 
 export interface BouquetList extends IBouquet {
     bouquetName: string,
-    bouquetOrder: number
+    bouquetOrder: number,
+    streams: number,
+    movies: number,
+    series: number,
+    stations: number
 }
 
 export interface BouquetDetail extends IBouquet {
