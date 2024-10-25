@@ -1,91 +1,89 @@
-import { Component } from '@angular/core';
-import { MaterialModule } from '../../../material.module';
-import { CommonModule } from '@angular/common';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatButtonModule } from '@angular/material/button';
-
-export interface productsData {
-  id: number;
-  imagePath: string;
-  uname: string;
-  position: string;
-  productName: string;
-  price: number;
-  priority: string;
-  progress: string;
-}
-
-const ELEMENT_DATA: productsData[] = [
-  {
-    id: 1,
-    imagePath: 'assets/images/products/product-5.png',
-    uname: 'iPhone 13 pro max-Pacific Blue-128GB storage',
-    position: 'Web Designer',
-    productName: 'Elite Admin',
-    price: 499,
-    priority: 'confirmed',
-    progress: 'primary',
-  },
-  {
-    id: 2,
-    imagePath: 'assets/images/products/product-6.png',
-    uname: 'Apple MacBook Pro 13 inch-M1-8/256GB-space',
-    position: 'Project Manager',
-    productName: 'Real Homes Theme',
-    price: 200,
-    priority: 'pending',
-    progress: 'accent',
-  },
-  {
-    id: 3,
-    imagePath: 'assets/images/products/product-7.png',
-    uname: 'PlayStation 5 DualSense Wireless Controller',
-    position: 'Project Manager',
-    productName: 'MedicalPro Theme',
-    price: 155,
-    priority: 'cancelled',
-    progress: 'warn',
-  },
-  {
-    id: 4,
-    imagePath: 'assets/images/products/product-8.png',
-    uname: 'Amazon Basics Mesh, Mid-Back, Swivel Office De...',
-    position: 'Frontend Engineer',
-    productName: 'Hosting Press HTML',
-    price: 190,
-    priority: 'pending',
-    progress: 'accent',
-  },
-  {
-    id: 5,
-    imagePath: 'assets/images/products/product-9.png',
-    uname: 'Sony X85J 75 Inch Sony 4K Ultra HD LED Smart G...',
-    position: 'Frontend Engineer',
-    productName: 'Hosting Press HTML',
-    price: 136,
-    priority: 'pending',
-    progress: 'accent',
-  },
-];
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {MaterialModule} from '../../../material.module';
+import {CommonModule} from '@angular/common';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatButtonModule} from '@angular/material/button';
+import {catchError, debounceTime, of, Subject, switchMap} from "rxjs";
+import {LineActivityList} from "../../../shared/models/line-activity";
+import {MatTableDataSource} from "@angular/material/table";
+import {LineActivityService} from "../../../shared/services/line-activity.service";
+import {UserLogList} from "../../../shared/models/user-log";
+import {UserLogService} from "../../../shared/services/user-log.service";
+import {Page} from "../../../shared/models/page";
+import {MatSort} from "@angular/material/sort";
+import {MatPaginator} from "@angular/material/paginator";
+import {CategoryList} from "../../../shared/models/category";
 
 interface month {
-  value: string;
-  viewValue: string;
+    value: string;
+    viewValue: string;
 }
 
 @Component({
-  selector: 'app-top-projects',
-  standalone: true,
-  imports: [MaterialModule, CommonModule, MatMenuModule, MatButtonModule],
-  templateUrl: './top-projects.component.html',
+    selector: 'app-top-projects',
+    standalone: true,
+    imports: [MaterialModule, CommonModule, MatMenuModule, MatButtonModule],
+    templateUrl: './top-projects.component.html',
 })
-export class AppTopProjectsComponent {
-  displayedColumns: string[] = ['assigned', 'name', 'priority', 'budget'];
-  dataSource = ELEMENT_DATA;
+export class AppTopProjectsComponent implements OnInit, AfterViewInit {
 
-  months: month[] = [
-    { value: 'mar', viewValue: 'March 2023' },
-    { value: 'apr', viewValue: 'April 2023' },
-    { value: 'june', viewValue: 'June 2023' },
-  ];
+    displayedColumns: string[] = [
+        'reseller',
+        'line',
+        'action_package',
+        'date',
+        'type'
+    ];
+
+    dataSource = new MatTableDataSource<UserLogList>([]);
+    totalElements = 0;
+    pageSize = 10;
+    pageIndex = 0;
+    sortDirection = 'asc';
+    sortActive = 'id';
+    loading: boolean = true;
+
+    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+
+    constructor(
+        private logService:UserLogService
+    ) {
+        // this.loadStreams();
+    }
+
+    ngOnInit(): void {
+        this.loadLogs();
+    }
+
+    ngAfterViewInit(): void {
+        // this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
+        this.sort?.sortChange.subscribe(() => this.loadLogs());
+        this.paginator?.page.subscribe(() => this.loadLogs());
+    }
+
+    filter(filterValue: string): void {
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+
+    loadLogs(): void {
+        const page = (this.paginator?.pageIndex || this.pageIndex);
+        const size = (this.paginator?.pageSize || this.pageSize);
+
+        this.loading = true; // Start loading
+        this.logService.getUserLogs<UserLogList>('', page, size).pipe(
+            catchError(error => {
+                console.error('Failed to load streams', error);
+                this.loading = false;
+                // this.notificationService.error('Failed to load streams. Please try again.');
+                return of({content: [], totalElements: 0, totalPages: 0, size: 0, number: 0} as Page<UserLogList>);
+            })
+        ).subscribe(pageResponse => {
+            this.dataSource.data = pageResponse.content;
+            this.totalElements = pageResponse.totalElements;
+            this.loading = false;
+        });
+    }
 }
