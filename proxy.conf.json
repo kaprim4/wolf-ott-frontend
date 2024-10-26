@@ -1,0 +1,8 @@
+{
+    "/api": {
+        "target": "https://wolfott.tech",
+        "secure": true,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    }
+}
