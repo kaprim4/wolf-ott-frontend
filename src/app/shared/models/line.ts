@@ -26,7 +26,7 @@ export interface LineDetail extends ILine {
     enabled: boolean;
     adminNotes: string | null;
     resellerNotes: string | null;
-    bouquet: string; // Consider parsing this if needed
+    bouquet: number[]; // Consider parsing this if needed
     allowedOutputs: string; // Consider parsing this if needed
     maxConnections: number;
     isRestreamer: boolean;

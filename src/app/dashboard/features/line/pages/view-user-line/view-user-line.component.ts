@@ -118,28 +118,28 @@ export class ViewUserLineComponent {
             this.initializeForm(this.line);
         });
 
-        this.bouquetService
-            .getAllBouquets<BouquetList>()
-            .subscribe((bouquets: BouquetList[]) => {
-                this.bouquets = bouquets;
-                this.bouquetsDataSource = new MatTableDataSource<BouquetList>(
-                    this.bouquets
-                );
-                const lineBouquets =
-                    this.line && this.line.bouquet
-                        ? (JSON.parse(this.line.bouquet).array as number[])
-                        : [];
-                const selectedBouquets = lineBouquets.map(
-                    (id) =>
-                        this.bouquets.find((bouquet) => bouquet.id === id) || {
-                            id: 0,
-                        }
-                );
-                this.bouquetsSelection = new SelectionModel<IBouquet>(
-                    true,
-                    selectedBouquets
-                );
-            });
+        // this.bouquetService
+        //     .getAllBouquets<BouquetList>()
+        //     .subscribe((bouquets: BouquetList[]) => {
+        //         this.bouquets = bouquets;
+        //         this.bouquetsDataSource = new MatTableDataSource<BouquetList>(
+        //             this.bouquets
+        //         );
+        //         const lineBouquets =
+        //             this.line && this.line.bouquet
+        //                 ? (JSON.parse(this.line.bouquet).array as number[])
+        //                 : [];
+        //         const selectedBouquets = lineBouquets.map(
+        //             (id) =>
+        //                 this.bouquets.find((bouquet) => bouquet.id === id) || {
+        //                     id: 0,
+        //                 }
+        //         );
+        //         this.bouquetsSelection = new SelectionModel<IBouquet>(
+        //             true,
+        //             selectedBouquets
+        //         );
+        //     });
     }
 
     initializeForm(line: LineDetail): void {

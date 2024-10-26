@@ -13,7 +13,7 @@ export class LineFactory {
             enabled: true,
             adminNotes: null,
             resellerNotes: null,
-            bouquet: '',
+            bouquet: [],
             allowedOutputs: '',
             maxConnections: 1,
             isRestreamer: false,

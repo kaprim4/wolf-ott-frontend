@@ -392,11 +392,21 @@
                     class="no-wrap m-t-0 v-middle w-100"
                   >
                     <ng-container matColumnDef="chk">
-                      <th mat-header-cell *matHeaderCellDef>
-                        <mat-checkbox color="primary"></mat-checkbox>
-                      </th>
+                        <th mat-header-cell *matHeaderCellDef>
+                            <mat-checkbox 
+                                color="primary" 
+                                (change)="$event ? masterToggle() : null" 
+                                [checked]="isAllSelected()" 
+                                [indeterminate]="bouquetsSelection.hasValue() && !isAllSelected()">
+                            </mat-checkbox>
+                        </th>
                       <td mat-cell *matCellDef="let element" class="f-s-14">
-                        <mat-checkbox [(ngModel)]="element.completed" color="primary"></mat-checkbox>
+                        <mat-checkbox color="primary" 
+                            (change)="$event ? bouquetsSelection.toggle(element) : null" 
+                            [checked]="bouquetsSelection.isSelected(element)" 
+                            [aria-label]="checkboxLabel(element)"
+                            (change)="updateBouquetSelection(element)"
+                        ></mat-checkbox>
                       </td>
                     </ng-container>
               

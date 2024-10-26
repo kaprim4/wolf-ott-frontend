@@ -64,28 +64,28 @@ bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
     this.rows.push(this.createItemFormGroup());
   }
   ngOnInit(): void {
-    this.bouquetService
-        .getAllBouquets<BouquetList>()
-        .subscribe((bouquets: BouquetList[]) => {
-            this.bouquets = bouquets;
-            this.bouquetsDataSource = new MatTableDataSource<BouquetList>(
-                this.bouquets
-            );
-            const packageBouquets =
-                this.package && this.package.bouquets
-                    ? (JSON.parse(this.package.bouquets).array as number[])
-                    : [];
-            const selectedBouquets = packageBouquets.map(
-                (id) =>
-                    this.bouquets.find((bouquet) => bouquet.id === id) || {
-                        id: 0,
-                    }
-            );
-            this.bouquetsSelection = new SelectionModel<IBouquet>(
-                true,
-                selectedBouquets
-            );
-        });
+    // this.bouquetService
+    //     .getAllBouquets<BouquetList>()
+    //     .subscribe((bouquets: BouquetList[]) => {
+    //         this.bouquets = bouquets;
+    //         this.bouquetsDataSource = new MatTableDataSource<BouquetList>(
+    //             this.bouquets
+    //         );
+    //         const packageBouquets =
+    //             this.package && this.package.bouquets
+    //                 ? (JSON.parse(this.package.bouquets).array as number[])
+    //                 : [];
+    //         const selectedBouquets = packageBouquets.map(
+    //             (id) =>
+    //                 this.bouquets.find((bouquet) => bouquet.id === id) || {
+    //                     id: 0,
+    //                 }
+    //         );
+    //         this.bouquetsSelection = new SelectionModel<IBouquet>(
+    //             true,
+    //             selectedBouquets
+    //         );
+    //     });
   }
 
   ////////////////////////////////////////////////////////////////////////////////////

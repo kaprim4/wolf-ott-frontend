@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {
     FormControl,
     UntypedFormBuilder,
@@ -33,7 +33,7 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
     templateUrl: './add-user-line.component.html',
     styleUrls: ['./add-user-line.component.scss'],
 })
-export class AddUserLineComponent implements OnInit {
+export class AddUserLineComponent implements OnInit, AfterViewInit {
     bouquetsDisplayedColumns: string[] = [
         'chk',
         'id',
@@ -141,6 +141,11 @@ export class AddUserLineComponent implements OnInit {
         });
 
     }
+    ngAfterViewInit(): void {
+        this.bouquetsDataSource.sort = this.bouquetSort;
+        this.bouquetSort?.sortChange.subscribe(() => this.loadBouquets());
+        this.bouquetPaginator?.page.subscribe(() => this.loadBouquets());
+    }
 
     ngOnInit(): void {
         this.userService
@@ -165,20 +170,21 @@ export class AddUserLineComponent implements OnInit {
         const page = this.bouquetPaginator?.pageIndex || this.bouquetPageIndex;
         const size = this.bouquetPaginator?.pageSize || this.bouquetPageSize;
         this.bouquetsLoading = true;
-        
+
         this.bouquetService.getBouquets<BouquetList>('', page, size).pipe(
-          catchError(error => {
+            catchError(error => {
             console.error('Failed to load bouquets', error);
             this.bouquetsLoading = false;
             this.notificationService.error('Failed to load bouquets. Please try again.');
             return of({ content: [], totalPages: 0, totalElements: 0, size: 0, number:0 } as Page<BouquetList>);
-          })
+            })
         ).subscribe(pageResponse => {
-          this.bouquetsDataSource.data = pageResponse.content;
-          this.bouquetTotalElements = pageResponse.totalElements;
-          this.bouquetsLoading = false;
+            this.bouquetsDataSource.data = pageResponse.content;
+            this.bouquetTotalElements = pageResponse.totalElements;
+            this.bouquetsLoading = false;
+            this.updateSelection();
         });
-      }
+    }
 
     private filterOwners(value: string): any[] {
         const filterValue = value?.toLowerCase();
@@ -260,13 +266,28 @@ export class AddUserLineComponent implements OnInit {
         return numSelected === numRows;
     }
 
-    masterToggle(): void {
-        this.isAllSelected()
-            ? this.bouquetsSelection.clear()
-            : this.bouquetsDataSource.data.forEach((row) =>
-                this.bouquetsSelection.select(row)
-            );
+    masterToggle() {
+        if (this.isAllSelected()) {
+            // Deselect all
+            const selectedIds = this.bouquetsSelection.selected.map(item => item.id);
+            selectedIds.forEach(id => {
+                const index = this.line.bouquet.indexOf(id);
+                if (index >= 0) {
+                    this.line.bouquet.splice(index, 1); // Remove ID from line.bouquet
+                }
+            });
+            this.bouquetsSelection.clear(); // Clear the selection
+        } else {
+            // Select all
+            this.bouquetsDataSource.data.forEach(row => {
+                if (!this.line.bouquet.includes(row.id)) {
+                    this.line.bouquet.push(row.id); // Add ID to line.bouquet
+                }
+                this.bouquetsSelection.select(row); // Select the row
+            });
+        }
     }
+    
 
     checkboxLabel(row?: BouquetList): string {
         if (!row) {
@@ -423,7 +444,8 @@ export class AddUserLineComponent implements OnInit {
                 console.log("Trial Expiration :", expiration);
                 this.addForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
             }
-
+            this.line.bouquet = pkg.bouquets;
+            this.updateSelection();
         }
         else
             console.log(`Ops!! Package[${id}] not found`);
@@ -439,4 +461,29 @@ export class AddUserLineComponent implements OnInit {
         const minutes = String(date.getMinutes()).padStart(2, '0');
         return `${year}-${month}-${day}T${hours}:${minutes}`; // Format for datetime-local
     }
+
+    updateBouquetSelection(element: any) {
+        if (this.bouquetsSelection.isSelected(element)) {
+            this.line.bouquet.push(element.id); // Add ID to bouquets
+        } else {
+            const index = this.line.bouquet.indexOf(element.id);
+            if (index >= 0) {
+                this.line.bouquet.splice(index, 1); // Remove ID from bouquets
+            }
+        }
+
+        console.log("Line Bouquets ", this.line.bouquet.length);
+        
+    }
+
+    updateSelection() {
+        this.bouquetsSelection.clear(); // Clear current selection
+
+        this.bouquetsDataSource.data.forEach(bouquet => {
+            if (this.line.bouquet.includes(bouquet.id)) {
+                this.bouquetsSelection.select(bouquet); // Select if ID is in the selected IDs array
+            }
+        });
+    }
+    
 }
