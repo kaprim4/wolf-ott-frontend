@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {
     FormControl,
     UntypedFormBuilder,
@@ -10,7 +10,7 @@ import {Router} from '@angular/router';
 import {MatChipInputEvent, MatChipEditedEvent} from '@angular/material/chips';
 import {MatTableDataSource} from '@angular/material/table';
 import {SelectionModel} from '@angular/cdk/collections';
-import {map, startWith, Observable} from 'rxjs';
+import {map, startWith, Observable, catchError, of} from 'rxjs';
 import {LineFactory} from 'src/app/shared/factories/line.factory';
 import {UserDialogComponent} from '../../../user/pages/user-dialog/user-dialog.component';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
@@ -23,6 +23,10 @@ import {PackageService} from 'src/app/shared/services/package.service';
 import {UserService} from 'src/app/shared/services/user.service';
 import {BouquetService} from 'src/app/shared/services/bouquet.service';
 import {ToastrService} from "ngx-toastr";
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { Page } from 'src/app/shared/models/page';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 @Component({
     selector: 'app-add-user-line',
@@ -31,21 +35,26 @@ import {ToastrService} from "ngx-toastr";
 })
 export class AddUserLineComponent implements OnInit {
     bouquetsDisplayedColumns: string[] = [
-        'select',
-        'name',
+        'chk',
+        'id',
+        'bouquetName',
         'streams',
         'movies',
         'series',
         'stations',
-        // 'budget',
-    ];
+        // 'action',
+      ];
     addForm: UntypedFormGroup;
     line: LineDetail = LineFactory.initLineDetail();
     bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
     bouquetsSelection = new SelectionModel<IBouquet>(true, []);
+    bouquetTotalElements = 0;
+    bouquetPageSize = 10;
+    bouquetPageIndex = 0;
+    bouquetsLoading: boolean = false;
     owners: UserList[] = [];
     packages: PackageList[] = [];
-    bouquets: BouquetList[] = [];
+    bouquets: Page<BouquetList>;
     filteredOwners: UserList[] = [];
     filteredPackages: PackageList[] = [];
     selectedOwner: UserList;
@@ -88,6 +97,9 @@ export class AddUserLineComponent implements OnInit {
         },
     ];
 
+    @ViewChild(MatSort) bouquetSort: MatSort;
+    @ViewChild(MatPaginator) bouquetPaginator: MatPaginator;
+
     constructor(
         private fb: UntypedFormBuilder,
         private lineService: LineService,
@@ -96,7 +108,8 @@ export class AddUserLineComponent implements OnInit {
         private bouquetService: BouquetService,
         private router: Router,
         public dialog: MatDialog,
-        private toastr: ToastrService
+        private toastr: ToastrService,
+        private notificationService: NotificationService
     ) {
         const username = LineService.generateRandomUsername();
         const password = LineService.generateRandomPassword();
@@ -144,29 +157,28 @@ export class AddUserLineComponent implements OnInit {
                 this.filteredPackages = this.packages;
             });
 
-        this.bouquetService
-            .getAllBouquets<BouquetList>()
-            .subscribe((bouquets: BouquetList[]) => {
-                this.bouquets = bouquets;
-                this.bouquetsDataSource = new MatTableDataSource<BouquetList>(
-                    this.bouquets
-                );
-                const lineBouquets =
-                    this.line && this.line.bouquet
-                        ? (JSON.parse(this.line.bouquet).array as number[])
-                        : [];
-                const selectedBouquets = lineBouquets.map(
-                    (id) =>
-                        this.bouquets.find((bouquet) => bouquet.id === id) || {
-                            id: 0,
-                        }
-                );
-                this.bouquetsSelection = new SelectionModel<IBouquet>(
-                    true,
-                    selectedBouquets
-                );
-            });
+            this.loadBouquets();
+        
     }
+
+    loadBouquets(): void {
+        const page = this.bouquetPaginator?.pageIndex || this.bouquetPageIndex;
+        const size = this.bouquetPaginator?.pageSize || this.bouquetPageSize;
+        this.bouquetsLoading = true;
+        
+        this.bouquetService.getBouquets<BouquetList>('', page, size).pipe(
+          catchError(error => {
+            console.error('Failed to load bouquets', error);
+            this.bouquetsLoading = false;
+            this.notificationService.error('Failed to load bouquets. Please try again.');
+            return of({ content: [], totalPages: 0, totalElements: 0, size: 0, number:0 } as Page<BouquetList>);
+          })
+        ).subscribe(pageResponse => {
+          this.bouquetsDataSource.data = pageResponse.content;
+          this.bouquetTotalElements = pageResponse.totalElements;
+          this.bouquetsLoading = false;
+        });
+      }
 
     private filterOwners(value: string): any[] {
         const filterValue = value?.toLowerCase();
