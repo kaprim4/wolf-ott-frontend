@@ -329,10 +329,7 @@ export class ViewUserLineComponent {
     }
 
     get allowedIps(): any[] {
-        const allowedIps: any[] =
-            this.line && this.line.allowedIps
-                ? (JSON.parse(this.line.allowedIps).array as string[])
-                : [];
+        const allowedIps: string[] = this.line.allowedIps;
         return allowedIps
             ? allowedIps.map((ip) => {
                   value: ip;
@@ -342,14 +339,11 @@ export class ViewUserLineComponent {
 
     set allowedIps(ips: string[]) {
         ips = ips.filter((ip) => ip);
-        this.line.allowedIps = JSON.stringify({ array: ips });
+        this.line.allowedIps = ips;
     }
 
     get allowedAgents(): any[] {
-        const allowedAgents: any[] =
-            this.line && this.line.allowedUa
-                ? (JSON.parse(this.line.allowedUa).array as string[])
-                : [];
+        const allowedAgents: string[] = this.line.allowedUa;
         return allowedAgents
             ? allowedAgents.map((agent) => {
                   value: agent;
@@ -359,6 +353,6 @@ export class ViewUserLineComponent {
 
     set allowedAgents(agents: string[]) {
         agents = agents.filter((agent) => agent);
-        this.line.allowedUa = JSON.stringify({ array: agents });
+        this.line.allowedUa = agents;
     }
 }

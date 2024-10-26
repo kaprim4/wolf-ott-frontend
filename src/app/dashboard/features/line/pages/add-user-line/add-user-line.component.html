@@ -13,6 +13,7 @@
                 >
                     Cancel
                 </a>
+                <!--  -->
                 <button
                     mat-raised-button
                     color="primary"
@@ -34,7 +35,7 @@
                             <mat-label class="mat-subtitle-2 f-w-600">Username</mat-label>
                         </div>
                         <div class="col-sm-8">
-                            <mat-form-field appearance="outline" class="w-100">
+                            <mat-form-field appearance="outline" class="w-100 f-w-800">
                                 <input matInput placeholder="Auto-generate if blank" formControlName="username" required />
                             </mat-form-field>
                         </div>
@@ -45,7 +46,7 @@
                             <mat-label class="mat-subtitle-2 f-w-600">Password</mat-label>
                         </div>
                         <div class="col-sm-8">
-                            <mat-form-field appearance="outline" class="w-100">
+                            <mat-form-field appearance="outline" class="w-100 f-w-800">
                                 <input matInput type="text" placeholder="Auto-generate if blank" formControlName="password" required />
                             </mat-form-field>
                         </div>
@@ -198,7 +199,7 @@
                         </div>
                         <div class="col-sm-3">
                             <mat-form-field appearance="outline" class="w-100">
-                                <input matInput type="number" placeholder="Enter Package Cost" formControlName="packageCost" required />
+                                <input matInput type="number" placeholder="Enter Package Cost" formControlName="packageCost" [disabled]="true" />
                             </mat-form-field>
                         </div>
                         <div class="col-sm-2 d-flex align-items-start">
@@ -206,7 +207,7 @@
                         </div>
                         <div class="col-sm-3">
                             <mat-form-field appearance="outline" class="w-100">
-                                <input matInput placeholder="Enter Duration" formControlName="duration" required />
+                                <input matInput placeholder="Enter Duration" formControlName="duration" />
                             </mat-form-field>
                         </div>
                     </div>
@@ -218,7 +219,7 @@
                         </div>
                         <div class="col-sm-3">
                             <mat-form-field appearance="outline" class="w-100">
-                                <input matInput type="number" placeholder="Enter Max Connections" formControlName="maxConnections" required />
+                                <input matInput type="number" placeholder="Enter Max Connections" formControlName="maxConnections" />
                             </mat-form-field>
                         </div>
                         <div class="col-sm-2 d-flex align-items-start">
@@ -226,7 +227,7 @@
                         </div>
                         <div class="col-sm-3">
                             <mat-form-field appearance="outline" class="w-100">
-                                <input matInput type="datetime-local" placeholder="Enter Expiration Date" formControlName="expirationDate" required />
+                                <input matInput type="datetime-local" placeholder="Enter Expiration Date" formControlName="expirationDate" />
                             </mat-form-field>
                         </div>
                     </div>
@@ -257,11 +258,11 @@
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Allowed IP's</mat-label>
                                 <mat-chip-grid #chipGrid aria-label="Enter fruits">
-                                  @for(ip of allowedIps; track ip?.value) {
+                                  @for(ip of allowedIps; track ip.value) {
                                   <mat-chip-row
-                                    (removed)="removeAllowedIp(ip?.value)"
+                                    (removed)="removeAllowedIp(ip.value)"
                                     [editable]="true"
-                                    (edited)="editAllowedIp(ip?.value, $event)"
+                                    (edited)="editAllowedIp(ip.value, $event)"
                                     [aria-description]="'press enter to edit ' + ip?.value"
                                     class="f-s-14"
                                   >
@@ -295,7 +296,7 @@
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Allowed Agent's</mat-label>
                                 <mat-chip-grid #agentChipGrid aria-label="Enter fruits">
-                                  @for(agent of allowedAgents; track agent.value) {
+                                @for(agent of allowedAgents; track agent.value) {
                                   <mat-chip-row
                                     (removed)="removeAllowedAgent(agent.value)"
                                     [editable]="true"
@@ -330,13 +331,13 @@
                             <mat-label class="mat-subtitle-2 f-w-600">Bypass UA Restrictions</mat-label>
                         </div>
                         <div class="col-sm-3">
-                            <mat-slide-toggle color="primary"></mat-slide-toggle>
+                            <mat-slide-toggle formControlName="bypassUa" color="primary"></mat-slide-toggle>
                         </div>
                         <div class="col-sm-2 d-flex align-items-start">
                             <mat-label class="mat-subtitle-2 f-w-600">Lock to ISP</mat-label>
                         </div>
                         <div class="col-sm-3">
-                            <mat-slide-toggle color="primary"></mat-slide-toggle>
+                            <mat-slide-toggle formControlName="isIsplock" color="primary"></mat-slide-toggle>
                         </div>
                     </div>
 
@@ -346,7 +347,7 @@
                         </div>
                         <div class="col-sm-8">
                             <mat-form-field appearance="outline" class="w-100">
-                                <input matInput placeholder="Enter ISP" formControlName="package" required />
+                                <input matInput placeholder="Enter ISP" formControlName="ispDesc" />
                             </mat-form-field>
                         </div>
                     </div>
@@ -395,9 +396,9 @@
                         <th mat-header-cell *matHeaderCellDef>
                             <mat-checkbox 
                                 color="primary" 
-                                (change)="$event ? masterToggle() : null" 
-                                [checked]="isAllSelected()" 
-                                [indeterminate]="bouquetsSelection.hasValue() && !isAllSelected()">
+                                (change)="$event ? bouquetsMasterToggle() : null" 
+                                [checked]="isAllBouquetsSelected()" 
+                                [indeterminate]="bouquetsSelection.hasValue() && !isAllBouquetsSelected()">
                             </mat-checkbox>
                         </th>
                       <td mat-cell *matCellDef="let element" class="f-s-14">
@@ -455,12 +456,17 @@
                     <tr mat-header-row *matHeaderRowDef="bouquetsDisplayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: bouquetsDisplayedColumns"></tr>
                   </table>
-                  <mat-paginator  [length]="bouquetTotalElements" 
-                                  [pageSize]="bouquetPageSize" 
-                                  [pageSizeOptions]="[5, 10, 25]" 
-                                  (page)="loadBouquets()"
-                                  showFirstLastButtons>
-                  </mat-paginator>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="p-4 m-l-4">
+                        {{ line.bouquets.length || 0 }} Bouquets Selected Of {{ bouquetTotalElements }}
+                    </span>
+                    <mat-paginator  [length]="bouquetTotalElements" 
+                                    [pageSize]="bouquetPageSize" 
+                                    [pageSizeOptions]="[5, 10, 25]" 
+                                    (page)="loadBouquets()"
+                                    showFirstLastButtons>
+                    </mat-paginator>
+                  </div>
                 </div>
               </mat-card>
         </mat-tab>

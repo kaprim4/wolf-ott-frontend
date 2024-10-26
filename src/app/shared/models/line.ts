@@ -26,8 +26,8 @@ export interface LineDetail extends ILine {
     enabled: boolean;
     adminNotes: string | null;
     resellerNotes: string | null;
-    bouquet: number[]; // Consider parsing this if needed
-    allowedOutputs: string; // Consider parsing this if needed
+    bouquets: number[]; // Consider parsing this if needed
+    allowedOutputs: number[]; // Consider parsing this if needed
     maxConnections: number;
     isRestreamer: boolean;
     isTrial: boolean;
@@ -35,8 +35,8 @@ export interface LineDetail extends ILine {
     isE2: boolean;
     isStalker: boolean;
     isIsplock: boolean;
-    allowedIps: string; // Consider parsing this if needed
-    allowedUa: string; // Consider parsing this if needed
+    allowedIps: string[]; // Consider parsing this if needed
+    allowedUa: string[]; // Consider parsing this if needed
     createdAt: number; // Consider converting to Date in your application logic
     pairId: number | null;
     forceServerId: number;
@@ -50,7 +50,7 @@ export interface LineDetail extends ILine {
     accessToken: string | null;
     contact: string | null;
     lastActivity: number; // Consider converting to Date in your application logic
-    lastActivityArray: string; // Consider parsing this if needed
+    lastActivityArray: any; // Consider parsing this if needed
     updated: number | null; // Consider converting to Date in your application logic
 }
 

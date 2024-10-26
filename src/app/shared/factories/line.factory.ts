@@ -13,8 +13,8 @@ export class LineFactory {
             enabled: true,
             adminNotes: null,
             resellerNotes: null,
-            bouquet: [],
-            allowedOutputs: '',
+            bouquets: [],
+            allowedOutputs: [],
             maxConnections: 1,
             isRestreamer: false,
             isTrial: false,
@@ -22,8 +22,8 @@ export class LineFactory {
             isE2: false,
             isStalker: false,
             isIsplock: false,
-            allowedIps: '[]',
-            allowedUa: '[]',
+            allowedIps: [],
+            allowedUa: [],
             createdAt: 0,
             pairId: null,
             forceServerId: 0,
@@ -37,7 +37,7 @@ export class LineFactory {
             accessToken: null,
             contact: null,
             lastActivity: 0,
-            lastActivityArray: '',
+            lastActivityArray: {},
             updated: null
           };
     }
