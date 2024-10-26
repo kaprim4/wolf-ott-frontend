@@ -50,4 +50,33 @@ export class PackageService extends CrudService<IPackage> {
     public deletePackage(id: number): Observable<HttpResponse<void>> {
         return this.delete<void>(id);
     }
+
+    public static getPackageExpirationDate(duration:number, durationIn:string) {
+        const now = new Date(); // Get the current date and time
+    
+        switch (durationIn) {
+            case "days":
+                now.setDate(now.getDate() + duration); // Add days
+                break;
+            case "hours":
+                now.setHours(now.getHours() + duration); // Add hours
+                break;
+            case "minutes":
+                now.setMinutes(now.getMinutes() + duration); // Add minutes
+                break;
+            case "weeks":
+                now.setDate(now.getDate() + duration * 7); // Add weeks (7 days per week)
+                break;
+            case "months":
+                now.setMonth(now.getMonth() + duration); // Add months
+                break;
+            case "years":
+                now.setFullYear(now.getFullYear() + duration); // Add years
+                break;
+            default:
+                throw new Error("Invalid durationIn value. It must be 'days', 'hours', 'minutes', 'weeks', 'months', or 'years'.");
+        }
+    
+        return now; // Return the calculated expiration date
+    }
 }

@@ -16,7 +16,7 @@ import {UserDialogComponent} from '../../../user/pages/user-dialog/user-dialog.c
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {LineDetail} from 'src/app/shared/models/line';
 import {BouquetList, IBouquet} from 'src/app/shared/models/bouquet';
-import {UserList} from 'src/app/shared/models/user';
+import {IUser, UserList} from 'src/app/shared/models/user';
 import {PackageList} from 'src/app/shared/models/package';
 import {LineService} from 'src/app/shared/services/line.service';
 import {PackageService} from 'src/app/shared/services/package.service';
@@ -98,9 +98,11 @@ export class AddUserLineComponent implements OnInit {
         public dialog: MatDialog,
         private toastr: ToastrService
     ) {
+        const username = LineService.generateRandomUsername();
+        const password = LineService.generateRandomPassword();
         this.addForm = this.fb.group({
-            username: ['', Validators.required],
-            password: ['', Validators.required],
+            username: [username, Validators.required],
+            password: [password, Validators.required],
             owner: ['', Validators.required],
             package: ['', Validators.required],
             packageCost: [null, Validators.required],
@@ -177,16 +179,16 @@ export class AddUserLineComponent implements OnInit {
     }
 
     ownersFilterOptions() {
-        const searchTermLower = this.ownerSearchTerm.toLowerCase();
-        this.filteredOwners = this.owners.filter((owner) =>
-            owner.username.toLowerCase().includes(searchTermLower)
+        const searchTermLower = this.ownerSearchTerm?.toLowerCase();
+        this.filteredOwners = this.owners?.filter((owner) =>
+            owner?.username?.toLowerCase().includes(searchTermLower)
         );
     }
 
     packagesFilterOptions() {
-        const searchTermLower = this.packageSearchTerm.toLowerCase();
-        this.filteredPackages = this.packages.filter((pkg) =>
-            pkg.packageName.toLowerCase().includes(searchTermLower)
+        const searchTermLower = this.packageSearchTerm?.toLowerCase();
+        this.filteredPackages = this.packages?.filter((pkg) =>
+            pkg.packageName?.toLowerCase().includes(searchTermLower)
         );
     }
 
@@ -374,5 +376,55 @@ export class AddUserLineComponent implements OnInit {
     set allowedAgents(agents: string[]) {
         agents = agents.filter(agent => agent);
         this.line.allowedUa = JSON.stringify({array: agents});
+    }
+
+    onSelectOwner($event: any) {
+        // console.log("All Owners", this.owners);
+        
+        const id = this.addForm.controls["owner"].value;
+        const owner = this.owners.find(o => o.id === id);
+        if(owner)
+            this.selectedOwner = owner;
+        else
+            console.log(`Ops!! Owner[${id}] not found`);
+            
+        // console.log("Select Owner", this.selectedOwner);
+    }
+
+    onSelectPackage($event: any) {
+        // console.log("All Packages", this.packages);
+        
+        const id = this.addForm.controls["package"].value;
+        const pkg = this.packages.find(o => o.id === id);
+        if(pkg){
+            this.selectedPackage = pkg;
+            if(pkg.isOfficial){
+                this.addForm.controls["packageCost"].setValue(pkg.officialCredits);
+                this.addForm.controls["duration"].setValue(pkg.officialDuration);
+                const expiration = PackageService.getPackageExpirationDate(pkg.officialDuration, pkg.officialDurationIn);
+                console.log("Official Expiration :", expiration);
+                this.addForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
+            }else{
+                this.addForm.controls["packageCost"].setValue(pkg.trialCredits);
+                this.addForm.controls["duration"].setValue(pkg.trialDuration);
+                const expiration = PackageService.getPackageExpirationDate(pkg.trialDuration, pkg.trialDurationIn);
+                console.log("Trial Expiration :", expiration);
+                this.addForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
+            }
+
+        }
+        else
+            console.log(`Ops!! Package[${id}] not found`);
+            
+        console.log("Select Package", this.selectedPackage);
+    }
+
+    formatDateTime(date:Date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${year}-${month}-${day}T${hours}:${minutes}`; // Format for datetime-local
     }
 }
