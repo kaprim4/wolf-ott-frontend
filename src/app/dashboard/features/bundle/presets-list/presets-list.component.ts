@@ -96,8 +96,12 @@ export class PresetsListComponent implements OnInit, AfterViewInit {
     }
 
     extractBouquetCount(bouquetString: string): number {
-        const regex = /PresetBouquet{presetId=\d+, bouquetId=\d+, positionOrder=\d+}/g;
-        const matches = bouquetString.match(regex);
-        return matches ? matches.length : 0; // Retourne le nombre de bouquets trouvés
+        try{
+            const regex = /PresetBouquet{presetId=\d+, bouquetId=\d+, positionOrder=\d+}/g;
+            const matches = bouquetString.match(regex);
+            return matches ? matches.length : 0; // Retourne le nombre de bouquets trouvés
+        }catch(ex){
+            return 0;
+        }
     }
 }

@@ -60,5 +60,5 @@ export interface CreateLine extends ILine {
     memberId: number;
     packageId: number,
     isTrial: boolean,
-    bouquets: string
+    bouquets: number[]
 }

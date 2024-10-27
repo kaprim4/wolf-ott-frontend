@@ -13,3 +13,20 @@
     transform: translateY(-25%);
     margin-left: 12px;
 }
+
+.mat-expansion-panel {
+    box-shadow: none; /* Remove shadow */
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between; /* Space between title and icons */
+    align-items: center; /* Center vertically */
+}
+
+.icon-container {
+    display: flex;
+    align-items: center; /* Center icons vertically */
+    justify-content: end;
+    margin-left: auto; /* Push icons to the right */
+}

@@ -79,13 +79,13 @@
                       </div>
                   </div>
 
-                    <div class="row">
+                <!-- 
+                  <div class="row">
                       <div class="col-sm-4 d-flex align-items-start">
                           <mat-label class="mat-subtitle-2 f-w-600">Packages</mat-label>
                       </div>
                       <div class="col-sm-8">
                           <mat-form-field appearance="outline" class="w-100">
-                            <!-- [(ngModel)]="selectedPackage" -->
                             <mat-select formControlName="package" (ngModelChange)="onSelectPackage($event)" (openedChange)="onPackagesDropdownOpened($event)" required>
                                 <mat-select-trigger>
                                     {{ selectedPackage ? selectedPackage.packageName : 'Select Package' }}
@@ -102,7 +102,32 @@
                             </mat-select>
                           </mat-form-field>
                       </div>
-                  </div>
+                  </div> 
+                -->
+
+                <div class="row">
+                    <div class="col-sm-4 d-flex align-items-start">
+                        <mat-label class="mat-subtitle-2 f-w-600">Packages</mat-label>
+                    </div>
+                    <div class="col-sm-8">
+                        <mat-form-field appearance="outline" class="w-100">
+                          <!-- [(ngModel)]="selectedOwner" -->
+                            <mat-select formControlName="package" (ngModelChange)="onSelectPackage($event)" (openedChange)="onPackagesDropdownOpened($event)" required>
+                              <mat-select-trigger>
+                                  {{ selectedPackage ? selectedPackage.packageName : 'Select Package' }}
+                              </mat-select-trigger>
+
+                              <mat-option>
+                                  <ngx-mat-select-search [formControl]="packageSearchCtrl" placeholderLabel="Search" noEntriesFoundLabel="No options found"></ngx-mat-select-search>
+                              </mat-option>
+
+                              <mat-option *ngFor="let pkg of filteredPackages" [value]="pkg.id" (click)="$event.stopPropagation()">
+                                  {{ pkg.packageName }}
+                              </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
 
                     <!-- New Row for Package Cost and Duration -->
                     <div class="row">

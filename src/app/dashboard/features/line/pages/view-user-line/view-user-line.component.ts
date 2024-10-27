@@ -184,6 +184,9 @@ export class ViewUserLineComponent {
                             this.selectedOwnerId = line.memberId;
                             this.editForm.controls['package'].setValue(line.packageId);
                             this.selectedPackageId = line.packageId || 0;
+                            // console.log("Selected Package:", this.selectedPackageId);
+                            setTimeout(() => console.log("Selected Package:", this.selectedPackage?.packageName), 5000);
+                            
                             const expirationDate = new Date(line.expDate * 1000);
                             this.editForm.controls['expirationDate'].setValue(this.formatDateTime(expirationDate));
                             const duration = this.selectedPackage?.isOfficial ? this.selectedPackage?.officialDuration : this.selectedPackage?.trialDuration || 0;
@@ -410,7 +413,7 @@ export class ViewUserLineComponent {
     }
 
     get selectedPackage():PackageList|undefined{
-        return this.packages.find(pkg => pkg.id === this.selectedPackageId);
+        return this.packages.find(pkg => pkg.id == this.selectedPackageId);
     }
     set selectedPackage(pkg:IPackage){
         this.selectedPackageId = pkg.id;
