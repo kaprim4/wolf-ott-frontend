@@ -164,7 +164,7 @@ export class ViewUserLineComponent {
         this.bouquetPaginator?.page.subscribe(() => this.loadBouquets());
 
         // console.log(`Form { valid: ${this.addForm.valid}, invalid: ${this.addForm.invalid} }`);
-        
+
     }
 
     ngOnInit(): void {
@@ -218,11 +218,11 @@ export class ViewUserLineComponent {
             });
 
         this.loadBouquets();
-        
+
         this.presetService.getAllPresets<PresetList>().subscribe((presets:any) => {
             this.presets = presets;
         });
-        
+
     }
 
     loadBouquets(): void {
@@ -279,7 +279,8 @@ export class ViewUserLineComponent {
                 resellerNotes: formValues.resellerNotes,
                 isIsplock: formValues.isIsplock,
                 bypassUa: formValues.bypassUa,
-                ispDesc: formValues.ispDesc
+                ispDesc: formValues.ispDesc,
+                createdAt: new Date(formValues.expirationDate).getTime() / 1000
             });
             this.lineService.updateLine(this.line)
                             .pipe(catchError(error => {
@@ -293,7 +294,7 @@ export class ViewUserLineComponent {
                                 this.router.navigate(['/apps/lines/users/list']);
                                 this.toastr.success('Line updated successfully.', 'Succès');
                             });
-            // this.dialog.open(UserDialogComponent)            
+            // this.dialog.open(UserDialogComponent)
 
         } else {
             for (const controlName in this.editForm.controls) {
@@ -304,7 +305,7 @@ export class ViewUserLineComponent {
                     console.log(`Control: ${controlName}:`, {valid: control.valid, value: control.value, errors: control.errors});
                 else
                     console.log(`Control[${controlName}] Not Found`);
-                    
+
             }
             // console.error('Form is invalid', this.addForm.errors);
             this.toastr.error('Form is invalid.', 'Erreur');
@@ -426,7 +427,7 @@ export class ViewUserLineComponent {
             this.packagesFilterOptions();
         }
     }
-    onSelectPackage($event: any) {     
+    onSelectPackage($event: any) {
         // console.log("Package Event", $event);
         const id = $event; // this.addForm.controls["package"].value;
         if(id != this.editForm.controls["package"].value)
@@ -458,7 +459,7 @@ export class ViewUserLineComponent {
         }
         else
             console.log(`Ops!! Package[${id}] not found`);
-            
+
         // console.log("Select Package", this.selectedPackage);
     }
 
@@ -476,7 +477,7 @@ export class ViewUserLineComponent {
         this.bouquetsLoading = true;
         this.presetService.getAllPresetBouquets(id).subscribe(res => {
             console.log("Preset Bouquets:", res);
-            
+
             this.presetBouquets = res || [];
             this.bouquetsLoading = false;
             this.presetBouquetsDataSource.data = res || [];
@@ -528,7 +529,7 @@ export class ViewUserLineComponent {
             }
         }
         console.log("Line Bouquets ", this.line.bouquets.length);
-        
+
     }
     updatePresetSelection() {
         this.presetBouquetsSelection.clear();
@@ -586,7 +587,7 @@ export class ViewUserLineComponent {
             }
         });
     }
-    
+
     updateMatrix(){
         const id = this.line.packageId;
         const credits = (this.user?.credits) || 0;
@@ -614,10 +615,10 @@ export class ViewUserLineComponent {
                 if (pkg) {
                     // Update line.bouquets with the selected package's bouquet IDs
                     this.line.bouquets = pkg.bouquets;
-    
+
                     // Clear current selection
                     this.bouquetsSelection.clear();
-                    
+
                     // Select new bouquets based on the IDs in pkg.bouquets
                     const selectedBouquets = this.bouquetsDataSource.data.filter(bouquet => pkg.bouquets.includes(bouquet.id));
                     this.bouquetsSelection.select(...selectedBouquets);
@@ -626,10 +627,10 @@ export class ViewUserLineComponent {
             case 'presets':
                 // Update line.bouquets with the IDs of preset bouquets
                 this.line.bouquets = this.presetBouquets.map(bouquet => bouquet.id);
-    
+
                 // Clear current selection
                 this.presetBouquetsSelection.clear();
-                
+
                 // Select all preset bouquets
                 this.presetBouquetsSelection.select(...this.presetBouquets);
                 break;
@@ -638,5 +639,5 @@ export class ViewUserLineComponent {
         }
 
     }
-    
+
 }

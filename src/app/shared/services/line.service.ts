@@ -46,6 +46,10 @@ export class LineService extends CrudService<ILine> {
         return this.httpClient.get<number>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/last-week-count`);
     }
 
+    public getCreatedLinesLastSixMonths(): Observable<{ [key: string]: number }> {
+        return this.httpClient.get<{ [key: string]: number }>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/created-last-six-months`);
+    }
+
     public getLine<T extends ILine>(id_line: number): Observable<T> {
         return this.getOneById(id_line).pipe(map(res => res.body as T));
     }

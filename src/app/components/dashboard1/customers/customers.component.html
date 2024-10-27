@@ -1,5 +1,5 @@
 <mat-card class="cardWithShadow">
-    @if (loading) {
+    @if (lastRegistredLineloading) {
         <mat-progress-bar mode="query"></mat-progress-bar>
     }
     <mat-card-header>
@@ -18,22 +18,26 @@
         </div>
     </mat-card-header>
     <mat-card-content>
-        <div class="m-t-35 m-b-24">
-            <apx-chart
-                [series]="customersChart.series"
-                [chart]="customersChart.chart"
-                [colors]="customersChart.colors"
-                [stroke]="customersChart.stroke"
-                [fill]="customersChart.fill"
-                [markers]="customersChart.markers"
-                [tooltip]="customersChart.tooltip"
-            ></apx-chart>
-        </div>
-        <div class="d-flex align-items-center justify-content-between w-100 m-t-10 p-b-10">
-            <div class="d-flex align-items-center">
-                <span class="mat-body-1">Last Week</span>
+        @if (lastWeekCountLoading) {
+            <mat-progress-bar mode="query"></mat-progress-bar>
+        } @else {
+            <div class="m-t-35 m-b-24">
+                <apx-chart
+                    [series]="customersChart.series"
+                    [chart]="customersChart.chart"
+                    [colors]="customersChart.colors"
+                    [stroke]="customersChart.stroke"
+                    [fill]="customersChart.fill"
+                    [markers]="customersChart.markers"
+                    [tooltip]="customersChart.tooltip"
+                ></apx-chart>
             </div>
-            <span>{{ lastWeekCount }}</span>
-        </div>
+            <div class="d-flex align-items-center justify-content-between w-100 m-t-10 p-b-10">
+                <div class="d-flex align-items-center">
+                    <span class="mat-body-1">Last Week</span>
+                </div>
+                <span>{{ lastWeekCount }}</span>
+            </div>
+        }
     </mat-card-content>
 </mat-card>
