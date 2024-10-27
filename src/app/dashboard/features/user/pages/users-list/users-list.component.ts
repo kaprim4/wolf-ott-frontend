@@ -21,8 +21,11 @@ export class UsersListComponent implements OnInit, AfterViewInit {
     // 'chk',
     'id',
     'username',
+    'owner',
     'ip',
     'status',
+    'credits',
+    'lines',
     'lastLogin',
     'action',
   ];
