@@ -20,7 +20,7 @@
             mat-raised-button
             color="primary"
             (click)="$event.preventDefault(); saveDetail()"
-            [disabled]="editForm.invalid"
+            [disabled]="editForm.invalid || this.loading"
           >
             Save Preset
           </button>

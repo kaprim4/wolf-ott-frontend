@@ -89,7 +89,7 @@ bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
   }
   
   saveDetail(): void {
-
+    this.loading = true;
     const presetName:string = this.editForm.controls["name"].value;
     const presetDescription:string = this.editForm.controls["description"].value;
     const bouquets: number[] = this.bouquetsSelection.selected.map(bouquet => bouquet.id);
@@ -100,6 +100,7 @@ bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
     this.preset.bouquets = bouquets;
 
     this.presetService.updatePreset(this.preset).subscribe(preset => {
+      this.loading = false;
       this.notificationService.success(`Presset Updated Successfully`)
       this.router.navigate(['/apps/bundles/presets/list']);
     })

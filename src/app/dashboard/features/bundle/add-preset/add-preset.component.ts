@@ -26,6 +26,7 @@ export class AddPresetComponent implements OnInit {
     'stations',
     // 'budget',
 ];
+loading:boolean = false;
 bouquetsLoading:boolean = false;
 
 bouquets: BouquetList[];
@@ -77,6 +78,7 @@ bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
 
   saveDetail(): void {
 
+    this.loading = true
     const presetName:string = this.addForm.controls["name"].value;
     const presetDescription:string = this.addForm.controls["description"].value;
     const bouquets: number[] = this.bouquetsSelection.selected.map(bouquet => bouquet.id);
@@ -86,6 +88,7 @@ bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
     this.preset.bouquets = bouquets;
 
     this.presetService.addPreset(this.preset).subscribe(preset => {
+      this.loading = false;
       this.notificationService.success(`Presset Created Successfully`)
       this.router.navigate(['/apps/bundles/presets/list']);
     })
