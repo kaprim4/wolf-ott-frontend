@@ -1,4 +1,7 @@
 <mat-card class="cardWithShadow theme-card">
+    @if(loading){
+        <mat-progress-bar mode="query"></mat-progress-bar>
+      }
     <mat-card-header>
         <div class="w-100 d-flex justify-content-between align-items-start">
             <h4 class="mat-subtitle-2 f-s-18 f-w-600 m-b-0">
@@ -13,11 +16,12 @@
                 >
                     Cancel
                 </a>
+                <!--  -->
                 <button
                     mat-raised-button
                     color="primary"
                     (click)="$event.preventDefault(); saveDetail()"
-                    [disabled]="addForm.invalid"
+                    [disabled]="editForm.invalid"
                 >
                     Save Line
                 </button>
@@ -28,14 +32,14 @@
     <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0ms">
         <mat-tab label="Details">
             <mat-card-content class="b-t-1">
-                <form [formGroup]="addForm" (ngSubmit)="saveDetail()">
+                <form [formGroup]="editForm" (ngSubmit)="saveDetail()">
                     <div class="row">
                         <div class="col-sm-4 d-flex align-items-start">
                             <mat-label class="mat-subtitle-2 f-w-600">Username</mat-label>
                         </div>
                         <div class="col-sm-8">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <input matInput placeholder="Enter Username" formControlName="username" required/>
+                            <mat-form-field appearance="outline" class="w-100 f-w-800">
+                                <input matInput placeholder="Username..." formControlName="username" required />
                             </mat-form-field>
                         </div>
                     </div>
@@ -45,106 +49,60 @@
                             <mat-label class="mat-subtitle-2 f-w-600">Password</mat-label>
                         </div>
                         <div class="col-sm-8">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <input matInput type="text" placeholder="Enter Password" formControlName="password"
-                                       required/>
+                            <mat-form-field appearance="outline" class="w-100 f-w-800">
+                                <input matInput type="text" placeholder="Password..." formControlName="password" required />
                             </mat-form-field>
                         </div>
                     </div>
 
-                    <!-- <div class="row">
-                        <div class="col-sm-4 d-flex align-items-start">
-                            <mat-label class="mat-subtitle-2 f-w-600">Owner</mat-label>
-                        </div>
-                        <div class="col-sm-8">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <input matInput placeholder="Enter Owner" formControlName="owner" required />
-                            </mat-form-field>
-                        </div>
-                    </div> -->
+                    <div class="row">
+                      <div class="col-sm-4 d-flex align-items-start">
+                          <mat-label class="mat-subtitle-2 f-w-600">Owners</mat-label>
+                      </div>
+                      <div class="col-sm-8">
+                          <mat-form-field appearance="outline" class="w-100">
+                            <!-- [(ngModel)]="selectedOwner" -->
+                              <mat-select formControlName="owner" (ngModelChange)="onSelectOwner($event)" (openedChange)="onOwnersDropdownOpened($event)" required>
+                                <mat-select-trigger>
+                                    {{ selectedOwner ? selectedOwner.username : 'Select Owner' }}
+                                </mat-select-trigger>
+
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="ownerSearchCtrl" placeholderLabel="Search" noEntriesFoundLabel="No options found"></ngx-mat-select-search>
+                                </mat-option>
+
+                                <mat-option *ngFor="let owner of filteredOwners" [value]="owner.id" (click)="$event.stopPropagation()">
+                                    {{ owner.username }}
+                                </mat-option>
+                              </mat-select>
+                          </mat-form-field>
+                      </div>
+                  </div>
 
                     <div class="row">
-                        <div class="col-sm-4 d-flex align-items-start">
-                            <mat-label class="mat-subtitle-2 f-w-600">Owner</mat-label>
-                        </div>
-                        <div class="col-sm-8">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <mat-select formControlName="memberId" (openedChange)="onOwnersDropdownOpened($event)"
-                                            required>
-                                    <mat-select-trigger>
-                                        {{ selectedOwner ? selectedOwner.username : 'Select Owner' }}
-                                    </mat-select-trigger>
-                                    @if (dropdownOpened) {
-                                        <mat-option appearance="outline" class="w-100" aria-disabled="true">
-                                            <input
-                                                matInput
-                                                class="w-100"
-                                                type="text"
-                                                placeholder="Search"
-                                                [(ngModel)]="ownerSearchTerm"
-                                                (ngModelChange)="ownersFilterOptions()"
-                                                (click)="$event.stopPropagation()"
-                                            />
-                                        </mat-option>
-                                    }
-                                    @for (owner of filteredOwners; track owner.id) {
-                                        <mat-option [value]="owner.id">
-                                            {{ owner.username }}
-                                        </mat-option>
-                                    }
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </div>
+                      <div class="col-sm-4 d-flex align-items-start">
+                          <mat-label class="mat-subtitle-2 f-w-600">Packages</mat-label>
+                      </div>
+                      <div class="col-sm-8">
+                          <mat-form-field appearance="outline" class="w-100">
+                            <!-- [(ngModel)]="selectedPackage" -->
+                            <mat-select formControlName="package" (ngModelChange)="onSelectPackage($event)" (openedChange)="onPackagesDropdownOpened($event)" required>
+                                <mat-select-trigger>
+                                    {{ selectedPackage ? selectedPackage.packageName : 'Select Package' }}
+                                </mat-select-trigger>
 
-                    <!--
-                    <div class="row">
-                        <div class="col-sm-4 d-flex align-items-start">
-                            <mat-label class="mat-subtitle-2 f-w-600">Package</mat-label>
-                        </div>
-                        <div class="col-sm-8">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <input matInput placeholder="Enter Package" formControlName="package" required />
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    -->
-
-                    <div class="row">
-                        <div class="col-sm-4 d-flex align-items-start">
-                            <mat-label class="mat-subtitle-2 f-w-600">Package</mat-label>
-                        </div>
-                        <div class="col-sm-8">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <!-- <mat-select [(value)]="selectedPackage" (openedChange)="onPackagesDropdownOpened($event)" required> -->
-                                <mat-select formControlName="packageId"
-                                            (openedChange)="onPackagesDropdownOpened($event)" required>
-                                    <mat-select-trigger>
-                                        {{ selectedPackage ? selectedPackage.packageName : 'Select Package' }}
-                                    </mat-select-trigger>
-                                    @if (dropdownOpened) {
-                                        <mat-option appearance="outline" class="w-100" aria-disabled="true">
-                                            <div>
-                                                <input
-                                                    matInput
-                                                    class="w-100"
-                                                    type="text"
-                                                    placeholder="Search"
-                                                    [(ngModel)]="packageSearchTerm"
-                                                    (ngModelChange)="packagesFilterOptions()"
-                                                    (click)="$event.stopPropagation()"
-                                                />
-                                            </div>
-                                        </mat-option>
-                                    }
-                                    <mat-option *ngFor="let pkg of filteredPackages" [value]="pkg"
-                                                (click)="$event.stopPropagation()">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="packageSearchCtrl" placeholderLabel="Search" noEntriesFoundLabel="No options found"></ngx-mat-select-search>
+                                </mat-option>
+                                @for (pkg of packages; track pkg) {
+                                    <mat-option [value]="pkg.id" (click)="$event.stopPropagation()">
                                         {{ pkg.packageName }}
                                     </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </div>
+                                }
+                            </mat-select>
+                          </mat-form-field>
+                      </div>
+                  </div>
 
                     <!-- New Row for Package Cost and Duration -->
                     <div class="row">
@@ -153,8 +111,7 @@
                         </div>
                         <div class="col-sm-3">
                             <mat-form-field appearance="outline" class="w-100">
-                                <input matInput type="number" placeholder="Enter Package Cost"
-                                       formControlName="packageCost" required/>
+                                <input matInput type="number" placeholder="Enter Package Cost" formControlName="packageCost" [disabled]="true" />
                             </mat-form-field>
                         </div>
                         <div class="col-sm-2 d-flex align-items-start">
@@ -162,7 +119,7 @@
                         </div>
                         <div class="col-sm-3">
                             <mat-form-field appearance="outline" class="w-100">
-                                <input matInput placeholder="Enter Duration" formControlName="duration" required/>
+                                <input matInput placeholder="Enter Duration" formControlName="duration" />
                             </mat-form-field>
                         </div>
                     </div>
@@ -174,8 +131,7 @@
                         </div>
                         <div class="col-sm-3">
                             <mat-form-field appearance="outline" class="w-100">
-                                <input matInput type="number" placeholder="Enter Max Connections"
-                                       formControlName="maxConnections" required/>
+                                <input matInput type="number" placeholder="Enter Max Connections" formControlName="maxConnections" />
                             </mat-form-field>
                         </div>
                         <div class="col-sm-2 d-flex align-items-start">
@@ -183,8 +139,18 @@
                         </div>
                         <div class="col-sm-3">
                             <mat-form-field appearance="outline" class="w-100">
-                                <input matInput type="date" placeholder="Enter Expiration Date"
-                                       formControlName="expirationDate" required/>
+                                <input matInput type="datetime-local" placeholder="Enter Expiration Date" formControlName="expirationDate" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4 d-flex align-items-start">
+                            <mat-label class="mat-subtitle-2 f-w-600">Contact Email</mat-label>
+                        </div>
+                        <div class="col-sm-8">
+                            <mat-form-field appearance="outline" class="w-100 f-w-800">
+                                <input matInput placeholder="Email..." formControlName="contact" required />
                             </mat-form-field>
                         </div>
                     </div>
@@ -195,19 +161,17 @@
                         </div>
                         <div class="col-sm-8">
                             <mat-form-field appearance="outline" class="w-100">
-                                <textarea matInput placeholder="Enter Reseller Notes" rows="4"
-                                          formControlName="resellerNotes"></textarea>
+                                <textarea matInput placeholder="Enter Reseller Notes" rows="4" formControlName="resellerNotes"></textarea>
                             </mat-form-field>
                         </div>
                     </div>
                 </form>
-
             </mat-card-content>
         </mat-tab>
         <mat-tab label="Restrictions">
             <!-- Restrictions content here -->
             <mat-card-content class="b-t-1">
-                <form [formGroup]="addForm" (ngSubmit)="saveDetail()">
+                <form [formGroup]="editForm" (ngSubmit)="saveDetail()">
                     <div class="row m-t-12">
                         <div class="col-sm-4 d-flex align-items-start">
                             <mat-label class="mat-subtitle-2 f-w-600">Allowed IP Addresses</mat-label>
@@ -216,33 +180,33 @@
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Allowed IP's</mat-label>
                                 <mat-chip-grid #chipGrid aria-label="Enter fruits">
-                                    @for (ip of allowedIps; track ip?.value) {
-                                        <mat-chip-row
-                                            (removed)="removeAllowedIp(ip?.value)"
-                                            [editable]="true"
-                                            (edited)="editAllowedIp(ip?.value, $event)"
-                                            [aria-description]="'press enter to edit ' + ip?.value"
-                                            class="f-s-14"
-                                        >
-                                            {{ ip.value }}
-                                            <button
-                                                matChipRemove
-                                                [attr.aria-label]="'remove ' + ip?.value"
-                                            >
-                                                <mat-icon>cancel</mat-icon>
-                                            </button>
-                                        </mat-chip-row>
-                                    }
+                                  @for(ip of allowedIps; track ip.value) {
+                                  <mat-chip-row
+                                    (removed)="removeAllowedIp(ip.value)"
+                                    [editable]="true"
+                                    (edited)="editAllowedIp(ip.value, $event)"
+                                    [aria-description]="'press enter to edit ' + ip?.value"
+                                    class="f-s-14"
+                                  >
+                                    {{ ip.value }}
+                                    <button
+                                      matChipRemove
+                                      [attr.aria-label]="'remove ' + ip?.value"
+                                    >
+                                      <mat-icon>cancel</mat-icon>
+                                    </button>
+                                  </mat-chip-row>
+                                  }
 
-                                    <input
-                                        placeholder="Add ip..."
-                                        [matChipInputFor]="chipGrid"
-                                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                        [matChipInputAddOnBlur]="addOnBlur"
-                                        (matChipInputTokenEnd)="addAllowedIp($event)"
-                                    />
+                                  <input
+                                    placeholder="Add ip..."
+                                    [matChipInputFor]="chipGrid"
+                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                    [matChipInputAddOnBlur]="addOnBlur"
+                                    (matChipInputTokenEnd)="addAllowedIp($event)"
+                                  />
                                 </mat-chip-grid>
-                            </mat-form-field>
+                              </mat-form-field>
                         </div>
                     </div>
 
@@ -254,33 +218,33 @@
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Allowed Agent's</mat-label>
                                 <mat-chip-grid #agentChipGrid aria-label="Enter fruits">
-                                    @for (agent of allowedAgents; track agent.value) {
-                                        <mat-chip-row
-                                            (removed)="removeAllowedAgent(agent.value)"
-                                            [editable]="true"
-                                            (edited)="editAllowedAgent(agent.value, $event)"
-                                            [aria-description]="'press enter to edit ' + agent.value"
-                                            class="f-s-14"
-                                        >
-                                            {{ agent.value }}
-                                            <button
-                                                matChipRemove
-                                                [attr.aria-label]="'remove ' + agent.value"
-                                            >
-                                                <mat-icon>cancel</mat-icon>
-                                            </button>
-                                        </mat-chip-row>
-                                    }
+                                @for(agent of allowedAgents; track agent.value) {
+                                  <mat-chip-row
+                                    (removed)="removeAllowedAgent(agent.value)"
+                                    [editable]="true"
+                                    (edited)="editAllowedAgent(agent.value, $event)"
+                                    [aria-description]="'press enter to edit ' + agent.value"
+                                    class="f-s-14"
+                                  >
+                                    {{ agent.value }}
+                                    <button
+                                      matChipRemove
+                                      [attr.aria-label]="'remove ' + agent.value"
+                                    >
+                                      <mat-icon>cancel</mat-icon>
+                                    </button>
+                                  </mat-chip-row>
+                                  }
 
-                                    <input
-                                        placeholder="Add agent..."
-                                        [matChipInputFor]="agentChipGrid"
-                                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                        [matChipInputAddOnBlur]="addOnBlur"
-                                        (matChipInputTokenEnd)="addAllowedAgent($event)"
-                                    />
+                                  <input
+                                    placeholder="Add agent..."
+                                    [matChipInputFor]="agentChipGrid"
+                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                    [matChipInputAddOnBlur]="addOnBlur"
+                                    (matChipInputTokenEnd)="addAllowedAgent($event)"
+                                  />
                                 </mat-chip-grid>
-                            </mat-form-field>
+                              </mat-form-field>
                         </div>
                     </div>
 
@@ -289,13 +253,13 @@
                             <mat-label class="mat-subtitle-2 f-w-600">Bypass UA Restrictions</mat-label>
                         </div>
                         <div class="col-sm-3">
-                            <mat-slide-toggle color="primary"></mat-slide-toggle>
+                            <mat-slide-toggle formControlName="bypassUa" color="primary"></mat-slide-toggle>
                         </div>
                         <div class="col-sm-2 d-flex align-items-start">
                             <mat-label class="mat-subtitle-2 f-w-600">Lock to ISP</mat-label>
                         </div>
                         <div class="col-sm-3">
-                            <mat-slide-toggle color="primary"></mat-slide-toggle>
+                            <mat-slide-toggle formControlName="isIsplock" color="primary"></mat-slide-toggle>
                         </div>
                     </div>
 
@@ -305,7 +269,7 @@
                         </div>
                         <div class="col-sm-8">
                             <mat-form-field appearance="outline" class="w-100">
-                                <input matInput placeholder="Enter ISP" formControlName="package" required/>
+                                <input matInput placeholder="Enter ISP" formControlName="ispDesc" />
                             </mat-form-field>
                         </div>
                     </div>
@@ -315,124 +279,217 @@
         </mat-tab>
         <mat-tab label="Review Purchase">
             <div class="row d-flex justify-content-around align-items-center m-t-24">
-                @for (metric of financialMetrics; track metric.title) {
-                    <div class="col-lg-3 col-sm-6 d-flex">
-                        <mat-card class="cardWithShadow text-center card-fixed-width ">
-                            <mat-card-content class="p-24">
-                                <div class="d-flex align-items-center">
+                @for(metric of financialMetrics; track metric.title) {
+                  <div class="col-lg-3 col-sm-6 d-flex">
+                    <mat-card class="cardWithShadow text-center card-fixed-width ">
+                      <mat-card-content class="p-24">
+                        <div class="d-flex align-items-center">
                           <span
-                              class="icon-50 bg-{{ metric.color }} text-white rounded-circle d-flex align-items-center justify-content-center"
+                            class="icon-50 bg-{{ metric.color }} text-white rounded-circle d-flex align-items-center justify-content-center"
                           >
                             <mat-icon class="f-s-24">{{ metric.icon }}</mat-icon>
                           </span>
-                                    <div class="m-l-12 text-left">
-                                        <h4 class="mat-subtitle-2 f-s-20 f-w-400 m-t-8">
-                                            {{ metric.title }}
-                                        </h4>
-                                        <h6 class="m-t-4 mat-subtitle-1 f-s-14 f-w-400 m-t-8 text-gray-100">
-                                            {{ metric.subtitle }}
-                                        </h6>
-                                    </div>
-                                </div>
-                            </mat-card-content>
-                        </mat-card>
-                    </div>
+                          <div class="m-l-12 text-left">
+                            <h4 class="mat-subtitle-2 f-s-20 f-w-400 m-t-8">
+                              {{ metric.title }}
+                            </h4>
+                            <h6 class="m-t-4 mat-subtitle-1 f-s-12 f-w-400 m-t-8 text-gray-100">
+                              {{ metric.subtitle }}
+                            </h6>
+                          </div>
+                        </div>
+                      </mat-card-content>
+                    </mat-card>
+                  </div>
+                }
+              </div>
+              <div class="row d-flex justify-content-between align-items-center p-24">
+                <div class="m-l-24">
+                    <span class="d-block">Select Bundle:</span>
+                    <mat-radio-group [(ngModel)]="selectedBundleOption" (change)="bundleToggle($event)">
+                        <mat-radio-button value="packages" [checked]="selectedBundleOption == 'packages'">Packages</mat-radio-button>
+                        <mat-radio-button value="presets" [checked]="selectedBundleOption == 'presets'">Presets</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            
+                @switch (selectedBundleOption) {
+                    @case ('packages') {
+                        <mat-form-field appearance="outline" class="w-40 m-r-24">
+                            <mat-select [(ngModel)]="editForm.value.package" (ngModelChange)="onSelectPackage($event)">
+                                <mat-select-trigger>
+                                    {{ selectedPackage ? selectedPackage.packageName : 'Select Package' }}
+                                </mat-select-trigger>
+                                @for (pkg of packages; track pkg) {
+                                    <mat-option [value]="pkg.id" (click)="$event.stopPropagation()">
+                                        {{ pkg.packageName }}
+                                    </mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    }
+                    @case ('presets') {
+                        <mat-form-field appearance="outline" class="w-40 m-r-24">
+                            <mat-select [(ngModel)]="selectedPreset" (ngModelChange)="onSelectPreset($event)">
+                                <mat-select-trigger>
+                                    {{ getSelectedPresetName() }}
+                                </mat-select-trigger>
+                                @for (preset of presets; track preset) {
+                                    <mat-option [value]="preset.id" (click)="$event.stopPropagation()">
+                                        {{ preset.presetName }}
+                                    </mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    }
                 }
             </div>
-            <mat-card class="">
-                <mat-card-content>
+            
+              @if(bouquetsLoading){
+                <mat-progress-bar mode="query"></mat-progress-bar>
+              }
+              @if(selectedBundleOption === 'packages'){
+                <mat-card class="cardWithShadow">
                     <div class="table-responsive">
-                        <table mat-table [dataSource]="bouquetsDataSource" class="w-100">
-                            <!-- Checkbox Column -->
-                            <ng-container matColumnDef="select">
-                                <th mat-header-cell *matHeaderCellDef class="p-l-0">
-                                    <mat-checkbox (change)="$event ? masterToggle() : null"
-                                                  [checked]="bouquetsSelection.hasValue() && isAllSelected()"
-                                                  color="primary"
-                                                  [indeterminate]="bouquetsSelection.hasValue() && !isAllSelected()"
-                                                  [aria-label]="checkboxLabel()">
-                                    </mat-checkbox>
-                                </th>
-                                <td mat-cell *matCellDef="let row" class="p-l-0">
-                                    <mat-checkbox (click)="$event.stopPropagation()"
-                                                  (change)="$event ? bouquetsSelection.toggle(row) : null"
-                                                  color="primary" [checked]="bouquetsSelection.isSelected(row)"
-                                                  [aria-label]="checkboxLabel(row)">
-                                    </mat-checkbox>
-                                </td>
-                            </ng-container>
-
-                            <!-- Name Column -->
-                            <ng-container matColumnDef="name">
-                                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
-                                    Bouquet Name
-                                </th>
-                                <td mat-cell *matCellDef="let element" class="mat-body-1">
-                                    {{ element.bouquetName }}
-                                </td>
-                            </ng-container>
-
-                            <!-- Name Column -->
-                            <ng-container matColumnDef="streams">
-                                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
-                                    Streams
-                                </th>
-                                <td mat-cell *matCellDef="let element" class="mat-body-1">
-                                    <!-- {{ element.productName }} -->
-                                    0
-                                </td>
-                            </ng-container>
-
-                            <!-- Name Column -->
-                            <ng-container matColumnDef="movies">
-                                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
-                                    Movies
-                                </th>
-                                <td mat-cell *matCellDef="let element" class="mat-body-1">
-                                    <!-- {{ element.productName }} -->
-                                    0
-                                </td>
-                            </ng-container>
-
-                            <!-- Name Column -->
-                            <ng-container matColumnDef="series">
-                                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
-                                    Series
-                                </th>
-                                <td mat-cell *matCellDef="let element" class="mat-body-1">
-                                    <!-- {{ element.productName }} -->
-                                    0
-                                </td>
-                            </ng-container>
-
-                            <!-- Name Column -->
-                            <ng-container matColumnDef="stations">
-                                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
-                                    Stations
-                                </th>
-                                <td mat-cell *matCellDef="let element" class="mat-body-1">
-                                    <!-- {{ element.productName }} -->
-                                    0
-                                </td>
-                            </ng-container>
-
-                            <!-- Symbol Column -->
-                            <ng-container matColumnDef="budget">
-                                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
-                                    Budget
-                                </th>
-                                <td mat-cell *matCellDef="let element" class="mat-body-1">
-                                    ${{ element.budget }}k
-                                </td>
-                            </ng-container>
-
-                            <tr mat-header-row *matHeaderRowDef="bouquetsDisplayedColumns"></tr>
-                            <tr mat-row *matRowDef="let row; columns: bouquetsDisplayedColumns"
-                                (click)="bouquetsSelection.toggle(row)"></tr>
-                        </table>
+                      <table
+                        mat-table
+                        [dataSource]="bouquetsDataSource"
+                        matSort
+                        class="no-wrap m-t-0 v-middle w-100"
+                      >
+                        <ng-container matColumnDef="chk">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <mat-checkbox 
+                                    color="primary" 
+                                    (change)="$event ? bouquetsMasterToggle() : null" 
+                                    [checked]="isAllBouquetsSelected()" 
+                                    [indeterminate]="bouquetsSelection.hasValue() && !isAllBouquetsSelected()">
+                                </mat-checkbox>
+                            </th>
+                          <td mat-cell *matCellDef="let element" class="f-s-14">
+                            <mat-checkbox color="primary" 
+                                (change)="$event ? bouquetsSelection.toggle(element) : null" 
+                                [checked]="bouquetsSelection.isSelected(element)" 
+                                [aria-label]="checkboxLabel(element)"
+                                (change)="updateBouquetSelection(element)"
+                            ></mat-checkbox>
+                          </td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="id">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Id</th>
+                          <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.id }}</td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="bouquetName">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Bouquet Name</th>
+                          <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.bouquetName }}</td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="streams">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Streams</th>
+                          <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.streams }}</td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="movies">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Movies</th>
+                          <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.movies }}</td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="series">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Series</th>
+                          <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.series }}</td>
+                        </ng-container>
+                
+                        <ng-container matColumnDef="stations">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Stations</th>
+                            <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.stations }}</td>
+                          </ng-container>
+                  
+                        <tr mat-header-row *matHeaderRowDef="bouquetsDisplayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: bouquetsDisplayedColumns"></tr>
+                      </table>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <span class="p-4 m-l-4">
+                            {{ line.bouquets.length || 0 }} Bouquets Selected Of {{ bouquetTotalElements }}
+                        </span>
+                        <mat-paginator  [length]="bouquetTotalElements" 
+                                        [pageSize]="bouquetPageSize" 
+                                        [pageSizeOptions]="[5, 10, 25]" 
+                                        (page)="loadBouquets()"
+                                        showFirstLastButtons>
+                        </mat-paginator>
+                      </div>
                     </div>
-                </mat-card-content>
-            </mat-card>
+                  </mat-card>
+              }@else {
+                <mat-card class="cardWithShadow">
+                    <div class="table-responsive">
+                      <table
+                        mat-table
+                        [dataSource]="presetBouquetsDataSource"
+                        matSort
+                        class="no-wrap m-t-0 v-middle w-100"
+                      >
+                        <ng-container matColumnDef="chk">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <mat-checkbox 
+                                    color="primary" 
+                                    (change)="$event ? presetBouquetsMasterToggle() : null" 
+                                    [checked]="isAllPresetBouquetsSelected()" 
+                                    [indeterminate]="presetBouquetsSelection.hasValue() && !isAllPresetBouquetsSelected()">
+                                </mat-checkbox>
+                            </th>
+                          <td mat-cell *matCellDef="let element" class="f-s-14">
+                            <mat-checkbox color="primary" 
+                                (change)="$event ? presetBouquetsSelection.toggle(element) : null" 
+                                [checked]="presetBouquetsSelection.isSelected(element)" 
+                                [aria-label]="presetCheckboxLabel(element)"
+                                (change)="updatePresetBouquetSelection(element)"
+                            ></mat-checkbox>
+                          </td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="id">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Id</th>
+                          <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.id }}</td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="bouquetName">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Bouquet Name</th>
+                          <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.bouquetName }}</td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="streams">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Streams</th>
+                          <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.streams }}</td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="movies">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Movies</th>
+                          <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.movies }}</td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="series">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Series</th>
+                          <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.series }}</td>
+                        </ng-container>
+                
+                        <ng-container matColumnDef="stations">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Stations</th>
+                            <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.stations }}</td>
+                          </ng-container>
+                  
+                        <tr mat-header-row *matHeaderRowDef="bouquetsDisplayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: bouquetsDisplayedColumns"></tr>
+                      </table>
+                      <div class="d-flex justify-content-start align-items-center">
+                        <span class="p-4 m-l-4">
+                            {{ line.bouquets.length || 0 }} Bouquets Selected Of {{ presetBouquets?.length }}
+                        </span>
+                      </div>
+                    </div>
+                  </mat-card>
+              }
         </mat-tab>
     </mat-tab-group>
 </mat-card>
