@@ -9,6 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { PresetService } from 'src/app/shared/services/preset.service';
 import { BouquetList, IBouquet } from 'src/app/shared/models/bouquet';
 import { BouquetService } from 'src/app/shared/services/bouquet.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 @Component({
   selector: 'app-add-preset',
@@ -25,38 +26,33 @@ export class AddPresetComponent implements OnInit {
     'stations',
     // 'budget',
 ];
+bouquetsLoading:boolean = false;
 
 bouquets: BouquetList[];
 bouquetsSelection = new SelectionModel<IBouquet>(true, []);
 bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
   
   addForm: UntypedFormGroup | any;
-  rows: UntypedFormArray;
   preset: PresetDetail;
-
-  ///////////////////////////////////////////////////////////
-  subTotal = 0;
-  vat = 0;
-  grandTotal = 0;
 
   constructor(
     private fb: UntypedFormBuilder,
     private presetService: PresetService,
     private bouquetService: BouquetService,
     private router: Router,
-    public dialog: MatDialog
+    // public dialog: MatDialog
+    private notificationService:NotificationService
   ) {
-    // tslint:disable-next-line - Disables all
+
     this.preset = PresetFactory.initPresetDetail();
-    ///////////////////////////////////////////////////////////
 
-    this.addForm = this.fb.group({});
-
-    this.rows = this.fb.array([]);
-    this.addForm.addControl('rows', this.rows);
-    this.rows.push(this.createItemFormGroup());
+    this.addForm = this.fb.group({
+      name: ['', Validators.required],
+      description: ['']
+    });
   }
   ngOnInit(): void {
+    this.bouquetsLoading = true;
     this.bouquetService
         .getAllBouquets<BouquetList>()
         .subscribe((bouquets: BouquetList[]) => {
@@ -75,62 +71,25 @@ bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
                 true,
                 selectedBouquets
             );
+            this.bouquetsLoading = false;
         });
   }
 
-  ////////////////////////////////////////////////////////////////////////////////////
-  onAddRow(): void {
-    this.rows.push(this.createItemFormGroup());
-  }
-
-  onRemoveRow(rowIndex: number): void {
-    const totalCostOfItem =
-      this.addForm.get('rows')?.value[rowIndex].unitPrice *
-      this.addForm.get('rows')?.value[rowIndex].units;
-
-    this.subTotal = this.subTotal - totalCostOfItem;
-    this.vat = this.subTotal / 10;
-    this.grandTotal = this.subTotal + this.vat;
-    this.rows.removeAt(rowIndex);
-  }
-
-  createItemFormGroup(): UntypedFormGroup {
-    return this.fb.group({
-      itemName: ['', Validators.required],
-      units: ['', Validators.required],
-      unitPrice: ['', Validators.required],
-      itemTotal: ['0'],
-    });
-  }
-
-  itemsChanged(): void {
-    let total: number = 0;
-    // tslint:disable-next-line - Disables all
-    for (
-      let t = 0;
-      t < (<UntypedFormArray>this.addForm.get('rows')).length;
-      t++
-    ) {
-      if (
-        this.addForm.get('rows')?.value[t].unitPrice !== '' &&
-        this.addForm.get('rows')?.value[t].units
-      ) {
-        total =
-          this.addForm.get('rows')?.value[t].unitPrice *
-            this.addForm.get('rows')?.value[t].units +
-          total;
-      }
-    }
-    this.subTotal = total;
-    this.vat = this.subTotal / 10;
-    this.grandTotal = this.subTotal + this.vat;
-  }
-  ////////////////////////////////////////////////////////////////////
-
   saveDetail(): void {
 
-    this.presetService.addPreset(this.preset);
-    this.router.navigate(['/apps/bundles/presets/list']);
+    const presetName:string = this.addForm.controls["name"].value;
+    const presetDescription:string = this.addForm.controls["description"].value;
+    const bouquets: number[] = this.bouquetsSelection.selected.map(bouquet => bouquet.id);
+
+    this.preset.presetName = presetName;
+    this.preset.presetDescription = presetDescription;
+    this.preset.bouquets = bouquets;
+
+    this.presetService.addPreset(this.preset).subscribe(preset => {
+      this.notificationService.success(`Presset Created Successfully`)
+      this.router.navigate(['/apps/bundles/presets/list']);
+    })
+    
   }
 
 
