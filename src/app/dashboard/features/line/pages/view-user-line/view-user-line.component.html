@@ -21,7 +21,7 @@
                     mat-raised-button
                     color="primary"
                     (click)="$event.preventDefault(); saveDetail()"
-                    [disabled]="editForm.invalid"
+                    [disabled]="editForm.invalid || loading"
                 >
                     Save Line
                 </button>

@@ -18,7 +18,7 @@
                     mat-raised-button
                     color="primary"
                     (click)="$event.preventDefault(); saveDetail()"
-                    [disabled]="addForm.invalid"
+                    [disabled]="addForm.invalid || loading"
                 >
                     Save Line
                 </button>

@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatChipInputEvent, MatChipEditedEvent } from '@angular/material/chips';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
-import { map, startWith, Observable, catchError, of } from 'rxjs';
+import { map, startWith, Observable, catchError, of, finalize } from 'rxjs';
 import { LineFactory } from 'src/app/shared/factories/line.factory';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { LineDetail } from 'src/app/shared/models/line';
@@ -170,29 +170,35 @@ export class ViewUserLineComponent {
     ngOnInit(): void {
 
         this.loading = true;
-        this.lineService.getLine<LineDetail>(this.id).subscribe((line:LineDetail) => {
-            this.line = line;
-            this.editForm.controls['username'].setValue(line.username);
-            this.editForm.controls['password'].setValue(line.password);
-            this.editForm.controls['owner'].setValue(line.memberId);
-            this.selectedOwnerId = line.memberId;
-            this.editForm.controls['package'].setValue(line.packageId);
-            this.selectedPackageId = line.packageId || 0;
-            const expirationDate = new Date(line.expDate * 1000);
-            this.editForm.controls['expirationDate'].setValue(this.formatDateTime(expirationDate));
-            const duration = this.selectedPackage?.isOfficial ? this.selectedPackage?.officialDuration : this.selectedPackage?.trialDuration || 0;
-            this.editForm.controls['duration'].setValue(duration);
-            const packageCost = this.selectedPackage?.isOfficial ? this.selectedPackage?.officialCredits : this.selectedPackage?.trialCredits || 0;
-            this.editForm.controls['packageCost'].setValue(packageCost);
-            this.editForm.controls['maxConnections'].setValue(line.maxConnections);
-            this.editForm.controls['contact'].setValue(line.contact);
-            this.editForm.controls['resellerNotes'].setValue(line.resellerNotes);
-            this.editForm.controls['isIsplock'].setValue(line.isIsplock);
-            this.editForm.controls['bypassUa'].setValue(line.bypassUa);
-            this.editForm.controls['ispDesc'].setValue(line.ispDesc);
+        this.lineService.getLine<LineDetail>(this.id)
+                        .pipe(catchError(error => {
+                            console.error("Line Update Failed :", error);
+                            this.notificationService.error("Line Update Failed");
+                            throw new Error(error);
+                        }), finalize(() => this.loading = false))
+                        .subscribe((line:LineDetail) => {
+                            this.line = line;
+                            this.editForm.controls['username'].setValue(line.username);
+                            this.editForm.controls['password'].setValue(line.password);
+                            this.editForm.controls['owner'].setValue(line.memberId);
+                            this.selectedOwnerId = line.memberId;
+                            this.editForm.controls['package'].setValue(line.packageId);
+                            this.selectedPackageId = line.packageId || 0;
+                            const expirationDate = new Date(line.expDate * 1000);
+                            this.editForm.controls['expirationDate'].setValue(this.formatDateTime(expirationDate));
+                            const duration = this.selectedPackage?.isOfficial ? this.selectedPackage?.officialDuration : this.selectedPackage?.trialDuration || 0;
+                            this.editForm.controls['duration'].setValue(duration);
+                            const packageCost = this.selectedPackage?.isOfficial ? this.selectedPackage?.officialCredits : this.selectedPackage?.trialCredits || 0;
+                            this.editForm.controls['packageCost'].setValue(packageCost);
+                            this.editForm.controls['maxConnections'].setValue(line.maxConnections);
+                            this.editForm.controls['contact'].setValue(line.contact);
+                            this.editForm.controls['resellerNotes'].setValue(line.resellerNotes);
+                            this.editForm.controls['isIsplock'].setValue(line.isIsplock);
+                            this.editForm.controls['bypassUa'].setValue(line.bypassUa);
+                            this.editForm.controls['ispDesc'].setValue(line.ispDesc);
 
-            this.loading = false;
-        })
+                            // this.loading = false;
+                        });
 
         this.userService
             .getAllUsers<UserList>()
@@ -255,7 +261,7 @@ export class ViewUserLineComponent {
 
     saveDetail(): void {
        console.log(`Form { valid: ${this.editForm.valid}, invalid: ${this.editForm.invalid} }`);
-       
+       this.loading = true;
         if (this.editForm.valid) {
             const formValues = this.editForm.value;
             const expDate = new Date(formValues.expirationDate).getTime() / 1000;
@@ -266,16 +272,24 @@ export class ViewUserLineComponent {
                 packageId: formValues.package,
                 maxConnections: formValues.maxConnections,
                 expDate: expDate,
+                constact: formValues.contact,
                 resellerNotes: formValues.resellerNotes,
                 isIsplock: formValues.isIsplock,
                 bypassUa: formValues.bypassUa,
                 ispDesc: formValues.ispDesc
             });
-            this.lineService.addLine(this.line).subscribe(line => {
-                console.log("Created Line :", line);
-                this.router.navigate(['/apps/lines/users']);
-                this.toastr.success('Line added successfully.', 'Succès');
-            })
+            this.lineService.updateLine(this.line)
+                            .pipe(catchError(error => {
+                                console.error("Line Update Failed :", error);
+                                this.notificationService.error("Line Update Failed");
+                                throw new Error(error);
+                            }), finalize(() => this.loading = false))
+                            .subscribe(line => {
+                                // this.loading = false;
+                                console.log("Created Line :", line);
+                                this.router.navigate(['/apps/lines/users/list']);
+                                this.toastr.success('Line updated successfully.', 'Succès');
+                            });
             // this.dialog.open(UserDialogComponent)            
 
         } else {

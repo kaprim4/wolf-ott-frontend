@@ -10,7 +10,7 @@ import {Router} from '@angular/router';
 import {MatChipInputEvent, MatChipEditedEvent} from '@angular/material/chips';
 import {MatTableDataSource} from '@angular/material/table';
 import {SelectionModel} from '@angular/cdk/collections';
-import {map, startWith, Observable, catchError, of} from 'rxjs';
+import {map, startWith, Observable, catchError, of, finalize} from 'rxjs';
 import {LineFactory} from 'src/app/shared/factories/line.factory';
 import {UserDialogComponent} from '../../../user/pages/user-dialog/user-dialog.component';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
@@ -37,6 +37,7 @@ import { PresetList } from 'src/app/shared/models/preset';
     styleUrls: ['./add-user-line.component.scss'],
 })
 export class AddUserLineComponent implements OnInit, AfterViewInit {
+    loading: boolean = false;
     bouquetsDisplayedColumns: string[] = [
         'chk',
         'id',
@@ -232,7 +233,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
 
     saveDetail(): void {
        console.log(`Form { valid: ${this.addForm.valid}, invalid: ${this.addForm.invalid} }`);
-       
+       this.loading = true;
         if (this.addForm.valid) {
             const formValues = this.addForm.value;
             const expDate = new Date(formValues.expirationDate).getTime() / 1000;
@@ -249,11 +250,18 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
                 bypassUa: formValues.bypassUa,
                 ispDesc: formValues.ispDesc
             });
-            this.lineService.addLine(this.line).subscribe(line => {
-                console.log("Created Line :", line);
-                this.router.navigate(['/apps/lines/users']);
-                this.toastr.success('Line added successfully.', 'Succès');
-            })
+            this.lineService.addLine(this.line)
+                            .pipe(catchError(error => {
+                                console.error("Line Update Failed :", error);
+                                this.notificationService.error("Line Update Failed : "+error);
+                                throw new Error(error);
+                            }), finalize(() => this.loading = false))
+                            .subscribe(line => {
+                                // this.loading = false;
+                                console.log("Created Line :", line);
+                                this.router.navigate(['/apps/lines/users/list']);
+                                this.toastr.success('Line added successfully.', 'Succès');
+                            });
             // this.dialog.open(UserDialogComponent)            
 
         } else {
