@@ -32,7 +32,7 @@ bouquetsLoading:boolean = false;
 bouquets: BouquetList[];
 bouquetsSelection = new SelectionModel<IBouquet>(true, []);
 bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
-  
+
   addForm: UntypedFormGroup | any;
   preset: PresetDetail;
 
@@ -92,7 +92,7 @@ bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
       this.notificationService.success(`Presset Created Successfully`)
       this.router.navigate(['/apps/bundles/presets/list']);
     })
-    
+
   }
 
 

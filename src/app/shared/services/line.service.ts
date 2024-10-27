@@ -1,17 +1,19 @@
 import {Injectable} from '@angular/core';
 import {CrudService} from './crud.service';
-import {ILine, LineDetail} from '../models/line';
+import {ILine, LineDetail, LineList} from '../models/line';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {JwtService} from './jwt.service';
 import {map, Observable} from 'rxjs';
 import {Page} from '../models/page';
 import { MatDialog } from '@angular/material/dialog';
 import { QuickM3uComponent } from '../components/quick-m3u/quick-m3u.component';
+import {environment} from "../../../environments/environment";
 
 @Injectable({
     providedIn: 'root'
 })
 export class LineService extends CrudService<ILine> {
+
     constructor(
         httpClient: HttpClient,
         jwtService: JwtService,
@@ -34,6 +36,14 @@ export class LineService extends CrudService<ILine> {
                 content: page.content as T[] // Type assertion
             }))
         );
+    }
+
+    public getLastRegisteredLines(): Observable<LineList[]> {
+        return this.httpClient.get<LineList[]>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/last-registered`);
+    }
+
+    public getLastWeekCount(): Observable<number> {
+        return this.httpClient.get<number>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/last-week-count`);
     }
 
     public getLine<T extends ILine>(id_line: number): Observable<T> {
