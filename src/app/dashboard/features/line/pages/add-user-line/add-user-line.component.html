@@ -52,50 +52,6 @@
                         </div>
                     </div>
 
-                    <!-- <div class="row">
-                        <div class="col-sm-4 d-flex align-items-start">
-                            <mat-label class="mat-subtitle-2 f-w-600">Owner</mat-label>
-                        </div>
-                        <div class="col-sm-8">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <input matInput placeholder="Enter Owner" formControlName="owner" required />
-                            </mat-form-field>
-                        </div>
-                    </div> -->
-
-                    <!-- <div class="row">
-                        <div class="col-sm-4 d-flex align-items-start">
-                            <mat-label class="mat-subtitle-2 f-w-600">Owner</mat-label>
-                        </div>
-                        <div class="col-sm-8">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <mat-select [(value)]="selectedOwner" (openedChange)="onOwnersDropdownOpened($event)" required>
-                                    <mat-select-trigger>
-                                        {{ selectedOwner ? selectedOwner.username : 'Select Owner' }}
-                                    </mat-select-trigger>
-                                    @if(dropdownOpened){
-                                        <mat-option appearance="outline" class="w-100">
-                                            <div>
-                                                <input
-                                                    matInput
-                                                    class="w-100"
-                                                    type="text"
-                                                    placeholder="Search"
-                                                    [(ngModel)]="ownerSearchTerm"
-                                                    (ngModelChange)="ownersFilterOptions()"
-                                                    (click)="$event.stopPropagation()"
-                                                />
-                                            </div>
-                                        </mat-option>
-                                    }
-                                    <mat-option *ngFor="let owner of filteredOwners" [value]="owner" (click)="$event.stopPropagation()">
-                                        {{ owner.username }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </div> -->
-
                     <div class="row">
                       <div class="col-sm-4 d-flex align-items-start">
                           <mat-label class="mat-subtitle-2 f-w-600">Owners</mat-label>
@@ -120,53 +76,6 @@
                       </div>
                   </div>
 
-
-                    <!--
-                    <div class="row">
-                        <div class="col-sm-4 d-flex align-items-start">
-                            <mat-label class="mat-subtitle-2 f-w-600">Package</mat-label>
-                        </div>
-                        <div class="col-sm-8">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <input matInput placeholder="Enter Package" formControlName="package" required />
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    -->
-
-                    <!-- <div class="row">
-                        <div class="col-sm-4 d-flex align-items-start">
-                            <mat-label class="mat-subtitle-2 f-w-600">Package</mat-label>
-                        </div>
-                        <div class="col-sm-8">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <mat-select [(value)]="selectedPackage" (openedChange)="onPackagesDropdownOpened($event)" required>
-                                    <mat-select-trigger>
-                                        {{ selectedPackage ? selectedPackage.packageName : 'Select Package' }}
-                                    </mat-select-trigger>
-                                    @if(dropdownOpened){
-                                        <mat-option appearance="outline" class="w-100" aria-disabled="true">
-                                            <div>
-                                                <input
-                                                    matInput
-                                                    class="w-100"
-                                                    type="text"
-                                                    placeholder="Search"
-                                                    [(ngModel)]="packageSearchTerm"
-                                                    (ngModelChange)="packagesFilterOptions()"
-                                                    (click)="$event.stopPropagation()"
-                                                />
-                                            </div>
-                                        </mat-option>
-                                    }
-                                    <mat-option *ngFor="let pkg of filteredPackages" [value]="pkg" (click)="$event.stopPropagation()">
-                                        {{ pkg.packageName }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </div> -->
-
                     <div class="row">
                       <div class="col-sm-4 d-flex align-items-start">
                           <mat-label class="mat-subtitle-2 f-w-600">Packages</mat-label>
@@ -182,15 +91,15 @@
                                 <mat-option>
                                     <ngx-mat-select-search [formControl]="packageSearchCtrl" placeholderLabel="Search" noEntriesFoundLabel="No options found"></ngx-mat-select-search>
                                 </mat-option>
-
-                                <mat-option *ngFor="let pkg of filteredPackages" [value]="pkg.id" (click)="$event.stopPropagation()">
-                                    {{ pkg.packageName }}
-                                </mat-option>
+                                @for (pkg of packages; track pkg) {
+                                    <mat-option [value]="pkg.id" (click)="$event.stopPropagation()">
+                                        {{ pkg.packageName }}
+                                    </mat-option>
+                                }
                             </mat-select>
                           </mat-form-field>
                       </div>
                   </div>
-
 
                     <!-- New Row for Package Cost and Duration -->
                     <div class="row">
@@ -243,7 +152,6 @@
                         </div>
                     </div>
                 </form>
-
             </mat-card-content>
         </mat-tab>
         <mat-tab label="Restrictions">
@@ -381,94 +289,193 @@
                   </div>
                 }
               </div>
+              <div class="row d-flex justify-content-between align-items-center p-24">
+                <div class="m-l-24">
+                    <span class="d-block">Select Bundle:</span>
+                    <mat-radio-group [(ngModel)]="selectedBundleOption" (change)="bundleToggle($event)">
+                        <mat-radio-button value="packages" [checked]="selectedBundleOption == 'packages'">Packages</mat-radio-button>
+                        <mat-radio-button value="presets" [checked]="selectedBundleOption == 'presets'">Presets</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            
+                @switch (selectedBundleOption) {
+                    @case ('packages') {
+                        <mat-form-field appearance="outline" class="w-40 m-r-24">
+                            <mat-select [(ngModel)]="addForm.value.package" (ngModelChange)="onSelectPackage($event)">
+                                <mat-select-trigger>
+                                    {{ selectedPackage ? selectedPackage.packageName : 'Select Package' }}
+                                </mat-select-trigger>
+                                @for (pkg of packages; track pkg) {
+                                    <mat-option [value]="pkg.id" (click)="$event.stopPropagation()">
+                                        {{ pkg.packageName }}
+                                    </mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    }
+                    @case ('presets') {
+                        <mat-form-field appearance="outline" class="w-40 m-r-24">
+                            <mat-select [(ngModel)]="selectedPreset" (ngModelChange)="onSelectPreset($event)">
+                                <mat-select-trigger>
+                                    {{ getSelectedPresetName() }}
+                                </mat-select-trigger>
+                                @for (preset of presets; track preset) {
+                                    <mat-option [value]="preset.id" (click)="$event.stopPropagation()">
+                                        {{ preset.presetName }}
+                                    </mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    }
+                }
+            </div>
+            
               @if(bouquetsLoading){
                 <mat-progress-bar mode="query"></mat-progress-bar>
               }
-              <mat-card class="cardWithShadow">
-                <div class="table-responsive">
-                  <table
-                    mat-table
-                    [dataSource]="bouquetsDataSource"
-                    matSort
-                    class="no-wrap m-t-0 v-middle w-100"
-                  >
-                    <ng-container matColumnDef="chk">
-                        <th mat-header-cell *matHeaderCellDef>
-                            <mat-checkbox 
-                                color="primary" 
-                                (change)="$event ? bouquetsMasterToggle() : null" 
-                                [checked]="isAllBouquetsSelected()" 
-                                [indeterminate]="bouquetsSelection.hasValue() && !isAllBouquetsSelected()">
-                            </mat-checkbox>
-                        </th>
-                      <td mat-cell *matCellDef="let element" class="f-s-14">
-                        <mat-checkbox color="primary" 
-                            (change)="$event ? bouquetsSelection.toggle(element) : null" 
-                            [checked]="bouquetsSelection.isSelected(element)" 
-                            [aria-label]="checkboxLabel(element)"
-                            (change)="updateBouquetSelection(element)"
-                        ></mat-checkbox>
-                      </td>
-                    </ng-container>
-              
-                    <ng-container matColumnDef="id">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Id</th>
-                      <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.id }}</td>
-                    </ng-container>
-              
-                    <ng-container matColumnDef="bouquetName">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Bouquet Name</th>
-                      <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.bouquetName }}</td>
-                    </ng-container>
-              
-                    <ng-container matColumnDef="streams">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Streams</th>
-                      <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.streams }}</td>
-                    </ng-container>
-              
-                    <ng-container matColumnDef="movies">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Movies</th>
-                      <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.movies }}</td>
-                    </ng-container>
-              
-                    <ng-container matColumnDef="series">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Series</th>
-                      <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.series }}</td>
-                    </ng-container>
-            
-                    <ng-container matColumnDef="stations">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Stations</th>
-                        <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.stations }}</td>
-                      </ng-container>
-              
-                    <!-- <ng-container matColumnDef="action">
-                      <th mat-header-cell *matHeaderCellDef class="f-w-600 f-s-15">Action</th>
-                      <td mat-cell *matCellDef="let element" class="f-s-14 d-flex">
-                        <a mat-icon-button [routerLink]="['/apps/bundles/bouquets/', element.id]" class="d-flex align-items-center justify-content-center">
-                          <i-tabler name="eye" class="icon-18 d-flex align-items-center"></i-tabler>
-                        </a>
-                        <button mat-icon-button (click)="" class="d-flex align-items-center justify-content-center" title="delete">
-                          <i-tabler name="trash" class="icon-18 d-flex align-items-center"></i-tabler>
-                        </button>
-                      </td>
-                    </ng-container> -->
-              
-                    <tr mat-header-row *matHeaderRowDef="bouquetsDisplayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: bouquetsDisplayedColumns"></tr>
-                  </table>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <span class="p-4 m-l-4">
-                        {{ line.bouquets.length || 0 }} Bouquets Selected Of {{ bouquetTotalElements }}
-                    </span>
-                    <mat-paginator  [length]="bouquetTotalElements" 
-                                    [pageSize]="bouquetPageSize" 
-                                    [pageSizeOptions]="[5, 10, 25]" 
-                                    (page)="loadBouquets()"
-                                    showFirstLastButtons>
-                    </mat-paginator>
-                  </div>
-                </div>
-              </mat-card>
+              @if(selectedBundleOption === 'packages'){
+                <mat-card class="cardWithShadow">
+                    <div class="table-responsive">
+                      <table
+                        mat-table
+                        [dataSource]="bouquetsDataSource"
+                        matSort
+                        class="no-wrap m-t-0 v-middle w-100"
+                      >
+                        <ng-container matColumnDef="chk">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <mat-checkbox 
+                                    color="primary" 
+                                    (change)="$event ? bouquetsMasterToggle() : null" 
+                                    [checked]="isAllBouquetsSelected()" 
+                                    [indeterminate]="bouquetsSelection.hasValue() && !isAllBouquetsSelected()">
+                                </mat-checkbox>
+                            </th>
+                          <td mat-cell *matCellDef="let element" class="f-s-14">
+                            <mat-checkbox color="primary" 
+                                (change)="$event ? bouquetsSelection.toggle(element) : null" 
+                                [checked]="bouquetsSelection.isSelected(element)" 
+                                [aria-label]="checkboxLabel(element)"
+                                (change)="updateBouquetSelection(element)"
+                            ></mat-checkbox>
+                          </td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="id">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Id</th>
+                          <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.id }}</td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="bouquetName">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Bouquet Name</th>
+                          <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.bouquetName }}</td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="streams">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Streams</th>
+                          <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.streams }}</td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="movies">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Movies</th>
+                          <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.movies }}</td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="series">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Series</th>
+                          <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.series }}</td>
+                        </ng-container>
+                
+                        <ng-container matColumnDef="stations">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Stations</th>
+                            <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.stations }}</td>
+                          </ng-container>
+                  
+                        <tr mat-header-row *matHeaderRowDef="bouquetsDisplayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: bouquetsDisplayedColumns"></tr>
+                      </table>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <span class="p-4 m-l-4">
+                            {{ line.bouquets.length || 0 }} Bouquets Selected Of {{ bouquetTotalElements }}
+                        </span>
+                        <mat-paginator  [length]="bouquetTotalElements" 
+                                        [pageSize]="bouquetPageSize" 
+                                        [pageSizeOptions]="[5, 10, 25]" 
+                                        (page)="loadBouquets()"
+                                        showFirstLastButtons>
+                        </mat-paginator>
+                      </div>
+                    </div>
+                  </mat-card>
+              }@else {
+                <mat-card class="cardWithShadow">
+                    <div class="table-responsive">
+                      <table
+                        mat-table
+                        [dataSource]="presetBouquetsDataSource"
+                        matSort
+                        class="no-wrap m-t-0 v-middle w-100"
+                      >
+                        <ng-container matColumnDef="chk">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <mat-checkbox 
+                                    color="primary" 
+                                    (change)="$event ? presetBouquetsMasterToggle() : null" 
+                                    [checked]="isAllPresetBouquetsSelected()" 
+                                    [indeterminate]="presetBouquetsSelection.hasValue() && !isAllPresetBouquetsSelected()">
+                                </mat-checkbox>
+                            </th>
+                          <td mat-cell *matCellDef="let element" class="f-s-14">
+                            <mat-checkbox color="primary" 
+                                (change)="$event ? presetBouquetsSelection.toggle(element) : null" 
+                                [checked]="presetBouquetsSelection.isSelected(element)" 
+                                [aria-label]="presetCheckboxLabel(element)"
+                                (change)="updatePresetBouquetSelection(element)"
+                            ></mat-checkbox>
+                          </td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="id">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Id</th>
+                          <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.id }}</td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="bouquetName">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Bouquet Name</th>
+                          <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.bouquetName }}</td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="streams">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Streams</th>
+                          <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.streams }}</td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="movies">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Movies</th>
+                          <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.movies }}</td>
+                        </ng-container>
+                  
+                        <ng-container matColumnDef="series">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Series</th>
+                          <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.series }}</td>
+                        </ng-container>
+                
+                        <ng-container matColumnDef="stations">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Stations</th>
+                            <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.stations }}</td>
+                          </ng-container>
+                  
+                        <tr mat-header-row *matHeaderRowDef="bouquetsDisplayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: bouquetsDisplayedColumns"></tr>
+                      </table>
+                      <div class="d-flex justify-content-start align-items-center">
+                        <span class="p-4 m-l-4">
+                            {{ line.bouquets.length || 0 }} Bouquets Selected Of {{ presetBouquets?.length }}
+                        </span>
+                      </div>
+                    </div>
+                  </mat-card>
+              }
         </mat-tab>
     </mat-tab-group>
 </mat-card>

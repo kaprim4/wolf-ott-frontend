@@ -5,6 +5,7 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import {JwtService} from './jwt.service';
 import {map, Observable} from 'rxjs';
 import {Page} from '../models/page';
+import { BouquetList } from '../models/bouquet';
 
 @Injectable({
     providedIn: 'root'
@@ -47,5 +48,10 @@ export class PresetService extends CrudService<IPreset> {
 
     public deletePreset(id: number): Observable<HttpResponse<void>> {
         return this.delete<void>(id);
+    }
+
+    public getAllPresetBouquets(id:number): Observable<BouquetList[]> {
+        const url = `${this.apiBaseUrl}/api/v1/${this.endpoint}/${id}/bouquets`;
+        return this.httpClient.get<BouquetList[]>(url) //.pipe(map(res => res.body as BouquetList[]));
     }
 }

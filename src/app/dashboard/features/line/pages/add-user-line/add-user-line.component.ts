@@ -28,6 +28,8 @@ import { MatSort } from '@angular/material/sort';
 import { Page } from 'src/app/shared/models/page';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { TokenService } from 'src/app/shared/services/token.service';
+import { PresetService } from 'src/app/shared/services/preset.service';
+import { PresetList } from 'src/app/shared/models/preset';
 
 @Component({
     selector: 'app-add-user-line',
@@ -65,8 +67,14 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
     dropdownOpened = false;
     addOnBlur = true;
     readonly separatorKeysCodes = [ENTER, COMMA] as const;
+    presets: PresetList[];
+    presetBouquets: BouquetList[] = [];
+    presetBouquetsDataSource = new MatTableDataSource<BouquetList>([]);
+    presetBouquetsSelection = new SelectionModel<IBouquet>(true, []);
+    selectedPreset:number;
 
     user: UserDetail;
+    selectedBundleOption: string = 'packages';
 
     ownerSearchCtrl = new FormControl();
     packageSearchCtrl = new FormControl();
@@ -108,7 +116,8 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
         public dialog: MatDialog,
         private toastr: ToastrService,
         private notificationService: NotificationService,
-        private tokenService: TokenService
+        private tokenService: TokenService,
+        private presetService: PresetService
     ) {
         const username = LineService.generateRandomUsername();
         const password = LineService.generateRandomPassword();
@@ -176,6 +185,10 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
             this.updateMatrix();
             this.addForm.controls["owner"].setValue(user.id);
             this.selectedOwner = this.owners.find(o => o.id == user.id) || {id: user.id, username: user.username};
+        });
+
+        this.presetService.getAllPresets<PresetList>().subscribe(presets => {
+            this.presets = presets;
         });
         
     }
@@ -361,8 +374,11 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
             this.packagesFilterOptions();
         }
     }
-    onSelectPackage($event: any) {        
-        const id = this.addForm.controls["package"].value;
+    onSelectPackage($event: any) {     
+        // console.log("Package Event", $event);
+        const id = $event; // this.addForm.controls["package"].value;
+        if(id != this.addForm.controls["package"].value)
+            this.addForm.controls["package"].setValue(id);
         const pkg = this.packages.find(o => o.id === id);
         if(pkg){
             this.line.packageId = pkg.id;
@@ -380,7 +396,8 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
                 // console.log("Trial Expiration :", expiration);
                 this.addForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
             }
-            this.line.bouquets = pkg.bouquets;
+            if(this.selectedBundleOption === 'packages')
+                this.line.bouquets = pkg.bouquets;
             this.updateSelection();
             this.line.isIsplock = pkg.isIsplock;
             this.line.isE2 = pkg.isE2;
@@ -402,6 +419,71 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
         return `${year}-${month}-${day}T${hours}:${minutes}`;
     }
 
+    onSelectPreset($event: any) {
+        const id = $event;
+        this.bouquetsLoading = true;
+        this.presetService.getAllPresetBouquets(id).subscribe(res => {
+            console.log("Preset Bouquets:", res);
+            
+            this.presetBouquets = res || [];
+            this.bouquetsLoading = false;
+            this.presetBouquetsDataSource.data = res || [];
+            this.updatePresetSelection();
+            this.line.bouquets = this.presetBouquets.map(bouquet => bouquet.id);
+        })
+    }
+    getSelectedPresetName(): string {
+        const selectedPresetObj = this.presets?.find(o => o.id === this.selectedPreset);
+        return selectedPresetObj ? selectedPresetObj.presetName : 'Select Package';
+    }
+    isAllPresetBouquetsSelected(): boolean {
+        const numSelected = this.presetBouquetsSelection.selected.length;
+        const numRows = this.presetBouquetsDataSource.data.length;
+        return numSelected === numRows;
+    }
+    presetBouquetsMasterToggle() {
+        if (this.isAllPresetBouquetsSelected()) {
+            const selectedIds = this.presetBouquetsSelection.selected.map(item => item.id);
+            selectedIds.forEach(id => {
+                const index = this.line.bouquets.indexOf(id);
+                if (index >= 0) {
+                    this.line.bouquets.splice(index, 1);
+                }
+            });
+            this.presetBouquetsSelection.clear();
+        } else {
+            this.presetBouquetsDataSource.data.forEach(row => {
+                if (!this.line.bouquets.includes(row.id)) {
+                    this.line.bouquets.push(row.id);
+                }
+                this.presetBouquetsSelection.select(row);
+            });
+        }
+    }
+    presetCheckboxLabel(row?: BouquetList): string {
+        if (!row) {
+            return `${this.isAllPresetBouquetsSelected() ? 'select' : 'deselect'} all`;
+        }
+        return `${ this.presetBouquetsSelection.isSelected(row) ? 'deselect' : 'select' } row ${row.bouquetOrder + 1}`;
+    }
+    updatePresetBouquetSelection(element: any) {
+        if (this.presetBouquetsSelection.isSelected(element)) {
+            this.line.bouquets.push(element.id);
+        } else {
+            const index = this.line.bouquets.indexOf(element.id);
+            if (index >= 0) {
+                this.line.bouquets.splice(index, 1);
+            }
+        }
+        console.log("Line Bouquets ", this.line.bouquets.length);
+        
+    }
+    updatePresetSelection() {
+        this.presetBouquetsSelection.clear();
+        this.presetBouquetsDataSource.data.forEach(bouquet => {
+            this.presetBouquetsSelection.select(bouquet);
+        });
+    }
 
     isAllBouquetsSelected(): boolean {
         const numSelected = this.bouquetsSelection.selected.length;
@@ -443,7 +525,6 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
             }
         }
         console.log("Line Bouquets ", this.line.bouquets.length);
-        
     }
     updateSelection() {
         this.bouquetsSelection.clear();
@@ -472,4 +553,39 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
             }
         });
     }
+
+    bundleToggle($event: any) {
+        console.log("Toggle to: ", $event.value);
+        switch ($event.value) {
+            case 'packages':
+                const pkg = this.packages.find(p => p.id === this.addForm.controls['package'].value);
+                if (pkg) {
+                    // Update line.bouquets with the selected package's bouquet IDs
+                    this.line.bouquets = pkg.bouquets;
+    
+                    // Clear current selection
+                    this.bouquetsSelection.clear();
+                    
+                    // Select new bouquets based on the IDs in pkg.bouquets
+                    const selectedBouquets = this.bouquetsDataSource.data.filter(bouquet => pkg.bouquets.includes(bouquet.id));
+                    this.bouquetsSelection.select(...selectedBouquets);
+                }
+                break;
+            case 'presets':
+                // Update line.bouquets with the IDs of preset bouquets
+                this.line.bouquets = this.presetBouquets.map(bouquet => bouquet.id);
+    
+                // Clear current selection
+                this.presetBouquetsSelection.clear();
+                
+                // Select all preset bouquets
+                this.presetBouquetsSelection.select(...this.presetBouquets);
+                break;
+            default:
+                console.log("Unknown Bundle");
+        }
+
+    }
+    
+    
 }
