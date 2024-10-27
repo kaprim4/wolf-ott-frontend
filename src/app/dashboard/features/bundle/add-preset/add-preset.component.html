@@ -24,8 +24,8 @@
           </div>
         </div>
       </mat-card-header>
-      
-      
+
+
     <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0ms">
         <mat-tab label="Details">
             <mat-card-content class="b-t-1">
@@ -84,7 +84,7 @@
                           {{ element.bouquetName }}
                         </td>
                       </ng-container>
-              
+
                       <ng-container matColumnDef="streams">
                         <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
                           Streams
@@ -120,7 +120,7 @@
                           {{ element.stations }}
                         </td>
                       </ng-container>
-              
+
                       <ng-container matColumnDef="budget">
                         <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14">
                           Budget
@@ -129,7 +129,7 @@
                           ${{ element.budget }}k
                         </td>
                       </ng-container>
-              
+
                       <tr mat-header-row *matHeaderRowDef="bouquetsDisplayedColumns"></tr>
                       <tr mat-row *matRowDef="let row; columns: bouquetsDisplayedColumns" (click)="bouquetsSelection.toggle(row)"></tr>
                     </table>
@@ -138,6 +138,5 @@
               </mat-card>
         </mat-tab>
     </mat-tab-group>
-    
+
   </mat-card>
-  

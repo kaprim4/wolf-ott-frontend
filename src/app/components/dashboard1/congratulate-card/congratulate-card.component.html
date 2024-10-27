@@ -4,7 +4,7 @@
             Congratulations <b>{{ user?.username }}</b>
         </mat-card-title>
         <mat-card-subtitle class="mat-body-1">
-            You have done 38% more sales
+            You have {{ activeAccounts }} Lines including {{ onlineUsers }} online
         </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content class="p-b-30 position-relative">
@@ -22,9 +22,11 @@
                 </div>
             </div>
         }
-        <img src="assets/images/backgrounds/man-working-on-laptop.png" alt="welcome-bg" class="congrats-bg d-none d-lg-flex"/>
+        <img src="assets/images/backgrounds/Businessman-bro-600x600.webp" width="355" alt="welcome-bg" class="congrats-bg d-none d-lg-flex"/>
     </mat-card-content>
+
     <mat-divider></mat-divider>
+
     <mat-card-header>
         <div class="d-flex w-100">
             <div>
