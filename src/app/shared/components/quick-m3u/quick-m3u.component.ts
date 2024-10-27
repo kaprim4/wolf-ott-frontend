@@ -5,13 +5,20 @@ import {PackageService} from '../../services/package.service';
 import {LineService} from '../../services/line.service';
 import {PackageList} from '../../models/package';
 import {FormControl} from '@angular/forms';
-import {CreateLine, ILine, LineList} from '../../models/line';
+import {CreateLine, ILine, LineDetail, LineList} from '../../models/line';
 import {NotificationService} from '../../services/notification.service';
 import {catchError, finalize, tap, throwError} from 'rxjs';
 import {ToastrService} from "ngx-toastr";
 import {UserDetail} from "../../models/user";
 import {UserService} from "../../services/user.service";
 import {TokenService} from "../../services/token.service";
+import {LineFactory} from "../../factories/line.factory";
+import {BouquetList, IBouquet} from "../../models/bouquet";
+import {PresetList} from "../../models/preset";
+import {BouquetService} from "../../services/bouquet.service";
+import {PresetService} from "../../services/preset.service";
+import {MatTableDataSource} from "@angular/material/table";
+import {SelectionModel} from "@angular/cdk/collections";
 
 @Component({
     selector: 'app-quick-m3u',
@@ -33,13 +40,23 @@ export class QuickM3uComponent implements OnInit {
     loggedInUser: any;
     user: any;
 
+    selectedBundleOption: string = 'packages';
+    line: LineDetail = LineFactory.initLineDetail();
+    presetBouquets: BouquetList[] = [];
+    selectedPreset: number;
+    presets: PresetList[];
+    presetBouquetsDataSource = new MatTableDataSource<BouquetList>([]);
+    presetBouquetsSelection = new SelectionModel<IBouquet>(true, []);
+
     constructor(
         private lineService: LineService,
         private packageService: PackageService,
         private notificationService: NotificationService,
         private toastr: ToastrService,
         private tokenService: TokenService,
-        private userService: UserService
+        private userService: UserService,
+        private bouquetService: BouquetService,
+        private presetService: PresetService
     ) {
         this.username = LineService.generateRandomUsername();
         this.password = LineService.generateRandomPassword();
@@ -164,5 +181,46 @@ export class QuickM3uComponent implements OnInit {
             this.packageSearchTerm = '';
             this.packagesFilterOptions();
         }
+    }
+
+    bundleToggle($event: any) {
+        console.log("Toggle to: ", $event.value);
+        switch ($event.value) {
+            case 'packages':
+                const pkg = this.packages.find(p => p.id === this.selectedPackage.id);
+                if (pkg) {
+                    this.line.bouquets = pkg.bouquets;
+                }
+                break;
+            case 'presets':
+                this.line.bouquets = this.presetBouquets.map(bouquet => bouquet.id);
+                break;
+            default:
+                console.log("Unknown Bundle");
+        }
+
+    }
+
+    getSelectedPresetName(): string {
+        const selectedPresetObj = this.presets?.find(o => o.id === this.selectedPreset);
+        return selectedPresetObj ? selectedPresetObj.presetName : 'Select Package';
+    }
+
+    onSelectPreset($event: any) {
+        const id = $event;
+        this.presetService.getAllPresetBouquets(id).subscribe(res => {
+            console.log("Preset Bouquets:", res);
+            this.presetBouquets = res || [];
+            this.presetBouquetsDataSource.data = res || [];
+            this.updatePresetSelection();
+            this.line.bouquets = this.presetBouquets.map(bouquet => bouquet.id);
+        })
+    }
+
+    updatePresetSelection() {
+        this.presetBouquetsSelection.clear();
+        this.presetBouquetsDataSource.data.forEach(bouquet => {
+            this.presetBouquetsSelection.select(bouquet);
+        });
     }
 }

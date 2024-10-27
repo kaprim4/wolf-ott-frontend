@@ -41,11 +41,12 @@ export class AppCustomersComponent implements OnInit {
     public customersChart!: Partial<customersChart> | any;
 
     lines: LineList[] = [];
-    loading: boolean = true;
+    lastRegistredLineloading: boolean = true;
+    lastWeekCountLoading: boolean = true;
     error: string | null = null;
     growth: number = 0;
     lastWeekCount: number = 0;
-
+    lastSixMonths: number[] = [];
 
     constructor(
         private userService: UserService,
@@ -53,14 +54,52 @@ export class AppCustomersComponent implements OnInit {
         private statsService: StatsService,
         private lineService: LineService
     ) {
+
+    }
+
+    loadLine() {
+        this.lastRegistredLineloading = true;
+        this.lastWeekCountLoading = true;
+        this.lineService.getLastRegisteredLines().subscribe((data) => {
+            this.lines = data;
+            this.lastRegistredLineloading = false;
+            this.calculateGrowth();
+
+            this.lineService.getLastWeekCount().subscribe((count) => {
+                this.lastWeekCount = count;
+                this.lineService.getCreatedLinesLastSixMonths().subscribe((data) => {
+                    this.prepareChartData(data);
+                    this.lastWeekCountLoading = false;
+                });
+            });
+        });
+    }
+
+    calculateGrowth(): void {
+        const currentCount = this.lines.length;
+        if (this.lastWeekCount > 0) {
+            this.growth = ((currentCount - this.lastWeekCount) / this.lastWeekCount) * 100;
+        }
+    }
+
+    ngOnInit(): void {
+        this.loadLine();
+    }
+
+    private prepareChartData(data: { [key: string]: number }) {
+        const seriesData: number[] = [];
+        const labels = Object.keys(data).reverse(); // Pour les mois, si besoin d'ordre
+        labels.forEach(month => {
+            seriesData.push(data[month]);
+        });
+
         this.customersChart = {
             series: [
                 {
-                    name: '',
-                    data: this.lines.map(line => line.id),
+                    name: 'Lignes Créées',
+                    data: seriesData,
                 },
             ],
-
             chart: {
                 type: 'area',
                 fontFamily: 'inherit',
@@ -93,29 +132,6 @@ export class AppCustomersComponent implements OnInit {
                 enabled: false,
             },
         };
-    }
-
-    loadLine() {
-        this.loading = true;
-        this.lineService.getLastRegisteredLines().subscribe((data) => {
-            this.lines = data;
-            this.loading = false;
-            this.calculateGrowth();
-        });
-        this.lineService.getLastWeekCount().subscribe((count) => {
-            this.lastWeekCount = count;
-            this.loading = false;
-        });
-    }
-
-    calculateGrowth(): void {
-        const currentCount = this.lines.length;
-        if (this.lastWeekCount > 0) {
-            this.growth = ((currentCount - this.lastWeekCount) / this.lastWeekCount) * 100;
-        }
-    }
-
-    ngOnInit(): void {
-        this.loadLine();
+        console.log(this.customersChart);
     }
 }

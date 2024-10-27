@@ -160,7 +160,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
         this.bouquetPaginator?.page.subscribe(() => this.loadBouquets());
 
         // console.log(`Form { valid: ${this.addForm.valid}, invalid: ${this.addForm.invalid} }`);
-        
+
     }
 
     ngOnInit(): void {
@@ -179,7 +179,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
             });
 
         this.loadBouquets();
-        
+
         const loggedInUser = this.tokenService.getPayload();
         this.userService.getUser<UserDetail>(+loggedInUser.sid).subscribe((user) => {
             this.user = user;
@@ -191,7 +191,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
         this.presetService.getAllPresets<PresetList>().subscribe(presets => {
             this.presets = presets;
         });
-        
+
     }
 
     loadBouquets(): void {
@@ -248,7 +248,8 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
                 resellerNotes: formValues.resellerNotes,
                 isIsplock: formValues.isIsplock,
                 bypassUa: formValues.bypassUa,
-                ispDesc: formValues.ispDesc
+                ispDesc: formValues.ispDesc,
+                createdAt: new Date(formValues.expirationDate).getTime() / 1000
             });
             this.lineService.addLine(this.line)
                             .pipe(catchError(error => {
@@ -262,7 +263,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
                                 this.router.navigate(['/apps/lines/users/list']);
                                 this.toastr.success('Line added successfully.', 'Succès');
                             });
-            // this.dialog.open(UserDialogComponent)            
+            // this.dialog.open(UserDialogComponent)
 
         } else {
             for (const controlName in this.addForm.controls) {
@@ -273,7 +274,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
                     console.log(`Control: ${controlName}:`, {valid: control.valid, value: control.value, errors: control.errors});
                 else
                     console.log(`Control[${controlName}] Not Found`);
-                    
+
             }
             // console.error('Form is invalid', this.addForm.errors);
             this.toastr.error('Form is invalid.', 'Erreur');
@@ -383,7 +384,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
             this.packagesFilterOptions();
         }
     }
-    onSelectPackage($event: any) {     
+    onSelectPackage($event: any) {
         // console.log("Package Event", $event);
         const id = $event; // this.addForm.controls["package"].value;
         if(id != this.addForm.controls["package"].value)
@@ -415,7 +416,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
         }
         else
             console.log(`Ops!! Package[${id}] not found`);
-            
+
         // console.log("Select Package", this.selectedPackage);
     }
 
@@ -433,7 +434,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
         this.bouquetsLoading = true;
         this.presetService.getAllPresetBouquets(id).subscribe(res => {
             console.log("Preset Bouquets:", res);
-            
+
             this.presetBouquets = res || [];
             this.bouquetsLoading = false;
             this.presetBouquetsDataSource.data = res || [];
@@ -485,7 +486,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
             }
         }
         console.log("Line Bouquets ", this.line.bouquets.length);
-        
+
     }
     updatePresetSelection() {
         this.presetBouquetsSelection.clear();
@@ -543,7 +544,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
             }
         });
     }
-    
+
     updateMatrix(){
         const id = this.line.packageId;
         const credits = (this.user?.credits) || 0;
@@ -571,10 +572,10 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
                 if (pkg) {
                     // Update line.bouquets with the selected package's bouquet IDs
                     this.line.bouquets = pkg.bouquets;
-    
+
                     // Clear current selection
                     this.bouquetsSelection.clear();
-                    
+
                     // Select new bouquets based on the IDs in pkg.bouquets
                     const selectedBouquets = this.bouquetsDataSource.data.filter(bouquet => pkg.bouquets.includes(bouquet.id));
                     this.bouquetsSelection.select(...selectedBouquets);
@@ -583,10 +584,10 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
             case 'presets':
                 // Update line.bouquets with the IDs of preset bouquets
                 this.line.bouquets = this.presetBouquets.map(bouquet => bouquet.id);
-    
+
                 // Clear current selection
                 this.presetBouquetsSelection.clear();
-                
+
                 // Select all preset bouquets
                 this.presetBouquetsSelection.select(...this.presetBouquets);
                 break;
@@ -595,6 +596,6 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
         }
 
     }
-    
-    
+
+
 }
