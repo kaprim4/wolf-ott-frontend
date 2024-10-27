@@ -258,7 +258,7 @@ export class ViewUserLineComponent {
        
         if (this.editForm.valid) {
             const formValues = this.editForm.value;
-            const expDate = new Date(formValues.expirationDate).getTime();
+            const expDate = new Date(formValues.expirationDate).getTime() / 1000;
             Object.assign(this.line, {
                 username: formValues.username,
                 password: formValues.password,

@@ -235,7 +235,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
        
         if (this.addForm.valid) {
             const formValues = this.addForm.value;
-            const expDate = new Date(formValues.expirationDate).getTime();
+            const expDate = new Date(formValues.expirationDate).getTime() / 1000;
             Object.assign(this.line, {
                 username: formValues.username,
                 password: formValues.password,
@@ -243,6 +243,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
                 packageId: formValues.package,
                 maxConnections: formValues.maxConnections,
                 expDate: expDate,
+                contact: formValues.contact,
                 resellerNotes: formValues.resellerNotes,
                 isIsplock: formValues.isIsplock,
                 bypassUa: formValues.bypassUa,
