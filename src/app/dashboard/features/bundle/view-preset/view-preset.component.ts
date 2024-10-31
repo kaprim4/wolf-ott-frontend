@@ -17,15 +17,50 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
   styleUrl: './view-preset.component.scss'
 })
 export class ViewPresetComponent implements OnInit {
+  isFinishStep: boolean = false;
+
   id: number;
-  bouquetsDisplayedColumns: string[] = [
+//   bouquetsDisplayedColumns: string[] = [
+//     'select',
+//     'name',
+//     'streams',
+//     'movies',
+//     'series',
+//     'stations',
+//     // 'budget',
+// ];
+selectedBouquetsDisplayedColumns: string[] = [
     'select',
     'name',
-    'streams',
-    'movies',
-    'series',
-    'stations',
+    // 'streams',
+    // 'movies',
+    // 'series',
+    // 'stations',
     // 'budget',
+];
+
+streamsBouquetsDisplayedColumns: string[] = [
+  'select',
+  'name',
+  'streams',
+];
+
+moviesBouquetsDisplayedColumns: string[] = [
+  'select',
+  'name',
+  'movies',
+];
+
+seriesBouquetsDisplayedColumns: string[] = [
+  'select',
+  'name',
+  'series',
+];
+
+stationsBouquetsDisplayedColumns: string[] = [
+  'select',
+  'name',
+  'stations',
 ];
 
 loading: boolean = false;
@@ -33,7 +68,7 @@ loading: boolean = false;
 bouquetsLoading:boolean = false;
 
 bouquets: BouquetList[];
-bouquetsSelection = new SelectionModel<IBouquet>(true, []);
+bouquetsSelection = new SelectionModel<BouquetList>(true, []);
 bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
   
   editForm: UntypedFormGroup | any;
@@ -73,14 +108,14 @@ bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
             this.bouquetsDataSource = new MatTableDataSource<BouquetList>(
                 this.bouquets
             );
-            const presetBouquets = this.preset.bouquets;
+            const presetBouquets = this.preset?.bouquets;
             const selectedBouquets = presetBouquets.map(
                 (id) =>
                     this.bouquets.find((bouquet) => bouquet.id === id) || {
                         id: 0,
-                    }
+                    } as BouquetList
             );
-            this.bouquetsSelection = new SelectionModel<IBouquet>(
+            this.bouquetsSelection = new SelectionModel<BouquetList>(
                 true,
                 selectedBouquets
             );
@@ -130,4 +165,97 @@ checkboxLabel(row?: BouquetList): string {
       this.bouquetsSelection.isSelected(row) ? 'deselect' : 'select'
   } row ${row.bouquetOrder + 1}`;
 }
+
+get getStreamsBouquets():BouquetList[] {
+  return this.bouquets?.filter(bouquet => bouquet.streams > 0);
+}
+
+get getStreamsBouquetsDatasource():MatTableDataSource<BouquetList> {
+  return new MatTableDataSource(this.getStreamsBouquets);
+}
+
+get getMoviesBouquets():BouquetList[] {
+  return this.bouquets?.filter(bouquet => bouquet.movies > 0);
+}
+
+get getMoviesBouquetsDatasource():MatTableDataSource<BouquetList> {
+  return new MatTableDataSource(this.getMoviesBouquets);
+}
+
+get getSeriesBouquets():BouquetList[] {
+  return this.bouquets?.filter(bouquet => bouquet.series > 0);
+}
+
+get getSeriesBouquetsDatasource():MatTableDataSource<BouquetList> {
+  return new MatTableDataSource(this.getSeriesBouquets);
+}
+
+get getStationsBouquets():BouquetList[] {
+  return this.bouquets?.filter(bouquet => bouquet.stations > 0);
+}
+
+get getStationsBouquetsDatasource():MatTableDataSource<BouquetList> {
+  return new MatTableDataSource(this.getStationsBouquets);
+}
+
+get getSelectedBouquetDatasource():MatTableDataSource<BouquetList> {
+  return new MatTableDataSource(this.bouquetsSelection.selected);
+}
+
+getSummary() {
+  const presetName = this.editForm.controls["name"].value;
+  const presetDescription = this.editForm.controls["description"].value;
+  const selectedBouquets = this.bouquetsSelection.selected;
+
+  return {
+    presetName,
+    presetDescription,
+    selectedBouquets,
+  };
+}
+
+getTotalSelectedBouquets(): number {
+  return this.bouquetsSelection.selected.length;
+}
+
+// Total counts for Streams
+getTotalStreams(): number {
+  return this.bouquetsSelection.selected.reduce((total, bouquet) => total + (bouquet.streams || 0), 0);
+}
+
+getTotalStreamBouquets(): number {
+  return this.bouquetsSelection.selected.filter(bouquet => bouquet.streams > 0).length;
+}
+
+// Total counts for Movies
+getTotalMovies(): number {
+  return this.bouquetsSelection.selected.reduce((total, bouquet) => total + (bouquet.movies || 0), 0);
+}
+
+getTotalMovieBouquets(): number {
+  return this.bouquetsSelection.selected.filter(bouquet => bouquet.movies > 0).length;
+}
+
+// Total counts for Series
+getTotalSeries(): number {
+  return this.bouquetsSelection.selected.reduce((total, bouquet) => total + (bouquet.series || 0), 0);
+}
+
+getTotalSeriesBouquets(): number {
+  return this.bouquetsSelection.selected.filter(bouquet => bouquet.series > 0).length;
+}
+
+// Total counts for Stations
+getTotalStations(): number {
+  return this.bouquetsSelection.selected.reduce((total, bouquet) => total + (bouquet.stations || 0), 0);
+}
+
+getTotalStationBouquets(): number {
+  return this.bouquetsSelection.selected.filter(bouquet => bouquet.stations > 0).length;
+}
+
+onStepChange(event: any) {
+  this.isFinishStep = event.selectedIndex === 2; // Assuming finish step is at index 2
+}
+
 }
