@@ -18,3 +18,50 @@
     }
   }
   
+  .selected-bouquets-container {
+    margin-top: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    position: relative;
+  }
+  
+  .bouquet-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #f1f1f1; /* Default background */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: move;
+    transition: background-color 0.2s;
+  }
+  
+  .bouquet-item:hover,
+  .bouquet-item.cdk-drag-preview {
+    background-color: rgba(224, 224, 224, 0.5); /* Same as hover */
+  }
+  
+  .bouquet-item-content {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* When an item is being dragged */
+  .bouquet-item.cdk-drag {
+    background-color: rgba(224, 224, 224, 0.5); /* Same as hover effect */
+    opacity: 0.8; /* Optional: gives a slightly transparent effect */
+  }
+  
+  /* Ensure the placeholder is hidden when dragging */
+  .cdk-drop-list .cdk-drop-placeholder {
+    display: none;
+  }
+  
+  .bouquet-drag-cursor {
+    margin-right: 16px;
+    cursor: move;
+  }

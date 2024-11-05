@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,13 +10,16 @@ import { PresetService } from 'src/app/shared/services/preset.service';
 import { BouquetList, IBouquet } from 'src/app/shared/models/bouquet';
 import { BouquetService } from 'src/app/shared/services/bouquet.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-view-preset',
   templateUrl: './view-preset.component.html',
   styleUrl: './view-preset.component.scss'
 })
-export class ViewPresetComponent implements OnInit {
+export class ViewPresetComponent implements OnInit, AfterViewInit {
   isFinishStep: boolean = false;
 
   id: number;
@@ -39,29 +42,25 @@ selectedBouquetsDisplayedColumns: string[] = [
     // 'budget',
 ];
 
-streamsBouquetsDisplayedColumns: string[] = [
+packageBouquetsDisplayedColumns: string[] = [
   'select',
   'name',
-  'streams',
+  // 'content'
+];
+vodBouquetsDisplayedColumns: string[] = [
+  'select',
+  'name',
+  // 'content'
 ];
 
-moviesBouquetsDisplayedColumns: string[] = [
-  'select',
-  'name',
-  'movies',
-];
+@ViewChild(MatSort) vodSort: MatSort;
+@ViewChild(MatPaginator) vodPaginator: MatPaginator;
 
-seriesBouquetsDisplayedColumns: string[] = [
-  'select',
-  'name',
-  'series',
-];
+@ViewChild(MatSort) packageSort: MatSort;
+@ViewChild(MatPaginator) packagePaginator: MatPaginator;
 
-stationsBouquetsDisplayedColumns: string[] = [
-  'select',
-  'name',
-  'stations',
-];
+packageBouquetsDataSource: MatTableDataSource<BouquetList>;
+vodBouquetsDataSource: MatTableDataSource<BouquetList>;
 
 loading: boolean = false;
 
@@ -92,6 +91,14 @@ bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
     });
 
   }
+
+
+
+  ngAfterViewInit() {
+    this.packageBouquetsDataSource.paginator = this.packagePaginator;
+    this.vodBouquetsDataSource.paginator = this.vodPaginator;
+  }
+
   ngOnInit(): void {
     this.loading = true;
     this.bouquetsLoading = true;
@@ -120,6 +127,13 @@ bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
                 selectedBouquets
             );
             this.bouquetsLoading = false;
+
+            this.packageBouquetsDataSource = new MatTableDataSource(this.getPackageBouquets);
+            this.packageBouquetsDataSource.paginator = this.packagePaginator;
+
+            this.vodBouquetsDataSource = new MatTableDataSource(this.getVODBouquets);
+            this.vodBouquetsDataSource.paginator = this.vodPaginator;
+
         });
   }
   
@@ -166,41 +180,71 @@ checkboxLabel(row?: BouquetList): string {
   } row ${row.bouquetOrder + 1}`;
 }
 
-get getStreamsBouquets():BouquetList[] {
-  return this.bouquets?.filter(bouquet => bouquet.streams > 0);
+// Package Bouquets Methods
+masterTogglePackage(): void {
+  this.isAllSelectedPackage()
+    ? this.bouquetsSelection.clear()
+    : this.packageBouquetsDataSource.data.forEach(row => this.bouquetsSelection.select(row));
 }
 
-get getStreamsBouquetsDatasource():MatTableDataSource<BouquetList> {
-  return new MatTableDataSource(this.getStreamsBouquets);
+isAllSelectedPackage(): boolean {
+  const numSelected = this.bouquetsSelection.selected.length;
+  const numRows = this.packageBouquetsDataSource.data.length;
+  return numSelected === numRows;
 }
 
-get getMoviesBouquets():BouquetList[] {
-  return this.bouquets?.filter(bouquet => bouquet.movies > 0);
+checkboxLabelPackage(row?: BouquetList): string {
+  if (!row) {
+    return `${this.isAllSelectedPackage() ? 'deselect' : 'select'} all in package`;
+  }
+  return `${this.bouquetsSelection.isSelected(row) ? 'deselect' : 'select'} row ${row.bouquetOrder + 1}`;
 }
 
-get getMoviesBouquetsDatasource():MatTableDataSource<BouquetList> {
-  return new MatTableDataSource(this.getMoviesBouquets);
+// VOD Bouquets Methods
+masterToggleVOD(): void {
+  this.isAllSelectedVOD()
+    ? this.bouquetsSelection.clear()
+    : this.vodBouquetsDataSource.data.forEach(row => this.bouquetsSelection.select(row));
 }
 
-get getSeriesBouquets():BouquetList[] {
-  return this.bouquets?.filter(bouquet => bouquet.series > 0);
+isAllSelectedVOD(): boolean {
+  const numSelected = this.bouquetsSelection.selected.length;
+  const numRows = this.vodBouquetsDataSource.data.length;
+  return numSelected === numRows;
 }
 
-get getSeriesBouquetsDatasource():MatTableDataSource<BouquetList> {
-  return new MatTableDataSource(this.getSeriesBouquets);
+checkboxLabelVOD(row?: BouquetList): string {
+  if (!row) {
+    return `${this.isAllSelectedVOD() ? 'deselect' : 'select'} all in VOD`;
+  }
+  return `${this.bouquetsSelection.isSelected(row) ? 'deselect' : 'select'} row ${row.bouquetOrder + 1}`;
 }
 
-get getStationsBouquets():BouquetList[] {
-  return this.bouquets?.filter(bouquet => bouquet.stations > 0);
-}
-
-get getStationsBouquetsDatasource():MatTableDataSource<BouquetList> {
-  return new MatTableDataSource(this.getStationsBouquets);
-}
 
 get getSelectedBouquetDatasource():MatTableDataSource<BouquetList> {
   return new MatTableDataSource(this.bouquetsSelection.selected);
 }
+
+// Getters for data sources
+  get getPackageBouquets(): BouquetList[] {
+    return this.bouquets?.filter(bouquet => bouquet.streams > 0 || bouquet.stations > 0);
+  }
+
+  // get getPackageBouquetsDatasource(): MatTableDataSource<BouquetList> {
+  //   const dataSource = new MatTableDataSource(this.getPackageBouquets);
+  //   dataSource.paginator = this.packagePaginator; // Set paginator
+  //   return dataSource;
+  // }
+
+  get getVODBouquets(): BouquetList[] {
+    return this.bouquets?.filter(bouquet => bouquet.movies > 0 || bouquet.series > 0);
+  }
+
+  // get getVODBouquetsDatasource(): MatTableDataSource<BouquetList> {
+  //   const dataSource = new MatTableDataSource(this.getVODBouquets);
+  //   dataSource.paginator = this.vodPaginator; // Set paginator
+  //   return dataSource;
+  // }
 
 getSummary() {
   const presetName = this.editForm.controls["name"].value;
@@ -257,5 +301,22 @@ getTotalStationBouquets(): number {
 onStepChange(event: any) {
   this.isFinishStep = event.selectedIndex === 2; // Assuming finish step is at index 2
 }
+
+
+  // Handle the drop event
+  onBouquetDrop(event: CdkDragDrop<BouquetList[]>): void {
+    // Move the item in the array to the new position
+    moveItemInArray(this.bouquetsSelection.selected, event.previousIndex, event.currentIndex);
+  }
+
+  // Optional: Handle the drag started event
+  onDragStarted(bouquet: BouquetList): void {
+    console.log('Drag started for:', bouquet.bouquetName);
+  }
+
+  // Optional: Handle the drag ended event
+  onDragEnded(bouquet: BouquetList): void {
+    console.log('Drag ended for:', bouquet.bouquetName);
+  }
 
 }

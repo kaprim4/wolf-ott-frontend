@@ -7,6 +7,7 @@ import { TablerIconsModule } from 'angular-tabler-icons';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { NotificationComponent } from './components/notification/notification.component';
 import { QuickM3uComponent } from './components/quick-m3u/quick-m3u.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 
@@ -28,7 +29,8 @@ import { QuickM3uComponent } from './components/quick-m3u/quick-m3u.component';
     FormsModule,
     ReactiveFormsModule,
     TablerIconsModule,
-    NgxMatSelectSearchModule
+    NgxMatSelectSearchModule,
+    DragDropModule
   ]
 })
 export class SharedModule { }
