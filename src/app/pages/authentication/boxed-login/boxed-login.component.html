@@ -92,30 +92,17 @@
 
             <div class="d-flex align-items-center m-b-12">
               <mat-checkbox color="primary">Remember this Device</mat-checkbox>
-              <a
-                [routerLink]="['/authentication/boxed-forgot-pwd']"
-                class="text-primary f-w-600 text-decoration-none m-l-auto f-s-14"
-                >Forgot Password ?</a
-              >
+              <a [routerLink]="['/authentication/boxed-forgot-pwd']" class="text-primary f-w-600 text-decoration-none m-l-auto f-s-14">
+                  Forgot Password ?
+              </a>
             </div>
-            <button
-              mat-flat-button
-              color="primary"
-              class="w-100"
-              [disabled]="!form.valid"
-            >
+            <button mat-flat-button color="primary" class="w-100" [disabled]="!form.valid">
               Sign In
             </button>
             <!-- input -->
           </form>
-          <span class="d-block f-w-500 text-center m-t-24"
-            >New to Spike?
-            <a
-              [routerLink]="['/authentication/boxed-register']"
-              class="text-decoration-none text-primary f-w-500 f-s-14"
-            >
-              Create an account</a
-            >
+          <span class="d-block f-w-500 text-center m-t-24">
+
           </span>
         </mat-card-content>
       </mat-card>

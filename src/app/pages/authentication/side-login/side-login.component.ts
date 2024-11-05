@@ -33,7 +33,8 @@ export class AppSideLoginComponent implements OnInit {
         private authService: AuthenticationService,
         private tokenService: TokenService,
         private route: ActivatedRoute,
-        private fb: FormBuilder) {
+        private fb: FormBuilder
+    ) {
     }
 
     loginForm: FormGroup = this.fb.group({

@@ -1,5 +1,6 @@
 import { QuickM3uComponent } from 'src/app/shared/components/quick-m3u/quick-m3u.component';
 import {NavItem} from './nav-item/nav-item';
+import {QuickXtreamComponent} from "../../../../shared/components/quick-xtream/quick-xtream.component";
 
 export const navItems: NavItem[] = [
     {
@@ -21,6 +22,17 @@ export const navItems: NavItem[] = [
         chipContent: 'New',
         chipClass: 'warning',
         openDialog: QuickM3uComponent
+    },
+    {
+        displayName: 'Quick Xtream',
+        subtext: 'Generate a Quick Xtream link',
+        iconName: 'stars',
+        bgcolor: 'error',
+        route: '',
+        chip: true,
+        chipContent: 'New',
+        chipClass: 'error',
+        openDialog: QuickXtreamComponent
     },
     {
         navCap: 'Apps',

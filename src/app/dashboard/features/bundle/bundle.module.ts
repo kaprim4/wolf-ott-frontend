@@ -12,7 +12,7 @@ import {AddBouquetComponent} from './add-bouquet/add-bouquet.component';
 import {ViewBouquetComponent} from './view-bouquet/view-bouquet.component';
 import {AddPresetComponent} from './add-preset/add-preset.component';
 import {ViewPresetComponent} from './view-preset/view-preset.component';
-
+import {DragDropModule} from "@angular/cdk/drag-drop";
 
 @NgModule({
     declarations: [
@@ -29,7 +29,8 @@ import {ViewPresetComponent} from './view-preset/view-preset.component';
     imports: [
         CommonModule,
         RouterModule.forChild(bundleRoutes),
-        SharedModule
+        SharedModule,
+        DragDropModule
     ]
 })
 export class BundleModule {
