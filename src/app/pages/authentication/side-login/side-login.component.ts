@@ -112,14 +112,13 @@ export class AppSideLoginComponent implements OnInit {
             return;
         }
         const params = Object.assign(result, {
-            captcha_id: this.captchaConfig.config.captchaId,
+            captcha_id: this.captchaConfig.config.captchaId
         });
-        this.httpClient.get(`${this.apiBaseUrl}/api/v1/auth/validate`, params)
-            .subscribe((res: any) => {
-                if (res.data.result) {
-                    console.log(res.data);
-                    alert(res.data.result);
-
+        console.log("captchaObj params", params);
+        this.httpClient.get(`${this.apiBaseUrl}/api/v1/auth/validate`, { params })
+            .subscribe((result: any) => {
+                console.log("result: ", result);
+                if (result.result) {
                     this.authService.login(this.formValues['username'].value, this.formValues['password'].value)?.subscribe(
                         (data: HttpResponse<any>) => {
                             if (data.status === 200 || data.status === 202) {
