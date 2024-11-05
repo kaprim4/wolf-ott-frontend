@@ -1,5 +1,5 @@
 export const environment = {
-    production: false,
+    production: true,
     GOOGLE_MAPS_API_KEY: 'AIzaSyDpgQMpcfx1QU-8SM-ljcgjG4xrYtIYby4',
     apiBaseUrl: 'http://212.237.231.147:30100',
     APP_ENV: "prod",

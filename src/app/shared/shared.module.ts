@@ -9,13 +9,16 @@ import {NotificationComponent} from './components/notification/notification.comp
 import {QuickM3uComponent} from './components/quick-m3u/quick-m3u.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {QuickXtreamComponent} from "./components/quick-xtream/quick-xtream.component";
+import {GeetestCaptchaComponent} from "./components/geetest-captcha/geetest-captcha.component";
+import {HttpClientModule} from "@angular/common/http";
 
 
 @NgModule({
     declarations: [
         NotificationComponent,
         QuickM3uComponent,
-        QuickXtreamComponent
+        QuickXtreamComponent,
+        GeetestCaptchaComponent
     ],
     imports: [
         CommonModule,
@@ -31,7 +34,8 @@ import {QuickXtreamComponent} from "./components/quick-xtream/quick-xtream.compo
         ReactiveFormsModule,
         TablerIconsModule,
         NgxMatSelectSearchModule,
-        DragDropModule
+        DragDropModule,
+        GeetestCaptchaComponent
     ]
 })
 export class SharedModule {

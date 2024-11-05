@@ -1,0 +1,6 @@
+#captcha {
+    height: 50px;
+    &.hideHeight {
+        height: 0;
+    }
+}
