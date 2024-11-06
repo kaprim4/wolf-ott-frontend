@@ -122,10 +122,6 @@ export class AddBouquetComponent implements OnInit, AfterViewInit {
         this.bouquet = BouquetFactory.initBouquetDetail();
 
         this.addForm = this.fb.group({});
-
-        this.rows = this.fb.array([]);
-        this.addForm.addControl('rows', this.rows);
-        this.rows.push(this.createItemFormGroup());
     }
     ngAfterViewInit(): void {
         this.streamsDataSource.sort = this.streamSort;
@@ -154,57 +150,11 @@ export class AddBouquetComponent implements OnInit, AfterViewInit {
         this.loadStations();
     }
 
-    onAddRow(): void {
-        this.rows.push(this.createItemFormGroup());
-    }
-
-    onRemoveRow(rowIndex: number): void {
-        const totalCostOfItem =
-            this.addForm.get('rows')?.value[rowIndex].unitPrice *
-            this.addForm.get('rows')?.value[rowIndex].units;
-
-        this.subTotal = this.subTotal - totalCostOfItem;
-        this.vat = this.subTotal / 10;
-        this.grandTotal = this.subTotal + this.vat;
-        this.rows.removeAt(rowIndex);
-    }
-
-    createItemFormGroup(): UntypedFormGroup {
-        return this.fb.group({
-            itemName: ['', Validators.required],
-            units: ['', Validators.required],
-            unitPrice: ['', Validators.required],
-            itemTotal: ['0'],
-        });
-    }
-
-    itemsChanged(): void {
-        let total: number = 0;
-        // tslint:disable-next-line - Disables all
-        for (
-            let t = 0;
-            t < (<UntypedFormArray>this.addForm.get('rows')).length;
-            t++
-        ) {
-            if (
-                this.addForm.get('rows')?.value[t].unitPrice !== '' &&
-                this.addForm.get('rows')?.value[t].units
-            ) {
-                total =
-                    this.addForm.get('rows')?.value[t].unitPrice *
-                        this.addForm.get('rows')?.value[t].units +
-                    total;
-            }
-        }
-        this.subTotal = total;
-        this.vat = this.subTotal / 10;
-        this.grandTotal = this.subTotal + this.vat;
-    }
-
     saveDetail(): void {
         this.bouquetService.addBouquet(this.bouquet);
         this.router.navigate(['/apps/bundles/bouquets/list']);
     }
+
     masterStreamsToggle(): void {
         this.isAllMoviesSelected()
             ? this.streamsSelection.clear()
