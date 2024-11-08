@@ -45,6 +45,13 @@ export const FeatureRoutes: Routes = [
                 },
                 loadChildren: () => import('./bundle/bundle.module').then(module => module.BundleModule)
             },
+            {
+                path: 'administration',
+                data: {
+                    title: 'Administration',
+                },
+                loadChildren: () => import('./administration/administration.module').then(module => module.AdministrationModule)
+            },
         ],
     },
 ];

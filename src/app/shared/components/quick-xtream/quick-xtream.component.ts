@@ -31,16 +31,20 @@ export class QuickXtreamComponent implements OnInit {
     packageSearchTerm = '';
     dropdownOpened = false;
     packageSearchCtrl = new FormControl();
-    server: string = "http://r2u.tech/";
+    server: string = "";
     isLoading: boolean = false;
     loggedInUser: any;
     user: any;
 
     line: LineDetail = LineFactory.initLineDetail();
+    presets: PresetList[];
+    selectedBundleOption: string = 'packages';
+    selectedPresetId:number;
     selectedPackageId:number;
 
     addForm: UntypedFormGroup;
     packageForm: UntypedFormGroup;
+    bundleForm: UntypedFormGroup;
 
     constructor(
         private lineService: LineService,
@@ -49,7 +53,8 @@ export class QuickXtreamComponent implements OnInit {
         private toastr: ToastrService,
         private tokenService: TokenService,
         private userService: UserService,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private presetService: PresetService
     ) {
         const username = this.username = LineService.generateRandomUsername();
         const password = this.password = LineService.generateRandomPassword();
@@ -75,6 +80,12 @@ export class QuickXtreamComponent implements OnInit {
             password: [password, Validators.required],
             package: ['', Validators.required],
         });
+        this.bundleForm = this.fb.group({
+            bundle: ['packages'],
+            preset: [''],
+            package: [''],
+            lines: [[]]
+        });
     }
 
     ngOnInit(): void {
@@ -85,6 +96,11 @@ export class QuickXtreamComponent implements OnInit {
         this.loggedInUser = this.tokenService.getPayload();
         this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
             this.user = user;
+            this.server = `http://${this.user.resellerDns}:80/`;
+        });
+
+        this.presetService.getAllPresets<PresetList>().subscribe(presets => {
+            this.presets = presets;
         });
     }
 
@@ -134,6 +150,7 @@ export class QuickXtreamComponent implements OnInit {
     onPackagesDropdownOpened(opened: boolean) {
         this.dropdownOpened = opened;
         if (opened) {
+            // Reset search term and filter options when the dropdown opens
             this.packageSearchTerm = '';
             this.packagesFilterOptions();
         }
@@ -142,6 +159,39 @@ export class QuickXtreamComponent implements OnInit {
     getSelectedPackageName(): string {
         const selectedPackagetObj = this.packages?.find(o => o.id === this.selectedPackageId);
         return selectedPackagetObj ? selectedPackagetObj.packageName : 'Select Package';
+    }
+
+    get selectedPreset():PresetList|undefined {
+        return this.presets.find(p => p.id == this.selectedPresetId);
+    }
+
+    onSelectPreset($event: any) {
+        const id = $event.value;
+        this.selectedPresetId = id;
+
+    }
+    getSelectedPresetName(): string {
+        const selectedPresetObj = this.presets?.find(o => o.id === this.selectedPresetId);
+        return selectedPresetObj ? selectedPresetObj.presetName : 'Select Package';
+    }
+
+    bundleToggle($event: any) {
+        console.log("Toggle to: ", $event.value);
+        switch ($event.value) {
+            case 'packages':
+                const pkg = this.packages.find(p => p.id === this.addForm.controls['package'].value);
+                if (pkg) {
+                    this.line.bouquets = pkg.bouquets;
+                }
+                break;
+            case 'presets':
+                // Update line.bouquets with the IDs of preset bouquets
+                // this.line.bouquets = this.presetBouquets.map(bouquet => bouquet.id);
+                break;
+            default:
+                console.log("Unknown Bundle");
+        }
+
     }
 
     onSelectPackage($event: any) {
@@ -154,6 +204,8 @@ export class QuickXtreamComponent implements OnInit {
             this.addForm.controls["package"].setValue(id);
         if(id != this.packageForm.controls["package"].value)
             this.packageForm.controls["package"].setValue(id);
+        if(id != this.bundleForm.controls["package"].value)
+            this.bundleForm.controls["package"].setValue(id);
         const pkg = this.packages.find(o => o.id === id);
         console.log("Selected Package:", pkg);
 
@@ -173,13 +225,16 @@ export class QuickXtreamComponent implements OnInit {
                 // console.log("Trial Expiration :", expiration);
                 this.addForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
             }
-            this.line.bouquets = pkg.bouquets;
+            if(this.selectedBundleOption === 'packages')
+                this.line.bouquets = pkg.bouquets;
             this.line.isIsplock = pkg.isIsplock;
             this.line.isE2 = pkg.isE2;
             this.line.forcedCountry = pkg.forcedCountry;
         }
         else
             console.log(`Ops!! Package[${id}] not found`);
+
+        // console.log("Select Package", this.selectedPackage);
     }
 
     formatDateTime(date:Date) {

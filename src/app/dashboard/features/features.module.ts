@@ -1,15 +1,15 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FeatureRoutes } from './features.routes';
-import { RouterModule } from '@angular/router';
-
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FeatureRoutes} from './features.routes';
+import {RouterModule} from '@angular/router';
 
 
 @NgModule({
-  declarations: [],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(FeatureRoutes)
-  ]
+    declarations: [],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(FeatureRoutes)
+    ]
 })
-export class FeaturesModule { }
+export class FeaturesModule {
+}

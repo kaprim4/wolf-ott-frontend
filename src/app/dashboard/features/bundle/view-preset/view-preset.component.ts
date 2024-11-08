@@ -291,6 +291,7 @@ export class ViewPresetComponent implements OnInit, AfterViewInit {
     }
 
     onStepChange(event: any) {
+        console.log("event:", event)
         this.isFinishStep = event.selectedIndex === 2; // Assuming finish step is at index 2
     }
 
