@@ -23,6 +23,9 @@ import { IMovie, MovieList } from 'src/app/shared/models/movie';
 import { ISerie, SerieList } from 'src/app/shared/models/serie';
 import { IStation, StationList } from 'src/app/shared/models/station';
 
+import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from '@angular/cdk/drag-drop';
+import { trigger, transition, style, animate } from '@angular/animations';
+
 @Component({
   selector: 'app-view-bouquet',
   templateUrl: './view-bouquet.component.html',
@@ -336,5 +339,10 @@ loadStations(): void {
         this.stationsTotalElements = pageResponse.totalElements;
         this.loadingStations = false;
     });
+}
+
+onSttreamCategoryDrop(event: CdkDragDrop<CategoryList[]>): void {
+    // Move the item in the array to the new position
+    // moveItemInArray(this.cazz.selected, event.previousIndex, event.currentIndex);
 }
 }
