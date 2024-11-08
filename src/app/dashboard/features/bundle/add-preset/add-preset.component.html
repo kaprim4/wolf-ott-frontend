@@ -17,8 +17,8 @@
     </mat-card-header>
     
     <mat-card-content class="b-t-1">
-      <mat-stepper #stepper>
-        <mat-step [stepControl]="addForm" (selectionChange)="onStepChange($event)">
+      <mat-stepper #stepper (selectionChange)="onStepChange($event)">
+        <mat-step [stepControl]="addForm">
           <ng-template matStepLabel>Details</ng-template>
           <form [formGroup]="addForm" (ngSubmit)="saveDetail()">
             <div class="row">
@@ -45,7 +45,7 @@
           </form>
         </mat-step>
 
-        <mat-step (selectionChange)="onStepChange($event)">
+        <mat-step>
           <ng-template matStepLabel>Bouquets</ng-template>
           <div class="d-flex g-4 p-4">
             <!-- Left Side: Package Bouquets Table -->
@@ -144,7 +144,7 @@
           </div>
         </mat-step>
         
-        <mat-step (selectionChange)="onStepChange($event)">
+        <mat-step>
           <ng-template matStepLabel>Finish</ng-template>
         
           <div class="summary-container">

@@ -18,7 +18,7 @@
     </mat-card-header>
 
     <mat-card-content class="b-t-1 ">
-        <mat-stepper #stepper>
+        <mat-stepper #stepper (selectionChange)="onStepChange($event)">
             <mat-step [stepControl]="editForm">
                 <ng-template matStepLabel>Details</ng-template>
                 <form [formGroup]="editForm" (ngSubmit)="saveDetail()" class="m-t-10">

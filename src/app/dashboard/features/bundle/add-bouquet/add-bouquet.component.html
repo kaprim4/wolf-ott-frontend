@@ -47,6 +47,7 @@
             <mat-card class="">
                 <mat-card-content>
 
+                    <!-- 
                     <div cdkDropList [cdkDropListData]="categories" (cdkDropListDropped)="onSttreamCategoryDrop($event)" [cdkDropListConnectedTo]="['categoryList']" class="category-list">
                         <div *ngFor="let category of categories; let i = index" class="bg-light-primary text-primary border-primary category-item" cdkDrag [cdkDragData]="category" [@dragAnimation]>
                             <div class="category-item-content">
@@ -57,7 +58,8 @@
                     </div>
                     <ng-template cdkDragPlaceholder>
                     <div class="custom-placeholder">Dragging...</div>
-                    </ng-template>
+                    </ng-template> 
+                    -->
 
                     <div class="table-responsive">
                         <table mat-table [dataSource]="streamsDataSource" class="w-100">
