@@ -35,8 +35,53 @@
                         </mat-form-field>
                         <div class="d-flex align-items-center justify-content-between">
                             <button mat-flat-button color="warn" matStepperPrevious>Back</button>
-                            <button mat-flat-button color="primary" matStepperNext (click)="createLine()">Create Line</button>
+                            <button mat-flat-button color="primary" matStepperNext>Next</button>
                         </div>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step [stepControl]="bundleForm">
+                <form class="" [formGroup]="bundleForm">
+                    <ng-template matStepLabel>Bundle</ng-template>
+                    <div class="row d-flex flex-column justify-content-start align-items-start p-24">
+                        <div class="m-l-4">
+                            <span class="d-block text-light">Select Bundle:</span>
+                            <mat-radio-group formControlName="bundle" (change)="bundleToggle($event)">
+                                <mat-radio-button value="packages" [checked]="selectedBundleOption === 'packages'">Packages</mat-radio-button>
+                                <mat-radio-button value="presets" [checked]="selectedBundleOption === 'presets'">Presets</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+
+                        <ng-container [ngSwitch]="bundleForm.value.bundle">
+                            <ng-container *ngSwitchCase="'packages'">
+                                <mat-form-field appearance="outline" class="w-100 m-r-24">
+                                    <mat-select formControlName="package" (selectionChange)="onSelectPackage($event)">
+                                        <mat-select-trigger>
+                                            {{ selectedPackage?.packageName || 'Select Package' }}
+                                        </mat-select-trigger>
+                                        <mat-option *ngFor="let pkg of packages" [value]="pkg.id" (click)="$event.stopPropagation()">
+                                            {{ pkg.packageName }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'presets'">
+                                <mat-form-field appearance="outline" class="w-100 m-r-24">
+                                    <mat-select [(ngModel)]="selectedPresetId" (selectionChange)="onSelectPreset($event)">
+                                        <mat-select-trigger>
+                                            {{ getSelectedPresetName() || 'Select Preset' }}
+                                        </mat-select-trigger>
+                                        <mat-option *ngFor="let preset of presets" [value]="preset.id" (click)="$event.stopPropagation()">
+                                            {{ preset.presetName }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <button mat-flat-button color="warn" matStepperPrevious>Back</button>
+                        <button mat-flat-button color="primary" matStepperNext (click)="createLine()">Create Line</button>
                     </div>
                 </form>
             </mat-step>

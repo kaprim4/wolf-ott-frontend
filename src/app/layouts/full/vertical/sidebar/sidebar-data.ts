@@ -1,11 +1,9 @@
-import { QuickM3uComponent } from 'src/app/shared/components/quick-m3u/quick-m3u.component';
+import {QuickM3uComponent} from 'src/app/shared/components/quick-m3u/quick-m3u.component';
 import {NavItem} from './nav-item/nav-item';
 import {QuickXtreamComponent} from "../../../../shared/components/quick-xtream/quick-xtream.component";
 
 export const navItems: NavItem[] = [
-    {
-        navCap: 'Menu',
-    },
+    {navCap: 'Menu'},
     {
         displayName: 'Dashboard',
         iconName: 'layout-dashboard',
@@ -27,16 +25,14 @@ export const navItems: NavItem[] = [
         displayName: 'Quick Xtream',
         subtext: 'Generate a Quick Xtream link',
         iconName: 'stars',
-        bgcolor: 'error',
+        bgcolor: 'warning',
         route: '',
         chip: true,
         chipContent: 'New',
         chipClass: 'error',
         openDialog: QuickXtreamComponent
     },
-    {
-        navCap: 'Apps',
-    },
+    {navCap: 'Apps'},
     {
         displayName: 'Users',
         iconName: 'user-shield',
@@ -160,5 +156,18 @@ export const navItems: NavItem[] = [
                 route: '/apps/bundles/presets/list',
             },
         ],
+    },
+    {navCap: 'Administration'},
+    {
+        displayName: 'News',
+        iconName: 'news',
+        bgcolor: 'error',
+        route: '/apps/administration/news/list',
+    },
+    {
+        displayName: 'Ranking',
+        iconName: 'stars',
+        bgcolor: 'error',
+        route: '/apps/administration/ranking/list',
     },
 ];
