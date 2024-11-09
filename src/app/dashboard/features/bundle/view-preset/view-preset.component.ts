@@ -14,6 +14,7 @@ import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from '@angular/cdk/drag-drop';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
 
 @Component({
     selector: 'app-view-preset',
@@ -302,7 +303,7 @@ export class ViewPresetComponent implements OnInit, AfterViewInit {
         return this.bouquetsSelection.selected.filter(bouquet => bouquet.stations > 0).length;
     }
 
-    onStepChange(event: any) {
+    onStepChange(event: StepperSelectionEvent) {
         console.log("event:", event)
         this.isFinishStep = event.selectedIndex === 2; // Assuming finish step is at index 2
     }

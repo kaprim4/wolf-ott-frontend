@@ -13,6 +13,7 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
 
 @Component({
   selector: 'app-add-preset',
@@ -59,8 +60,8 @@ vodBouquetsDisplayedColumns: string[] = [
 @ViewChild(MatSort) packageSort: MatSort;
 @ViewChild(MatPaginator) packagePaginator: MatPaginator;
 
-packageBouquetsDataSource: MatTableDataSource<BouquetList>;
-vodBouquetsDataSource: MatTableDataSource<BouquetList>;
+packageBouquetsDataSource: MatTableDataSource<BouquetList> = new MatTableDataSource<BouquetList>([]);
+vodBouquetsDataSource: MatTableDataSource<BouquetList>= new MatTableDataSource<BouquetList>([]);
 
 loading: boolean = false;
 
@@ -89,31 +90,44 @@ bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
       description: ['']
     });
   }
-  ngAfterViewInit(): void {
-    throw new Error('Method not implemented.');
+  ngAfterViewInit() {
+    // Assign the paginator and sort for the Vod Bouquets table
+    this.vodBouquetsDataSource.paginator = this.vodPaginator;
+    this.vodBouquetsDataSource.sort = this.vodSort;
+
+    // Assign the paginator and sort for the Package Bouquets table
+    this.packageBouquetsDataSource.paginator = this.packagePaginator;
+    this.packageBouquetsDataSource.sort = this.packageSort;
   }
   ngOnInit(): void {
     this.bouquetsLoading = true;
     this.bouquetService
-        .getAllBouquets<BouquetList>()
-        .subscribe((bouquets: BouquetList[]) => {
-            this.bouquets = bouquets;
-            this.bouquetsDataSource = new MatTableDataSource<BouquetList>(
-                this.bouquets
-            );
-            const presetBouquets = this.preset.bouquets;
-            const selectedBouquets = presetBouquets.map(
-                (id) =>
-                    this.bouquets.find((bouquet) => bouquet.id === id) || {
-                        id: 0,
-                    } as BouquetList
-            );
-            this.bouquetsSelection = new SelectionModel<BouquetList>(
-                true,
-                selectedBouquets
-            );
-            this.bouquetsLoading = false;
-        });
+            .getAllBouquets<BouquetList>()
+            .subscribe((bouquets: BouquetList[]) => {
+                this.bouquets = bouquets;
+                this.bouquetsDataSource = new MatTableDataSource<BouquetList>(
+                    this.bouquets
+                );
+                const presetBouquets = this.preset?.bouquets;
+                const selectedBouquets = presetBouquets.map(
+                    (id) =>
+                        this.bouquets.find((bouquet) => bouquet.id === id) || {
+                            id: 0,
+                        } as BouquetList
+                );
+                this.bouquetsSelection = new SelectionModel<BouquetList>(
+                    true,
+                    selectedBouquets
+                );
+                this.bouquetsLoading = false;
+
+                this.packageBouquetsDataSource = new MatTableDataSource(this.getPackageBouquets);
+                this.packageBouquetsDataSource.paginator = this.packagePaginator;
+
+                this.vodBouquetsDataSource = new MatTableDataSource(this.getVODBouquets);
+                this.vodBouquetsDataSource.paginator = this.vodPaginator;
+
+            });
   }
 
   saveDetail(): void {
@@ -277,7 +291,7 @@ getTotalStationBouquets(): number {
   return this.bouquetsSelection.selected.filter(bouquet => bouquet.stations > 0).length;
 }
 
-onStepChange(event: any) {
+onStepChange(event: StepperSelectionEvent) {
   this.isFinishStep = event.selectedIndex === 2; // Assuming finish step is at index 2
 }
 

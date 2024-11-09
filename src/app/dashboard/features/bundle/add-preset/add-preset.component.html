@@ -43,6 +43,9 @@
               </div>
             </div>
           </form>
+          <div class="d-flex align-items-center justify-content-end">
+            <button mat-flat-button color="primary" matStepperNext>Next</button>
+        </div>
         </mat-step>
 
         <mat-step>
@@ -89,7 +92,7 @@
                       <tr mat-header-row *matHeaderRowDef="packageBouquetsDisplayedColumns"></tr>
                       <tr mat-row *matRowDef="let row; columns: packageBouquetsDisplayedColumns"></tr>
                     </table>
-                    <mat-paginator #vodPaginator [pageSizeOptions]="[5, 10, 25]" pageSize="5" showFirstLastButtons></mat-paginator>                    
+                    <mat-paginator #packagePaginator [pageSizeOptions]="[5, 10, 25]" pageSize="5" showFirstLastButtons></mat-paginator>                    
                   </div>
                 </mat-card-content>
               </mat-card>
@@ -142,6 +145,11 @@
               </mat-card>
             </div>
           </div>
+
+          <div class="d-flex align-items-center justify-content-between">
+            <button mat-flat-button color="warn" matStepperPrevious>Back</button>
+            <button mat-flat-button color="primary" matStepperNext>Next</button>
+        </div>
         </mat-step>
         
         <mat-step>
@@ -196,8 +204,9 @@
           </div>
         </mat-step>
         
-        
-
+        <div class="d-flex align-items-center justify-content-between">
+          <button mat-flat-button color="warn" matStepperPrevious>Back</button>
+      </div>
       </mat-stepper>
     </mat-card-content>
 
