@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {Article} from "../../../../../shared/models/article";
 import {Router} from "@angular/router";
@@ -6,12 +6,26 @@ import {MatDialog} from "@angular/material/dialog";
 import {NotificationService} from "../../../../../shared/services/notification.service";
 import {ArticleService} from "../../../../../shared/services/article.service";
 
+import { Editor } from "ngx-editor";
+
 @Component({
     selector: 'app-news-add',
     templateUrl: './news-add.component.html',
     styleUrl: './news-add.component.scss'
 })
-export class NewsAddComponent {
+export class NewsAddComponent implements OnInit, OnDestroy {
+
+    editor: Editor;
+    html: "<p>Hello World!</p>";
+
+    ngOnInit(): void {
+        this.editor = new Editor();
+    }
+
+    // make sure to destory the editor
+    ngOnDestroy(): void {
+        this.editor.destroy();
+    }
 
     addForm: UntypedFormGroup | any;
     article: Article = {

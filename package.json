@@ -40,6 +40,7 @@
         "ng-recaptcha": "^13.2.1",
         "ng2-search-filter": "^0.5.1",
         "ngx-echarts": "^18.0.0",
+        "ngx-editor": "^18.0.0",
         "ngx-mat-select-search": "^7.0.7",
         "ngx-pagination": "^6.0.3",
         "ngx-permissions": "^17.1.0",

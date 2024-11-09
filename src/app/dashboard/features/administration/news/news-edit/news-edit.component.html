@@ -1,1 +1,80 @@
-<p>news-edit works!</p>
+<mat-card class="cardWithShadow theme-card">
+    <mat-card-header>
+        <div class="w-100 d-flex justify-content-between align-items-center">
+            <h4 class="mat-subtitle-2 f-s-18 f-w-600 m-b-0">
+                <mat-card-title>Edit article</mat-card-title>
+            </h4>
+            <div class="text-right">
+                <a
+                    routerLink="/apps/bundles/articles/list"
+                    mat-stroked-button
+                    color="warn"
+                    class="m-r-10"
+                >
+                    Cancel
+                </a>
+                <button mat-raised-button color="primary" (click)="$event.preventDefault(); saveDetail()"
+                        [disabled]="editForm.invalid">
+                    Save article
+                </button>
+            </div>
+        </div>
+    </mat-card-header>
+
+    <mat-card-content class="b-t-1">
+        <form [formGroup]="editForm" (ngSubmit)="saveDetail()">
+            <div class="row">
+                <div class="col-sm-4 d-flex align-items-center">
+                    <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Title</mat-label>
+                </div>
+                <div class="col-sm-8">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <input matInput placeholder="Enter title" name="title" [(ngModel)]="article.title" required/>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4 d-flex align-items-center">
+                    <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Image Url</mat-label>
+                </div>
+                <div class="col-sm-8">
+                    <!-- Champ de fichier sans matInput -->
+                    <input type="file" id="file" (change)="onFileSelected($event)" accept="image/*" required />
+                </div>
+            </div>
+
+            <!-- Affichage de l'aperçu de l'image -->
+            <div *ngIf="imagePreview" class="image-preview">
+                <img [src]="imagePreview" alt="Aperçu de l'image" style="max-width: 100%; max-height: 200px;">
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4 d-flex align-items-center">
+                    <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Content</mat-label>
+                </div>
+                <div class="col-sm-8">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <textarea matInput placeholder="Enter content" rows="5" name="content"
+                                  [(ngModel)]="article.content" required></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+        </form>
+
+
+<!-- 
+<div class="NgxEditor__Wrapper">
+    <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
+    <ngx-editor
+      [editor]="editor"
+      [ngModel]="html"
+      [editable]="true"
+      [placeholder]="Type here..."
+    ></ngx-editor>
+  </div> -->
+  
+  
+  
+    </mat-card-content>
+</mat-card>
