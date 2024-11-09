@@ -12,12 +12,24 @@ import {BouquetService} from 'src/app/shared/services/bouquet.service';
 import {NotificationService} from 'src/app/shared/services/notification.service';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from '@angular/cdk/drag-drop';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
     selector: 'app-view-preset',
     templateUrl: './view-preset.component.html',
-    styleUrl: './view-preset.component.scss'
+    styleUrl: './view-preset.component.scss',
+    animations: [
+        trigger('dragAnimation', [
+          transition(':enter', [
+            style({ opacity: 0 }),
+            animate('300ms', style({ opacity: 1 }))
+          ]),
+          transition(':leave', [
+            animate('300ms', style({ opacity: 0 }))
+          ])
+        ])
+      ]
 })
 export class ViewPresetComponent implements OnInit, AfterViewInit {
     isFinishStep: boolean = false;
@@ -309,6 +321,14 @@ export class ViewPresetComponent implements OnInit, AfterViewInit {
     // Optional: Handle the drag ended event
     onDragEnded(bouquet: BouquetList): void {
         console.log('Drag ended for:', bouquet.bouquetName);
+    }
+
+    /**
+     * Predicate function that only allows even numbers to be
+     * sorted into even indices and odd numbers at odd indices.
+     */
+    sortPredicate(index: number, item: CdkDrag<number>) {
+        return (index + 1) % 2 === item.data % 2;
     }
 
 }

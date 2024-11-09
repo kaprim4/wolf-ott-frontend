@@ -18,7 +18,7 @@
     </mat-card-header>
 
     <mat-card-content class="b-t-1 ">
-        <mat-stepper #stepper>
+        <mat-stepper #stepper (selectionChange)="onStepChange($event)">
             <mat-step [stepControl]="editForm">
                 <ng-template matStepLabel>Details</ng-template>
                 <form [formGroup]="editForm" (ngSubmit)="saveDetail()" class="m-t-10">
@@ -253,23 +253,39 @@
 
                     <mat-card class="cardWithShadow theme-card m-t-30">
                         <mat-card-header>
-                            <mat-card-title>Selected Bouquets</mat-card-title>
+                          <mat-card-title>Selected Bouquets</mat-card-title>
                         </mat-card-header>
                         <mat-card-content class="b-t-1">
-                            <div cdkDropList [cdkDropListData]="bouquetsSelection.selected"
-                                 (cdkDropListDropped)="onBouquetDrop($event)">
-                                <div *ngFor="let bouquet of bouquetsSelection.selected" class="bg-light-primary text-primary border-primary bouquet-item" cdkDrag
-                                     [cdkDragData]="bouquet">
-                                    <div class=" bouquet-item-content">
-                                        <mat-icon class="bouquet-drag-cursor">
-                                            reorder
-                                        </mat-icon>
-                                        <span>{{ bouquet.bouquetName }}</span>
-                                    </div>
-                                </div>
+                          <div 
+                            cdkDropList 
+                            [cdkDropListData]="bouquetsSelection.selected"
+                            (cdkDropListDropped)="onBouquetDrop($event)"
+                            
+                            [cdkDropListConnectedTo]="['bouquetList']"
+                            class="bouquet-list"
+                          >
+                            <div 
+                              *ngFor="let bouquet of bouquetsSelection.selected; let i = index" 
+                              class="bg-light-primary text-primary border-primary bouquet-item" 
+                              cdkDrag
+                              [cdkDragData]="bouquet"
+                              [@dragAnimation]
+                            >
+                              <div class="bouquet-item-content">
+                                <mat-icon class="bouquet-drag-cursor">
+                                  reorder
+                                </mat-icon>
+                                <span>{{ bouquet.bouquetName }}</span>
+                              </div>
                             </div>
+                          </div>
+                          <ng-template cdkDragPlaceholder>
+                            <div class="custom-placeholder">Dragging...</div>
+                          </ng-template>
+                          
                         </mat-card-content>
-                    </mat-card>
+                      </mat-card>
+                      
                 </div>
 
                 <div class="d-flex align-items-center justify-content-between">

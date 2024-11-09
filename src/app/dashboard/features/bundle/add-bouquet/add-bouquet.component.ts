@@ -23,10 +23,24 @@ import { IMovie, MovieList } from 'src/app/shared/models/movie';
 import { ISerie, SerieList } from 'src/app/shared/models/serie';
 import { IStation, StationList } from 'src/app/shared/models/station';
 
+import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from '@angular/cdk/drag-drop';
+import { trigger, transition, style, animate } from '@angular/animations';
+
 @Component({
     selector: 'app-add-bouquet',
     templateUrl: './add-bouquet.component.html',
     styleUrl: './add-bouquet.component.scss',
+    animations: [
+        trigger('dragAnimation', [
+          transition(':enter', [
+            style({ opacity: 0 }),
+            animate('300ms', style({ opacity: 1 }))
+          ]),
+          transition(':leave', [
+            animate('300ms', style({ opacity: 0 }))
+          ])
+        ])
+      ]
 })
 export class AddBouquetComponent implements OnInit, AfterViewInit {
     moviesDisplayedColumns: string[] = [
@@ -329,5 +343,10 @@ export class AddBouquetComponent implements OnInit, AfterViewInit {
             this.stationsTotalElements = pageResponse.totalElements;
             this.loadingStations = false;
         });
+    }
+
+    onSttreamCategoryDrop(event: CdkDragDrop<CategoryList[]>): void {
+        // Move the item in the array to the new position
+        // moveItemInArray(this.cazz.selected, event.previousIndex, event.currentIndex);
     }
 }
