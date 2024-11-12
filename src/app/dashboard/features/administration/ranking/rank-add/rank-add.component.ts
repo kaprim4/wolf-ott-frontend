@@ -21,7 +21,7 @@ export class RankAddComponent implements OnInit {
     title: '',
     maxPoints: 0,
     minPoints: 0,
-    badgeImageUrl: ''
+    badgeImage: ''
   };
   imagePreview: string | ArrayBuffer | null = null;
 
@@ -48,14 +48,33 @@ export class RankAddComponent implements OnInit {
           const reader = new FileReader();
           reader.onload = () => {
               this.imagePreview = reader.result;
-              this.rank.badgeImageUrl = reader.result as string; // Stocke l'image en base64
+              this.rank.badgeImage = reader.result as string; // Stocke l'image en base64
           };
           reader.readAsDataURL(file);
       }
   }
 
   saveDetail(): void {
-      this.rankingService.addRank(this.rank);
-      this.router.navigate(['/apps/administration/news/list']);
+    const title = this.addForm.controls['title'].value;
+    const maxPoints = this.addForm.controls['maxPoints'].value;
+    const minPoints = this.addForm.controls['minPoints'].value;
+
+    this.rank.title = title;
+    this.rank.maxPoints = maxPoints;
+    this.rank.minPoints = minPoints;
+
+    this.rankingService.addRank(this.rank).subscribe({
+      next: () => {
+        // Navigate after successful save
+        this.router.navigate(['/apps/administration/ranking/list']);
+      },
+      error: (err) => {
+        // Handle error (show notification or alert)
+        this.notificationService.error('Error while saving rank');
+        console.error("'Error while saving rank'", err);
+        
+      }
+    });
+    
   }
 }

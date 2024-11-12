@@ -21,7 +21,7 @@ export class RankViewComponent implements OnInit {
     title: '',
     maxPoints: 0,
     minPoints: 0,
-    badgeImageUrl: ''
+    badgeImage: ''
   };
   imagePreview: string | ArrayBuffer | null = null;
 
@@ -44,6 +44,12 @@ export class RankViewComponent implements OnInit {
   ngOnInit(): void {
     this.rankingService.getRank<Rank>(this.id).subscribe(rank => {
       this.rank = rank;
+
+      this.editForm.controls['title'].setValue(this.rank.title);
+      this.editForm.controls['minPoints'].setValue(this.rank.minPoints);
+      this.editForm.controls['maxPoints'].setValue(this.rank.maxPoints);
+      // this.editForm.controls['badgeImage'].setValue(this.rank.badgeImage);
+      this.imagePreview = this.rank.badgeImage;
     })
   }
 
@@ -53,14 +59,32 @@ export class RankViewComponent implements OnInit {
           const reader = new FileReader();
           reader.onload = () => {
               this.imagePreview = reader.result;
-              this.rank.badgeImageUrl = reader.result as string; // Stocke l'image en base64
+              this.rank.badgeImage = reader.result as string; // Stocke l'image en base64
           };
           reader.readAsDataURL(file);
       }
   }
 
   saveDetail(): void {
-      this.rankingService.updateRank(this.rank);
-      this.router.navigate(['/apps/administration/news/list']);
+    const title = this.editForm.controls['title'].value;
+    const maxPoints = this.editForm.controls['maxPoints'].value;
+    const minPoints = this.editForm.controls['minPoints'].value;
+
+    this.rank.title = title;
+    this.rank.maxPoints = maxPoints;
+    this.rank.minPoints = minPoints;
+
+      this.rankingService.updateRank(this.rank).subscribe({
+        next: () => {
+          // Navigate after successful save
+          this.router.navigate(['/apps/administration/ranking/list']);
+        },
+        error: (err) => {
+          // Handle error (show notification or alert)
+          this.notificationService.error('Error while saving rank');
+          console.error("'Error while saving rank'", err);
+          
+        }
+      });
   }
 }

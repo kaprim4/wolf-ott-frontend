@@ -17,7 +17,7 @@ export class RankListComponent  implements OnInit {
     displayedColumns: string[] = [
         'chk',
         'id',
-        'badgeImageUrl',
+        'badgeImage',
         'title',
         'minPoints',
         'maxPoints',

@@ -6,5 +6,5 @@ export interface Rank extends IRank {
     title: string;
     minPoints: number;
     maxPoints: number;
-    badgeImageUrl: string;
+    badgeImage: string;
 }

@@ -16,7 +16,7 @@ export class RankingService extends CrudService<IRank> {
         jwtService: JwtService
     ) {
         super(httpClient, jwtService);
-        this.endpoint = "rank";
+        this.endpoint = "ranks";
     }
 
     public getAllRanks<T extends IRank>(search?: string): Observable<T[]> {

@@ -16,7 +16,7 @@ export class ArticleService extends CrudService<IArticle> {
         jwtService: JwtService
     ) {
         super(httpClient, jwtService);
-        this.endpoint = "article";
+        this.endpoint = "articles";
     }
 
     public getAllArticles<T extends IArticle>(search?: string): Observable<T[]> {
