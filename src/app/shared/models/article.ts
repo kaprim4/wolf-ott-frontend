@@ -5,7 +5,7 @@ export interface IArticle {
 export interface Article extends IArticle {
     title: string;
     content: string;
-    imageUrl: string;
+    thumbnail: string;
     createdAt?: Date;
     updatedAt?: Date;
 }

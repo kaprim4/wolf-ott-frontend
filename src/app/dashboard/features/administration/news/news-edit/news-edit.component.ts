@@ -24,7 +24,7 @@ export class NewsEditComponent implements OnInit, OnDestroy {
   article: Article = {
     content: "",
     id: 0,
-    imageUrl: "",
+    thumbnail: "",
     title: ""
   };
   imagePreview: string | ArrayBuffer | null = null;
@@ -48,6 +48,9 @@ export class NewsEditComponent implements OnInit, OnDestroy {
     this.editor = new Editor();
     this.articleService.getArticle<Article>(this.id).subscribe(article => {
       this.article = article;
+      this.editForm.controls['title'].setValue(this.article.title);
+      this.editForm.controls['content'].setValue(this.article.content);
+      this.imagePreview =this.article.thumbnail;
     });
   }
 
@@ -62,7 +65,7 @@ export class NewsEditComponent implements OnInit, OnDestroy {
           const reader = new FileReader();
           reader.onload = () => {
               this.imagePreview = reader.result;
-              this.article.imageUrl = reader.result as string; // Stocke l'image en base64
+              this.article.thumbnail = reader.result as string; // Stocke l'image en base64
           };
           reader.readAsDataURL(file);
       }
@@ -70,7 +73,24 @@ export class NewsEditComponent implements OnInit, OnDestroy {
 
   saveDetail(): void {
     this.article.id = this.id;
-      this.articleService.updateArticle(this.article);
-      this.router.navigate(['/apps/administration/news/list']);
+
+    const title = this.editForm.controls['title'].value;
+    const content = this.editForm.controls['content'].value;
+
+    this.article.title = title;
+    this.article.content = content;
+
+      this.articleService.updateArticle(this.article).subscribe({
+        next: () => {
+          // Navigate after successful save
+          this.router.navigate(['/apps/administration/news/list']);
+        },
+        error: (err) => {
+          // Handle error (show notification or alert)
+          this.notificationService.error('Error while saving news');
+          console.error("'Error while saving news'", err);
+          
+        }
+      });
   }
 }

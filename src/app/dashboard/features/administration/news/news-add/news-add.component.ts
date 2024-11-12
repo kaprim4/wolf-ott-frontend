@@ -29,10 +29,11 @@ export class NewsAddComponent implements OnInit, OnDestroy {
 
     addForm: UntypedFormGroup | any;
     article: Article = {
-        content: "",
         id: 0,
-        imageUrl: "",
-        title: ""
+        title: "",
+        content: "",
+        thumbnail: ""
+        
     };
     imagePreview: string | ArrayBuffer | null = null;
 
@@ -56,14 +57,30 @@ export class NewsAddComponent implements OnInit, OnDestroy {
             const reader = new FileReader();
             reader.onload = () => {
                 this.imagePreview = reader.result;
-                this.article.imageUrl = reader.result as string; // Stocke l'image en base64
+                this.article.thumbnail = reader.result as string; // Stocke l'image en base64
             };
             reader.readAsDataURL(file);
         }
     }
 
     saveDetail(): void {
-        this.articleService.addArticle(this.article);
-        this.router.navigate(['/apps/administration/news/list']);
+        const title = this.addForm.controls['title'].value;
+        const content = this.addForm.controls['content'].value;
+
+        this.article.title = title;
+        this.article.content = content;
+        
+        this.articleService.addArticle(this.article).subscribe({
+            next: () => {
+              // Navigate after successful save
+              this.router.navigate(['/apps/administration/news/list']);
+            },
+            error: (err) => {
+              // Handle error (show notification or alert)
+              this.notificationService.error('Error while saving news');
+              console.error("'Error while saving news'", err);
+              
+            }
+          });
     }
 }

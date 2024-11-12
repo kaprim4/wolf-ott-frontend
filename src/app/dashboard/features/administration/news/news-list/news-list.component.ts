@@ -17,9 +17,8 @@ export class NewsListComponent  implements OnInit {
     displayedColumns: string[] = [
         'chk',
         'id',
+        'thumbnail',
         'title',
-        'content',
-        'imageUrl',
         'createdAt',
         'updatedAt',
         'action',
