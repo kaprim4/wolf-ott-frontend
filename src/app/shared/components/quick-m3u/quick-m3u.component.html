@@ -31,7 +31,7 @@
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
-            
+
                         <mat-accordion>
                             <mat-expansion-panel hideToggle>
                                 <mat-expansion-panel-header class="d-flex justify-content-between" (click)="panelOpened = !panelOpened">
@@ -51,13 +51,13 @@
                                 </mat-form-field>
                             </mat-expansion-panel>
                         </mat-accordion>
-            
+
                         <div class="text-right mt-2"> <!-- Add Bootstrap margin-top to this div -->
                             <button mat-flat-button color="primary" matStepperNext [disabled]="packageForm.invalid">Next</button>
                         </div>
                     </div>
                 </form>
-            </mat-step>            
+            </mat-step>
             <mat-step [stepControl]="bundleForm">
                 <form class="" [formGroup]="bundleForm">
                     <ng-template matStepLabel>Bundle</ng-template>
@@ -71,6 +71,7 @@
                         </div>
 
                         <ng-container [ngSwitch]="bundleForm.value.bundle">
+
                             <ng-container *ngSwitchCase="'packages'">
                                 <mat-form-field appearance="outline" class="w-100 m-r-24">
                                     <mat-select formControlName="package" (selectionChange)="onSelectPackage($event)">
@@ -83,6 +84,7 @@
                                     </mat-select>
                                 </mat-form-field>
                             </ng-container>
+
                             <ng-container *ngSwitchCase="'presets'">
                                 <mat-form-field appearance="outline" class="w-100 m-r-24">
                                     <mat-select [(ngModel)]="selectedPresetId" (selectionChange)="onSelectPreset($event)">

@@ -11,12 +11,17 @@
       expanded: expanded,
       disabled: item.disabled
     }" class="menu-list-item {{ item.bgcolor }}">
-        <i-tabler
-            class="routeIcon"
-            name="{{ item.iconName }}"
-            matListItemIcon
-        ></i-tabler>
+        @if (item.isImage){
+            <img src="assets/images/icons/{{item.iconName}}" class="routeIcon" matListItemIcon alt="Aperçu de l'image" width="24" height="24" style="color: white" />
+        } @else {
+            <i-tabler
+                class="routeIcon"
+                name="{{ item.iconName }}"
+                matListItemIcon
+            ></i-tabler>
+        }
         <span class="hide-menu">{{ item.displayName | translate }}</span>
+
         @if (item.children && item.children.length) {
             <span class="arrow-icon" fxFlex>
                 <span fxFlex></span>

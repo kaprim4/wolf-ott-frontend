@@ -1,5 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+import {ParametersComponent} from "./parameters/parameters.component";
 
 const routes: Routes = [
     {
@@ -26,6 +27,13 @@ const routes: Routes = [
                     title: 'Ranking',
                 },
                 loadChildren: () => import('./ranking/ranking.module').then(module => module.RankingModule)
+            },
+            {
+                path: 'parameters',
+                data: {
+                    title: 'Parameters',
+                },
+                component: ParametersComponent
             },
         ],
     },

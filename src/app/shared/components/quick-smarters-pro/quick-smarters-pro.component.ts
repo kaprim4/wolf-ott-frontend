@@ -17,11 +17,11 @@ import { PresetService } from '../../services/preset.service';
 import { LineFactory } from '../../factories/line.factory';
 
 @Component({
-    selector: 'app-quick-xtream',
-    templateUrl: './quick-xtream.component.html',
-    styleUrl: './quick-xtream.component.scss'
+    selector: 'app-quick-smarters-pro',
+    templateUrl: './quick-smarters-pro.component.html',
+    styleUrl: './quick-smarters-pro.component.scss'
 })
-export class QuickXtreamComponent implements OnInit {
+export class QuickSmartersProComponent implements OnInit {
     username: string = '';
     password: string = '';
     lineCreated: boolean = false;

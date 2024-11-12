@@ -103,6 +103,7 @@ export class QuickM3uComponent implements OnInit {
         this.loggedInUser = this.tokenService.getPayload();
         this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
             this.user = user;
+            console.log(this.user);
             this.server = `http://${this.user.resellerDns}:80/`;
         });
 
