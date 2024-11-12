@@ -6,7 +6,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {NotificationService} from "../../../../../shared/services/notification.service";
 import {ArticleService} from "../../../../../shared/services/article.service";
 
-import { Editor } from "ngx-editor";
+import {Editor} from "ngx-editor";
 
 @Component({
     selector: 'app-news-add',
@@ -17,6 +17,15 @@ export class NewsAddComponent implements OnInit, OnDestroy {
 
     editor: Editor;
     html: "<p>Hello World!</p>";
+    addForm: UntypedFormGroup | any;
+    article: Article = {
+        id: 0,
+        title: "",
+        content: "",
+        thumbnail: ""
+    };
+    imagePreview: string | ArrayBuffer | null = null;
+    loading: boolean = false;
 
     ngOnInit(): void {
         this.editor = new Editor();
@@ -26,16 +35,6 @@ export class NewsAddComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.editor.destroy();
     }
-
-    addForm: UntypedFormGroup | any;
-    article: Article = {
-        id: 0,
-        title: "",
-        content: "",
-        thumbnail: ""
-        
-    };
-    imagePreview: string | ArrayBuffer | null = null;
 
     constructor(
         private fb: UntypedFormBuilder,
@@ -64,23 +63,24 @@ export class NewsAddComponent implements OnInit, OnDestroy {
     }
 
     saveDetail(): void {
+        this.loading = true;
         const title = this.addForm.controls['title'].value;
         const content = this.addForm.controls['content'].value;
-
         this.article.title = title;
         this.article.content = content;
-        
         this.articleService.addArticle(this.article).subscribe({
             next: () => {
-              // Navigate after successful save
-              this.router.navigate(['/apps/administration/news/list']);
+                // Navigate after successful save
+                this.router.navigate(['/apps/administration/news/list']);
             },
             error: (err) => {
-              // Handle error (show notification or alert)
-              this.notificationService.error('Error while saving news');
-              console.error("'Error while saving news'", err);
-              
+                // Handle error (show notification or alert)
+                this.notificationService.error('Error while saving news');
+                console.error("'Error while saving news'", err);
+            },
+            complete: () => {
+                this.loading = false;
             }
-          });
+        });
     }
 }

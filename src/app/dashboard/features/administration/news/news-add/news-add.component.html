@@ -1,4 +1,7 @@
 <mat-card class="cardWithShadow theme-card">
+    @if (loading) {
+        <mat-progress-bar mode="query"></mat-progress-bar>
+    }
     <mat-card-header>
         <div class="w-100 d-flex justify-content-between align-items-center">
             <h4 class="mat-subtitle-2 f-s-18 f-w-600 m-b-0">
@@ -30,7 +33,7 @@
                 </div>
                 <div class="col-sm-8">
                     <!-- Champ de fichier sans matInput -->
-                    <input type="file" id="file" (change)="onFileSelected($event)" accept="image/*" required />
+                    <input type="file" id="file" (change)="onFileSelected($event)" accept="image/*" required/>
                 </div>
             </div>
 
@@ -57,25 +60,25 @@
                 </div>
                 <div class="col-sm-8">
                     <mat-form-field appearance="outline" class="w-100">
-                        <textarea matInput placeholder="Enter content" rows="5" name="content" formControlName="content" required></textarea>
+                        <textarea matInput placeholder="Enter content" rows="5" name="content" formControlName="content"
+                                  required></textarea>
                     </mat-form-field>
                 </div>
             </div>
         </form>
 
 
-<!-- 
-<div class="NgxEditor__Wrapper">
-    <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
-    <ngx-editor
-      [editor]="editor"
-      [ngModel]="html"
-      [editable]="true"
-      [placeholder]="Type here..."
-    ></ngx-editor>
-  </div> -->
-  
-  
-  
+        <!--
+        <div class="NgxEditor__Wrapper">
+            <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
+            <ngx-editor
+              [editor]="editor"
+              [ngModel]="html"
+              [editable]="true"
+              [placeholder]="Type here..."
+            ></ngx-editor>
+          </div> -->
+
+
     </mat-card-content>
 </mat-card>

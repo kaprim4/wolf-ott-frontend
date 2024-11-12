@@ -19,9 +19,9 @@ export class RankingService extends CrudService<IRank> {
         this.endpoint = "ranks";
     }
 
-    public getAllRanks<T extends IRank>(search?: string): Observable<T[]> {
-        return this.getAllAsList<T>(search || "").pipe(
-            map((packages: (IRank | T)[]) => packages as T[]) // Type assertion
+    public getAllRanks<T extends IRank>(): Observable<T[]> {
+        return this.getAllAsList2<T>().pipe(
+            map((ranks: (IRank | T)[]) => ranks as T[]) // Type assertion
         );
     }
 

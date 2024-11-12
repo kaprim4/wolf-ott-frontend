@@ -2,6 +2,7 @@ import {
     ApplicationConfig,
     provideZoneChangeDetection,
     importProvidersFrom,
+    LOCALE_ID
 } from '@angular/core';
 import {
     HttpClient,
@@ -41,6 +42,10 @@ import {NgxEchartsModule} from 'ngx-echarts';
 import {FormatAmountPipe} from "./helpers/format-amount.pipe";
 import {ToastrModule} from "ngx-toastr";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {registerLocaleData} from "@angular/common";
+import localeFr from '@angular/common/locales/fr';
+
+registerLocaleData(localeFr, 'fr');
 
 export const appConfig: ApplicationConfig = {
     providers: [

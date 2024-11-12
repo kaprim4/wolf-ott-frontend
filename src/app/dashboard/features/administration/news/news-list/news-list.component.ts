@@ -19,6 +19,7 @@ export class NewsListComponent  implements OnInit {
         'id',
         'thumbnail',
         'title',
+        'content',
         'createdAt',
         'updatedAt',
         'action',

@@ -42,13 +42,21 @@
             <ng-container matColumnDef="thumbnail">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Image</th>
                 <td mat-cell *matCellDef="let element" class="f-s-14">
-                    <img matListItemAvatar [src]="element.thumbnail" alt="{{ element.title }}" style="width: 75px;"/>
+                    <img matListItemAvatar [src]="element.thumbnail" alt="{{ element.title }}" style="height: 60px;"/>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="title">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Title</th>
                 <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.title }}</td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="content">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Content</th>
+                <td mat-cell *matCellDef="let element" class="text-center f-s-14">
+                    <p>{{ element.content | slice:0:25 }}...</p>
+                </td>
             </ng-container>
 
             <ng-container matColumnDef="createdAt">
@@ -62,8 +70,8 @@
             </ng-container>
 
             <ng-container matColumnDef="action">
-                <th mat-header-cell *matHeaderCellDef class="f-w-600 f-s-15">Action</th>
-                <td mat-cell *matCellDef="let element" class="f-s-14 d-flex">
+                <th mat-header-cell *matHeaderCellDef class="text-center f-w-600 f-s-15">Action</th>
+                <td mat-cell *matCellDef="let element" class="text-center f-s-14 d-flex center" style="height: 98px;">
                     <a mat-icon-button [routerLink]="['/apps/administration/news', element.id]" class="d-flex align-items-center justify-content-center">
                         <i-tabler name="eye" class="icon-18 d-flex align-items-center"></i-tabler>
                     </a>

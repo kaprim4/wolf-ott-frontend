@@ -38,6 +38,10 @@ export class LineService extends CrudService<ILine> {
         );
     }
 
+    public getAllLinesWithMemberId(memberId: number): Observable<number> {
+        return this.httpClient.get<number>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/member/${memberId}`);
+    }
+
     public getLastRegisteredLines(): Observable<LineList[]> {
         return this.httpClient.get<LineList[]>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/last-registered`);
     }
