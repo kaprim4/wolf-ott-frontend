@@ -1,0 +1,54 @@
+<mat-card class="cardWithShadow theme-card">
+    <mat-card-header>
+        <mat-card-title class="m-b-0" style="color:white;">
+            Download Playlist
+        </mat-card-title>
+    </mat-card-header>
+    @if (isDownloading) {
+        <mat-progress-bar mode="query"></mat-progress-bar>
+    }
+    <mat-card-content class="b-t-1">
+
+        <div class="row">
+            <div class="col-sm-4 d-flex align-items-start">
+                <mat-label class="mat-subtitle-2 f-w-600">Format</mat-label>
+            </div>
+            <div class="col-sm-8">
+                <mat-form-field appearance="outline" class="w-100" (change)="onFormatChange($event)">
+                    <mat-select [(ngModel)]="selectedFormat">
+                        <!-- 
+                        <mat-optgroup *ngFor="let group of groupedFormats; " [label]="group.group">
+                            <mat-option *ngFor="let format of group.options; trackBy: trackByFormat" [value]="format">
+                                {{ format.label }}
+                              </mat-option>
+                              
+                        </mat-optgroup>
+                        -->
+
+                        <mat-option *ngFor="let format of formats;" [value]="format">
+                            {{ format.label }}
+                          </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <mat-form-field appearance="outline" class="w-100" color="primary">
+                <mat-label>Playlist URL</mat-label>
+                <input matInput type="text" [value]="downloadUrl" disabled>
+            </mat-form-field>
+            <button class="action-btn" mat-icon-button (click)="copyToClipboard(downloadUrl)">
+                <mat-icon>content_copy</mat-icon>
+            </button>
+            <button class="action-btn" mat-icon-button (click)="downloadM3U(downloadUrl)">
+                <mat-icon>download</mat-icon>
+            </button>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+
+
+
+
