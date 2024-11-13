@@ -1,6 +1,7 @@
 import {QuickM3uComponent} from 'src/app/shared/components/quick-m3u/quick-m3u.component';
 import {NavItem} from './nav-item/nav-item';
 import {QuickXtreamComponent} from "../../../../shared/components/quick-xtream/quick-xtream.component";
+import {QuickSmartersProComponent} from "../../../../shared/components/quick-smarters-pro/quick-smarters-pro.component";
 
 export const navItems: NavItem[] = [
     {navCap: 'Menu'},
@@ -13,7 +14,8 @@ export const navItems: NavItem[] = [
     {
         displayName: 'Quick M3U',
         subtext: 'Generate a M3U link',
-        iconName: 'comet',
+        iconName: 'm3u.png',
+        isImage:true,
         bgcolor: 'warning',
         route: '',
         chip: true,
@@ -24,13 +26,25 @@ export const navItems: NavItem[] = [
     {
         displayName: 'Quick Xtream',
         subtext: 'Generate a Quick Xtream link',
-        iconName: 'stars',
+        iconName: 'xtream.png',
+        isImage:true,
         bgcolor: 'warning',
         route: '',
         chip: true,
         chipContent: 'New',
         chipClass: 'error',
         openDialog: QuickXtreamComponent
+    },
+    {
+        displayName: 'Quick Smarters Pro',
+        subtext: 'Generate a Quick Smarters Pro link',
+        iconName: 'stars',
+        bgcolor: 'warning',
+        route: '',
+        chip: true,
+        chipContent: 'New',
+        chipClass: 'error',
+        openDialog: QuickSmartersProComponent
     },
     {navCap: 'Apps'},
     {
@@ -169,5 +183,11 @@ export const navItems: NavItem[] = [
         iconName: 'stars',
         bgcolor: 'error',
         route: '/apps/administration/ranking/list',
+    },
+    {
+        displayName: 'Parameters',
+        iconName: 'settings',
+        bgcolor: 'error',
+        route: '/apps/administration/parameters',
     },
 ];

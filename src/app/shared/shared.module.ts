@@ -11,6 +11,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {QuickXtreamComponent} from "./components/quick-xtream/quick-xtream.component";
 import {GeetestCaptchaComponent} from "./components/geetest-captcha/geetest-captcha.component";
 import { NgxEditorModule } from "ngx-editor";
+import {QuickSmartersProComponent} from "./components/quick-smarters-pro/quick-smarters-pro.component";
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import { NgxEditorModule } from "ngx-editor";
         NotificationComponent,
         QuickM3uComponent,
         QuickXtreamComponent,
+        QuickSmartersProComponent,
         GeetestCaptchaComponent,
     ],
     imports: [
