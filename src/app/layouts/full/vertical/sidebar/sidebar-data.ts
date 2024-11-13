@@ -171,23 +171,26 @@ export const navItems: NavItem[] = [
             },
         ],
     },
-    {navCap: 'Administration'},
+    {navCap: 'Administration', group: 'admin'},
     {
         displayName: 'News',
         iconName: 'news',
         bgcolor: 'error',
         route: '/apps/administration/news/list',
+        group: 'admin'
     },
     {
         displayName: 'Ranking',
         iconName: 'stars',
         bgcolor: 'error',
         route: '/apps/administration/ranking/list',
+        group: 'admin'
     },
     {
         displayName: 'Parameters',
         iconName: 'settings',
         bgcolor: 'error',
         route: '/apps/administration/parameters',
+        group: 'admin'
     },
 ];

@@ -66,7 +66,14 @@ interface quicklinks {
     encapsulation: ViewEncapsulation.None,
 })
 export class FullComponent implements OnInit {
-    navItems = navItems;
+    // navItems = navItems;
+
+    get navItems(){
+        if(this.loggedInUser.isAdmin)
+            return navItems;
+        else
+            return navItems.filter(item => item.group !== 'admin');
+    }
 
     @ViewChild('leftsidenav')
     public sidenav: MatSidenav;

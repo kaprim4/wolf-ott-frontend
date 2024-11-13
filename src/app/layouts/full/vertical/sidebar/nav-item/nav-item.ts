@@ -18,4 +18,5 @@ export interface NavItem {
     bgcolor?:string;
     openDialog?: ComponentType<unknown>;
     isImage?: boolean;
+    group?: string;
 }
