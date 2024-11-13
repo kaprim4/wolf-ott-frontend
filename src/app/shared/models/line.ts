@@ -13,7 +13,9 @@ export interface LineList extends ILine {
     active: number,
     connections: number,
     expiration: Date,
-    lastConnection: Date
+    lastConnection: Date,
+    useVpn: boolean,
+    vpnDns: string
 }
 
 export interface LineDetail extends ILine {

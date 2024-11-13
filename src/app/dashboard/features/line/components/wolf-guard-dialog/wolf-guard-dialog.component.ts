@@ -11,9 +11,10 @@ import { LineList } from 'src/app/shared/models/line';
 export class WolfGuardDialogComponent {
 
   active: boolean = false;
+  line: LineList;
 
   constructor(private toastr: ToastrService, public dialogRef: MatDialogRef<WolfGuardDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: {line:LineList})
   {
-    // 
+    this.line = data.line;
   }
 }
