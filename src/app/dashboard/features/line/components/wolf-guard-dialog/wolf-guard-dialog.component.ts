@@ -28,7 +28,7 @@ export class WolfGuardDialogComponent {
     const patch:Patch = {
       op: 'replace',
       path: '/useVPN',
-      value: !this.line.useVPN
+      value: this.line.useVPN
     }
     this.lineService.patch(id, patch).subscribe(line => {
       console.log("Line updated successfuly", line);
