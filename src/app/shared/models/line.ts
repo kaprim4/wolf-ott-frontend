@@ -14,7 +14,7 @@ export interface LineList extends ILine {
     connections: number,
     expiration: Date,
     lastConnection: Date,
-    useVpn: boolean,
+    useVPN: boolean,
     vpnDns: string
 }
 

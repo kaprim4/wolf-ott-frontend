@@ -8,6 +8,7 @@ import {Page} from '../models/page';
 import { MatDialog } from '@angular/material/dialog';
 import { QuickM3uComponent } from '../components/quick-m3u/quick-m3u.component';
 import {environment} from "../../../environments/environment";
+import { Patch } from '../models/patch';
 
 @Injectable({
     providedIn: 'root'
@@ -103,4 +104,8 @@ export class LineService extends CrudService<ILine> {
     }
 
 
+    public patch<T extends ILine>(id:number, patch:Patch): Observable<T>{
+        const url = `${this.apiBaseUrl}/api/v1/${this.endpoint}/${id}`
+        return this.httpClient.patch<HttpResponse<T>>(url, patch).pipe(map(res => res.body as T));;
+    }
 }

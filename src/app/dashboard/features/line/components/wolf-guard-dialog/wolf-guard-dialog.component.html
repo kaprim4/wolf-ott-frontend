@@ -8,14 +8,14 @@
         <mat-progress-bar mode="query"></mat-progress-bar>
     }
     <mat-card-content class="b-t-1">
-        <img src="assets/images/vpn/wolf-guard-{{ line.useVpn ? 'active' : 'inactive' }}-logo.png" alt="wolf-guard-logo" style="width: 100%;">
+        <img src="assets/images/vpn/wolf-guard-{{ line.useVPN ? 'active' : 'inactive' }}-logo.png" alt="wolf-guard-logo" style="width: 100%;">
         <p style="color:white;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad, non minus. Reiciendis nihil, reprehenderit harum laboriosam quos, dolor minus officia et illum qui assumenda ipsum unde commodi consequatur. Corporis, doloremque.</p>
     </mat-card-content>
     <mat-card-footer>
         <div class="d-flex justify-content-between p-10" style="color:white;">
             
             <div class="col-sm-3 d-flex align-items-center">
-                <mat-slide-toggle [(ngModel)]="line.useVpn" color="primary" class="d-block"></mat-slide-toggle>
+                <mat-slide-toggle [(ngModel)]="line.useVPN" color="primary" class="d-block" (change)="toggleVpn()"></mat-slide-toggle>
                 <mat-label class="mat-subtitle-2 f-w-600">Activate VPN</mat-label>
             </div>
 
