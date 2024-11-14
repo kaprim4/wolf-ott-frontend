@@ -35,4 +35,11 @@ export class WolfGuardDialogComponent {
       
     })
   }
+
+  refreshVPN(){
+    const id = this.line.id;
+    this.lineService.refreshVPN(id).subscribe(line => {
+      console.log("Line VPN changed successfuly", line);
+    })
+  }
 }

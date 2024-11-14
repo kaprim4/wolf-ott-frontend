@@ -108,4 +108,9 @@ export class LineService extends CrudService<ILine> {
         const url = `${this.apiBaseUrl}/api/v1/${this.endpoint}/${id}`
         return this.httpClient.patch<HttpResponse<T>>(url, patch).pipe(map(res => res.body as T));;
     }
+
+    public refreshVPN<T extends ILine>(id:number): Observable<T>{
+        const url = `${this.apiBaseUrl}/api/v1/${this.endpoint}/${id}/vpn/refresh`
+        return this.httpClient.post<HttpResponse<T>>(url, null).pipe(map(res => res.body as T));;
+    }
 }
