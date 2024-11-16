@@ -25,6 +25,7 @@ export abstract class CrudService<T> {
 
     protected getAllAsList<Res>(search: string): Observable<Array<T | Res>> {
         return this.httpClient.get<Array<T | Res>>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/list`, {
+            headers: this.headers,
             params: {
                 search: search,
             },
@@ -38,6 +39,7 @@ export abstract class CrudService<T> {
 
     protected getAllAsList2<Res>(): Observable<Array<T | Res>> {
         return this.httpClient.get<Array<T | Res>>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/list`, {
+            headers: this.headers,
             observe: 'response'
         }).pipe(
             map((response: HttpResponse<Array<T | Res>>) => {
@@ -48,6 +50,7 @@ export abstract class CrudService<T> {
 
     protected getAllAsPage<Res>(search: string, page: number, size: number): Observable<Page<T | Res>> {
         return this.httpClient.get<Page<T | Res>>(`${this.apiBaseUrl}/api/v1/${this.endpoint}`, {
+            headers: this.headers,
             params: {
                 search: search,
                 page: page.toString(),

@@ -5,7 +5,7 @@ import {Principal} from '../models/principal';
     providedIn: 'root'
 })
 export class JwtService {
-    private readonly ACCESS_TOKEN_KEY = 'access_token';
+    private readonly ACCESS_TOKEN_KEY = 'token'; // 'access_token';
     private readonly REFRESH_TOKEN_KEY = 'refresh_token';
 
     constructor() {
