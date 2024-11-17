@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Inject, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
@@ -7,24 +7,7 @@ import {LineList} from 'src/app/shared/models/line';
 import {Page} from 'src/app/shared/models/page';
 import {LineService} from 'src/app/shared/services/line.service';
 import {NotificationService} from 'src/app/shared/services/notification.service';
-import {
-    MatDialog,
-    MatDialogRef,
-    MAT_DIALOG_DATA,
-    MatDialogActions,
-    MatDialogClose,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogModule,
-} from '@angular/material/dialog';
-import {MatButtonModule} from "@angular/material/button";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatInput} from "@angular/material/input";
-import {MatOption} from "@angular/material/autocomplete";
-import {MatSelect, MatSelectTrigger} from "@angular/material/select";
-import {ReactiveFormsModule} from "@angular/forms";
-import {SharedModule} from "../../../../../shared/shared.module";
-import {ToastrService} from "ngx-toastr";
+import {MatDialog} from '@angular/material/dialog';
 import { WolfGuardDialogComponent } from '../../components/wolf-guard-dialog/wolf-guard-dialog.component';
 import { M3UDialogComponent } from '../../components/m3u-dialog/m3u-dialog.component';
 
