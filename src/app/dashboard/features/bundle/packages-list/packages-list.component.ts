@@ -7,6 +7,7 @@ import {PackageList} from 'src/app/shared/models/package';
 import {Page} from 'src/app/shared/models/page';
 import {NotificationService} from 'src/app/shared/services/notification.service';
 import {PackageService} from 'src/app/shared/services/package.service';
+import { TokenService } from 'src/app/shared/services/token.service';
 
 @Component({
     selector: 'app-packages-list',
@@ -35,11 +36,14 @@ export class PackagesListComponent implements OnInit, AfterViewInit {
     private searchSubject = new Subject<string>();
     searchValue = '';
 
+    principal:any;
+
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    constructor(private packageService: PackageService, private notificationService: NotificationService) {
+    constructor(private packageService: PackageService, private notificationService: NotificationService, private tokenService: TokenService) {
         this.loadPackages();
+        this.principal = this.tokenService.getPayload();
     }
 
     ngOnInit(): void {
@@ -92,5 +96,9 @@ export class PackagesListComponent implements OnInit, AfterViewInit {
             this.totalElements = pageResponse.totalElements;
             this.loading = false;
         });
+    }
+
+    get isAdmin() {
+        return !!this.principal?.isAdmin;
     }
 }

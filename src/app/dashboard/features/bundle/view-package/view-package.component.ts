@@ -9,6 +9,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { BouquetList, IBouquet } from 'src/app/shared/models/bouquet';
 import { MatTableDataSource } from '@angular/material/table';
 import { BouquetService } from 'src/app/shared/services/bouquet.service';
+import { TokenService } from 'src/app/shared/services/token.service';
 
 @Component({
   selector: 'app-view-package',
@@ -41,13 +42,16 @@ bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
   vat = 0;
   grandTotal = 0;
 
+  principal: any;
+
   constructor(
     private fb: UntypedFormBuilder,
     private packageService: PackageService,
     private bouquetService: BouquetService,
     private router: Router,
     public dialog: MatDialog,
-    private activatedRouter: ActivatedRoute
+    private activatedRouter: ActivatedRoute, 
+    private tokenService: TokenService
   ) {
     this.id = this.activatedRouter.snapshot.paramMap.get(
       'id'
@@ -62,30 +66,32 @@ bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
     this.rows = this.fb.array([]);
     this.addForm.addControl('rows', this.rows);
     this.rows.push(this.createItemFormGroup());
+
+    this.principal = this.tokenService.getPayload();
   }
   ngOnInit(): void {
-    // this.bouquetService
-    //     .getAllBouquets<BouquetList>()
-    //     .subscribe((bouquets: BouquetList[]) => {
-    //         this.bouquets = bouquets;
-    //         this.bouquetsDataSource = new MatTableDataSource<BouquetList>(
-    //             this.bouquets
-    //         );
-    //         const packageBouquets =
-    //             this.package && this.package.bouquets
-    //                 ? (JSON.parse(this.package.bouquets).array as number[])
-    //                 : [];
-    //         const selectedBouquets = packageBouquets.map(
-    //             (id) =>
-    //                 this.bouquets.find((bouquet) => bouquet.id === id) || {
-    //                     id: 0,
-    //                 }
-    //         );
-    //         this.bouquetsSelection = new SelectionModel<IBouquet>(
-    //             true,
-    //             selectedBouquets
-    //         );
-    //     });
+    this.bouquetService
+        .getAllBouquets<BouquetList>()
+        .subscribe((bouquets: BouquetList[]) => {
+            this.bouquets = bouquets;
+            this.bouquetsDataSource = new MatTableDataSource<BouquetList>(
+                this.bouquets
+            );
+            const packageBouquets = this.package.bouquets;
+            const selectedBouquets = packageBouquets.map(
+                (id) =>
+                    this.bouquets.find((bouquet) => bouquet.id === id) || {
+                        id: 0,
+                    }
+            );
+            this.bouquetsSelection = new SelectionModel<IBouquet>(
+                true,
+                selectedBouquets
+            );
+        });
+
+      if(!this.isAdmin)
+        this.addForm.disable()
   }
 
   ////////////////////////////////////////////////////////////////////////////////////
@@ -164,5 +170,9 @@ checkboxLabel(row?: BouquetList): string {
   return `${
       this.bouquetsSelection.isSelected(row) ? 'deselect' : 'select'
   } row ${row.bouquetOrder + 1}`;
+}
+
+get isAdmin() {
+  return !!this.principal?.isAdmin;
 }
 }
