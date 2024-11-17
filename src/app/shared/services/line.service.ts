@@ -40,19 +40,19 @@ export class LineService extends CrudService<ILine> {
     }
 
     public getAllLinesWithMemberId(memberId: number): Observable<number> {
-        return this.httpClient.get<number>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/member/${memberId}`);
+        return this.httpClient.get<number>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/member/${memberId}`, {headers: this.headers});
     }
 
     public getLastRegisteredLines(): Observable<LineList[]> {
-        return this.httpClient.get<LineList[]>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/last-registered`);
+        return this.httpClient.get<LineList[]>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/last-registered`, {headers: this.headers});
     }
 
     public getLastWeekCount(): Observable<number> {
-        return this.httpClient.get<number>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/last-week-count`);
+        return this.httpClient.get<number>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/last-week-count`, {headers: this.headers});
     }
 
     public getCreatedLinesLastSixMonths(): Observable<{ [key: string]: number }> {
-        return this.httpClient.get<{ [key: string]: number }>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/created-last-six-months`);
+        return this.httpClient.get<{ [key: string]: number }>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/created-last-six-months`, {headers: this.headers});
     }
 
     public getLine<T extends ILine>(id_line: number): Observable<T> {

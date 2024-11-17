@@ -52,6 +52,6 @@ export class PresetService extends CrudService<IPreset> {
 
     public getAllPresetBouquets(id:number): Observable<BouquetList[]> {
         const url = `${this.apiBaseUrl}/api/v1/${this.endpoint}/${id}/bouquets`;
-        return this.httpClient.get<BouquetList[]>(url) //.pipe(map(res => res.body as BouquetList[]));
+        return this.httpClient.get<BouquetList[]>(url, {headers: this.headers}) //.pipe(map(res => res.body as BouquetList[]));
     }
 }
