@@ -2,7 +2,11 @@
     <mat-card-header>
         <div class="w-100 d-flex justify-content-between align-items-center">
           <h4 class="mat-subtitle-2 f-s-18 f-w-600 m-b-0">
-            <mat-card-title>Edit Bouquet</mat-card-title>
+            @if (isAdmin) {
+                <mat-card-title>Edit Bouquet</mat-card-title>
+            } @else {
+                <mat-card-title>View Bouquet</mat-card-title>
+            }
           </h4>
           <div class="text-right">
             <a
@@ -13,14 +17,16 @@
             >
               Cancel
             </a>
-            <button
-              mat-raised-button
-              color="primary"
-              (click)="$event.preventDefault(); saveDetail()"
-              [disabled]="addForm.invalid"
-            >
-              Save Bouquet
-            </button>
+            @if (isAdmin) {
+                <button
+                mat-raised-button
+                color="primary"
+                (click)="$event.preventDefault(); saveDetail()"
+                [disabled]="addForm.invalid"
+              >
+                Save Bouquet
+              </button>
+            }
           </div>
         </div>
       </mat-card-header>
@@ -37,7 +43,7 @@
                         <div class="col-sm-8">
                             <mat-form-field appearance="outline" class="w-100">
                                 <input matInput placeholder="Enter Bouquet Name" name="bouquetName"
-                                       [(ngModel)]="bouquet.bouquetName" required/>
+                                       [(ngModel)]="bouquet.bouquetName" required [disabled]="!isAdmin"/>
                             </mat-form-field>
                         </div>
                     </div>
@@ -58,13 +64,13 @@
                                 <th mat-header-cell *matHeaderCellDef class="p-l-0">
                                     <mat-checkbox (change)="$event ? masterStreamsToggle() : null"
                                                   [checked]="streamsSelection.hasValue() && isAllStreamsSelected()"
-                                                  color="primary"
+                                                  color="primary" [disabled]="!isAdmin"
                                                   [indeterminate]="streamsSelection.hasValue() && !isAllStreamsSelected()"
                                                   [aria-label]="checkboxStreamLabel()">
                                     </mat-checkbox>
                                 </th>
                                 <td mat-cell *matCellDef="let row" class="p-l-0">
-                                    <mat-checkbox (click)="$event.stopPropagation()"
+                                    <mat-checkbox (click)="$event.stopPropagation()" [disabled]="!isAdmin"
                                                   (change)="$event ? streamsSelection.toggle(row) : null"
                                                   color="primary" [checked]="streamsSelection.isSelected(row)"
                                                   [aria-label]="checkboxStreamLabel(row)">
@@ -132,13 +138,13 @@
                                 <th mat-header-cell *matHeaderCellDef class="p-l-0">
                                     <mat-checkbox (change)="$event ? masterMoviesToggle() : null"
                                                   [checked]="moviesSelection.hasValue() && isAllMoviesSelected()"
-                                                  color="primary"
+                                                  color="primary" [disabled]="!isAdmin"
                                                   [indeterminate]="moviesSelection.hasValue() && !isAllMoviesSelected()"
                                                   [aria-label]="checkboxMovieLabel()">
                                     </mat-checkbox>
                                 </th>
                                 <td mat-cell *matCellDef="let row" class="p-l-0">
-                                    <mat-checkbox (click)="$event.stopPropagation()"
+                                    <mat-checkbox (click)="$event.stopPropagation()" [disabled]="!isAdmin"
                                                   (change)="$event ? moviesSelection.toggle(row) : null"
                                                   color="primary" [checked]="moviesSelection.isSelected(row)"
                                                   [aria-label]="checkboxMovieLabel(row)">
@@ -205,13 +211,13 @@
                                 <th mat-header-cell *matHeaderCellDef class="p-l-0">
                                     <mat-checkbox (change)="$event ? masterSeriesToggle() : null"
                                                   [checked]="seriesSelection.hasValue() && isAllSeriesSelected()"
-                                                  color="primary"
+                                                  color="primary" [disabled]="!isAdmin"
                                                   [indeterminate]="seriesSelection.hasValue() && !isAllSeriesSelected()"
                                                   [aria-label]="checkboxSerieLabel()">
                                     </mat-checkbox>
                                 </th>
                                 <td mat-cell *matCellDef="let row" class="p-l-0">
-                                    <mat-checkbox (click)="$event.stopPropagation()"
+                                    <mat-checkbox (click)="$event.stopPropagation()" [disabled]="!isAdmin"
                                                   (change)="$event ? seriesSelection.toggle(row) : null"
                                                   color="primary" [checked]="seriesSelection.isSelected(row)"
                                                   [aria-label]="checkboxSerieLabel(row)">
@@ -277,13 +283,13 @@
                                 <th mat-header-cell *matHeaderCellDef class="p-l-0">
                                     <mat-checkbox (change)="$event ? masterStationsToggle() : null"
                                                   [checked]="stationsSelection.hasValue() && isAllStationsSelected()"
-                                                  color="primary"
+                                                  color="primary" [disabled]="!isAdmin"
                                                   [indeterminate]="seriesSelection.hasValue() && !isAllStationsSelected()"
                                                   [aria-label]="checkboxStationLabel()">
                                     </mat-checkbox>
                                 </th>
                                 <td mat-cell *matCellDef="let row" class="p-l-0">
-                                    <mat-checkbox (click)="$event.stopPropagation()"
+                                    <mat-checkbox (click)="$event.stopPropagation()" [disabled]="!isAdmin"
                                                   (change)="$event ? seriesSelection.toggle(row) : null"
                                                   color="primary" [checked]="stationsSelection.isSelected(row)"
                                                   [aria-label]="checkboxStationLabel(row)">

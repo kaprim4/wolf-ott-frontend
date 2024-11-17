@@ -25,6 +25,7 @@ import { IStation, StationList } from 'src/app/shared/models/station';
 
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from '@angular/cdk/drag-drop';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { TokenService } from 'src/app/shared/services/token.service';
 
 @Component({
   selector: 'app-view-bouquet',
@@ -111,6 +112,8 @@ loadingStations: boolean;
 
 categories: CategoryList[] = [];
 
+principal: any;
+
 constructor(
     private fb: UntypedFormBuilder,
     private bouquetService: BouquetService,
@@ -122,12 +125,14 @@ constructor(
     private router: Router,
     public dialog: MatDialog,
     protected notificationService: NotificationService,
-    private activatedRouter: ActivatedRoute
+    private activatedRouter: ActivatedRoute, 
+    private tokenService: TokenService
 ) {
     this.id = this.activatedRouter.snapshot.paramMap.get('id') as unknown as number;
     this.bouquet = BouquetFactory.initBouquetDetail();
 
     this.addForm = this.fb.group({});
+    this.principal = this.tokenService.getPayload();
 }
     ngAfterViewInit(): void {
         this.streamsDataSource.sort = this.streamSort;
@@ -344,5 +349,9 @@ loadStations(): void {
 onSttreamCategoryDrop(event: CdkDragDrop<CategoryList[]>): void {
     // Move the item in the array to the new position
     // moveItemInArray(this.cazz.selected, event.previousIndex, event.currentIndex);
+}
+
+get isAdmin() {
+    return !!this.principal?.isAdmin;
 }
 }

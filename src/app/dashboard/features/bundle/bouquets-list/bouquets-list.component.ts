@@ -7,6 +7,7 @@ import { BouquetList } from 'src/app/shared/models/bouquet';
 import { Page } from 'src/app/shared/models/page';
 import { BouquetService } from 'src/app/shared/services/bouquet.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import { TokenService } from 'src/app/shared/services/token.service';
 
 @Component({
   selector: 'app-bouquets-list',
@@ -36,11 +37,14 @@ export class BouquetsListComponent implements OnInit, AfterViewInit {
   private searchSubject = new Subject<string>();
   searchValue = '';
 
+  principal: any;
+
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private bouquetService: BouquetService, private notificationService: NotificationService) {
+  constructor(private bouquetService: BouquetService, private notificationService: NotificationService, private tokenService: TokenService) {
     this.loadBouquets();
+    this.principal = this.tokenService.getPayload();
   }
   ngOnInit(): void {
     this.loadBouquets();
@@ -93,4 +97,8 @@ ngAfterViewInit(): void {
       this.loading = false;
     });
   }
+
+  get isAdmin() {
+    return !!this.principal?.isAdmin;
+}
 }
