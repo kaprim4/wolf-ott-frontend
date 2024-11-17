@@ -10,6 +10,7 @@ import {NotificationService} from 'src/app/shared/services/notification.service'
 import {MatDialog} from '@angular/material/dialog';
 import { WolfGuardDialogComponent } from '../../components/wolf-guard-dialog/wolf-guard-dialog.component';
 import { M3UDialogComponent } from '../../components/m3u-dialog/m3u-dialog.component';
+import { TokenService } from 'src/app/shared/services/token.service';
 
 @Component({
     selector: 'app-user-lines-list',
@@ -45,15 +46,19 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
     private searchSubject = new Subject<string>();
     searchValue = '';
 
+    principal:any;
+
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
     constructor(
         private lineService: LineService,
         private notificationService: NotificationService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        private tokenService: TokenService
     ) {
         // this.loadLines();
+        this.principal = this.tokenService.getPayload();
     }
 
     ngOnInit(): void {

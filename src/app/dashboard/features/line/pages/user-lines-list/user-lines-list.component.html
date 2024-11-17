@@ -40,7 +40,7 @@
 
             <ng-container matColumnDef="username">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Username</th>
-                <td mat-cell *matCellDef="let element" class="f-s-12">{{ element.username }}</td>
+                <td mat-cell *matCellDef="let element" class="f-s-12 position-relative" [ngClass]="{'indirect': (element.owner !== principal.sub)}">{{ element.username }}</td>
             </ng-container>
 
             <ng-container matColumnDef="password">

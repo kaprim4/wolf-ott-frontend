@@ -41,3 +41,12 @@
     --mdc-snackbar-supporting-text-color: #fff;
   }
 }
+
+.indirect::after{
+  content: 'indirect';
+  color: red;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+}
