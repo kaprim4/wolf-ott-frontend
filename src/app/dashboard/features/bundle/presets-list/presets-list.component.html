@@ -17,11 +17,13 @@
           </mat-form-field>
         </div>
         <div class="col-sm-4 d-flex align-items-center justify-content-end">
-          <a
+          @if (isAdmin) {
+            <a
             mat-button
             [routerLink]="['/apps/bundles/presets/add']"
             mat-flat-button
             color="primary">Add Preset</a>
+          }
         </div>
       </div>
     </mat-card-content>
@@ -84,9 +86,11 @@
             <a mat-icon-button [routerLink]="['/apps/bundles/presets/', element.id]" class="d-flex align-items-center justify-content-center">
               <i-tabler name="eye" class="icon-18 d-flex align-items-center"></i-tabler>
             </a>
-            <button mat-icon-button (click)="deletePreset(element.id)" class="d-flex align-items-center justify-content-center" title="delete">
-              <i-tabler name="trash" class="icon-18 d-flex align-items-center"></i-tabler>
-            </button>
+            @if (isAdmin) {
+              <button mat-icon-button (click)="deletePreset(element.id)" class="d-flex align-items-center justify-content-center" title="delete">
+                <i-tabler name="trash" class="icon-18 d-flex align-items-center"></i-tabler>
+              </button>
+            }
           </td>
         </ng-container>
 

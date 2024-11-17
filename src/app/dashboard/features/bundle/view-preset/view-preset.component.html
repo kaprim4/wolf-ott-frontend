@@ -5,14 +5,21 @@
     <mat-card-header>
         <div class="w-100 d-flex justify-content-between align-items-center">
             <h4 class="mat-subtitle-2 f-s-18 f-w-600 m-b-0">
-                <mat-card-title>Edit Preset</mat-card-title>
+                @if (isAdmin) {
+                    <mat-card-title>Edit Preset</mat-card-title>
+                } @else {
+                    <mat-card-title>View Preset</mat-card-title>
+                }
+                
             </h4>
             <div class="text-right">
                 <a routerLink="/apps/bundles/presets/list" mat-stroked-button olor="warn" class="m-r-10">Cancel</a>
+               @if (isAdmin) {
                 <button mat-raised-button color="primary" (click)="$event.preventDefault(); saveDetail()"
                         [disabled]="editForm.invalid || this.loading || !isFinishStep">
                     Save Preset
                 </button>
+               }
             </div>
         </div>
     </mat-card-header>
@@ -65,14 +72,14 @@
                                     <table mat-table [dataSource]="packageBouquetsDataSource" class="w-100">
                                         <ng-container matColumnDef="select">
                                             <th mat-header-cell *matHeaderCellDef class="p-l-0">
-                                                <mat-checkbox (change)="$event ? masterTogglePackage() : null"
+                                                <mat-checkbox (change)="$event ? masterTogglePackage() : null" [disabled]="!isAdmin"
                                                               [checked]="bouquetsSelection.hasValue() && isAllSelectedPackage()"
                                                               [indeterminate]="bouquetsSelection.hasValue() && !isAllSelectedPackage()"></mat-checkbox>
                                             </th>
                                             <td mat-cell *matCellDef="let row" class="p-l-0">
                                                 <mat-checkbox (click)="$event.stopPropagation()"
                                                               (change)="$event ? bouquetsSelection.toggle(row) : null"
-                                                              color="primary"
+                                                              color="primary"  [disabled]="!isAdmin"
                                                               [checked]="bouquetsSelection.isSelected(row)"
                                                               [aria-label]="checkboxLabel(row)">
                                                 </mat-checkbox>
@@ -119,14 +126,14 @@
                                         <ng-container matColumnDef="select">
                                             <th mat-header-cell *matHeaderCellDef class="p-l-0">
                                                 <!-- <mat-checkbox (change)="$event ? masterToggleVOD() : null" [checked]="bouquetsSelection.hasValue() && isAllSelectedVOD()"[indeterminate]="bouquetsSelection.hasValue() && !isAllSelectedVOD()"></mat-checkbox>             -->
-                                                <mat-checkbox (change)="$event ? masterToggleVOD() : null"
+                                                <mat-checkbox (change)="$event ? masterToggleVOD() : null"  [disabled]="!isAdmin"
                                                               [checked]="bouquetsSelection.hasValue() && isAllSelectedVOD()"
                                                               [indeterminate]="bouquetsSelection.hasValue() && !isAllSelectedVOD()"></mat-checkbox>
                                             </th>
                                             <td mat-cell *matCellDef="let row" class="p-l-0">
                                                 <mat-checkbox (click)="$event.stopPropagation()"
                                                               (change)="$event ? bouquetsSelection.toggle(row) : null"
-                                                              color="primary"
+                                                              color="primary"  [disabled]="!isAdmin"
                                                               [checked]="bouquetsSelection.isSelected(row)"
                                                               [aria-label]="checkboxLabel(row)">
                                                 </mat-checkbox>
@@ -270,6 +277,7 @@
                               cdkDrag
                               [cdkDragData]="bouquet"
                               [@dragAnimation]
+                              [draggable]="!isAdmin"
                             >
                               <div class="bouquet-item-content">
                                 <mat-icon class="bouquet-drag-cursor">

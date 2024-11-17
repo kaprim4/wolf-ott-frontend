@@ -7,6 +7,7 @@ import {Page} from 'src/app/shared/models/page';
 import {PresetDetail, PresetList} from 'src/app/shared/models/preset';
 import {NotificationService} from 'src/app/shared/services/notification.service';
 import {PresetService} from 'src/app/shared/services/preset.service';
+import { TokenService } from 'src/app/shared/services/token.service';
 
 @Component({
     selector: 'app-presets-list',
@@ -36,11 +37,14 @@ export class PresetsListComponent implements OnInit, AfterViewInit {
     private searchSubject = new Subject<string>();
     searchValue = '';
 
+    principal: any;
+
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    constructor(private presetService: PresetService, private notificationService: NotificationService) {
+    constructor(private presetService: PresetService, private notificationService: NotificationService, private tokenService: TokenService) {
         this.loadPresets();
+        this.principal = this.tokenService.getPayload();
     }
 
     ngOnInit(): void {
@@ -103,5 +107,9 @@ export class PresetsListComponent implements OnInit, AfterViewInit {
         }catch(ex){
             return 0;
         }
+    }
+
+    get isAdmin() {
+        return !!this.principal?.isAdmin;
     }
 }

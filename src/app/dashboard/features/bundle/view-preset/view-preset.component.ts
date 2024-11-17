@@ -15,6 +15,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from '@angular/cdk/drag-drop';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import { TokenService } from 'src/app/shared/services/token.service';
 
 @Component({
     selector: 'app-view-preset',
@@ -85,6 +86,8 @@ export class ViewPresetComponent implements OnInit, AfterViewInit {
     editForm: UntypedFormGroup | any;
     preset: PresetDetail;
 
+    principal:any;
+
     constructor(
         private fb: UntypedFormBuilder,
         private presetService: PresetService,
@@ -92,13 +95,16 @@ export class ViewPresetComponent implements OnInit, AfterViewInit {
         private router: Router,
         // public dialog: MatDialog,
         private activatedRouter: ActivatedRoute,
-        private notificationService: NotificationService
+        private notificationService: NotificationService,
+        private tokenService: TokenService
     ) {
         this.id = this.activatedRouter.snapshot.paramMap.get('id') as unknown as number;
         this.editForm = this.fb.group({
             name: ['', Validators.required],
             description: ['']
         });
+
+        this.principal = this.tokenService.getPayload();
     }
 
     ngAfterViewInit() {
@@ -142,6 +148,9 @@ export class ViewPresetComponent implements OnInit, AfterViewInit {
                 this.vodBouquetsDataSource.paginator = this.vodPaginator;
 
             });
+        if(!this.isAdmin){
+            this.editForm.disable();
+        }
     }
 
     saveDetail(): void {
@@ -330,6 +339,10 @@ export class ViewPresetComponent implements OnInit, AfterViewInit {
      */
     sortPredicate(index: number, item: CdkDrag<number>) {
         return (index + 1) % 2 === item.data % 2;
+    }
+
+    get isAdmin() {
+        return !!this.principal?.isAdmin;
     }
 
 }
