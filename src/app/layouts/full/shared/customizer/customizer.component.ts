@@ -85,6 +85,7 @@ export class CustomizerComponent implements OnInit {
                         language:  value.body.language,
                         navPos: 'side',
                     }
+                    console.info("this.options after update: {}", this.options);
                 }
             },
             error: (err) => {
@@ -93,6 +94,7 @@ export class CustomizerComponent implements OnInit {
                 console.error("'Error while saving user theme options'", err);
             },
             complete:()=>{
+                this.optionsChange.emit(this.options);
                 this.notificationService.success('User\'s theme options was successfully updated');
             }
         });

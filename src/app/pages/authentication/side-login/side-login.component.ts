@@ -1,17 +1,16 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {CoreService} from 'src/app/services/core.service';
-import {FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule, FormBuilder} from '@angular/forms';
-import {ActivatedRoute, Router, RouterModule} from '@angular/router';
+import {FormGroup, Validators, FormsModule, ReactiveFormsModule, FormBuilder} from '@angular/forms';
+import {ActivatedRoute, RouterModule} from '@angular/router';
 import {MaterialModule} from '../../../material.module';
 import {environment} from "../../../../environments/environment";
 import {ICredential} from "../../../shared/models/credential";
 import {TokenService} from "../../../shared/services/token.service";
 import {AuthenticationService} from "../../../shared/services/auth.service";
 import {HttpClient, HttpErrorResponse, HttpResponse} from "@angular/common/http";
-import {ComponentClass} from "devextreme/core/dom_component";
 import {SharedModule} from "../../../shared/shared.module";
 import {UserService} from "../../../shared/services/user.service";
-import {AppSettings, defaults} from "../../../config";
+import {AppSettings} from "../../../config";
 import {IUserThemeOptions, IUserThemeOptionsRequest} from "../../../shared/models/user";
 import {NotificationService} from "../../../shared/services/notification.service";
 
@@ -29,6 +28,7 @@ export class AppSideLoginComponent implements OnInit {
     APP_NAME = environment.APP_NAME;
 
     options = this.settings.getOptions();
+
     form: ICredential = {
         username: '',
         password: ''
@@ -127,34 +127,33 @@ export class AppSideLoginComponent implements OnInit {
             captcha_id: this.captchaConfig.config.captchaId
         });
         console.log("captchaObj params", params);
-        this.httpClient.get(`${this.apiBaseUrl}/api/v1/auth/validate`, {params})
-            .subscribe((result: any) => {
-                console.log("result: ", result);
-                if (result.result) {
-                    this.authService.login(this.formValues['username'].value, this.formValues['password'].value)?.subscribe(
-                        (data: HttpResponse<any>) => {
-                            if (data.status === 200 || data.status === 202) {
-                                console.log(`Got a successfull status code: ${data.status}`);
-                            }
-                            if (data.body) {
-                                console.log("login token:", data.body.access_token)
-                                this.tokenService.saveToken(data.body.access_token)
-                                this.getUserThemeConfig()
-                            }
-                            console.log('This contains body: ', data.body);
-                        },
-                        (err: HttpErrorResponse) => {
-                            if (err.status === 403 || err.status === 404) {
-                                console.error(`${err.status} status code caught`);
-                                this.error = err.message;
-                                console.log(err.message)
-                            }
-                        }, ((): void => {
-                            this.loading = false;
-                        })
-                    )
-                }
-            });
+        this.httpClient.get(`${this.apiBaseUrl}/api/v1/auth/validate`, {params}).subscribe((result: any) => {
+            console.log("result: ", result);
+            if (result.result) {
+                this.authService.login(this.formValues['username'].value, this.formValues['password'].value)?.subscribe(
+                    (data: HttpResponse<any>) => {
+                        if (data.status === 200 || data.status === 202) {
+                            console.log(`Got a successfull status code: ${data.status}`);
+                        }
+                        if (data.body) {
+                            console.log("login token:", data.body.access_token)
+                            this.tokenService.saveToken(data.body.access_token)
+                            this.getUserThemeConfig()
+                        }
+                        console.log('This contains body: ', data.body);
+                    },
+                    (err: HttpErrorResponse) => {
+                        if (err.status === 403 || err.status === 404) {
+                            console.error(`${err.status} status code caught`);
+                            this.error = err.message;
+                            console.log(err.message)
+                        }
+                    }, ((): void => {
+                        this.loading = false;
+                    })
+                )
+            }
+        });
     }
 
     getUserThemeConfig() {
@@ -170,7 +169,7 @@ export class AppSideLoginComponent implements OnInit {
 
         this.userService.createUserThemeOptions(this.userThemeOptionsRequest).subscribe({
             next: (value) => {
-                if(value.status === 200 && value.body) {
+                if (value.status === 200 && value.body) {
                     this.userThemeOptions = value.body;
                     console.log(this.userThemeOptions);
                     this.options = {
@@ -185,7 +184,7 @@ export class AppSideLoginComponent implements OnInit {
                         sidenavOpened: false,
                         theme: value.body.theme
                     }
-                    this.optionsChange.emit(this.options);
+                    console.info("this.options after create: {}", this.options);
                 }
             },
             error: (err) => {
@@ -193,7 +192,8 @@ export class AppSideLoginComponent implements OnInit {
                 this.notificationService.error('Error while creating user theme options');
                 console.error("'Error while creating user theme options'", err);
             },
-            complete:()=>{
+            complete: () => {
+                this.optionsChange.emit(this.options);
                 this.notificationService.success('User\'s theme options was successfully created');
             }
         })
