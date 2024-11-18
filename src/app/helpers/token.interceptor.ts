@@ -20,7 +20,7 @@ export class TokenInterceptor implements HttpInterceptor {
     }
 
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-        //console.log(request)
+        console.log(request)
         const token = this.tokenService.getToken()
         // SI token à insérer dans le header
         if (token !== null) {

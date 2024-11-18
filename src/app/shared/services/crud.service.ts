@@ -14,7 +14,7 @@ export abstract class CrudService<T> {
     protected endpoint: string;
     protected headers: HttpHeaders;
 
-    constructor(
+    protected constructor(
         protected httpClient: HttpClient,
         protected jwtService: JwtService
     ) {

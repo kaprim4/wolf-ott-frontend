@@ -11,13 +11,13 @@ import {CoreService} from 'src/app/services/core.service';
 import {BrandingComponent} from '../../vertical/sidebar/branding.component';
 import {TablerIconsModule} from 'angular-tabler-icons';
 import {MaterialModule} from 'src/app/material.module';
-import {CommonModule, NgIf} from '@angular/common';
+import {NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {NgScrollbarModule} from 'ngx-scrollbar';
-import {ParameterService} from "../../../../shared/services/parameters.service";
 import {UserService} from "../../../../shared/services/user.service";
 import {IUserThemeOptionsRequest, UserDetail} from "../../../../shared/models/user";
 import {TokenService} from "../../../../shared/services/token.service";
+import {NotificationService} from "../../../../shared/services/notification.service";
 
 @Component({
     selector: 'app-customizer',
@@ -41,7 +41,7 @@ export class CustomizerComponent implements OnInit {
     hideMultipleSelectionIndicator = signal(true);
 
     userThemeOptionsRequest: IUserThemeOptionsRequest = {
-        activeTheme: "", language: "", theme: "", user_id: 0
+        activeTheme: "", language: "", theme: "", userId: 0
     }
     loggedInUser: any;
     user: any;
@@ -50,6 +50,7 @@ export class CustomizerComponent implements OnInit {
         private settings: CoreService,
         private userService: UserService,
         private tokenService: TokenService,
+        protected notificationService: NotificationService,
     ) {
     }
 
@@ -67,9 +68,36 @@ export class CustomizerComponent implements OnInit {
             activeTheme: options.activeTheme,
             language: options.language,
             theme: options.theme,
-            user_id: this.user.id
+            userId: this.user.id
         };
-        this.userService.updateUserThemeOptions(this.userThemeOptionsRequest);
+        this.userService.updateUserThemeOptions(this.user.id, this.userThemeOptionsRequest).subscribe({
+            next: (value) => {
+                if(value.status === 200 && value.body) {
+                    this.options = {
+                        dir: 'ltr',
+                        theme: value.body.theme,
+                        sidenavOpened: false,
+                        sidenavCollapsed: false,
+                        boxed: false,
+                        horizontal: false,
+                        cardBorder: false,
+                        activeTheme:  value.body.activeTheme,
+                        language:  value.body.language,
+                        navPos: 'side',
+                    }
+                    console.info("this.options after update: {}", this.options);
+                }
+            },
+            error: (err) => {
+                // Handle error (show notification or alert)
+                this.notificationService.error('Error while saving user theme options');
+                console.error("'Error while saving user theme options'", err);
+            },
+            complete:()=>{
+                this.optionsChange.emit(this.options);
+                this.notificationService.success('User\'s theme options was successfully updated');
+            }
+        });
     }
 
     setDark() {
