@@ -180,6 +180,13 @@ export const navItems: NavItem[] = [
         group: 'admin'
     },
     {
+        displayName: 'Applications',
+        iconName: 'brand-appgallery',
+        bgcolor: 'error',
+        route: '/apps/administration/applications/list',
+        group: 'admin'
+    },
+    {
         displayName: 'Ranking',
         iconName: 'stars',
         bgcolor: 'error',

@@ -22,6 +22,13 @@ const routes: Routes = [
                 loadChildren: () => import('./news/news.module').then(module => module.NewsModule)
             },
             {
+                path: 'applications',
+                data: {
+                    title: 'Applications',
+                },
+                loadChildren: () => import('./applications/applications.module').then(module => module.ApplicationsModule)
+            },
+            {
                 path: 'ranking',
                 data: {
                     title: 'Ranking',

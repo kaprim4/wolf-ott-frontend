@@ -4,6 +4,7 @@ import {CommonModule} from '@angular/common';
 import {AdministrationRoutingModule} from './administration-routing.module';
 import {SharedModule} from "../../../shared/shared.module";
 import { ParametersModule } from './parameters/parameters.module';
+import { ApplicationsModule } from './applications/applications.module';
 
 
 @NgModule({
@@ -12,7 +13,8 @@ import { ParametersModule } from './parameters/parameters.module';
         CommonModule,
         SharedModule,
         ParametersModule,
-        AdministrationRoutingModule
+        AdministrationRoutingModule,
+        ApplicationsModule
     ]
 })
 export class AdministrationModule {

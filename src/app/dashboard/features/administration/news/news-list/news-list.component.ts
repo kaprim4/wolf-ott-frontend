@@ -13,7 +13,7 @@ import {Page} from "../../../../../shared/models/page";
   templateUrl: './news-list.component.html',
   styleUrl: './news-list.component.scss'
 })
-export class NewsListComponent  implements OnInit {
+export class NewsListComponent implements OnInit {
     displayedColumns: string[] = [
         'chk',
         'id',

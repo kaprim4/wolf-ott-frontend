@@ -1,8 +1,8 @@
 export interface Apps {
     id: number,
     title: string,
-    thumbnail: Blob,
+    thumbnail: string,
     url: string,
-    createdAt: Date,
-    updatedAt: Date
+    createdAt?: Date,
+    updatedAt?: Date
 }

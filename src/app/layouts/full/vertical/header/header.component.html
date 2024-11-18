@@ -117,10 +117,10 @@
                 <div class="col-6 p-x-0">
                     <!-- [routerLink]="['/apps/invoice']" -->
                     <a class="bg-light-primary-hover d-flex justify-content-center flex-column gap-8 text-decoration-none p-x-20 p-y-12 text-center b-t-1 b-b-1 b-r-1"
-                       [href]="app.url">
+                       [href]="app.url" target="_blank">
                         <div class="icon-45 bg-light-info rounded-circle m-auto round d-flex align-items-center justify-content-center">
                             <!-- <i-tabler name="list-check" class="icon-20 text-info"></i-tabler> -->
-                             <img [src]="app.thumbnail" alt="app-logo">
+                             <img [src]="app.thumbnail" alt="app-logo" style="width: 75px; margin: 5px;">
                         </div>
                         <h6 class="f-s-16 f-w-600 m-0 mat-subtitle-1">{{ app.title }}</h6>
                         <p class="d-block m-0 mat-body-1 f-w-500">Download Now</p>
