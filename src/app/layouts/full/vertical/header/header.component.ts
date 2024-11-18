@@ -21,8 +21,9 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {AuthenticationService} from "../../../../shared/services/auth.service";
 import {TokenService} from "../../../../shared/services/token.service";
 import {UserService} from "../../../../shared/services/user.service";
-import {LineDetail} from "../../../../shared/models/line";
 import {UserDetail} from "../../../../shared/models/user";
+import { AppsService } from 'src/app/shared/services/apps.service';
+import { Apps } from 'src/app/shared/models/apps';
 
 interface notifications {
     id: number;
@@ -97,6 +98,8 @@ export class HeaderComponent implements OnInit{
     loggedInUser: any;
     user: any;
 
+    applications: Apps[];
+
     public languages: any[] = [
         {
             language: 'English',
@@ -127,7 +130,8 @@ export class HeaderComponent implements OnInit{
         private vsidenav: CoreService,
         public dialog: MatDialog,
         private translate: TranslateService,
-        private userService: UserService
+        private userService: UserService,
+        private appsService: AppsService
     ) {
         translate.setDefaultLang('en');
     }
@@ -150,6 +154,10 @@ export class HeaderComponent implements OnInit{
         this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
             this.user = user;
         });
+
+        this.appsService.getAllApps().subscribe(apps => {
+            this.applications = apps;
+        })
     }
 
     notifications: notifications[] = [
