@@ -60,14 +60,14 @@ export interface UserDetail extends IUser {
 
 export interface IUserThemeOptions {
     id: number;
-    user_id: number;
+    userId: number;
     theme: string;
     activeTheme: string;
     language: string;
 }
 
 export interface IUserThemeOptionsRequest {
-    user_id: number;
+    userId: number;
     theme: string;
     activeTheme: string;
     language: string;

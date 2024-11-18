@@ -49,16 +49,16 @@ export class UserService extends CrudService<IUser> {
         return this.delete<void>(id);
     }
 
-    public updateUserThemeOptions(userThemeOptionsRequest: IUserThemeOptionsRequest): Observable<HttpResponse<IUserThemeOptions>> {
-        return this.httpClient.put<IUserThemeOptions>(
+    public createUserThemeOptions(userThemeOptionsRequest: IUserThemeOptionsRequest): Observable<HttpResponse<IUserThemeOptions>> {
+        return this.httpClient.post<IUserThemeOptions>(
             `${this.apiBaseUrl}/api/v1/${this.endpoint}/theme-options`, userThemeOptionsRequest,
             {headers: this.headers, observe: 'response'},
         );
     }
 
-    public createUserThemeOptions(userThemeOptionsRequest: IUserThemeOptionsRequest): Observable<HttpResponse<IUserThemeOptions>> {
-        return this.httpClient.post<IUserThemeOptions>(
-            `${this.apiBaseUrl}/api/v1/${this.endpoint}/theme-options`, userThemeOptionsRequest,
+    public updateUserThemeOptions(id:number, userThemeOptionsRequest: IUserThemeOptionsRequest): Observable<HttpResponse<IUserThemeOptions>> {
+        return this.httpClient.put<IUserThemeOptions>(
+            `${this.apiBaseUrl}/api/v1/${this.endpoint}/theme-options/${id}`, userThemeOptionsRequest,
             {headers: this.headers, observe: 'response'},
         );
     }

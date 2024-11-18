@@ -11,8 +11,9 @@ import {HttpClient, HttpErrorResponse, HttpResponse} from "@angular/common/http"
 import {ComponentClass} from "devextreme/core/dom_component";
 import {SharedModule} from "../../../shared/shared.module";
 import {UserService} from "../../../shared/services/user.service";
-import {AppSettings} from "../../../config";
+import {AppSettings, defaults} from "../../../config";
 import {IUserThemeOptions, IUserThemeOptionsRequest} from "../../../shared/models/user";
+import {NotificationService} from "../../../shared/services/notification.service";
 
 @Component({
     selector: 'app-side-login',
@@ -33,10 +34,10 @@ export class AppSideLoginComponent implements OnInit {
         password: ''
     }
     userThemeOptionsRequest: IUserThemeOptionsRequest = {
-        activeTheme: "", language: "", theme: "", user_id: 0
+        activeTheme: "", language: "", theme: "", userId: 0
     }
     userThemeOptions: IUserThemeOptions = {
-        id: 0, activeTheme: "", language: "", theme: "", user_id: 0
+        id: 0, activeTheme: "", language: "", theme: "", userId: 0
     }
     captchaHandler = (captchaObj: any) => {
         (window as any).captchaObj = captchaObj;
@@ -76,6 +77,7 @@ export class AppSideLoginComponent implements OnInit {
         private fb: FormBuilder,
         private httpClient: HttpClient,
         private userService: UserService,
+        protected notificationService: NotificationService,
     ) {
     }
 
@@ -90,18 +92,6 @@ export class AppSideLoginComponent implements OnInit {
 
     ngOnInit(): void {
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || this.returnUrl;
-        this.options = {
-            activeTheme: this.userThemeOptions.activeTheme,
-            boxed: false,
-            cardBorder: false,
-            dir: "ltr",
-            horizontal: false,
-            language: this.userThemeOptions.language,
-            navPos: "side",
-            sidenavCollapsed: false,
-            sidenavOpened: false,
-            theme: this.userThemeOptions.theme
-        }
     }
 
     get formValues() {
@@ -172,25 +162,39 @@ export class AppSideLoginComponent implements OnInit {
             activeTheme: this.options.activeTheme,
             language: this.options.language,
             theme: this.options.theme,
-            user_id: parseInt(this.tokenService.getPayload().sid)
+            userId: parseInt(this.tokenService.getPayload().sid)
         };
-        this.userService.createUserThemeOptions(this.userThemeOptionsRequest).subscribe((result: HttpResponse<IUserThemeOptions>) => {
-            if (result.status === 200 && result.body) {
-                this.userThemeOptions = result.body
-                console.log(this.userThemeOptions);
-                this.options = {
-                    activeTheme: this.userThemeOptions.activeTheme,
-                    boxed: false,
-                    cardBorder: false,
-                    dir: "ltr",
-                    horizontal: false,
-                    language: this.userThemeOptions.language,
-                    navPos: "side",
-                    sidenavCollapsed: false,
-                    sidenavOpened: false,
-                    theme: this.userThemeOptions.theme
+
+        console.log("options:", this.options);
+        console.log("userThemeOptionsRequest:", this.userThemeOptionsRequest);
+
+        this.userService.createUserThemeOptions(this.userThemeOptionsRequest).subscribe({
+            next: (value) => {
+                if(value.status === 200 && value.body) {
+                    this.userThemeOptions = value.body;
+                    console.log(this.userThemeOptions);
+                    this.options = {
+                        activeTheme: value.body.activeTheme,
+                        boxed: false,
+                        cardBorder: false,
+                        dir: "ltr",
+                        horizontal: false,
+                        language: value.body.language,
+                        navPos: "side",
+                        sidenavCollapsed: false,
+                        sidenavOpened: false,
+                        theme: value.body.theme
+                    }
+                    this.optionsChange.emit(this.options);
                 }
-                this.optionsChange.emit(this.options);
+            },
+            error: (err) => {
+                // Handle error (show notification or alert)
+                this.notificationService.error('Error while creating user theme options');
+                console.error("'Error while creating user theme options'", err);
+            },
+            complete:()=>{
+                this.notificationService.success('User\'s theme options was successfully created');
             }
         })
     }
