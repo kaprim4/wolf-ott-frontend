@@ -6,10 +6,16 @@ import {SharedModule} from 'src/app/shared/shared.module';
 import {UsersListComponent} from './pages/users-list/users-list.component';
 import {AddUserComponent} from './pages/add-user/add-user.component';
 import {ViewUserComponent} from './pages/view-user/view-user.component';
+import {UserProfileComponent} from "./pages/user-profile/user-profile.component";
 
 
 @NgModule({
-    declarations: [UsersListComponent, AddUserComponent, ViewUserComponent],
+    declarations: [
+        UsersListComponent,
+        AddUserComponent,
+        ViewUserComponent,
+        UserProfileComponent
+    ],
     imports: [
         CommonModule,
         RouterModule.forChild(UserRoutes),

@@ -115,12 +115,9 @@
         <div class="row m-x-0">
             @for (app of applications; track $index) {
                 <div class="col-6 p-x-0">
-                    <!-- [routerLink]="['/apps/invoice']" -->
-                    <a class="bg-light-primary-hover d-flex justify-content-center flex-column gap-8 text-decoration-none p-x-20 p-y-12 text-center b-t-1 b-b-1 b-r-1"
-                       [href]="app.url" target="_blank">
+                    <a class="bg-light-primary-hover d-flex justify-content-center flex-column gap-8 text-decoration-none p-x-20 p-y-12 text-center b-t-1 b-b-1 b-r-1" [href]="app.url" target="_blank">
                         <div class="icon-45 bg-light-info rounded-circle m-auto round d-flex align-items-center justify-content-center">
-                            <!-- <i-tabler name="list-check" class="icon-20 text-info"></i-tabler> -->
-                             <img [src]="app.thumbnail" alt="app-logo" style="width: 75px; margin: 5px;">
+                            <img [src]="app.thumbnail" alt="app-logo" style="width: 55px; margin: 5px;">
                         </div>
                         <h6 class="f-s-16 f-w-600 m-0 mat-subtitle-1">{{ app.title }}</h6>
                         <p class="d-block m-0 mat-body-1 f-w-500">Download Now</p>
@@ -131,74 +128,6 @@
             @if (applications && applications.length === 0) {
                 <span class="w-100 text-center py-14 m-y-14">No Apps Available</span>
             }
-<!--             
-            <div class="col-6 p-x-0">
-                <a class="bg-light-primary-hover d-flex justify-content-center flex-column gap-8 text-decoration-none p-x-20 p-y-12 text-center b-t-1 b-b-1 b-r-1"
-                   [routerLink]="['/apps/invoice']">
-                    <div
-                        class="icon-45 bg-light-info rounded-circle m-auto round d-flex align-items-center justify-content-center">
-                        <i-tabler name="list-check" class="icon-20 text-info"></i-tabler>
-                    </div>
-                    <h6 class="f-s-16 f-w-600 m-0 mat-subtitle-1">Invoice</h6>
-                    <p class="d-block m-0 mat-body-1 f-w-500">Get latest invoice</p>
-                </a>
-            </div>
-            <div class="col-6 p-x-0">
-                <a class="bg-light-primary-hover d-flex justify-content-center flex-column gap-8 text-decoration-none p-x-20 p-y-12 text-center b-t-1 b-b-1"
-                   [routerLink]="['/apps/chat']">
-                    <div
-                        class="icon-45 bg-light-primary rounded-circle m-auto round d-flex align-items-center justify-content-center">
-                        <i-tabler name="message-2" class="icon-20 text-primary"></i-tabler>
-                    </div>
-                    <h6 class="f-s-16 f-w-600 m-0 mat-subtitle-1">Chat</h6>
-                    <p class="d-block m-0 mat-body-1 f-w-500">New messages</p>
-                </a>
-            </div>
-            <div class="col-6 p-x-0">
-                <a class="bg-light-primary-hover d-flex justify-content-center flex-column gap-8 text-decoration-none p-x-20 p-y-12 text-center b-b-1 b-r-1"
-                   [routerLink]="['/apps/contacts']">
-                    <div
-                        class="icon-45 bg-light-accent rounded-circle m-auto round d-flex align-items-center justify-content-center">
-                        <i-tabler name="phone-call" class="icon-20 text-accent"></i-tabler>
-                    </div>
-                    <h6 class="f-s-16 f-w-600 m-0 mat-subtitle-1">Contact</h6>
-                    <p class="d-block m-0 mat-body-1 f-w-500">2 Unsaved Contacts</p>
-                </a>
-            </div>
-            <div class="col-6 p-x-0">
-                <a class="bg-light-primary-hover d-flex justify-content-center flex-column gap-8 text-decoration-none p-x-20 p-y-12 text-center b-b-1"
-                   [routerLink]="['/apps/email/inbox']">
-                    <div
-                        class="icon-45 bg-light-error rounded-circle m-auto round d-flex align-items-center justify-content-center">
-                        <i-tabler name="mail" class="icon-20 text-error"></i-tabler>
-                    </div>
-                    <h6 class="f-s-16 f-w-600 m-0 mat-subtitle-1">Email</h6>
-                    <p class="d-block m-0 mat-body-1 f-w-500">Get new emails</p>
-                </a>
-            </div>
-            <div class="col-6 p-x-0">
-                <a class="bg-light-primary-hover d-flex justify-content-center flex-column gap-8 text-decoration-none p-x-20 p-y-12 text-center b-r-1"
-                   [routerLink]="['/apps/todo']">
-                    <div
-                        class="icon-45 bg-light-warning rounded-circle m-auto round d-flex align-items-center justify-content-center">
-                        <i-tabler name="edit" class="icon-20 text-warning"></i-tabler>
-                    </div>
-                    <h6 class="f-s-16 f-w-600 m-0 mat-subtitle-1">ToDo</h6>
-                    <p class="d-block m-0 mat-body-1 f-w-500">Daily tasks</p>
-                </a>
-            </div>
-            <div class="col-6 p-x-0">
-                <a class="bg-light-primary-hover d-flex justify-content-center flex-column gap-8 text-decoration-none p-x-20 p-y-12 text-center"
-                   [routerLink]="['/apps/calendar']">
-                    <div
-                        class="icon-45 bg-light-success rounded-circle m-auto round d-flex align-items-center justify-content-center">
-                        <i-tabler name="calendar" class="icon-20 text-success"></i-tabler>
-                    </div>
-                    <h6 class="f-s-16 f-w-600 m-0 mat-subtitle-1">Calendar</h6>
-                    <p class="d-block m-0 mat-body-1 f-w-500">Get dates</p>
-                </a>
-            </div>
--->
         </div>
     </mat-menu>
 
@@ -276,7 +205,7 @@
         </div>
     </button>
     <mat-menu #profileMenu="matMenu" xPosition="before" class="topbar-dd cardWithShadow">
-        <ng-scrollbar class="position-relative" style="height: 495px">
+        <ng-scrollbar class="position-relative" style="height: 330px">
             <div class="p-x-32 p-y-16">
                 <h6 class="f-s-16 f-w-600 m-0 mat-subtitle-1">User Profile</h6>
 
@@ -288,22 +217,22 @@
                         </h6>
                         <span class="f-s-14 mat-body-1 d-block m-b-4">{{ loggedInUser?.role }}</span>
                         <span class="d-flex align-items-center">
-              <i-tabler name="mail" class="icon-15 m-r-4"></i-tabler>
+                            <i-tabler name="mail" class="icon-15 m-r-4"></i-tabler>
                             {{ loggedInUser?.email }}
-            </span>
+                        </span>
                     </div>
                 </div>
             </div>
+
             <div class="p-x-32">
                 @for (profile of profiledd; track profile.title) {
                     <a class="p-y-16 text-decoration-none d-block text-hover-primary" [routerLink]="[profile.link]">
                         <div class="d-flex align-items-center">
-            <span class="text-{{ profile.color }} bg-light-{{
-                profile.color
-              }} icon-50 d-flex align-items-center justify-content-center shadow-none rounded">
-              <i-tabler [name]="profile.img" class="icon-20"/>
-            </span>
-
+                            <span class="text-{{ profile.color }} bg-light-{{
+                                profile.color
+                              }} icon-50 d-flex align-items-center justify-content-center shadow-none rounded">
+                              <i-tabler [name]="profile.img" class="icon-20"/>
+                            </span>
                             <div class="m-l-16">
                                 <h5 class="f-s-14 f-w-600 m-0 textprimary mat-subtitle-1 hover-text">
                                     {{ profile.title }}

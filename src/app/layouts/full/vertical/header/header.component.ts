@@ -199,9 +199,9 @@ export class HeaderComponent implements OnInit{
             color: 'primary',
             title: 'My Profile',
             subtitle: 'Account Settings',
-            link: '/',
+            link: '/apps/users/profile',
         },
-        {
+        /*{
             id: 2,
             img: 'shield',
             color: 'success',
@@ -216,7 +216,7 @@ export class HeaderComponent implements OnInit{
             title: 'My Tasks',
             subtitle: 'To-do and Daily Tasks',
             link: '/',
-        },
+        },*/
     ];
     apps: apps[] = [
         {
