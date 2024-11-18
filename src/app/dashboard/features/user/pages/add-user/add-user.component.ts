@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { map, startWith } from 'rxjs';
+import { GroupService } from 'src/app/shared/services/group.service';
+import { GroupList, IGroup } from 'src/app/shared/models/group';
 
 @Component({
   selector: 'app-add-user',
@@ -40,21 +42,26 @@ export class AddUserComponent implements OnInit {
   addForm: UntypedFormGroup | any;
   rows: UntypedFormArray;
   user: UserDetail  = { id: 0, username: ''};
+  groups:GroupList[] = [];
 
   owners: UserList[] = [];
   filteredOwners: UserList[] = [];
+  filteredGroups: GroupList[] = [];
   // selectedOwner: IUser;
   ownerSearchTerm = '';
+  groupSearchTerm = '';
   dropdownOpened = false;
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   ownerSearchCtrl = new FormControl();
+  groupSearchCtrl = new FormControl();
 
   constructor(
     private fb: UntypedFormBuilder,
     private userService: UserService,
+    private groupService: GroupService,
     private router: Router,
-    public dialog: MatDialog
+    private dialog: MatDialog
   ) {
     this.user.id = 0;
     this.addForm = this.fb.group({});
@@ -62,8 +69,15 @@ export class AddUserComponent implements OnInit {
       startWith(''),
       map(value => this.filterOwners(value))
   ).subscribe(filtered => {
-      this.filteredOwners = filtered;
+      this.filteredOwners = filtered as UserList[];
   });
+    this.groupSearchCtrl.valueChanges.pipe(
+      startWith(''),
+      map(value => this.filterGroups(value))
+  ).subscribe(filtered => {
+      this.filteredGroups = filtered as GroupList[];
+  });
+
   }
   ngOnInit(): void {
     this.userService.getAllUsers<UserList>().subscribe((users: UserList[]) => {
@@ -72,6 +86,10 @@ export class AddUserComponent implements OnInit {
         console.log("Selected Owner", this.selectedOwner);
         
     });
+
+    this.groupService.getAllGroups<GroupList>().subscribe(groups => {
+      this.groups = groups;
+    })
 
   }
 
@@ -85,9 +103,14 @@ export class AddUserComponent implements OnInit {
     
   }
 
-  private filterOwners(value: string): any[] {
+  private filterOwners(value: string): IUser[] {
     const filterValue = value?.toLowerCase();
     return this.owners.filter(owner => owner?.username?.toLowerCase().includes(filterValue));
+}
+
+private filterGroups(value: string): GroupList[] {
+  const filterValue = value?.toLowerCase();
+  return this.groups.filter(group => group?.groupName?.toLowerCase().includes(filterValue));
 }
 
 ownersFilterOptions() {
@@ -95,6 +118,11 @@ ownersFilterOptions() {
   this.filteredOwners = this.owners.filter((owner) =>
       owner?.username?.toLowerCase().includes(searchTermLower)
   );
+}
+
+groupsFilterOptions() {
+  const searchTermLower = this.groupSearchTerm.toLowerCase();
+  // this.filterGroups = this.groups.filter((group) =>group?.groupName?.toLowerCase().includes(searchTermLower));
 }
 
 onOwnersDropdownOpened(opened: boolean) {
@@ -106,7 +134,20 @@ onOwnersDropdownOpened(opened: boolean) {
   }
 }
 
+onGroupsDropdownOpened(opened: boolean) {
+  this.dropdownOpened = opened;
+  if (opened) {
+      // Reset search term and filter options when the dropdown opens
+      this.groupSearchTerm = '';
+      this.groupsFilterOptions();
+  }
+}
+
 get selectedOwner():IUser {
   return this.owners.find(owner => owner.id == this.user.ownerId) as IUser;
+}
+
+get selectedGroup():GroupList {
+  return this.groups.find(group => group.groupId == this.user.groupId) as GroupList;
 }
 }

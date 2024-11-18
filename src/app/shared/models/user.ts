@@ -49,6 +49,7 @@ export interface UserDetail extends IUser {
     status?: boolean;
     resellerDns?: string;
     ownerId?: number;
+    groupId?: number;
     overridePackages?: string; // Assuming this is a string representation of an array
     hue?: string;
     theme?: number;
