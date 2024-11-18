@@ -68,8 +68,8 @@ interface quicklinks {
 export class FullComponent implements OnInit {
     // navItems = navItems;
 
-    get navItems(){
-        if(this.loggedInUser.isAdmin)
+    get navItems() {
+        if (this.loggedInUser.isAdmin)
             return navItems;
         else
             return navItems.filter(item => item.group !== 'admin');

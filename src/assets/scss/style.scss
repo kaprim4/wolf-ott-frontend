@@ -1,4 +1,5 @@
 @use "@angular/material" as mat;
+
 @include mat.core();
 
 @import "themecolors/default_theme";
@@ -13,32 +14,32 @@
 @include mat.all-component-themes($bluetheme);
 
 .dark-theme {
-  @include mat.all-component-colors($darkbluetheme);
+    @include mat.all-component-colors($darkbluetheme);
 }
 
 .orange_theme {
-  @import "themecolors/orange_theme";
-  @include mat.all-component-colors($orangetheme);
+    @import "themecolors/orange_theme";
+    @include mat.all-component-colors($orangetheme);
 }
 
 .aqua_theme {
-  @import "themecolors/aqua_theme";
-  @include mat.all-component-colors($aquatheme);
+    @import "themecolors/aqua_theme";
+    @include mat.all-component-colors($aquatheme);
 }
 
 .purple_theme {
-  @import "themecolors/purple_theme";
-  @include mat.all-component-colors($purpletheme);
+    @import "themecolors/purple_theme";
+    @include mat.all-component-colors($purpletheme);
 }
 
 .green_theme {
-  @import "themecolors/green_theme";
-  @include mat.all-component-colors($greentheme);
+    @import "themecolors/green_theme";
+    @include mat.all-component-colors($greentheme);
 }
 
 .cyan_theme {
-  @import "themecolors/cyan_theme";
-  @include mat.all-component-colors($cyantheme);
+    @import "themecolors/cyan_theme";
+    @include mat.all-component-colors($cyantheme);
 }
 
 //container layout

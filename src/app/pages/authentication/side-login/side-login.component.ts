@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {CoreService} from 'src/app/services/core.service';
 import {FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule, FormBuilder} from '@angular/forms';
 import {ActivatedRoute, Router, RouterModule} from '@angular/router';
@@ -10,6 +10,9 @@ import {AuthenticationService} from "../../../shared/services/auth.service";
 import {HttpClient, HttpErrorResponse, HttpResponse} from "@angular/common/http";
 import {ComponentClass} from "devextreme/core/dom_component";
 import {SharedModule} from "../../../shared/shared.module";
+import {UserService} from "../../../shared/services/user.service";
+import {AppSettings} from "../../../config";
+import {IUserThemeOptions, IUserThemeOptionsRequest} from "../../../shared/models/user";
 
 @Component({
     selector: 'app-side-login',
@@ -18,6 +21,7 @@ import {SharedModule} from "../../../shared/shared.module";
     templateUrl: './side-login.component.html',
 })
 export class AppSideLoginComponent implements OnInit {
+    @Output() optionsChange = new EventEmitter<AppSettings>();
     protected apiBaseUrl = environment.apiBaseUrl;
     currYear: number = new Date().getFullYear();
     today: Date = new Date();
@@ -28,7 +32,12 @@ export class AppSideLoginComponent implements OnInit {
         username: '',
         password: ''
     }
-
+    userThemeOptionsRequest: IUserThemeOptionsRequest = {
+        activeTheme: "", language: "", theme: "", user_id: 0
+    }
+    userThemeOptions: IUserThemeOptions = {
+        id: 0, activeTheme: "", language: "", theme: "", user_id: 0
+    }
     captchaHandler = (captchaObj: any) => {
         (window as any).captchaObj = captchaObj;
         captchaObj.appendTo("#captcha")
@@ -65,7 +74,8 @@ export class AppSideLoginComponent implements OnInit {
         private tokenService: TokenService,
         private route: ActivatedRoute,
         private fb: FormBuilder,
-        private httpClient: HttpClient
+        private httpClient: HttpClient,
+        private userService: UserService,
     ) {
     }
 
@@ -80,6 +90,18 @@ export class AppSideLoginComponent implements OnInit {
 
     ngOnInit(): void {
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || this.returnUrl;
+        this.options = {
+            activeTheme: this.userThemeOptions.activeTheme,
+            boxed: false,
+            cardBorder: false,
+            dir: "ltr",
+            horizontal: false,
+            language: this.userThemeOptions.language,
+            navPos: "side",
+            sidenavCollapsed: false,
+            sidenavOpened: false,
+            theme: this.userThemeOptions.theme
+        }
     }
 
     get formValues() {
@@ -115,7 +137,7 @@ export class AppSideLoginComponent implements OnInit {
             captcha_id: this.captchaConfig.config.captchaId
         });
         console.log("captchaObj params", params);
-        this.httpClient.get(`${this.apiBaseUrl}/api/v1/auth/validate`, { params })
+        this.httpClient.get(`${this.apiBaseUrl}/api/v1/auth/validate`, {params})
             .subscribe((result: any) => {
                 console.log("result: ", result);
                 if (result.result) {
@@ -127,6 +149,7 @@ export class AppSideLoginComponent implements OnInit {
                             if (data.body) {
                                 console.log("login token:", data.body.access_token)
                                 this.tokenService.saveToken(data.body.access_token)
+                                this.getUserThemeConfig()
                             }
                             console.log('This contains body: ', data.body);
                         },
@@ -142,5 +165,33 @@ export class AppSideLoginComponent implements OnInit {
                     )
                 }
             });
+    }
+
+    getUserThemeConfig() {
+        this.userThemeOptionsRequest = {
+            activeTheme: this.options.activeTheme,
+            language: this.options.language,
+            theme: this.options.theme,
+            user_id: parseInt(this.tokenService.getPayload().sid)
+        };
+        this.userService.createUserThemeOptions(this.userThemeOptionsRequest).subscribe((result: HttpResponse<IUserThemeOptions>) => {
+            if (result.status === 200 && result.body) {
+                this.userThemeOptions = result.body
+                console.log(this.userThemeOptions);
+                this.options = {
+                    activeTheme: this.userThemeOptions.activeTheme,
+                    boxed: false,
+                    cardBorder: false,
+                    dir: "ltr",
+                    horizontal: false,
+                    language: this.userThemeOptions.language,
+                    navPos: "side",
+                    sidenavCollapsed: false,
+                    sidenavOpened: false,
+                    theme: this.userThemeOptions.theme
+                }
+                this.optionsChange.emit(this.options);
+            }
+        })
     }
 }
