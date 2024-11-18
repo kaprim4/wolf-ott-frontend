@@ -24,46 +24,55 @@
         }
         <img src="assets/images/backgrounds/Businessman-bro-600x600.webp" width="355" alt="welcome-bg" class="congrats-bg d-none d-lg-flex"/>
     </mat-card-content>
+</mat-card>
 
-    <mat-divider></mat-divider>
-
+<mat-card class="cardWithShadow">
     <mat-card-header>
-        <div class="d-flex w-100">
-            <div>
-                <mat-card-title>Total Orders</mat-card-title>
-                <mat-card-subtitle class="mat-body-1"
-                >Weekly order updates
-                </mat-card-subtitle
-                >
-            </div>
-            <div class="m-l-auto">
-                <mat-form-field class="theme-select" appearance="outline">
-                    <mat-select value="mar">
-                        @for (month of months; track month.value) {
-                            <mat-option [value]="month.value">
-                                {{ month.viewValue }}
-                            </mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
-            </div>
-        </div>
+        <mat-card-title>
+            Congratulations <b>{{ user?.username }}</b>
+        </mat-card-title>
+        <mat-card-subtitle class="mat-body-1">
+            You have {{ activeAccounts }} Lines including {{ onlineUsers }} online
+        </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-        <div class="row">
-            <div class="col-sm-12">
-                <apx-chart
-                    [series]="revenueChart.series"
-                    [dataLabels]="revenueChart.dataLabels"
-                    [chart]="revenueChart.chart"
-                    [legend]="revenueChart.legend"
-                    [stroke]="revenueChart.stroke"
-                    [grid]="revenueChart.grid"
-                    [xaxis]="revenueChart.xaxis"
-                    [yaxis]="revenueChart.yaxis"
-                    [tooltip]="revenueChart.tooltip"
-                ></apx-chart>
-            </div>
+        <div class="row justify-content-center">
+            @for(cardimg of cardimgs; track cardimg.imgSrc) {
+                <div class="col-sm-6 col-lg-4">
+                    <mat-card class="cardWithShadow card2 position-relative card-hover">
+                        <img mat-card-image src="{{ cardimg.imgSrc }}" alt="Photo of a Shiba Inu" />
+                        <div class="card-overlay h-100 d-flex align-items-end justify-content-end">
+                            <mat-chip class="f-s-12 f-w-600 m-y-16 m-r-16 bg-white">{{
+                                    cardimg.time
+                                }}</mat-chip>
+                        </div>
+
+                        <mat-card-content class="p-y-24">
+                            <div class="user-category">
+                                <div>
+                                    <img src="{{ cardimg.user }}" class="rounded-circle" width="40" />
+                                </div>
+                                <mat-chip class="f-s-12 m-y-16 f-w-600">{{
+                                        cardimg.category
+                                    }}</mat-chip>
+                            </div>
+                            <mat-card-title>{{ cardimg.title }}</mat-card-title>
+                            <div class="d-flex align-items-center justify-content-center m-t-24">
+                                <div class="d-flex align-items-center">
+            <span class="m-r-12 f-s-14 d-flex align-items-center"><i-tabler name="eye"
+                                                                            class="icon-18 m-r-4"></i-tabler>{{ cardimg.views }}</span>
+                                    <span class="f-s-14 d-flex align-items-center"><i-tabler name="message-2"
+                                                                                             class="icon-18 m-r-4"></i-tabler>{{ cardimg.comments }}</span>
+                                </div>
+                                <span class="m-l-auto f-s-14 d-flex align-items-center">
+            <i-tabler name="point" class="icon-14 m-r-4 d-flex"></i-tabler>
+                                    {{ cardimg.date }}
+          </span>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            }
         </div>
     </mat-card-content>
 </mat-card>

@@ -24,12 +24,12 @@ export const UserRoutes: Routes = [
                 component: AddUserComponent
             },
             {
-                path: ':id',
-                component: ViewUserComponent
-            },
-            {
                 path: 'profile',
                 component: UserProfileComponent
+            },
+            {
+                path: ':id',
+                component: ViewUserComponent
             },
         ],
     },

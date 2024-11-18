@@ -23,6 +23,8 @@ import {TokenService} from "../../../shared/services/token.service";
 import {StatsService} from "../../../shared/services/stats.service";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 import {IDashboardStat} from "../../../shared/models/stats";
+import {ArticleService} from "../../../shared/services/article.service";
+import {Article} from "../../../shared/models/article";
 
 interface month {
     value: string;
@@ -35,6 +37,18 @@ interface stats {
     title: string;
     subtitle: string;
     icon: string;
+}
+
+interface cardimgs {
+    id: number;
+    time: string;
+    imgSrc: string;
+    user: string;
+    title: string;
+    views: string;
+    category: string;
+    comments: number;
+    date: string;
 }
 
 export interface revenueChart {
@@ -81,7 +95,8 @@ export class AppCongratulateCardComponent implements OnInit {
     constructor(
         private userService: UserService,
         private tokenService: TokenService,
-        private statsService: StatsService
+        private statsService: StatsService,
+        private articleService: ArticleService,
     ) {
         this.revenueChart = {
             series: [
@@ -149,12 +164,44 @@ export class AppCongratulateCardComponent implements OnInit {
         };
     }
 
+    /*
+    {
+        id: 1,
+        time: '2 mins Read',
+        imgSrc: '/assets/images/blog/blog-img1.jpg',
+        user: '/assets/images/profile/user-1.jpg',
+        title: 'As yen tumbles, gadget-loving Japan goes for secondhand iPhones',
+        views: '9,125',
+        category: 'Social',
+        comments: 3,
+        date: 'Mon, Dec 23',
+    }
+    */
+    cardimgs: cardimgs[] = [];
+
     ngOnInit(): void {
         this.loggedInUser = this.tokenService.getPayload();
         this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
             this.user = user;
         });
         this.getStats();
+        this.articleService.getAllArticles<Article>().subscribe((value: Article[]) => {
+            if (value.length > 0) {
+                value.map(article => {
+                    this.cardimgs.push({
+                        id: article.id,
+                        time: '2 mins Read',
+                        imgSrc: article.thumbnail,
+                        user: '/assets/images/profile/user-1.jpg',
+                        title: article.title,
+                        views: '9,125',
+                        category: 'Social',
+                        comments: 3,
+                        date: 'Mon, Dec 23',
+                    })
+                })
+            }
+        })
     }
 
     getStats(): void {
