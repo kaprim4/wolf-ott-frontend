@@ -1,133 +1,57 @@
-<form>
-    <div class="row">
-        <div class="col-lg-6">
-            <mat-card class="cardWithShadow theme-card">
-                <mat-card-header>
-                    <mat-card-title class="m-b-0">Smarters Pro</mat-card-title>
-                </mat-card-header>
-                <mat-card-content class="b-t-1">
-                    <div class="row">
-                        <div class="col-sm-4 d-flex align-items-center">
-                            <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">
-                                Host
-                            </mat-label>
-                        </div>
-                        <div class="col-sm-8">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <input matInput placeholder="host address"/>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-        </div>
-        <div class="col-lg-6">
-            <mat-card class="cardWithShadow theme-card">
-                <mat-card-header>
-                    <mat-card-title class="m-b-0">Basic with Icons</mat-card-title>
-                </mat-card-header>
-                <mat-card-content class="b-t-1">
-                    <div class="row">
-                        <div class="col-sm-4 d-flex align-items-center">
-                            <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16"
-                            >Name
-                            </mat-label
-                            >
-                        </div>
-                        <div class="col-sm-8">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <input matInput placeholder="John Deo"/>
-                                <mat-icon matPrefix class="op-5">
-                                    <i-tabler name="user" class="icon-20 d-flex"></i-tabler>
-                                </mat-icon>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4 d-flex align-items-center">
-                            <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16"
-                            >Company
-                            </mat-label
-                            >
-                        </div>
-                        <div class="col-sm-8">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <input matInput placeholder="ACME Inc."/>
-                                <mat-icon matPrefix class="op-5">
-                                    <i-tabler
-                                        name="building-arch"
-                                        class="icon-20 d-flex"
-                                    ></i-tabler>
-                                </mat-icon>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4 d-flex align-items-center">
-                            <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16"
-                            >Email
-                            </mat-label
-                            >
-                        </div>
-                        <div class="col-sm-8">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <input matInput placeholder="john.deo" type="email"/>
-                                <mat-icon matPrefix class="op-5">
-                                    <i-tabler name="mail" class="icon-20 d-flex"></i-tabler>
-                                </mat-icon>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4 d-flex align-items-center">
-                            <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16"
-                            >Phone No
-                            </mat-label
-                            >
-                        </div>
-                        <div class="col-sm-8">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <input matInput placeholder="123 4561 123"/>
-                                <mat-icon matPrefix class="op-5">
-                                    <i-tabler name="phone" class="icon-20 d-flex"></i-tabler>
-                                </mat-icon>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4 d-flex align-items-center">
-                            <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16"
-                            >Message
-                            </mat-label>
-                        </div>
-                        <div class="col-sm-8">
-                            <mat-form-field appearance="outline" class="w-100">
-                <textarea
-                    rows="5"
-                    matInput
-                    placeholder="Hi, Do you have a moment to talk Deo ?"
-                ></textarea>
-                                <mat-icon matPrefix class="op-5">
-                                    <i-tabler name="message-2" class="icon-20 d-flex"></i-tabler>
-                                </mat-icon>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-        </div>
+<div class="row">
+    <div class="col-12">
+      <mat-card class="mat-card-top cardWithShadow position-relative">
+        <mat-sidenav-container class="bg-white" [ngClass]="{
+            'side-panel-opened': sidePanelOpened,
+            'side-panel-closed': !sidePanelOpened
+          }" style="min-height: 80vh">
+          <!-- --------------------------------------------------------------------------- -->
+          <!-- Sidebar -->
+          <!-- --------------------------------------------------------------------------- -->
+          <mat-sidenav #chatnav right class="app-left-sidebar" [mode]="isOver() ? 'over' : 'side'" [opened]="!isOver()"
+            (open)="sidePanelOpened = true" (close)="sidePanelOpened = false" position="start">
+            <mat-toolbar class="bg-white">
+              <div class="row">
+                <div class="col-12">
+                  <p class="f-w-500 f-s-18 m-0 mat-subtitle-1">Settings</p>
+                </div>
+              </div>
+            </mat-toolbar>
+            <mat-nav-list>
+              @for (param of params; track $index) {
+                <mat-list-item (click)="changeTabTo(param)" class="all rounded-0"
+                [class.bg-light-primary]="selectedParam === param">
+                <div class="d-flex align-items-center">
+                  <span class="mat-subtitle-2">{{ param }}</span>
+                </div>
+              </mat-list-item>
+              }
+            </mat-nav-list>
+          </mat-sidenav>
+          <!-- --------------------------------------------------------------------------- -->
+          <!-- Detail View -->
+          <!-- --------------------------------------------------------------------------- -->
+          <mat-toolbar class="bg-white">
+            <div class="d-flex align-items-center w-100">
+              <!-- <label for="all">Mark All</label> -->
+              <div class="m-l-auto col-sm-3 col-lg-2">
+                <button mat-button (click)="handleSaveChanges()" class="bg-primary text-white p-8 rounded f-s-14 w-100">Save Changes</button>
+              </div>
+            </div>
+          </mat-toolbar>
+          <mat-divider></mat-divider>
+          <mat-card-content class="p-x-0 app-right-sidebar" style="min-height: 70vh">
+            @switch (selectedParam) {
+                @case ('VPN') {
+                    <!-- (saveChanges)="handleSaveChanges()" -->
+                    <app-vpn-params ></app-vpn-params>
+                }
+                @case ('Smarters PRO') {
+                    <app-smarters-pro-params></app-smarters-pro-params>
+                }
+            }
+          </mat-card-content>
+        </mat-sidenav-container>
+      </mat-card>
     </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <mat-card class="cardWithShadow theme-card">
-                <mat-card-content>
-                    <div class="row justify-content-end">
-                        <div class="col-sm-12">
-                            <button mat-flat-button color="primary">Save settings</button>
-                        </div>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-        </div>
-    </div>
-</form>
+  </div>
