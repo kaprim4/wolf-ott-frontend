@@ -2,6 +2,7 @@ import {Routes} from '@angular/router';
 import {UsersListComponent} from './pages/users-list/users-list.component';
 import {ViewUserComponent} from './pages/view-user/view-user.component';
 import {AddUserComponent} from './pages/add-user/add-user.component';
+import {UserProfileComponent} from "./pages/user-profile/user-profile.component";
 
 
 export const UserRoutes: Routes = [
@@ -25,6 +26,10 @@ export const UserRoutes: Routes = [
             {
                 path: ':id',
                 component: ViewUserComponent
+            },
+            {
+                path: 'profile',
+                component: UserProfileComponent
             },
         ],
     },
