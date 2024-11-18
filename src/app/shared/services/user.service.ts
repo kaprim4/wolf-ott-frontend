@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {CrudService} from './crud.service';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {JwtService} from './jwt.service';
-import {IUser, UserList} from '../models/user';
+import {IUser, IUserThemeOptions, IUserThemeOptionsRequest} from '../models/user';
 import {map, Observable} from 'rxjs';
 import {Page} from '../models/page';
 
@@ -48,4 +48,19 @@ export class UserService extends CrudService<IUser> {
     public deleteUser(id: number): Observable<HttpResponse<void>> {
         return this.delete<void>(id);
     }
+
+    public updateUserThemeOptions(userThemeOptionsRequest: IUserThemeOptionsRequest): Observable<HttpResponse<IUserThemeOptions>> {
+        return this.httpClient.put<IUserThemeOptions>(
+            `${this.apiBaseUrl}/api/v1/${this.endpoint}/theme-options`, userThemeOptionsRequest,
+            {headers: this.headers, observe: 'response'},
+        );
+    }
+
+    public createUserThemeOptions(userThemeOptionsRequest: IUserThemeOptionsRequest): Observable<HttpResponse<IUserThemeOptions>> {
+        return this.httpClient.post<IUserThemeOptions>(
+            `${this.apiBaseUrl}/api/v1/${this.endpoint}/theme-options`, userThemeOptionsRequest,
+            {headers: this.headers, observe: 'response'},
+        );
+    }
+
 }

@@ -16,18 +16,11 @@
             <div class="col-sm-8">
                 <mat-form-field appearance="outline" class="w-100" (change)="onFormatChange($event)">
                     <mat-select [(ngModel)]="selectedFormat">
-                        <!-- 
-                        <mat-optgroup *ngFor="let group of groupedFormats; " [label]="group.group">
-                            <mat-option *ngFor="let format of group.options; trackBy: trackByFormat" [value]="format">
+                        <mat-optgroup *ngFor="let group of formats" [label]="group.letter">
+                            <mat-option *ngFor="let format of group.options; trackBy: trackByFn" [value]="format">
                                 {{ format.label }}
-                              </mat-option>
-                              
+                            </mat-option>
                         </mat-optgroup>
-                        -->
-
-                        <mat-option *ngFor="let format of formats;" [value]="format">
-                            {{ format.label }}
-                          </mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>

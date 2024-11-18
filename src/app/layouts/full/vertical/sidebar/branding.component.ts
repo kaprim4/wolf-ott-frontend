@@ -10,7 +10,7 @@ import { CoreService } from 'src/app/services/core.service';
       <div class="branding">
           @if (options.theme === 'light') {
               <a href="/">
-                  <img src="./assets/images/wolf_text_logo.png" class="align-middle m-2" alt="logo" height="65"/>
+                  <img src="./assets/images/wolf_text_logo-light.png" class="align-middle m-2" alt="logo" height="65"/>
               </a>
           }
           @if (options.theme === 'dark') {
