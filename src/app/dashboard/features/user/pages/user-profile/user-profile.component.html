@@ -1,716 +1,1763 @@
 <mat-card class="cardWithShadow">
     <mat-card-content class="p-0">
-        <mat-tab-group mat-stretch-tabs="false" animationDuration="0ms">
-            <mat-tab>
-                <ng-template mat-tab-label>
-                    <div class="d-flex align-items-center">
-                        <mat-icon>
-                            <i-tabler name="user-circle" class="icon-20 m-r-8"></i-tabler>
-                        </mat-icon>
-                    </div>
-                    Account
-                </ng-template>
-                <mat-card-content class="p-y-24 b-t-1">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <mat-card class="cardWithShadow">
-                                <mat-card-content class="p-y-24">
-                                    <mat-card-title>Change Profile</mat-card-title>
-                                    <mat-card-subtitle class="mat-body-1">
-                                        Change your profile picture from here
-                                    </mat-card-subtitle>
-                                    <div class="text-center m-t-24">
-                                        <img src="/assets/images/profile/user-1.jpg" class="rounded-circle" width="120"/>
-                                        <div class="m-t-24">
-                                            <button mat-flat-button color="primary" class="m-r-8">
-                                                Upload
-                                            </button>
-                                            <button mat-stroked-button color="warn">Reset</button>
-                                        </div>
-                                        <span class="f-s-14 m-t-24 d-block">
-                                            Allowed JPG, GIF or PNG. Max size of 800K
-                                        </span>
-                                    </div>
-                                </mat-card-content>
-                            </mat-card>
+        <form [formGroup]="userForm" (ngSubmit)="saveDetail()">
+            <mat-tab-group mat-stretch-tabs="false" animationDuration="0ms">
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        <div class="d-flex align-items-center">
+                            <mat-icon>
+                                <i-tabler name="user-circle" class="icon-20 m-r-8"></i-tabler>
+                            </mat-icon>
                         </div>
-                        <div class="col-sm-6">
-                            <mat-card class="cardWithShadow">
-                                <mat-card-content class="p-y-24">
-                                    <mat-card-title>Change Password</mat-card-title>
-                                    <mat-card-subtitle class="mat-body-1">
-                                        To change your password please confirm here
-                                    </mat-card-subtitle>
-                                    <form class="m-t-24">
-                                        <!-- input -->
-                                        <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-                                        >Current Password</mat-label
-                                        >
-                                        <mat-form-field
-                                            appearance="outline"
-                                            class="w-100"
-                                            color="primary"
-                                        >
-                                            <input matInput type="password" value="password" />
-                                        </mat-form-field>
-                                        <!-- input -->
-                                        <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-                                        >New Password</mat-label
-                                        >
-                                        <mat-form-field
-                                            appearance="outline"
-                                            class="w-100"
-                                            color="primary"
-                                        >
-                                            <input matInput type="password" value="password" />
-                                        </mat-form-field>
-                                        <!-- input -->
-                                        <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-                                        >Confirm Password</mat-label
-                                        >
-                                        <mat-form-field
-                                            appearance="outline"
-                                            class="w-100 hide-hint"
-                                            color="primary"
-                                        >
-                                            <input matInput type="password" value="password" />
-                                        </mat-form-field>
-                                    </form>
-                                </mat-card-content>
-                            </mat-card>
-                        </div>
-                        <div class="col-12">
-                            <mat-card class="cardWithShadow">
-                                <mat-card-content>
-                                    <mat-card-title>Personal Details</mat-card-title>
-                                    <mat-card-subtitle class="mat-body-1"
-                                    >To change your personal detail , edit and save from
-                                        here</mat-card-subtitle
-                                    >
-
-                                    <div class="row m-t-24">
-                                        <div class="col-sm-6">
-                                            <!-- input -->
-                                            <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-                                            >Your Name</mat-label
-                                            >
-                                            <mat-form-field
-                                                appearance="outline"
-                                                class="w-100"
-                                                color="primary"
-                                            >
-                                                <input matInput type="text" value="Mike Nielsen" />
-                                            </mat-form-field>
-                                            <!-- input -->
-                                            <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-                                            >Location</mat-label
-                                            >
-                                            <mat-form-field appearance="outline" class="w-100">
-                                                <mat-select value="in">
-                                                    <mat-option value="in">India</mat-option>
-                                                    <mat-option value="us">United States</mat-option>
-                                                    <mat-option value="uk">United Kingdom</mat-option>
-                                                    <mat-option value="ru">Russia</mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                            <!-- input -->
-                                            <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-                                            >Email</mat-label
-                                            >
-                                            <mat-form-field
-                                                appearance="outline"
-                                                class="w-100"
-                                                color="primary"
-                                            >
-                                                <input
-                                                    matInput
-                                                    type="email"
-                                                    value="info@spike.com"
-                                                />
-                                            </mat-form-field>
+                        Account
+                    </ng-template>
+                    <mat-card-content class="p-y-24 b-t-1">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <mat-card class="cardWithShadow">
+                                    <mat-card-content class="p-y-24">
+                                        <mat-card-title>Change Profile</mat-card-title>
+                                        <mat-card-subtitle class="mat-body-1">
+                                            Change your profile picture from here
+                                        </mat-card-subtitle>
+                                        <div class="text-center m-t-24">
+                                            @if (imagePreview) {
+                                                <img [src]="imagePreview" class="rounded-pill" width="200"/>
+                                            } @else {
+                                                <img src="/assets/images/profile/default.jpg" class="rounded-pill"
+                                                     width="200"/>
+                                            }
+                                            <div class="m-t-24">
+                                                <input mat-button color="primary" type="file" id="file"
+                                                       (change)="onFileSelected($event)" accept="image/*" required/>
+                                            </div>
+                                            <span class="f-s-14 m-t-24 d-block">Allowed JPG, GIF or PNG. Max size of 800K</span>
                                         </div>
-                                        <div class="col-sm-6">
-                                            <!-- input -->
-                                            <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-                                            >Store Name</mat-label
-                                            >
-                                            <mat-form-field
-                                                appearance="outline"
-                                                class="w-100"
-                                                color="primary"
-                                            >
-                                                <input matInput type="text" value="Maxima Studio" />
-                                            </mat-form-field>
-                                            <!-- input -->
-                                            <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-                                            >Currency</mat-label
-                                            >
-                                            <mat-form-field
-                                                appearance="outline"
-                                                class="w-100"
-                                                color="primary"
-                                            >
-                                                <mat-select value="in">
-                                                    <mat-option value="in">India (INR)</mat-option>
-                                                    <mat-option value="us">Us Dollar ($)</mat-option>
-                                                    <mat-option value="uk"
-                                                    >United Kingdom(Pound)</mat-option
-                                                    >
-                                                    <mat-option value="ru">Russia (Ruble)</mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                            <!-- input -->
-                                            <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-                                            >Phone</mat-label
-                                            >
-                                            <mat-form-field
-                                                appearance="outline"
-                                                class="w-100"
-                                                color="primary"
-                                            >
-                                                <input matInput type="text" value="+91 12345 65478" />
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="col-12">
-                                            <!-- input -->
-                                            <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-                                            >Address</mat-label
-                                            >
-                                            <mat-form-field
-                                                appearance="outline"
-                                                class="w-100"
-                                                color="primary"
-                                            >
-                                                <input
-                                                    matInput
-                                                    type="text"
-                                                    value="814 Howard Street, 120065, India"
-                                                />
-                                            </mat-form-field>
-                                        </div>
-                                    </div>
-                                </mat-card-content>
-                            </mat-card>
-                        </div>
-                    </div>
-                </mat-card-content>
-            </mat-tab>
-            <mat-tab>
-                <ng-template mat-tab-label>
-                    <div class="d-flex align-items-center">
-                        <mat-icon>
-                            <i-tabler name="bell" class="icon-20 m-r-8"></i-tabler>
-                        </mat-icon>
-                    </div>
-                    Notifications
-                </ng-template>
-                <mat-card-content class="p-y-24 b-t-1">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-9">
-                            <mat-card class="cardWithShadow">
-                                <mat-card-content class="p-y-24">
-                                    <mat-card-title>Notification Preferences</mat-card-title>
-                                    <mat-card-subtitle class="mat-body-1"
-                                    >Select the notificaitons ou would like to receive via
-                                        email. Please note that you cannot opt out of receving
-                                        service messages, such as payment, security or legal
-                                        notifications.</mat-card-subtitle
-                                    >
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                            <div class="col-sm-6">
+                                @if (loggedInUser.role === 'Administrators') {
+                                    <mat-card class="cardWithShadow">
+                                        <mat-card-content class="p-y-24">
+                                            <mat-card-title>Change Password</mat-card-title>
+                                            <mat-card-subtitle class="mat-body-1">
+                                                To change your password please confirm here
+                                            </mat-card-subtitle>
+                                            <form class="m-t-24">
+                                                <!-- input -->
+                                                <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">
+                                                    Current Password
+                                                </mat-label>
+                                                <mat-form-field appearance="outline" class="w-100" color="primary">
+                                                    <input matInput type="password" value="current_password"/>
+                                                </mat-form-field>
 
-                                    <!-- input -->
-                                    <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block m-t-24"
-                                    >Email Address*</mat-label
-                                    >
-                                    <mat-form-field
-                                        appearance="outline"
-                                        class="w-100"
-                                        color="primary"
-                                    >
-                                        <input matInput type="email" />
-                                        <mat-hint> Required for notificaitons.</mat-hint>
-                                    </mat-form-field>
+                                                <!-- input -->
+                                                <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">
+                                                    New Password
+                                                </mat-label>
+                                                <mat-form-field appearance="outline" class="w-100" color="primary">
+                                                    <input matInput type="password" value="new_password"/>
+                                                </mat-form-field>
 
-                                    <div class="d-flex align-items-center m-t-24">
-                                        <button
-                                            mat-mini-fab
-                                            class="bg-light-primary shadow-none rounded icon-48"
-                                        >
-                                            <i-tabler
-                                                name="article"
-                                                class="icon-20 d-flex text-primary"
-                                            ></i-tabler>
-                                        </button>
-                                        <div class="m-l-16 w-100">
-                                            <h5 class="f-s-16 f-w-600 m-0 m-b-4">Our newsletter</h5>
-                                            <div
-                                                class="d-flex align-items-center justify-content-center w-100"
-                                            >
-                        <span class="f-s-14"
-                        >We'll always let you know about important
-                          changes</span
-                        >
-                                                <mat-slide-toggle class="m-l-auto"></mat-slide-toggle>
+                                                <!-- input -->
+                                                <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">
+                                                    Confirm Password
+                                                </mat-label>
+                                                <mat-form-field appearance="outline" class="w-100 hide-hint"
+                                                                color="primary">
+                                                    <input matInput type="password" value="confirm_password"/>
+                                                </mat-form-field>
+                                            </form>
+                                        </mat-card-content>
+                                    </mat-card>
+                                }
+                            </div>
+                            <div class="col-12">
+                                <mat-card class="cardWithShadow">
+                                    <mat-card-content>
+                                        <mat-card-title>Personal Details</mat-card-title>
+                                        <mat-card-subtitle class="mat-body-1">
+                                            To change your personal detail , edit and save from here
+                                        </mat-card-subtitle>
+                                        <div class="row m-t-24">
+                                            <div class="col-sm-6">
+                                                <!-- input -->
+                                                <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">
+                                                    Username
+                                                </mat-label>
+                                                <mat-form-field appearance="outline" class="w-100" color="primary">
+                                                    <input matInput type="text" placeholder="Enter username"
+                                                           formControlName="username" readonly/>
+                                                </mat-form-field>
+                                                <!-- input -->
+                                                <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">
+                                                    Timezone
+                                                </mat-label>
+                                                <mat-form-field appearance="outline" class="w-100">
+                                                    <mat-select value="" formControlName="timezone">
+                                                        <mat-option value="">Server Default</mat-option>
+                                                        <mat-option value="Africa/Abidjan">Africa/Abidjan [GMT 00:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Accra">Africa/Accra [GMT 00:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Addis_Ababa">Africa/Addis_Ababa [EAT
+                                                            +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Algiers">Africa/Algiers [CET +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Asmara">Africa/Asmara [EAT +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Bamako">Africa/Bamako [GMT 00:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Bangui">Africa/Bangui [WAT +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Banjul">Africa/Banjul [GMT 00:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Bissau">Africa/Bissau [GMT 00:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Blantyre">Africa/Blantyre [CAT
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Brazzaville">Africa/Brazzaville [WAT
+                                                            +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Bujumbura">Africa/Bujumbura [CAT
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Cairo">Africa/Cairo [EET +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Casablanca">Africa/Casablanca [WEST
+                                                            +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Ceuta">Africa/Ceuta [CEST +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Conakry">Africa/Conakry [GMT 00:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Dakar">Africa/Dakar [GMT 00:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Dar_es_Salaam">Africa/Dar_es_Salaam
+                                                            [EAT +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Djibouti">Africa/Djibouti [EAT
+                                                            +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Douala">Africa/Douala [WAT +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/El_Aaiun">Africa/El_Aaiun [WEST
+                                                            +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Freetown">Africa/Freetown [GMT
+                                                            00:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Gaborone">Africa/Gaborone [CAT
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Harare">Africa/Harare [CAT +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Johannesburg">Africa/Johannesburg
+                                                            [SAST +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Juba">Africa/Juba [EAT +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Kampala">Africa/Kampala [EAT +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Khartoum">Africa/Khartoum [EAT
+                                                            +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Kigali">Africa/Kigali [CAT +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Kinshasa">Africa/Kinshasa [WAT
+                                                            +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Lagos">Africa/Lagos [WAT +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Libreville">Africa/Libreville [WAT
+                                                            +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Lome">Africa/Lome [GMT 00:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Luanda">Africa/Luanda [WAT +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Lubumbashi">Africa/Lubumbashi [CAT
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Lusaka">Africa/Lusaka [CAT +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Malabo">Africa/Malabo [WAT +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Maputo">Africa/Maputo [CAT +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Maseru">Africa/Maseru [SAST +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Mbabane">Africa/Mbabane [SAST
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Mogadishu">Africa/Mogadishu [EAT
+                                                            +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Monrovia">Africa/Monrovia [GMT
+                                                            00:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Nairobi">Africa/Nairobi [EAT +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Ndjamena">Africa/Ndjamena [WAT
+                                                            +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Niamey">Africa/Niamey [WAT +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Nouakchott">Africa/Nouakchott [GMT
+                                                            00:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Ouagadougou">Africa/Ouagadougou [GMT
+                                                            00:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Porto-Novo">Africa/Porto-Novo [WAT
+                                                            +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Sao_Tome">Africa/Sao_Tome [GMT
+                                                            00:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Tripoli">Africa/Tripoli [EET +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Tunis">Africa/Tunis [CET +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Africa/Windhoek">Africa/Windhoek [WAST
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Adak">America/Adak [HADT -09:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Anchorage">America/Anchorage [AKDT
+                                                            -08:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Anguilla">America/Anguilla [AST
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Antigua">America/Antigua [AST
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Araguaina">America/Araguaina [BRT
+                                                            -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Argentina/Buenos_Aires">
+                                                            America/Argentina/Buenos_Aires [ART -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Argentina/Catamarca">
+                                                            America/Argentina/Catamarca [ART -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Argentina/Cordoba">
+                                                            America/Argentina/Cordoba [ART -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Argentina/Jujuy">
+                                                            America/Argentina/Jujuy [ART -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Argentina/La_Rioja">
+                                                            America/Argentina/La_Rioja [ART -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Argentina/Mendoza">
+                                                            America/Argentina/Mendoza [ART -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Argentina/Rio_Gallegos">
+                                                            America/Argentina/Rio_Gallegos [ART -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Argentina/Salta">
+                                                            America/Argentina/Salta [ART -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Argentina/San_Juan">
+                                                            America/Argentina/San_Juan [ART -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Argentina/San_Luis">
+                                                            America/Argentina/San_Luis [ART -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Argentina/Tucuman">
+                                                            America/Argentina/Tucuman [ART -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Argentina/Ushuaia">
+                                                            America/Argentina/Ushuaia [ART -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Aruba">America/Aruba [AST -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Asuncion">America/Asuncion [PYT
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Atikokan">America/Atikokan [EST
+                                                            -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Bahia">America/Bahia [BRT -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Bahia_Banderas">
+                                                            America/Bahia_Banderas [CDT -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Barbados">America/Barbados [AST
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Belem">America/Belem [BRT -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Belize">America/Belize [CST -06:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Blanc-Sablon">America/Blanc-Sablon
+                                                            [AST -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Boa_Vista">America/Boa_Vista [AMT
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Bogota">America/Bogota [COT -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Boise">America/Boise [MDT -06:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Cambridge_Bay">America/Cambridge_Bay
+                                                            [MDT -06:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Campo_Grande">America/Campo_Grande
+                                                            [AMT -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Cancun">America/Cancun [CDT -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Caracas">America/Caracas [VET
+                                                            -04:30]
+                                                        </mat-option>
+                                                        <mat-option value="America/Cayenne">America/Cayenne [GFT
+                                                            -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Cayman">America/Cayman [EST -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Chicago">America/Chicago [CDT
+                                                            -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Chihuahua">America/Chihuahua [MDT
+                                                            -06:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Costa_Rica">America/Costa_Rica [CST
+                                                            -06:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Creston">America/Creston [MST
+                                                            -07:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Cuiaba">America/Cuiaba [AMT -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Curacao">America/Curacao [AST
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Danmarkshavn">America/Danmarkshavn
+                                                            [GMT 00:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Dawson">America/Dawson [PDT -07:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Dawson_Creek">America/Dawson_Creek
+                                                            [MST -07:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Denver">America/Denver [MDT -06:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Detroit">America/Detroit [EDT
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Dominica">America/Dominica [AST
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Edmonton">America/Edmonton [MDT
+                                                            -06:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Eirunepe">America/Eirunepe [ACT
+                                                            -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/El_Salvador">America/El_Salvador [CST
+                                                            -06:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Fortaleza">America/Fortaleza [BRT
+                                                            -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Glace_Bay">America/Glace_Bay [ADT
+                                                            -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Godthab">America/Godthab [WGST
+                                                            -02:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Goose_Bay">America/Goose_Bay [ADT
+                                                            -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Grand_Turk">America/Grand_Turk [AST
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Grenada">America/Grenada [AST
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Guadeloupe">America/Guadeloupe [AST
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Guatemala">America/Guatemala [CST
+                                                            -06:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Guayaquil">America/Guayaquil [ECT
+                                                            -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Guyana">America/Guyana [GYT -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Halifax">America/Halifax [ADT
+                                                            -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Havana">America/Havana [CDT -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Hermosillo">America/Hermosillo [MST
+                                                            -07:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Indiana/Indianapolis">
+                                                            America/Indiana/Indianapolis [EDT -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Indiana/Knox">America/Indiana/Knox
+                                                            [CDT -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Indiana/Marengo">
+                                                            America/Indiana/Marengo [EDT -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Indiana/Petersburg">
+                                                            America/Indiana/Petersburg [EDT -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Indiana/Tell_City">
+                                                            America/Indiana/Tell_City [CDT -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Indiana/Vevay">America/Indiana/Vevay
+                                                            [EDT -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Indiana/Vincennes">
+                                                            America/Indiana/Vincennes [EDT -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Indiana/Winamac">
+                                                            America/Indiana/Winamac [EDT -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Inuvik">America/Inuvik [MDT -06:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Iqaluit">America/Iqaluit [EDT
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Jamaica">America/Jamaica [EST
+                                                            -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Juneau">America/Juneau [AKDT
+                                                            -08:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Kentucky/Louisville">
+                                                            America/Kentucky/Louisville [EDT -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Kentucky/Monticello">
+                                                            America/Kentucky/Monticello [EDT -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Kralendijk">America/Kralendijk [AST
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/La_Paz">America/La_Paz [BOT -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Lima">America/Lima [PET -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Los_Angeles">America/Los_Angeles [PDT
+                                                            -07:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Lower_Princes">America/Lower_Princes
+                                                            [AST -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Maceio">America/Maceio [BRT -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Managua">America/Managua [CST
+                                                            -06:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Manaus">America/Manaus [AMT -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Marigot">America/Marigot [AST
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Martinique">America/Martinique [AST
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Matamoros">America/Matamoros [CDT
+                                                            -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Mazatlan">America/Mazatlan [MDT
+                                                            -06:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Menominee">America/Menominee [CDT
+                                                            -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Merida">America/Merida [CDT -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Metlakatla">America/Metlakatla [PST
+                                                            -08:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Mexico_City">America/Mexico_City [CDT
+                                                            -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Miquelon">America/Miquelon [PMDT
+                                                            -02:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Moncton">America/Moncton [ADT
+                                                            -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Monterrey">America/Monterrey [CDT
+                                                            -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Montevideo">America/Montevideo [UYT
+                                                            -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Montserrat">America/Montserrat [AST
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Nassau">America/Nassau [EDT -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/New_York">America/New_York [EDT
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Nipigon">America/Nipigon [EDT
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Nome">America/Nome [AKDT -08:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Noronha">America/Noronha [FNT
+                                                            -02:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/North_Dakota/Beulah">
+                                                            America/North_Dakota/Beulah [CDT -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/North_Dakota/Center">
+                                                            America/North_Dakota/Center [CDT -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/North_Dakota/New_Salem">
+                                                            America/North_Dakota/New_Salem [CDT -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Ojinaga">America/Ojinaga [MDT
+                                                            -06:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Panama">America/Panama [EST -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Pangnirtung">America/Pangnirtung [EDT
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Paramaribo">America/Paramaribo [SRT
+                                                            -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Phoenix">America/Phoenix [MST
+                                                            -07:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Port-au-Prince">
+                                                            America/Port-au-Prince [EDT -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Port_of_Spain">America/Port_of_Spain
+                                                            [AST -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Porto_Velho">America/Porto_Velho [AMT
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Puerto_Rico">America/Puerto_Rico [AST
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Rainy_River">America/Rainy_River [CDT
+                                                            -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Rankin_Inlet">America/Rankin_Inlet
+                                                            [CDT -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Recife">America/Recife [BRT -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Regina">America/Regina [CST -06:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Resolute">America/Resolute [CDT
+                                                            -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Rio_Branco">America/Rio_Branco [ACT
+                                                            -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Santa_Isabel">America/Santa_Isabel
+                                                            [PDT -07:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Santarem">America/Santarem [BRT
+                                                            -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Santiago">America/Santiago [CLST
+                                                            -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Santo_Domingo">America/Santo_Domingo
+                                                            [AST -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Sao_Paulo">America/Sao_Paulo [BRT
+                                                            -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Scoresbysund">America/Scoresbysund
+                                                            [EGST 00:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Sitka">America/Sitka [AKDT -08:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/St_Barthelemy">America/St_Barthelemy
+                                                            [AST -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/St_Johns">America/St_Johns [NDT
+                                                            -02:30]
+                                                        </mat-option>
+                                                        <mat-option value="America/St_Kitts">America/St_Kitts [AST
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/St_Lucia">America/St_Lucia [AST
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/St_Thomas">America/St_Thomas [AST
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/St_Vincent">America/St_Vincent [AST
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Swift_Current">America/Swift_Current
+                                                            [CST -06:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Tegucigalpa">America/Tegucigalpa [CST
+                                                            -06:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Thule">America/Thule [ADT -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Thunder_Bay">America/Thunder_Bay [EDT
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Tijuana">America/Tijuana [PDT
+                                                            -07:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Toronto">America/Toronto [EDT
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Tortola">America/Tortola [AST
+                                                            -04:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Vancouver">America/Vancouver [PDT
+                                                            -07:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Whitehorse">America/Whitehorse [PDT
+                                                            -07:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Winnipeg">America/Winnipeg [CDT
+                                                            -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Yakutat">America/Yakutat [AKDT
+                                                            -08:00]
+                                                        </mat-option>
+                                                        <mat-option value="America/Yellowknife">America/Yellowknife [MDT
+                                                            -06:00]
+                                                        </mat-option>
+                                                        <mat-option value="Antarctica/Casey">Antarctica/Casey [AWST
+                                                            +08:00]
+                                                        </mat-option>
+                                                        <mat-option value="Antarctica/Davis">Antarctica/Davis [DAVT
+                                                            +07:00]
+                                                        </mat-option>
+                                                        <mat-option value="Antarctica/DumontDUrville">
+                                                            Antarctica/DumontDUrville [DDUT +10:00]
+                                                        </mat-option>
+                                                        <mat-option value="Antarctica/Macquarie">Antarctica/Macquarie
+                                                            [MIST +11:00]
+                                                        </mat-option>
+                                                        <mat-option value="Antarctica/Mawson">Antarctica/Mawson [MAWT
+                                                            +05:00]
+                                                        </mat-option>
+                                                        <mat-option value="Antarctica/McMurdo">Antarctica/McMurdo [NZDT
+                                                            +13:00]
+                                                        </mat-option>
+                                                        <mat-option value="Antarctica/Palmer">Antarctica/Palmer [CLST
+                                                            -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Antarctica/Rothera">Antarctica/Rothera [ROTT
+                                                            -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Antarctica/Syowa">Antarctica/Syowa [SYOT
+                                                            +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Antarctica/Troll">Antarctica/Troll [CEST
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Antarctica/Vostok">Antarctica/Vostok [VOST
+                                                            +06:00]
+                                                        </mat-option>
+                                                        <mat-option value="Arctic/Longyearbyen">Arctic/Longyearbyen
+                                                            [CEST +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Aden">Asia/Aden [AST +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Almaty">Asia/Almaty [ALMT +06:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Amman">Asia/Amman [EEST +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Anadyr">Asia/Anadyr [ANAT +12:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Aqtau">Asia/Aqtau [AQTT +05:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Aqtobe">Asia/Aqtobe [AQTT +05:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Ashgabat">Asia/Ashgabat [TMT +05:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Baghdad">Asia/Baghdad [AST +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Bahrain">Asia/Bahrain [AST +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Baku">Asia/Baku [AZST +05:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Bangkok">Asia/Bangkok [ICT +07:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Beirut">Asia/Beirut [EEST +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Bishkek">Asia/Bishkek [KGT +06:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Brunei">Asia/Brunei [BNT +08:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Chita">Asia/Chita [IRKT +08:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Choibalsan">Asia/Choibalsan [CHOT
+                                                            +08:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Colombo">Asia/Colombo [IST +05:30]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Damascus">Asia/Damascus [EEST +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Dhaka">Asia/Dhaka [BDT +06:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Dili">Asia/Dili [TLT +09:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Dubai">Asia/Dubai [GST +04:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Dushanbe">Asia/Dushanbe [TJT +05:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Gaza">Asia/Gaza [EET +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Hebron">Asia/Hebron [EET +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Ho_Chi_Minh">Asia/Ho_Chi_Minh [ICT
+                                                            +07:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Hong_Kong">Asia/Hong_Kong [HKT +08:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Hovd">Asia/Hovd [HOVT +07:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Irkutsk">Asia/Irkutsk [IRKT +08:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Jakarta">Asia/Jakarta [WIB +07:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Jayapura">Asia/Jayapura [WIT +09:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Jerusalem">Asia/Jerusalem [IDT +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Kabul">Asia/Kabul [AFT +04:30]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Kamchatka">Asia/Kamchatka [PETT
+                                                            +12:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Karachi">Asia/Karachi [PKT +05:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Kathmandu">Asia/Kathmandu [NPT +05:45]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Khandyga">Asia/Khandyga [YAKT +09:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Kolkata">Asia/Kolkata [IST +05:30]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Krasnoyarsk">Asia/Krasnoyarsk [KRAT
+                                                            +07:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Kuala_Lumpur">Asia/Kuala_Lumpur [MYT
+                                                            +08:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Kuching">Asia/Kuching [MYT +08:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Kuwait">Asia/Kuwait [AST +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Macau">Asia/Macau [CST +08:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Magadan">Asia/Magadan [MAGT +10:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Makassar">Asia/Makassar [WITA +08:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Manila">Asia/Manila [PHT +08:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Muscat">Asia/Muscat [GST +04:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Nicosia">Asia/Nicosia [EEST +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Novokuznetsk">Asia/Novokuznetsk [KRAT
+                                                            +07:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Novosibirsk">Asia/Novosibirsk [NOVT
+                                                            +06:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Omsk">Asia/Omsk [OMST +06:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Oral">Asia/Oral [ORAT +05:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Phnom_Penh">Asia/Phnom_Penh [ICT
+                                                            +07:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Pontianak">Asia/Pontianak [WIB +07:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Pyongyang">Asia/Pyongyang [KST +09:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Qatar">Asia/Qatar [AST +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Qyzylorda">Asia/Qyzylorda [QYZT
+                                                            +06:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Rangoon">Asia/Rangoon [MMT +06:30]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Riyadh">Asia/Riyadh [AST +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Sakhalin">Asia/Sakhalin [SAKT +10:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Samarkand">Asia/Samarkand [UZT +05:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Seoul">Asia/Seoul [KST +09:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Shanghai">Asia/Shanghai [CST +08:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Singapore">Asia/Singapore [SGT +08:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Srednekolymsk">Asia/Srednekolymsk [SRET
+                                                            +11:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Taipei">Asia/Taipei [CST +08:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Tashkent">Asia/Tashkent [UZT +05:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Tbilisi">Asia/Tbilisi [GET +04:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Tehran">Asia/Tehran [IRST +03:30]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Thimphu">Asia/Thimphu [BTT +06:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Tokyo">Asia/Tokyo [JST +09:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Ulaanbaatar">Asia/Ulaanbaatar [ULAT
+                                                            +08:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Urumqi">Asia/Urumqi [XJT +06:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Ust-Nera">Asia/Ust-Nera [VLAT +10:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Vientiane">Asia/Vientiane [ICT +07:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Vladivostok">Asia/Vladivostok [VLAT
+                                                            +10:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Yakutsk">Asia/Yakutsk [YAKT +09:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Yekaterinburg">Asia/Yekaterinburg [YEKT
+                                                            +05:00]
+                                                        </mat-option>
+                                                        <mat-option value="Asia/Yerevan">Asia/Yerevan [AMT +04:00]
+                                                        </mat-option>
+                                                        <mat-option value="Atlantic/Azores">Atlantic/Azores [AZOST
+                                                            00:00]
+                                                        </mat-option>
+                                                        <mat-option value="Atlantic/Bermuda">Atlantic/Bermuda [ADT
+                                                            -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Atlantic/Canary">Atlantic/Canary [WEST
+                                                            +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Atlantic/Cape_Verde">Atlantic/Cape_Verde [CVT
+                                                            -01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Atlantic/Faroe">Atlantic/Faroe [WEST
+                                                            +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Atlantic/Madeira">Atlantic/Madeira [WEST
+                                                            +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Atlantic/Reykjavik">Atlantic/Reykjavik [GMT
+                                                            00:00]
+                                                        </mat-option>
+                                                        <mat-option value="Atlantic/South_Georgia">
+                                                            Atlantic/South_Georgia [GST -02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Atlantic/St_Helena">Atlantic/St_Helena [GMT
+                                                            00:00]
+                                                        </mat-option>
+                                                        <mat-option value="Atlantic/Stanley">Atlantic/Stanley [FKST
+                                                            -03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Australia/Adelaide">Australia/Adelaide [ACDT
+                                                            +10:30]
+                                                        </mat-option>
+                                                        <mat-option value="Australia/Brisbane">Australia/Brisbane [AEST
+                                                            +10:00]
+                                                        </mat-option>
+                                                        <mat-option value="Australia/Broken_Hill">Australia/Broken_Hill
+                                                            [ACDT +10:30]
+                                                        </mat-option>
+                                                        <mat-option value="Australia/Currie">Australia/Currie [AEDT
+                                                            +11:00]
+                                                        </mat-option>
+                                                        <mat-option value="Australia/Darwin">Australia/Darwin [ACST
+                                                            +09:30]
+                                                        </mat-option>
+                                                        <mat-option value="Australia/Eucla">Australia/Eucla [ACWST
+                                                            +08:45]
+                                                        </mat-option>
+                                                        <mat-option value="Australia/Hobart">Australia/Hobart [AEDT
+                                                            +11:00]
+                                                        </mat-option>
+                                                        <mat-option value="Australia/Lindeman">Australia/Lindeman [AEST
+                                                            +10:00]
+                                                        </mat-option>
+                                                        <mat-option value="Australia/Lord_Howe">Australia/Lord_Howe
+                                                            [LHDT +11:00]
+                                                        </mat-option>
+                                                        <mat-option value="Australia/Melbourne">Australia/Melbourne
+                                                            [AEDT +11:00]
+                                                        </mat-option>
+                                                        <mat-option value="Australia/Perth">Australia/Perth [AWST
+                                                            +08:00]
+                                                        </mat-option>
+                                                        <mat-option value="Australia/Sydney">Australia/Sydney [AEDT
+                                                            +11:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Amsterdam">Europe/Amsterdam [CEST
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Andorra">Europe/Andorra [CEST
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Athens">Europe/Athens [EEST +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Belgrade">Europe/Belgrade [CEST
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Berlin">Europe/Berlin [CEST +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Bratislava">Europe/Bratislava [CEST
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Brussels">Europe/Brussels [CEST
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Bucharest">Europe/Bucharest [EEST
+                                                            +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Budapest">Europe/Budapest [CEST
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Busingen">Europe/Busingen [CEST
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Chisinau">Europe/Chisinau [EEST
+                                                            +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Copenhagen">Europe/Copenhagen [CEST
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Dublin">Europe/Dublin [IST +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Gibraltar">Europe/Gibraltar [CEST
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Guernsey">Europe/Guernsey [BST
+                                                            +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Helsinki">Europe/Helsinki [EEST
+                                                            +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Isle_of_Man">Europe/Isle_of_Man [BST
+                                                            +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Istanbul">Europe/Istanbul [EEST
+                                                            +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Jersey">Europe/Jersey [BST +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Kaliningrad">Europe/Kaliningrad [EET
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Kiev">Europe/Kiev [EEST +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Lisbon">Europe/Lisbon [WEST +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Ljubljana">Europe/Ljubljana [CEST
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/London">Europe/London [BST +01:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Luxembourg">Europe/Luxembourg [CEST
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Madrid">Europe/Madrid [CEST +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Malta">Europe/Malta [CEST +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Mariehamn">Europe/Mariehamn [EEST
+                                                            +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Minsk">Europe/Minsk [MSK +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Monaco">Europe/Monaco [CEST +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Moscow">Europe/Moscow [MSK +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Oslo">Europe/Oslo [CEST +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Paris">Europe/Paris [CEST +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Podgorica">Europe/Podgorica [CEST
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Prague">Europe/Prague [CEST +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Riga">Europe/Riga [EEST +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Rome">Europe/Rome [CEST +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Samara">Europe/Samara [SAMT +04:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/San_Marino">Europe/San_Marino [CEST
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Sarajevo">Europe/Sarajevo [CEST
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Simferopol">Europe/Simferopol [MSK
+                                                            +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Skopje">Europe/Skopje [CEST +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Sofia">Europe/Sofia [EEST +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Stockholm">Europe/Stockholm [CEST
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Tallinn">Europe/Tallinn [EEST
+                                                            +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Tirane">Europe/Tirane [CEST +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Uzhgorod">Europe/Uzhgorod [EEST
+                                                            +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Vaduz">Europe/Vaduz [CEST +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Vatican">Europe/Vatican [CEST
+                                                            +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Vienna">Europe/Vienna [CEST +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Vilnius">Europe/Vilnius [EEST
+                                                            +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Volgograd">Europe/Volgograd [MSK
+                                                            +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Warsaw">Europe/Warsaw [CEST +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Zagreb">Europe/Zagreb [CEST +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Zaporozhye">Europe/Zaporozhye [EEST
+                                                            +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Europe/Zurich">Europe/Zurich [CEST +02:00]
+                                                        </mat-option>
+                                                        <mat-option value="Indian/Antananarivo">Indian/Antananarivo [EAT
+                                                            +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Indian/Chagos">Indian/Chagos [IOT +06:00]
+                                                        </mat-option>
+                                                        <mat-option value="Indian/Christmas">Indian/Christmas [CXT
+                                                            +07:00]
+                                                        </mat-option>
+                                                        <mat-option value="Indian/Cocos">Indian/Cocos [CCT +06:30]
+                                                        </mat-option>
+                                                        <mat-option value="Indian/Comoro">Indian/Comoro [EAT +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Indian/Kerguelen">Indian/Kerguelen [TFT
+                                                            +05:00]
+                                                        </mat-option>
+                                                        <mat-option value="Indian/Mahe">Indian/Mahe [SCT +04:00]
+                                                        </mat-option>
+                                                        <mat-option value="Indian/Maldives">Indian/Maldives [MVT
+                                                            +05:00]
+                                                        </mat-option>
+                                                        <mat-option value="Indian/Mauritius">Indian/Mauritius [MUT
+                                                            +04:00]
+                                                        </mat-option>
+                                                        <mat-option value="Indian/Mayotte">Indian/Mayotte [EAT +03:00]
+                                                        </mat-option>
+                                                        <mat-option value="Indian/Reunion">Indian/Reunion [RET +04:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Apia">Pacific/Apia [WSDT +14:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Auckland">Pacific/Auckland [NZDT
+                                                            +13:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Bougainville">Pacific/Bougainville
+                                                            [BST +11:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Chatham">Pacific/Chatham [CHADT
+                                                            +13:45]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Chuuk">Pacific/Chuuk [CHUT +10:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Easter">Pacific/Easter [EASST
+                                                            -05:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Efate">Pacific/Efate [VUT +11:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Enderbury">Pacific/Enderbury [PHOT
+                                                            +13:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Fakaofo">Pacific/Fakaofo [TKT
+                                                            +13:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Fiji">Pacific/Fiji [FJT +12:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Funafuti">Pacific/Funafuti [TVT
+                                                            +12:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Galapagos">Pacific/Galapagos [GALT
+                                                            -06:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Gambier">Pacific/Gambier [GAMT
+                                                            -09:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Guadalcanal">Pacific/Guadalcanal [SBT
+                                                            +11:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Guam">Pacific/Guam [ChST +10:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Honolulu">Pacific/Honolulu [HST
+                                                            -10:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Johnston">Pacific/Johnston [HST
+                                                            -10:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Kiritimati">Pacific/Kiritimati [LINT
+                                                            +14:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Kosrae">Pacific/Kosrae [KOST
+                                                            +11:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Kwajalein">Pacific/Kwajalein [MHT
+                                                            +12:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Majuro">Pacific/Majuro [MHT +12:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Marquesas">Pacific/Marquesas [MART
+                                                            -09:30]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Midway">Pacific/Midway [SST -11:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Nauru">Pacific/Nauru [NRT +12:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Niue">Pacific/Niue [NUT -11:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Norfolk">Pacific/Norfolk [NFT
+                                                            +11:30]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Noumea">Pacific/Noumea [NCT +11:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Pago_Pago">Pacific/Pago_Pago [SST
+                                                            -11:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Palau">Pacific/Palau [PWT +09:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Pitcairn">Pacific/Pitcairn [PST
+                                                            -08:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Pohnpei">Pacific/Pohnpei [PONT
+                                                            +11:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Port_Moresby">Pacific/Port_Moresby
+                                                            [PGT +10:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Rarotonga">Pacific/Rarotonga [CKT
+                                                            -10:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Saipan">Pacific/Saipan [ChST
+                                                            +10:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Tahiti">Pacific/Tahiti [TAHT
+                                                            -10:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Tarawa">Pacific/Tarawa [GILT
+                                                            +12:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Tongatapu">Pacific/Tongatapu [TOT
+                                                            +13:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Wake">Pacific/Wake [WAKT +12:00]
+                                                        </mat-option>
+                                                        <mat-option value="Pacific/Wallis">Pacific/Wallis [WFT +12:00]
+                                                        </mat-option>
+                                                        <mat-option value="UTC">UTC [UTC 00:00]</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <!-- input -->
+                                                <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">
+                                                    Email Address
+                                                </mat-label>
+                                                <mat-form-field appearance="outline" class="w-100" color="primary">
+                                                    <input matInput type="email" placeholder="Enter Email"
+                                                           formControlName="email"/>
+                                                </mat-form-field>
+                                                <!-- input -->
+                                                <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">
+                                                    Custom DNS
+                                                </mat-label>
+                                                <mat-form-field appearance="outline" class="w-100" color="primary">
+                                                    <input matInput type="resellerDns" placeholder="Enter Custom DNS"
+                                                           formControlName="resellerDns"/>
+                                                </mat-form-field>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="d-flex align-items-center m-t-24">
-                                        <button
-                                            mat-mini-fab
-                                            class="bg-light-primary shadow-none rounded icon-48"
-                                        >
-                                            <i-tabler
-                                                name="checkbox"
-                                                class="icon-20 d-flex text-primary"
-                                            ></i-tabler>
-                                        </button>
-                                        <div class="m-l-16 w-100">
-                                            <h5 class="f-s-16 f-w-600 m-0 m-b-4">
-                                                Order Confirmation
-                                            </h5>
-                                            <div
-                                                class="d-flex align-items-center justify-content-center w-100"
-                                            >
-                        <span class="f-s-14"
-                        >You will be notified when customer order any
-                          product</span
-                        >
-                                                <mat-slide-toggle class="m-l-auto"></mat-slide-toggle>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center m-t-24">
-                                        <button
-                                            mat-mini-fab
-                                            class="bg-light-primary shadow-none rounded icon-48"
-                                        >
-                                            <i-tabler
-                                                name="clock"
-                                                class="icon-20 d-flex text-primary"
-                                            ></i-tabler>
-                                        </button>
-                                        <div class="m-l-16 w-100">
-                                            <h5 class="f-s-16 f-w-600 m-0 m-b-4">
-                                                Order Status Changed
-                                            </h5>
-                                            <div
-                                                class="d-flex align-items-center justify-content-center w-100"
-                                            >
-                        <span class="f-s-14"
-                        >You will be notified when customer make changes to
-                          the order</span
-                        >
-                                                <mat-slide-toggle class="m-l-auto"></mat-slide-toggle>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center m-t-24">
-                                        <button
-                                            mat-mini-fab
-                                            class="bg-light-primary shadow-none rounded icon-48"
-                                        >
-                                            <i-tabler
-                                                name="truck-delivery"
-                                                class="icon-20 d-flex text-primary"
-                                            ></i-tabler>
-                                        </button>
-                                        <div class="m-l-16 w-100">
-                                            <h5 class="f-s-16 f-w-600 m-0 m-b-4">Order Delivered</h5>
-                                            <div
-                                                class="d-flex align-items-center justify-content-center w-100"
-                                            >
-                        <span class="f-s-14"
-                        >You will be notified once the order is
-                          delivered</span
-                        >
-                                                <mat-slide-toggle class="m-l-auto"></mat-slide-toggle>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center m-t-24">
-                                        <button
-                                            mat-mini-fab
-                                            class="bg-light-primary shadow-none rounded icon-48"
-                                        >
-                                            <i-tabler
-                                                name="mail"
-                                                class="icon-20 d-flex text-primary"
-                                            ></i-tabler>
-                                        </button>
-                                        <div class="m-l-16 w-100">
-                                            <h5 class="f-s-16 f-w-600 m-0 m-b-4">
-                                                Email Notification
-                                            </h5>
-                                            <div
-                                                class="d-flex align-items-center justify-content-center w-100"
-                                            >
-                        <span class="f-s-14"
-                        >Turn on email notificaiton to get updates through
-                          email</span
-                        >
-                                                <mat-slide-toggle class="m-l-auto"></mat-slide-toggle>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </mat-card-content>
-                            </mat-card>
-
-                            <mat-card class="cardWithShadow">
-                                <mat-card-content class="p-y-24">
-                                    <mat-card-title>Date & Time</mat-card-title>
-                                    <mat-card-subtitle class="mat-body-1"
-                                    >Time zones and calendar display
-                                        settings.</mat-card-subtitle
-                                    >
-
-                                    <div class="d-flex align-items-center m-t-24">
-                                        <button
-                                            mat-mini-fab
-                                            class="bg-light-primary shadow-none rounded icon-48"
-                                        >
-                                            <i-tabler
-                                                name="clock"
-                                                class="icon-20 d-flex text-primary"
-                                            ></i-tabler>
-                                        </button>
-                                        <div class="m-l-16 w-100">
-                                            <span class="f-s-14 d-block m-b-4">Time zone</span>
-                                            <h5 class="f-s-16 f-w-600 m-0 m-b-4">
-                                                (UTC + 02:00) Athens, Bucharet
-                                            </h5>
-                                        </div>
-                                        <span class="m-l-auto">
-                      <i-tabler name="download" class="icon-20"></i-tabler>
-                    </span>
-                                    </div>
-                                </mat-card-content>
-                            </mat-card>
-
-                            <mat-card class="cardWithShadow">
-                                <mat-card-content class="p-y-24">
-                                    <mat-card-title>Ignore Tracking</mat-card-title>
-
-                                    <div class="d-flex align-items-center m-t-24">
-                                        <button
-                                            mat-mini-fab
-                                            class="bg-light-primary shadow-none rounded icon-48"
-                                        >
-                                            <i-tabler
-                                                name="clock"
-                                                class="icon-20 d-flex text-primary"
-                                            ></i-tabler>
-                                        </button>
-                                        <div class="m-l-16 w-100">
-                                            <h5 class="f-s-16 f-w-600 m-0 m-b-4">
-                                                Ignore Browser Tracking
-                                            </h5>
-                                            <span class="f-s-14">Browser Cookie</span>
-                                        </div>
-                                        <mat-slide-toggle class="m-l-auto"></mat-slide-toggle>
-                                    </div>
-                                </mat-card-content>
-                            </mat-card>
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
                         </div>
-                    </div>
-                </mat-card-content>
-            </mat-tab>
-            <mat-tab>
-                <ng-template mat-tab-label>
-                    <div class="d-flex align-items-center">
-                        <mat-icon>
-                            <i-tabler name="receipt" class="icon-20 m-r-8"></i-tabler>
-                        </mat-icon>
-                    </div>
-                    Bills
-                </ng-template>
-                <mat-card-content class="p-y-24 b-t-1">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-9">
-                            <mat-card class="cardWithShadow">
-                                <mat-card-content class="p-y-24">
-                                    <mat-card-title class="m-b-24"
-                                    >Billing Information</mat-card-title
-                                    >
-
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <!-- input -->
-                                            <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-                                            >Business Name*</mat-label
-                                            >
-                                            <mat-form-field
-                                                appearance="outline"
-                                                class="w-100"
-                                                color="primary"
-                                            >
-                                                <input matInput type="text" value="Visitor Analytics" />
-                                            </mat-form-field>
-                                            <!-- input -->
-                                            <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-                                            >Business Address*</mat-label
-                                            >
-                                            <mat-form-field
-                                                appearance="outline"
-                                                class="w-100"
-                                                color="primary"
-                                            >
-                                                <input matInput type="text" />
-                                            </mat-form-field>
-                                            <!-- input -->
-                                            <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-                                            >First Name*</mat-label
-                                            >
-                                            <mat-form-field
-                                                appearance="outline"
-                                                class="w-100"
-                                                color="primary"
-                                            >
-                                                <input matInput type="text" />
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <!-- input -->
-                                            <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-                                            >Business Sector*</mat-label
-                                            >
-                                            <mat-form-field
-                                                appearance="outline"
-                                                class="w-100"
-                                                color="primary"
-                                            >
-                                                <input
-                                                    matInput
-                                                    type="text"
-                                                    value="Arts, Media & Entertainment"
-                                                />
-                                            </mat-form-field>
-                                            <!-- input -->
-                                            <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-                                            >Country*</mat-label
-                                            >
-                                            <mat-form-field
-                                                appearance="outline"
-                                                class="w-100"
-                                                color="primary"
-                                            >
-                                                <input matInput type="text" value="Romania" />
-                                            </mat-form-field>
-                                            <!-- input -->
-                                            <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-                                            >Last Name*</mat-label
-                                            >
-                                            <mat-form-field
-                                                appearance="outline"
-                                                class="w-100"
-                                                color="primary"
-                                            >
-                                                <input matInput type="text" />
-                                            </mat-form-field>
-                                        </div>
-                                    </div>
-                                </mat-card-content>
-                            </mat-card>
-
-                            <mat-card class="cardWithShadow">
-                                <mat-card-content class="p-y-24">
-                                    <mat-card-title
-                                    >Current Plan : <span class="text-success">Execusive</span>
-                                    </mat-card-title>
-                                    <mat-card-subtitle class="mat-body-1"
-                                    >Thanks for being a premium member and supporting our
-                                        development.</mat-card-subtitle
-                                    >
-
-                                    <div class="d-flex align-items-center m-t-24">
-                                        <button
-                                            mat-mini-fab
-                                            class="bg-light-primary shadow-none rounded icon-48"
-                                        >
-                                            <i-tabler
-                                                name="box"
-                                                class="icon-20 d-flex text-primary"
-                                            ></i-tabler>
-                                        </button>
-                                        <div class="m-l-16 w-100">
-                                            <span class="f-s-14 d-block m-b-4">Current Plan</span>
-                                            <h5 class="f-s-16 f-w-600 m-0 m-b-4">
-                                                750.000 Monthly Visits
-                                            </h5>
-                                        </div>
-                                        <span class="m-l-auto">
-                      <i-tabler name="circle-plus" class="icon-20"></i-tabler>
-                    </span>
-                                    </div>
-
-                                    <div class="m-t-24">
-                                        <button mat-flat-button color="primary">Change Plan</button>
-                                        <button mat-stroked-button class="m-l-8" color="warn">
-                                            Reset Plan
-                                        </button>
-                                    </div>
-                                </mat-card-content>
-                            </mat-card>
-
-                            <mat-card class="cardWithShadow">
-                                <mat-card-content class="p-y-24">
-                                    <mat-card-title>Payment Method </mat-card-title>
-                                    <mat-card-subtitle class="mat-body-1"
-                                    >On 26 December, 2023</mat-card-subtitle
-                                    >
-
-                                    <div class="d-flex align-items-center m-t-24">
-                                        <button
-                                            mat-mini-fab
-                                            class="bg-light-primary shadow-none rounded icon-48"
-                                        >
-                                            <i-tabler
-                                                name="credit-card"
-                                                class="icon-20 d-flex text-primary"
-                                            ></i-tabler>
-                                        </button>
-                                        <div class="m-l-16 w-100">
-                                            <span class="f-s-14 d-block m-b-4">Visa</span>
-                                            <h5 class="f-s-16 f-w-600 m-0 m-b-4">*****2102</h5>
-                                        </div>
-                                        <span class="m-l-auto">
-                      <i-tabler name="pencil-minus" class="icon-20"></i-tabler>
-                    </span>
-                                    </div>
-
-                                    <div class="m-t-24">
-                                        <button mat-stroked-button class="m-l-8" color="warn">
-                                            Cancel Subscription
-                                        </button>
-                                    </div>
-                                </mat-card-content>
-                            </mat-card>
+                    </mat-card-content>
+                </mat-tab>
+                <!--
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        <div class="d-flex align-items-center">
+                            <mat-icon>
+                                <i-tabler name="bell" class="icon-20 m-r-8"></i-tabler>
+                            </mat-icon>
                         </div>
-                    </div>
-                </mat-card-content>
-            </mat-tab>
-            <mat-tab>
-                <ng-template mat-tab-label>
-                    <div class="d-flex align-items-center">
-                        <mat-icon>
-                            <i-tabler name="lock" class="icon-20 m-r-8"></i-tabler>
-                        </mat-icon>
-                    </div>
-                    Security
-                </ng-template>
-                <mat-card-content class="p-y-24 b-t-1">
-                    <div class="row">
-                        <div class="col-lg-8">
-                            <mat-card class="cardWithShadow">
-                                <mat-card-content class="p-y-24">
-                                    <mat-card-title>Two-factor Authentication</mat-card-title>
-                                    <div class="d-flex align-items-center p-b-30 b-b-1">
+                        Notifications
+                    </ng-template>
+                    <mat-card-content class="p-y-24 b-t-1">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-9">
+                                <mat-card class="cardWithShadow">
+                                    <mat-card-content class="p-y-24">
+                                        <mat-card-title>Notification Preferences</mat-card-title>
                                         <mat-card-subtitle class="mat-body-1"
-                                        >Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                                            Corporis sapiente sunt earum officiis laboriosam
-                                            ut.</mat-card-subtitle
+                                        >Select the notificaitons ou would like to receive via
+                                            email. Please note that you cannot opt out of receving
+                                            service messages, such as payment, security or legal
+                                            notifications.
+                                        </mat-card-subtitle
                                         >
-                                        <button mat-flat-button color="primary" class="m-l-auto">
-                                            Enable
-                                        </button>
-                                    </div>
-                                    <div class="d-flex align-items-center p-y-24 b-b-1">
-                                        <div>
-                                            <h5 class="f-s-16 f-w-600 m-0">Authentication App</h5>
-                                            <mat-card-subtitle class="mat-body-1"
-                                            >Google auth app</mat-card-subtitle
-                                            >
-                                        </div>
 
-                                        <button mat-stroked-button color="primary" class="m-l-auto">
-                                            Setup
-                                        </button>
-                                    </div>
-                                    <div class="d-flex align-items-center p-y-24 b-b-1">
-                                        <div>
-                                            <h5 class="f-s-16 f-w-600 m-0">Another e-mail</h5>
-                                            <mat-card-subtitle class="mat-body-1"
-                                            >E-mail to send verification link</mat-card-subtitle
-                                            >
-                                        </div>
 
-                                        <button mat-stroked-button color="primary" class="m-l-auto">
-                                            Setup
-                                        </button>
-                                    </div>
-                                    <div class="d-flex align-items-center p-y-24 b-b-1">
-                                        <div>
-                                            <h5 class="f-s-16 f-w-600 m-0">SMS Recovery</h5>
-                                            <mat-card-subtitle class="mat-body-1"
-                                            >Your phone number or something</mat-card-subtitle
-                                            >
-                                        </div>
 
-                                        <button mat-stroked-button color="primary" class="m-l-auto">
-                                            Setup
-                                        </button>
-                                    </div>
-                                </mat-card-content>
-                            </mat-card>
+                                        <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block m-t-24"
+                                        >Email Address*
+                                        </mat-label
+                                        >
+                                        <mat-form-field
+                                            appearance="outline"
+                                            class="w-100"
+                                            color="primary"
+                                        >
+                                            <input matInput type="email"/>
+                                            <mat-hint> Required for notificaitons.</mat-hint>
+                                        </mat-form-field>
+
+                                        <div class="d-flex align-items-center m-t-24">
+                                            <button
+                                                mat-mini-fab
+                                                class="bg-light-primary shadow-none rounded icon-48"
+                                            >
+                                                <i-tabler
+                                                    name="article"
+                                                    class="icon-20 d-flex text-primary"
+                                                ></i-tabler>
+                                            </button>
+                                            <div class="m-l-16 w-100">
+                                                <h5 class="f-s-16 f-w-600 m-0 m-b-4">Our newsletter</h5>
+                                                <div
+                                                    class="d-flex align-items-center justify-content-center w-100"
+                                                >
+                            <span class="f-s-14"
+                            >We'll always let you know about important
+                              changes</span
+                            >
+                                                    <mat-slide-toggle class="m-l-auto"></mat-slide-toggle>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center m-t-24">
+                                            <button
+                                                mat-mini-fab
+                                                class="bg-light-primary shadow-none rounded icon-48"
+                                            >
+                                                <i-tabler
+                                                    name="checkbox"
+                                                    class="icon-20 d-flex text-primary"
+                                                ></i-tabler>
+                                            </button>
+                                            <div class="m-l-16 w-100">
+                                                <h5 class="f-s-16 f-w-600 m-0 m-b-4">
+                                                    Order Confirmation
+                                                </h5>
+                                                <div
+                                                    class="d-flex align-items-center justify-content-center w-100"
+                                                >
+                            <span class="f-s-14"
+                            >You will be notified when customer order any
+                              product</span
+                            >
+                                                    <mat-slide-toggle class="m-l-auto"></mat-slide-toggle>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center m-t-24">
+                                            <button
+                                                mat-mini-fab
+                                                class="bg-light-primary shadow-none rounded icon-48"
+                                            >
+                                                <i-tabler
+                                                    name="clock"
+                                                    class="icon-20 d-flex text-primary"
+                                                ></i-tabler>
+                                            </button>
+                                            <div class="m-l-16 w-100">
+                                                <h5 class="f-s-16 f-w-600 m-0 m-b-4">
+                                                    Order Status Changed
+                                                </h5>
+                                                <div
+                                                    class="d-flex align-items-center justify-content-center w-100"
+                                                >
+                            <span class="f-s-14"
+                            >You will be notified when customer make changes to
+                              the order</span
+                            >
+                                                    <mat-slide-toggle class="m-l-auto"></mat-slide-toggle>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center m-t-24">
+                                            <button
+                                                mat-mini-fab
+                                                class="bg-light-primary shadow-none rounded icon-48"
+                                            >
+                                                <i-tabler
+                                                    name="truck-delivery"
+                                                    class="icon-20 d-flex text-primary"
+                                                ></i-tabler>
+                                            </button>
+                                            <div class="m-l-16 w-100">
+                                                <h5 class="f-s-16 f-w-600 m-0 m-b-4">Order Delivered</h5>
+                                                <div
+                                                    class="d-flex align-items-center justify-content-center w-100"
+                                                >
+                            <span class="f-s-14"
+                            >You will be notified once the order is
+                              delivered</span
+                            >
+                                                    <mat-slide-toggle class="m-l-auto"></mat-slide-toggle>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center m-t-24">
+                                            <button
+                                                mat-mini-fab
+                                                class="bg-light-primary shadow-none rounded icon-48"
+                                            >
+                                                <i-tabler
+                                                    name="mail"
+                                                    class="icon-20 d-flex text-primary"
+                                                ></i-tabler>
+                                            </button>
+                                            <div class="m-l-16 w-100">
+                                                <h5 class="f-s-16 f-w-600 m-0 m-b-4">
+                                                    Email Notification
+                                                </h5>
+                                                <div
+                                                    class="d-flex align-items-center justify-content-center w-100"
+                                                >
+                            <span class="f-s-14"
+                            >Turn on email notificaiton to get updates through
+                              email</span
+                            >
+                                                    <mat-slide-toggle class="m-l-auto"></mat-slide-toggle>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-card-content>
+                                </mat-card>
+
+                                <mat-card class="cardWithShadow">
+                                    <mat-card-content class="p-y-24">
+                                        <mat-card-title>Date & Time</mat-card-title>
+                                        <mat-card-subtitle class="mat-body-1"
+                                        >Time zones and calendar display
+                                            settings.
+                                        </mat-card-subtitle
+                                        >
+
+                                        <div class="d-flex align-items-center m-t-24">
+                                            <button
+                                                mat-mini-fab
+                                                class="bg-light-primary shadow-none rounded icon-48"
+                                            >
+                                                <i-tabler
+                                                    name="clock"
+                                                    class="icon-20 d-flex text-primary"
+                                                ></i-tabler>
+                                            </button>
+                                            <div class="m-l-16 w-100">
+                                                <span class="f-s-14 d-block m-b-4">Time zone</span>
+                                                <h5 class="f-s-16 f-w-600 m-0 m-b-4">
+                                                    (UTC + 02:00) Athens, Bucharet
+                                                </h5>
+                                            </div>
+                                            <span class="m-l-auto">
+                          <i-tabler name="download" class="icon-20"></i-tabler>
+                        </span>
+                                        </div>
+                                    </mat-card-content>
+                                </mat-card>
+
+                                <mat-card class="cardWithShadow">
+                                    <mat-card-content class="p-y-24">
+                                        <mat-card-title>Ignore Tracking</mat-card-title>
+
+                                        <div class="d-flex align-items-center m-t-24">
+                                            <button
+                                                mat-mini-fab
+                                                class="bg-light-primary shadow-none rounded icon-48"
+                                            >
+                                                <i-tabler
+                                                    name="clock"
+                                                    class="icon-20 d-flex text-primary"
+                                                ></i-tabler>
+                                            </button>
+                                            <div class="m-l-16 w-100">
+                                                <h5 class="f-s-16 f-w-600 m-0 m-b-4">
+                                                    Ignore Browser Tracking
+                                                </h5>
+                                                <span class="f-s-14">Browser Cookie</span>
+                                            </div>
+                                            <mat-slide-toggle class="m-l-auto"></mat-slide-toggle>
+                                        </div>
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
                         </div>
-                        <div class="col-lg-4">
-                            <mat-card class="cardWithShadow">
-                                <mat-card-content class="p-y-24">
-                                    <button
-                                        mat-mini-fab
-                                        class="bg-light-primary shadow-none rounded icon-48"
-                                    >
-                                        <i-tabler
-                                            name="device-laptop"
-                                            class="icon-22 d-flex text-primary"
-                                        ></i-tabler>
-                                    </button>
-                                    <mat-card-title class="m-t-16">Devices</mat-card-title>
-                                    <mat-card-subtitle class="mat-body-1"
-                                    >Lorem ipsum dolor sit amet consectetur adipisicing elit
-                                        Rem.</mat-card-subtitle
-                                    >
-                                    <button mat-flat-button color="primary" class="m-t-24">
-                                        Sign out from all devices
-                                    </button>
-
-                                    <div class="d-flex align-items-center p-y-24 b-b-1">
-                    <span>
-                      <i-tabler name="device-mobile" class="icon-22"></i-tabler>
-                    </span>
-                                        <div class="m-l-16">
-                                            <mat-card-title class="m-b-0">iPhone 14</mat-card-title>
-                                            <mat-card-subtitle class="mat-body-1"
-                                            >London UK, Oct 23 at 1:15 AM
-                                            </mat-card-subtitle>
-                                        </div>
-                                        <button mat-icon-button class="m-l-auto">
-                                            <mat-icon>more_vert</mat-icon>
-                                        </button>
-                                    </div>
-                                    <div class="d-flex align-items-center p-t-24">
-                    <span>
-                      <i-tabler name="device-laptop" class="icon-22"></i-tabler>
-                    </span>
-                                        <div class="m-l-16">
-                                            <mat-card-title class="m-b-0">Macbook Air</mat-card-title>
-                                            <mat-card-subtitle class="mat-body-1"
-                                            >Gujarat India, Oct 24 at 3:15 AM
-                                            </mat-card-subtitle>
-                                        </div>
-                                        <button mat-icon-button class="m-l-auto">
-                                            <mat-icon>more_vert</mat-icon>
-                                        </button>
-                                    </div>
-                                    <button mat-stroked-button color="primary" class="m-t-16 w-100">Need Help?</button>
-                                </mat-card-content>
-                            </mat-card>
+                    </mat-card-content>
+                </mat-tab>
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        <div class="d-flex align-items-center">
+                            <mat-icon>
+                                <i-tabler name="receipt" class="icon-20 m-r-8"></i-tabler>
+                            </mat-icon>
                         </div>
-                    </div>
-                </mat-card-content>
-            </mat-tab>
-        </mat-tab-group>
-        <div class="text-right p-24 p-t-0">
-            <button mat-flat-button color="primary" class="m-r-8">Save</button>
-            <button mat-stroked-button color="warn">Cancel</button>
-        </div>
+                        Bills
+                    </ng-template>
+                    <mat-card-content class="p-y-24 b-t-1">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-9">
+                                <mat-card class="cardWithShadow">
+                                    <mat-card-content class="p-y-24">
+                                        <mat-card-title class="m-b-24"
+                                        >Billing Information
+                                        </mat-card-title
+                                        >
+
+                                        <div class="row">
+                                            <div class="col-sm-6">
+
+                                                 input
+
+                                                <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
+                                                >Business Name*
+                                                </mat-label
+                                                >
+                                                <mat-form-field
+                                                    appearance="outline"
+                                                    class="w-100"
+                                                    color="primary"
+                                                >
+                                                    <input matInput type="text" value="Visitor Analytics"/>
+                                                </mat-form-field>
+
+
+                                                <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
+                                                >Business Address*
+                                                </mat-label
+                                                >
+                                                <mat-form-field
+                                                    appearance="outline"
+                                                    class="w-100"
+                                                    color="primary"
+                                                >
+                                                    <input matInput type="text"/>
+                                                </mat-form-field>
+
+
+                                                <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
+                                                >First Name*
+                                                </mat-label
+                                                >
+                                                <mat-form-field
+                                                    appearance="outline"
+                                                    class="w-100"
+                                                    color="primary"
+                                                >
+                                                    <input matInput type="text"/>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-sm-6">
+
+
+                                                <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
+                                                >Business Sector*
+                                                </mat-label
+                                                >
+                                                <mat-form-field
+                                                    appearance="outline"
+                                                    class="w-100"
+                                                    color="primary"
+                                                >
+                                                    <input
+                                                        matInput
+                                                        type="text"
+                                                        value="Arts, Media & Entertainment"
+                                                    />
+                                                </mat-form-field>
+
+
+                                                <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
+                                                >Country*
+                                                </mat-label
+                                                >
+                                                <mat-form-field
+                                                    appearance="outline"
+                                                    class="w-100"
+                                                    color="primary"
+                                                >
+                                                    <input matInput type="text" value="Romania"/>
+                                                </mat-form-field>
+
+
+                                                <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
+                                                >Last Name*
+                                                </mat-label
+                                                >
+                                                <mat-form-field
+                                                    appearance="outline"
+                                                    class="w-100"
+                                                    color="primary"
+                                                >
+                                                    <input matInput type="text"/>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </mat-card-content>
+                                </mat-card>
+
+                                <mat-card class="cardWithShadow">
+                                    <mat-card-content class="p-y-24">
+                                        <mat-card-title
+                                        >Current Plan : <span class="text-success">Execusive</span>
+                                        </mat-card-title>
+                                        <mat-card-subtitle class="mat-body-1"
+                                        >Thanks for being a premium member and supporting our
+                                            development.
+                                        </mat-card-subtitle
+                                        >
+
+                                        <div class="d-flex align-items-center m-t-24">
+                                            <button
+                                                mat-mini-fab
+                                                class="bg-light-primary shadow-none rounded icon-48"
+                                            >
+                                                <i-tabler
+                                                    name="box"
+                                                    class="icon-20 d-flex text-primary"
+                                                ></i-tabler>
+                                            </button>
+                                            <div class="m-l-16 w-100">
+                                                <span class="f-s-14 d-block m-b-4">Current Plan</span>
+                                                <h5 class="f-s-16 f-w-600 m-0 m-b-4">
+                                                    750.000 Monthly Visits
+                                                </h5>
+                                            </div>
+                                            <span class="m-l-auto">
+                          <i-tabler name="circle-plus" class="icon-20"></i-tabler>
+                        </span>
+                                        </div>
+
+                                        <div class="m-t-24">
+                                            <button mat-flat-button color="primary">Change Plan</button>
+                                            <button mat-stroked-button class="m-l-8" color="warn">
+                                                Reset Plan
+                                            </button>
+                                        </div>
+                                    </mat-card-content>
+                                </mat-card>
+
+                                <mat-card class="cardWithShadow">
+                                    <mat-card-content class="p-y-24">
+                                        <mat-card-title>Payment Method</mat-card-title>
+                                        <mat-card-subtitle class="mat-body-1"
+                                        >On 26 December, 2023
+                                        </mat-card-subtitle
+                                        >
+
+                                        <div class="d-flex align-items-center m-t-24">
+                                            <button
+                                                mat-mini-fab
+                                                class="bg-light-primary shadow-none rounded icon-48"
+                                            >
+                                                <i-tabler
+                                                    name="credit-card"
+                                                    class="icon-20 d-flex text-primary"
+                                                ></i-tabler>
+                                            </button>
+                                            <div class="m-l-16 w-100">
+                                                <span class="f-s-14 d-block m-b-4">Visa</span>
+                                                <h5 class="f-s-16 f-w-600 m-0 m-b-4">*****2102</h5>
+                                            </div>
+                                            <span class="m-l-auto">
+                          <i-tabler name="pencil-minus" class="icon-20"></i-tabler>
+                        </span>
+                                        </div>
+
+                                        <div class="m-t-24">
+                                            <button mat-stroked-button class="m-l-8" color="warn">
+                                                Cancel Subscription
+                                            </button>
+                                        </div>
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-tab>
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        <div class="d-flex align-items-center">
+                            <mat-icon>
+                                <i-tabler name="lock" class="icon-20 m-r-8"></i-tabler>
+                            </mat-icon>
+                        </div>
+                        Security
+                    </ng-template>
+                    <mat-card-content class="p-y-24 b-t-1">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <mat-card class="cardWithShadow">
+                                    <mat-card-content class="p-y-24">
+                                        <mat-card-title>Two-factor Authentication</mat-card-title>
+                                        <div class="d-flex align-items-center p-b-30 b-b-1">
+                                            <mat-card-subtitle class="mat-body-1"
+                                            >Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                                                Corporis sapiente sunt earum officiis laboriosam
+                                                ut.
+                                            </mat-card-subtitle
+                                            >
+                                            <button mat-flat-button color="primary" class="m-l-auto">
+                                                Enable
+                                            </button>
+                                        </div>
+                                        <div class="d-flex align-items-center p-y-24 b-b-1">
+                                            <div>
+                                                <h5 class="f-s-16 f-w-600 m-0">Authentication App</h5>
+                                                <mat-card-subtitle class="mat-body-1"
+                                                >Google auth app
+                                                </mat-card-subtitle
+                                                >
+                                            </div>
+
+                                            <button mat-stroked-button color="primary" class="m-l-auto">
+                                                Setup
+                                            </button>
+                                        </div>
+                                        <div class="d-flex align-items-center p-y-24 b-b-1">
+                                            <div>
+                                                <h5 class="f-s-16 f-w-600 m-0">Another e-mail</h5>
+                                                <mat-card-subtitle class="mat-body-1"
+                                                >E-mail to send verification link
+                                                </mat-card-subtitle
+                                                >
+                                            </div>
+
+                                            <button mat-stroked-button color="primary" class="m-l-auto">
+                                                Setup
+                                            </button>
+                                        </div>
+                                        <div class="d-flex align-items-center p-y-24 b-b-1">
+                                            <div>
+                                                <h5 class="f-s-16 f-w-600 m-0">SMS Recovery</h5>
+                                                <mat-card-subtitle class="mat-body-1"
+                                                >Your phone number or something
+                                                </mat-card-subtitle
+                                                >
+                                            </div>
+
+                                            <button mat-stroked-button color="primary" class="m-l-auto">
+                                                Setup
+                                            </button>
+                                        </div>
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                            <div class="col-lg-4">
+                                <mat-card class="cardWithShadow">
+                                    <mat-card-content class="p-y-24">
+                                        <button
+                                            mat-mini-fab
+                                            class="bg-light-primary shadow-none rounded icon-48"
+                                        >
+                                            <i-tabler
+                                                name="device-laptop"
+                                                class="icon-22 d-flex text-primary"
+                                            ></i-tabler>
+                                        </button>
+                                        <mat-card-title class="m-t-16">Devices</mat-card-title>
+                                        <mat-card-subtitle class="mat-body-1"
+                                        >Lorem ipsum dolor sit amet consectetur adipisicing elit
+                                            Rem.
+                                        </mat-card-subtitle
+                                        >
+                                        <button mat-flat-button color="primary" class="m-t-24">
+                                            Sign out from all devices
+                                        </button>
+
+                                        <div class="d-flex align-items-center p-y-24 b-b-1">
+                        <span>
+                          <i-tabler name="device-mobile" class="icon-22"></i-tabler>
+                        </span>
+                                            <div class="m-l-16">
+                                                <mat-card-title class="m-b-0">iPhone 14</mat-card-title>
+                                                <mat-card-subtitle class="mat-body-1"
+                                                >London UK, Oct 23 at 1:15 AM
+                                                </mat-card-subtitle>
+                                            </div>
+                                            <button mat-icon-button class="m-l-auto">
+                                                <mat-icon>more_vert</mat-icon>
+                                            </button>
+                                        </div>
+                                        <div class="d-flex align-items-center p-t-24">
+                        <span>
+                          <i-tabler name="device-laptop" class="icon-22"></i-tabler>
+                        </span>
+                                            <div class="m-l-16">
+                                                <mat-card-title class="m-b-0">Macbook Air</mat-card-title>
+                                                <mat-card-subtitle class="mat-body-1"
+                                                >Gujarat India, Oct 24 at 3:15 AM
+                                                </mat-card-subtitle>
+                                            </div>
+                                            <button mat-icon-button class="m-l-auto">
+                                                <mat-icon>more_vert</mat-icon>
+                                            </button>
+                                        </div>
+                                        <button mat-stroked-button color="primary" class="m-t-16 w-100">Need Help?</button>
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-tab>
+                -->
+            </mat-tab-group>
+            <div class="text-right p-24 p-t-0">
+                <button mat-flat-button color="primary" class="m-r-8" (click)="$event.preventDefault(); saveDetail()" [disabled]="userForm.invalid">
+                    Save
+                </button>
+                <a routerLink="/apps/users/profile" mat-stroked-button color="warn" class="m-r-10">
+                    Cancel
+                </a>
+            </div>
+        </form>
     </mat-card-content>
 </mat-card>

@@ -57,6 +57,7 @@ export interface UserDetail extends IUser {
     apiKey?: string;
     lastLogin?: string; // Consider using Date if you're parsing this into a Date object
     dateRegistered?: string; // Same as above
+    thumbnail?: string;
 }
 
 export interface IUserThemeOptions {

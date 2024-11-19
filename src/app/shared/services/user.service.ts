@@ -42,6 +42,7 @@ export class UserService extends CrudService<IUser> {
     }
 
     public updateUser(user: IUser): Observable<HttpResponse<IUser>> {
+        console.log("updateUser: ", user)
         return this.update(user.id, user);
     }
 

@@ -96,7 +96,9 @@ export class HeaderComponent implements OnInit{
     no_profile_img = './assets/images/no_image.png';
     pageTitle: string = '';
     loggedInUser: any;
-    user: any;
+    user: UserDetail = {
+        id: 0, username: ""
+    };
 
     applications: Apps[];
 
