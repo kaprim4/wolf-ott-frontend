@@ -22,52 +22,46 @@
                 </div>
             </div>
         }
-        <img src="assets/images/backgrounds/Businessman-bro-600x600.webp" width="355" alt="welcome-bg" class="congrats-bg d-none d-lg-flex"/>
+        <img src="assets/images/backgrounds/Businessman-bro-600x600.webp" width="355" alt="welcome-bg"
+             class="congrats-bg d-none d-lg-flex"/>
     </mat-card-content>
 </mat-card>
 
 <mat-card class="cardWithShadow">
     <mat-card-header>
         <mat-card-title>
-            Congratulations <b>{{ user?.username }}</b>
+            Latest <b>News</b>
         </mat-card-title>
         <mat-card-subtitle class="mat-body-1">
-            You have {{ activeAccounts }} Lines including {{ onlineUsers }} online
+            Stay Updated with the Most Recent Highlights
         </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
         <div class="row justify-content-center">
-            @for(cardimg of cardimgs; track cardimg.imgSrc) {
-                <div class="col-sm-6 col-lg-4">
+            @for (element of cardArticles; track element.thumbnail) {
+                <div class="col-sm-12 col-md-6 col-lg-6">
                     <mat-card class="cardWithShadow card2 position-relative card-hover">
-                        <img mat-card-image src="{{ cardimg.imgSrc }}" alt="Photo of a Shiba Inu" />
-                        <div class="card-overlay h-100 d-flex align-items-end justify-content-end">
-                            <mat-chip class="f-s-12 f-w-600 m-y-16 m-r-16 bg-white">{{
-                                    cardimg.time
-                                }}</mat-chip>
-                        </div>
-
+                        <img matListItemAvatar [src]="element.thumbnail" alt="{{ element.title }}"/>
                         <mat-card-content class="p-y-24">
-                            <div class="user-category">
-                                <div>
-                                    <img src="{{ cardimg.user }}" class="rounded-circle" width="40" />
-                                </div>
-                                <mat-chip class="f-s-12 m-y-16 f-w-600">{{
-                                        cardimg.category
-                                    }}</mat-chip>
-                            </div>
-                            <mat-card-title>{{ cardimg.title }}</mat-card-title>
+                            <mat-card-title>{{ element.title }}</mat-card-title>
+                            <mat-card-subtitle class="mat-body-1">
+                                <p>{{ element.content | slice:0: 50 }}...</p>
+                            </mat-card-subtitle>
                             <div class="d-flex align-items-center justify-content-center m-t-24">
                                 <div class="d-flex align-items-center">
-            <span class="m-r-12 f-s-14 d-flex align-items-center"><i-tabler name="eye"
-                                                                            class="icon-18 m-r-4"></i-tabler>{{ cardimg.views }}</span>
-                                    <span class="f-s-14 d-flex align-items-center"><i-tabler name="message-2"
-                                                                                             class="icon-18 m-r-4"></i-tabler>{{ cardimg.comments }}</span>
+                                    <span class="m-r-12 f-s-14 d-flex align-items-center">
+                                        <i-tabler name="eye" class="icon-18 m-r-4"></i-tabler>
+                                        {{ element.views }}
+                                    </span>
+                                    <span class="f-s-14 d-flex align-items-center">
+                                        <i-tabler name="message-2" class="icon-18 m-r-4"></i-tabler>
+                                        {{ element.comments }}
+                                    </span>
                                 </div>
                                 <span class="m-l-auto f-s-14 d-flex align-items-center">
-            <i-tabler name="point" class="icon-14 m-r-4 d-flex"></i-tabler>
-                                    {{ cardimg.date }}
-          </span>
+                                    <i-tabler name="point" class="icon-14 m-r-4 d-flex"></i-tabler>
+                                    {{ element.createdAt ? (element.createdAt | date) : (element.updatedAt | date) }}
+                                </span>
                             </div>
                         </mat-card-content>
                     </mat-card>
