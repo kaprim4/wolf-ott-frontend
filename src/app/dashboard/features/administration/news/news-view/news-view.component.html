@@ -1,1 +1,50 @@
-<p>news-view works!</p>
+<mat-card class="cardWithShadow">
+    <mat-card-content>
+        <div class="row justify-content-between gap-16">
+            <div class="col-sm-12 d-flex align-items-center justify-content-end">
+                <a mat-button [routerLink]="['/dashboard']" mat-flat-button color="primary">
+                    Return to Dashboard
+                </a>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+<mat-card class="cardWithShadow">
+    @if(loading){
+        <mat-progress-bar mode="query"></mat-progress-bar>
+    }
+    <img mat-card-image [src]="article.thumbnail" alt="{{ article.title }}" class="w-100"/>
+    <mat-card-content class="p-24 b-b-1">
+        <div class="d-flex align-items-center justify-content-center m-t-1">
+            <div class="d-flex align-items-center">
+                <span class="m-r-12 f-s-14 mat-subtitle-2 d-flex align-items-center">
+                    <i-tabler name="eye" class="icon-18 m-r-4"></i-tabler> {{ article.views }}
+                </span>
+                <span class="f-s-14 mat-subtitle-2 d-flex align-items-center">
+                    <i-tabler name="message-2" class="icon-18 m-r-4"></i-tabler> {{ article.comments }}
+                </span>
+            </div>
+            <span class="m-l-auto f-s-14 mat-subtitle-2 d-flex align-items-center">
+                <i-tabler name="point" class="icon-14 m-r-4"></i-tabler>
+                {{ article.createdAt ? (article.createdAt | date) : (article.updatedAt | date) }}
+            </span>
+        </div>
+    </mat-card-content>
+    <mat-card-content class="p-24">
+        <h2 class="mat-headline-5 f-w-600 f-s-30">{{ article.title }}</h2>
+        <p class="mat-body-1 m-t-16">
+            {{ article.content }}
+        </p>
+    </mat-card-content>
+</mat-card>
+<mat-card class="cardWithShadow">
+    <mat-card-content>
+        <div class="row justify-content-between gap-16">
+            <div class="col-sm-12 d-flex align-items-center justify-content-end">
+                <a mat-button [routerLink]="['/dashboard']" mat-flat-button color="primary">
+                    Return to Dashboard
+                </a>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

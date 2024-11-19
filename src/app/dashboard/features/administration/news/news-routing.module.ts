@@ -23,7 +23,7 @@ const routes: Routes = [
                 component: NewsAddComponent
             },
             {
-                path: 'view:id',
+                path: 'view/:id',
                 component: NewsViewComponent
             },
             {
