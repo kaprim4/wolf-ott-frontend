@@ -25,7 +25,9 @@ import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 import {IDashboardStat} from "../../../shared/models/stats";
 import {ArticleService} from "../../../shared/services/article.service";
 import {Article, ArticleCard} from "../../../shared/models/article";
-import {DatePipe, SlicePipe} from "@angular/common";
+import {DatePipe, NgForOf, SlicePipe} from "@angular/common";
+import {RouterLink} from "@angular/router";
+import {NotificationService} from "../../../shared/services/notification.service";
 
 interface month {
     value: string;
@@ -58,7 +60,7 @@ export interface revenueChart {
 @Component({
     selector: 'app-congratulate-card',
     standalone: true,
-    imports: [NgApexchartsModule, MaterialModule, TablerIconsModule, DatePipe, SlicePipe],
+    imports: [NgApexchartsModule, MaterialModule, TablerIconsModule, DatePipe, SlicePipe, RouterLink, NgForOf],
     templateUrl: './congratulate-card.component.html',
 })
 export class AppCongratulateCardComponent implements OnInit {
@@ -72,46 +74,81 @@ export class AppCongratulateCardComponent implements OnInit {
     activeAccounts: number = 0;
     creditsAssigned: number = 0;
     isStatLoading: boolean = false;
+    isNewsLoading: boolean = false;
 
     constructor(
         private userService: UserService,
         private tokenService: TokenService,
         private statsService: StatsService,
         private articleService: ArticleService,
+        protected notificationService: NotificationService
     ) {
     }
 
     cardArticles: ArticleCard[] = [];
+    visibleArticles: ArticleCard[] = [];
+    currentIndex = 0;
 
     ngOnInit(): void {
+        this.isNewsLoading = true;
         this.loggedInUser = this.tokenService.getPayload();
         this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
             this.user = user;
         });
         this.getStats();
-        this.articleService.getAllArticles<Article>().subscribe((value: Article[]) => {
-            if (value.length > 0) {
-                value.map(article => {
-                    this.cardArticles.push({
-                        id: article.id,
-                        content: article.content,
-                        createdAt: article.createdAt,
-                        updatedAt: article.updatedAt,
-                        thumbnail: article.thumbnail,
-                        title: article.title,
-                        views: 0,
-                        comments: 0,
+        this.articleService.getAllArticles<Article>().subscribe({
+            next: (value: Article[]) => {
+                if (value.length > 0) {
+                    value.map(article => {
+                        this.cardArticles.push({
+                            id: article.id,
+                            content: article.content,
+                            createdAt: article.createdAt,
+                            updatedAt: article.updatedAt,
+                            thumbnail: article.thumbnail,
+                            title: article.title,
+                            views: 1230,
+                            comments: 650,
+                        })
                     })
-                })
+                }
+                this.updateVisibleArticles();
+            },
+            error: (err) => {
+                this.notificationService.error('Error while retrieving news');
+                console.error("'Error while retrieving news'", err);
+            },
+            complete: () => {
+                this.isNewsLoading = false;
+                this.notificationService.success('Retrieving news successfully');
+                console.info("'Retrieving news successfully'");
             }
-        })
+        });
+    }
+
+    updateVisibleArticles(): void {
+        this.visibleArticles = this.cardArticles.slice(this.currentIndex, this.currentIndex + 2);
+    }
+
+    nextSlide(): void {
+        if (this.currentIndex + 2 < this.cardArticles.length) {
+            this.currentIndex += 2;
+            this.updateVisibleArticles();
+        }
+    }
+
+    prevSlide(): void {
+        if (this.currentIndex > 0) {
+            this.currentIndex -= 2;
+            this.updateVisibleArticles();
+        }
     }
 
     getStats(): void {
         this.isStatLoading = true;
         const rStart = Date.now();
-        this.statsService.getStats("dashboard").subscribe(
-            (data: HttpResponse<IDashboardStat>) => {
+        this.statsService.getStats("dashboard").subscribe({
+            next: (data: HttpResponse<IDashboardStat>) => {
                 if (data.status === 200 || data.status === 202) {
                     console.log(`Got a successfull status code: ${data.status}`);
                 }
@@ -125,16 +162,20 @@ export class AppCongratulateCardComponent implements OnInit {
                 }
                 console.log('This contains body: ', data.body);
             },
-            (err: HttpErrorResponse) => {
+            error: (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
                     setTimeout(() => this.getStats(), 1000);
-                    console.log(err.message)
+                    this.notificationService.error('Error while Retrieving Stats');
+                    console.error("'Error while Retrieving Stats: '", err.message);
                 }
-            }, ((): void => {
+            },
+            complete: () => {
                 this.isStatLoading = false;
-            })
-        );
+                this.notificationService.success('Retrieving Stats successfully');
+                console.info("'Retrieving Stats successfully'");
+            }
+        });
     }
 
     stats: stats[] = [
