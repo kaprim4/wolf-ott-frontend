@@ -58,27 +58,13 @@
                 <div class="col-sm-4 d-flex align-items-center">
                     <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Content</mat-label>
                 </div>
-                <div class="col-sm-8">
-                    <mat-form-field appearance="outline" class="w-100">
-                        <textarea matInput placeholder="Enter content" rows="5" name="content" formControlName="content"
-                                  required></textarea>
-                    </mat-form-field>
+                <div class="col-sm-8 p-b-24">
+                    <app-rich-text-editor
+                        [content]="addForm.controls['content'].value"
+                        (contentChanged)="addForm.controls['content'].setValue($event)">
+                    </app-rich-text-editor>
                 </div>
             </div>
         </form>
-
-
-        <!--
-        <div class="NgxEditor__Wrapper">
-            <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
-            <ngx-editor
-              [editor]="editor"
-              [ngModel]="html"
-              [editable]="true"
-              [placeholder]="Type here..."
-            ></ngx-editor>
-          </div> -->
-
-
     </mat-card-content>
 </mat-card>

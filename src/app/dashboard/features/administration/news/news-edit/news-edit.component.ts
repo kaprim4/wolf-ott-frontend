@@ -1,5 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-
+import {Component, OnInit} from '@angular/core';
 import {FormControl, UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {Article} from "../../../../../shared/models/article";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -7,19 +6,14 @@ import {MatDialog} from "@angular/material/dialog";
 import {NotificationService} from "../../../../../shared/services/notification.service";
 import {ArticleService} from "../../../../../shared/services/article.service";
 
-import {Editor} from "ngx-editor";
-
 @Component({
     selector: 'app-news-edit',
     templateUrl: './news-edit.component.html',
     styleUrl: './news-edit.component.scss'
 })
-export class NewsEditComponent implements OnInit, OnDestroy {
+export class NewsEditComponent implements OnInit {
 
     id: number = 0;
-    editor: Editor;
-    html: "<p>Hello World!</p>";
-
     editForm: UntypedFormGroup | any;
     article: Article = {
         content: "",
@@ -46,19 +40,21 @@ export class NewsEditComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.editor = new Editor();
-        this.articleService.getArticle<Article>(this.id).subscribe(article => {
-            this.article = article;
-            this.editForm.controls['title'].setValue(this.article.title);
-            this.editForm.controls['content'].setValue(this.article.content);
-            this.imagePreview = this.article.thumbnail;
+        this.articleService.getArticle<Article>(this.id).subscribe({
+            next: (article) => {
+                this.article = article;
+            },
+            error: (err) => {
+                this.notificationService.error("An error has occured", err)
+            },
+            complete: () => {
+                this.editForm.controls['title'].setValue(this.article.title);
+                this.editForm.controls['content'].setValue(this.article.content);
+                this.imagePreview = this.article.thumbnail;
+                this.notificationService.success("Fetch success");
+            }
         });
     }
-
-    ngOnDestroy(): void {
-        this.editor.destroy();
-    }
-
 
     onFileSelected(event: Event): void {
         const file = (event.target as HTMLInputElement).files?.[0];

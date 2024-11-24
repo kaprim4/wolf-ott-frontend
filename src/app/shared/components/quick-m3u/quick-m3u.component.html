@@ -15,7 +15,8 @@
                     <div>
                         <mat-form-field appearance="outline" class="w-100">
                             <mat-label class="mat-subtitle-2 fw-bold">Package</mat-label>
-                            <mat-select formControlName="package" (selectionChange)="onSelectPackage($event)" (openedChange)="onPackagesDropdownOpened($event)" required>
+                            <mat-select formControlName="package" (selectionChange)="onSelectPackage($event)"
+                                        (openedChange)="onPackagesDropdownOpened($event)" required>
                                 <mat-select-trigger>
                                     {{ getSelectedPackageName() }}
                                 </mat-select-trigger>
@@ -26,7 +27,8 @@
                                         noEntriesFoundLabel="No options found">
                                     </ngx-mat-select-search>
                                 </mat-option>
-                                <mat-option *ngFor="let pkg of filteredPackages" [value]="pkg.id" (click)="$event.stopPropagation()">
+                                <mat-option *ngFor="let pkg of filteredPackages" [value]="pkg.id"
+                                            (click)="$event.stopPropagation()">
                                     {{ pkg.packageName }}
                                 </mat-option>
                             </mat-select>
@@ -34,7 +36,8 @@
 
                         <mat-accordion>
                             <mat-expansion-panel hideToggle>
-                                <mat-expansion-panel-header class="d-flex justify-content-between" (click)="panelOpened = !panelOpened">
+                                <mat-expansion-panel-header class="d-flex justify-content-between"
+                                                            (click)="panelOpened = !panelOpened">
                                     <mat-panel-title class="fw-bold w-100">Advanced</mat-panel-title>
                                     <mat-panel-description class="icon-container">
                                         <mat-icon *ngIf="!panelOpened">expand_more</mat-icon>
@@ -43,11 +46,11 @@
                                 </mat-expansion-panel-header>
                                 <mat-form-field appearance="outline" class="w-100 m-t-4">
                                     <mat-label>Username</mat-label>
-                                    <input matInput type="text" formControlName="username" class="fw-bold" />
+                                    <input matInput type="text" formControlName="username" class="fw-bold"/>
                                 </mat-form-field>
                                 <mat-form-field appearance="outline" class="w-100">
                                     <mat-label>Password</mat-label>
-                                    <input matInput type="text" formControlName="password" class="fw-bold" />
+                                    <input matInput type="text" formControlName="password" class="fw-bold"/>
                                 </mat-form-field>
                                 <!--
                                 <mat-form-field appearance="outline" class="w-100">
@@ -63,12 +66,14 @@
                                         <mat-slide-toggle formControlName="use_vpn" color="primary"></mat-slide-toggle>
                                     </div>
                                 </div>
-                                
+
                             </mat-expansion-panel>
                         </mat-accordion>
 
                         <div class="text-right mt-2"> <!-- Add Bootstrap margin-top to this div -->
-                            <button mat-flat-button color="primary" matStepperNext [disabled]="packageForm.invalid">Next</button>
+                            <button mat-flat-button color="primary" matStepperNext [disabled]="packageForm.invalid">
+                                Next
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -80,8 +85,12 @@
                         <div class="m-l-4">
                             <span class="d-block text-light">Select Bundle:</span>
                             <mat-radio-group formControlName="bundle" (change)="bundleToggle($event)">
-                                <mat-radio-button value="packages" [checked]="selectedBundleOption === 'packages'">All (bouquets)</mat-radio-button>
-                                <mat-radio-button value="presets" [checked]="selectedBundleOption === 'presets'">Presets</mat-radio-button>
+                                <mat-radio-button value="packages" [checked]="selectedBundleOption === 'packages'">All
+                                    (bouquets)
+                                </mat-radio-button>
+                                <mat-radio-button value="presets" [checked]="selectedBundleOption === 'presets'">
+                                    Presets
+                                </mat-radio-button>
                             </mat-radio-group>
                         </div>
 
@@ -93,7 +102,8 @@
                                         <mat-select-trigger>
                                             {{ selectedPackage?.packageName || 'Select Package' }}
                                         </mat-select-trigger>
-                                        <mat-option *ngFor="let pkg of packages" [value]="pkg.id" (click)="$event.stopPropagation()">
+                                        <mat-option *ngFor="let pkg of packages" [value]="pkg.id"
+                                                    (click)="$event.stopPropagation()">
                                             {{ pkg.packageName }}
                                         </mat-option>
                                     </mat-select>
@@ -102,11 +112,13 @@
 
                             <ng-container *ngSwitchCase="'presets'">
                                 <mat-form-field appearance="outline" class="w-100 m-r-24">
-                                    <mat-select [(ngModel)]="selectedPresetId" (selectionChange)="onSelectPreset($event)">
+                                    <mat-select [(ngModel)]="selectedPresetId"
+                                                (selectionChange)="onSelectPreset($event)">
                                         <mat-select-trigger>
                                             {{ getSelectedPresetName() || 'Select Preset' }}
                                         </mat-select-trigger>
-                                        <mat-option *ngFor="let preset of presets" [value]="preset.id" (click)="$event.stopPropagation()">
+                                        <mat-option *ngFor="let preset of presets" [value]="preset.id"
+                                                    (click)="$event.stopPropagation()">
                                             {{ preset.presetName }}
                                         </mat-option>
                                     </mat-select>
@@ -116,28 +128,27 @@
                     </div>
                     <div class="d-flex align-items-center justify-content-between">
                         <button mat-flat-button color="warn" matStepperPrevious>Back</button>
-                        <button mat-flat-button color="primary" matStepperNext (click)="createLine()">Create Line</button>
+                        <button mat-flat-button color="primary" matStepperNext (click)="createLine()">Create Line
+                        </button>
                     </div>
                 </form>
             </mat-step>
             <mat-step>
                 <ng-template matStepLabel>Finish</ng-template>
-                <div class="input-group p-10">
-                    <div class="row">
-                        <div class="col-sm-12 col-md-9 col-lg-9">
-                            <mat-form-field appearance="outline" class="w-100" color="primary">
-                                <mat-label>Playlist URL</mat-label>
-                                <input matInput type="text" [value]="downloadUrl" disabled>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-sm-12 col-md-3 col-lg-3">
-                            <button class="action-btn" mat-icon-button (click)="copyToClipboard(downloadUrl)">
-                                <mat-icon>content_copy</mat-icon>
-                            </button>
-                            <button class="action-btn" mat-icon-button (click)="downloadM3U(downloadUrl)">
-                                <mat-icon>download</mat-icon>
-                            </button>
-                        </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-9 col-lg-9">
+                        <mat-form-field appearance="outline" class="w-100" color="primary">
+                            <mat-label>Playlist URL</mat-label>
+                            <input matInput type="text" [value]="downloadUrl" disabled>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-12 col-md-3 col-lg-3">
+                        <button class="action-btn" mat-icon-button (click)="copyToClipboard(downloadUrl)">
+                            <mat-icon>content_copy</mat-icon>
+                        </button>
+                        <button class="action-btn" mat-icon-button (click)="downloadM3U(downloadUrl)">
+                            <mat-icon>download</mat-icon>
+                        </button>
                     </div>
                 </div>
             </mat-step>

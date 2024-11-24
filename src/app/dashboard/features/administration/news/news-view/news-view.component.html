@@ -32,9 +32,7 @@
     </mat-card-content>
     <mat-card-content class="p-24">
         <h2 class="mat-headline-5 f-w-600 f-s-30">{{ article.title }}</h2>
-        <p class="mat-body-1 m-t-16">
-            {{ article.content }}
-        </p>
+        <div class="mat-body-1 m-t-16" [innerHTML]="article.content | safeHtml"></div>
     </mat-card-content>
 </mat-card>
 <mat-card class="cardWithShadow">

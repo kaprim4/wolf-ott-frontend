@@ -8,6 +8,7 @@ import {NewsListComponent} from "./news-list/news-list.component";
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
 import {NewsViewComponent} from "./news-view/news-view.component";
+import {ParametersModule} from "../parameters/parameters.module";
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import {NewsViewComponent} from "./news-view/news-view.component";
         CommonModule,
         NewsRoutingModule,
         ReactiveFormsModule,
-        SharedModule
+        SharedModule,
+        ParametersModule
     ]
 })
 export class NewsModule { }

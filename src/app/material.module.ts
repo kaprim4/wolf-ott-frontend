@@ -42,10 +42,14 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
 import {MatTableModule} from '@angular/material/table';
 import {FormatAmountPipe} from "./helpers/format-amount.pipe";
+import {SafeHtmlPipe} from "./pipe/safe-html.pipe";
+import {SliceWithEllipsisPipe} from "./pipe/slice-with-ellipsis.pipe";
 
 @NgModule({
     declarations: [
         FormatAmountPipe,
+        SafeHtmlPipe,
+        SliceWithEllipsisPipe
     ],
     exports: [
         MatAutocompleteModule,
@@ -84,6 +88,8 @@ import {FormatAmountPipe} from "./helpers/format-amount.pipe";
         MatSortModule,
         MatTableModule,
         FormatAmountPipe,
+        SafeHtmlPipe,
+        SliceWithEllipsisPipe,
     ],
 })
 export class MaterialModule {
