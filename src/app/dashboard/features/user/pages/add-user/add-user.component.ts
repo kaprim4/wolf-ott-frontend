@@ -9,6 +9,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { map, startWith } from 'rxjs';
 import { GroupService } from 'src/app/shared/services/group.service';
 import { GroupList, IGroup } from 'src/app/shared/models/group';
+import { TokenService } from 'src/app/shared/services/token.service';
 
 @Component({
   selector: 'app-add-user',
@@ -44,6 +45,8 @@ export class AddUserComponent implements OnInit {
   user: UserDetail  = { id: 0, username: ''};
   groups:GroupList[] = [];
 
+  principal: any;
+
   owners: UserList[] = [];
   filteredOwners: UserList[] = [];
   filteredGroups: GroupList[] = [];
@@ -61,7 +64,8 @@ export class AddUserComponent implements OnInit {
     private userService: UserService,
     private groupService: GroupService,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private tokenService: TokenService
   ) {
     this.user.id = 0;
     this.addForm = this.fb.group({});
@@ -77,6 +81,8 @@ export class AddUserComponent implements OnInit {
   ).subscribe(filtered => {
       this.filteredGroups = filtered as GroupList[];
   });
+
+  this.principal = this.tokenService.getPayload();
 
   }
   ngOnInit(): void {
@@ -149,5 +155,9 @@ get selectedOwner():IUser {
 
 get selectedGroup():GroupList {
   return this.groups.find(group => group.groupId == this.user.groupId) as GroupList;
+}
+
+get isAdmin() {
+  return !!this.principal?.isAdmin;
 }
 }

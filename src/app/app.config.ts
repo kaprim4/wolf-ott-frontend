@@ -7,6 +7,7 @@ import {
 import {
     HttpClient,
     provideHttpClient,
+    withInterceptors,
     withInterceptorsFromDi,
 } from '@angular/common/http';
 import {routes} from './app.routes';
@@ -44,6 +45,7 @@ import {ToastrModule} from "ngx-toastr";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {registerLocaleData} from "@angular/common";
 import localeFr from '@angular/common/locales/fr';
+import { JwtInterceptor } from './dashboard/core/jwt.interceptor';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -56,9 +58,10 @@ export const appConfig: ApplicationConfig = {
                 scrollPositionRestoration: 'enabled',
                 anchorScrolling: 'enabled',
             }),
-            withComponentInputBinding()
+            withComponentInputBinding(),
         ),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withInterceptors([JwtInterceptor])),
+        // provideHttpClient(withInterceptorsFromDi()),
         provideClientHydration(),
         provideAnimationsAsync(),
         importProvidersFrom(

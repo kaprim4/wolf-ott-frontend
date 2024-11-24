@@ -18,9 +18,7 @@ export abstract class CrudService<T> {
         protected httpClient: HttpClient,
         protected jwtService: JwtService
     ) {
-        this.headers = new HttpHeaders();
-        this.headers = this.headers.append('Content-Type', 'application/json');
-        this.headers = this.headers.append('Authorization', `Bearer ${this.jwtService.getAccessToken()}`);
+        
     }
 
     protected getAllAsList<Res>(search: string): Observable<Array<T | Res>> {
@@ -91,4 +89,11 @@ export abstract class CrudService<T> {
             {headers: this.headers, observe: 'response'},
         );
     }
+
+    // get headers(): HttpHeaders{
+    //     const headers = new HttpHeaders();
+    //     headers.append('Content-Type', 'application/json');
+    //     headers.append('Authorization', `Bearer ${this.jwtService.getAccessToken()}`);
+    //     return headers;
+    // }
 }

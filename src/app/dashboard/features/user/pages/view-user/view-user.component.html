@@ -89,6 +89,31 @@
                           </mat-form-field>
                       </div>
                   </div>
+
+                  @if (isAdmin) {
+                    <div class="row">
+                      <div class="col-sm-4 d-flex align-items-start">
+                          <mat-label class="mat-subtitle-2 f-w-600">Group</mat-label>
+                      </div>
+                      <div class="col-sm-8">
+                          <mat-form-field appearance="outline" class="w-100">
+                              <mat-select [(ngModel)]="user.groupId" name="group" (openedChange)="onGroupsDropdownOpened($event)" required placeholder="Select Group">
+                                  <mat-select-trigger>
+                                      {{ selectedGroup ? selectedGroup.groupName : 'Select Owner' }}
+                                  </mat-select-trigger>
+    
+                                  <mat-option>
+                                    <ngx-mat-select-search [formControl]="groupSearchCtrl" placeholderLabel="Search" noEntriesFoundLabel="No options found"></ngx-mat-select-search>
+                                  </mat-option>
+    
+                                  <mat-option *ngFor="let group of filteredGroups" [value]="group.groupId" (click)="$event.stopPropagation()">
+                                      {{ group.groupName }}
+                                  </mat-option>
+                              </mat-select>
+                          </mat-form-field>
+                      </div>
+                  </div>
+                  }
                   
                     <div class="row">
                       <div class="col-sm-4 d-flex align-items-center">
