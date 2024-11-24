@@ -2,70 +2,66 @@
     <mat-progress-bar mode="query"></mat-progress-bar>
 }
 <div class="p-16 bg-white">
-    <form >
-      <div class="row justify-content-between align-items-center gap-16">
-        <div class="col-sm-6 col-lg-5">
-          <mat-form-field appearance="outline" class="w-100 hide-hint">
-            <input matInput #inputData [(ngModel)]="dnsToAdd" name="dnsToAdd" placeholder="Add DNS" />
-          </mat-form-field>
+    <form>
+        <div class="row justify-content-between align-items-center">
+            <div class="col-sm-8 col-md-9 col-lg-10">
+                <mat-form-field appearance="outline" class="w-100 hide-hint">
+                    <input matInput #inputData [(ngModel)]="dnsToAdd" name="dnsToAdd" placeholder="Add DNS"/>
+                </mat-form-field>
+            </div>
+            <div class="col-sm-4 col-md-3 col-lg-2">
+                <button mat-flat-button appearance="outline" color="primary" [disabled]="!canAddDNS" class="w-50"
+                        id="btnAddTodo"
+                        (click)="addDNS()">
+                    Add DNS
+                </button>
+            </div>
         </div>
-        <div class="col-sm-3 col-lg-2">
-          <button mat-flat-button appearance="outline" color="primary" [disabled]="!canAddDNS" class="w-50" id="btnAddTodo"
-            (click)="addDNS()">
-            Add DNS
-          </button>
-        </div>
-      </div>
     </form>
-  </div>
-  <mat-divider></mat-divider>
-@for(dns of defaultVPN.dns; track $index; let i = $index) {
+</div>
+<mat-divider></mat-divider>
+@for (dns of defaultVPN.dns; track $index; let i = $index) {
     <div class="todo-item p-y-12 p-x-8 b-b-1">
-      <div class="d-flex align-items-center w-100">
+        <div class="d-flex align-items-center w-100">
+            @if (editableDNSIndex !== $index) {
+                <div class="flex-shrink-0">
+                    <span class="f-s-16 f-w-500">{{ $index + 1 }} - {{ dns }}</span>
+                </div>
+            }
+            <div class="w-100">
+                @if (editableDNSIndex !== $index) {
 
-        @if(editableDNSIndex !== $index){
-            <div class="flex-shrink-0">
-                <span class="f-s-16 f-w-500">{{$index+1}} - {{ dns }}</span>
+                    <div class="d-flex align-items-start" (click)="editDNS($index, '')">
+                        <div class="m-l-auto px-3 mr-2 d-flex">
+                            <button mat-icon-button class="d-flex justify-content-center" title="btn"
+                                    (click)="editDNS($index, 'edit')">
+                                <i-tabler name="pencil" class="icon-18 d-flex"></i-tabler>
+                            </button>
+                            <button mat-icon-button class="d-flex justify-content-center" title="btn"
+                                    (click)="deleteDNS(i)">
+                                <i-tabler name="trash" class="icon-18 d-flex"></i-tabler>
+                            </button>
+                        </div>
+                    </div>
+                } @else {
+                    <!-- Edit View -->
+                    <div class="d-flex align-items-center edit-view">
+                        {{ $index + 1 }} -
+                        <mat-form-field appearance="outline" class="hide-hint">
+                            <input matInput [(ngModel)]="dnsToEdit"/>
+                        </mat-form-field>
+
+                        <div class="m-l-auto d-flex align-items-center">
+                            <button mat-icon-button class="d-flex" (click)="saveDNS($index)" title="btn">
+                                <i-tabler name="checks" class="icon-18 d-flex"></i-tabler>
+                            </button>
+                            <button mat-icon-button class="d-flex" (click)="deleteDNS(i)" title="btn">
+                                <i-tabler name="trash" class="icon-18 d-flex"></i-tabler>
+                            </button>
+                        </div>
+                    </div>
+                }
             </div>
-        }
-
-       
-        <div class="w-100">
-          @if(editableDNSIndex !== $index) {
-
-          <div class="d-flex align-items-start" (click)="editDNS($index, '')">
-            <div class="m-l-auto px-3 mr-2 d-flex">
-              <button mat-icon-button class="d-flex justify-content-center" title="btn"
-                (click)="editDNS($index, 'edit')">
-                <i-tabler name="pencil" class="icon-18 d-flex"></i-tabler>
-              </button>
-              <button mat-icon-button class="d-flex justify-content-center"  title="btn"
-                (click)="deleteDNS(i)">
-                <i-tabler name="trash" class="icon-18 d-flex"></i-tabler>
-              </button>
-            </div>
-          </div>
-          }
-
-          <!-- Edit View -->
-          @else {
-          <div class="d-flex align-items-center edit-view">
-            {{$index+1}} - 
-            <mat-form-field appearance="outline" class="hide-hint">
-                <input matInput [(ngModel)]="dnsToEdit" />
-            </mat-form-field>
-
-            <div class="m-l-auto d-flex align-items-center">
-              <button mat-icon-button class="d-flex" (click)="saveDNS($index)"  title="btn">
-                <i-tabler name="checks" class="icon-18 d-flex"></i-tabler>
-              </button>
-              <button mat-icon-button class="d-flex" (click)="deleteDNS(i)"  title="btn">
-                <i-tabler name="trash" class="icon-18 d-flex"></i-tabler>
-              </button>
-            </div>
-          </div>
-          }
         </div>
-      </div>
     </div>
-    }
+}

@@ -96,7 +96,7 @@ export class QuickXtreamComponent implements OnInit {
         this.loggedInUser = this.tokenService.getPayload();
         this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
             this.user = user;
-            this.server = `http://${this.user.resellerDns}:80/`;
+            this.server = `http://${this.user.resellerDns}:80`;
         });
 
         this.presetService.getAllPresets<PresetList>().subscribe(presets => {
