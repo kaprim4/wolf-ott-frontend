@@ -53,9 +53,9 @@
                                 {{ element.title.length > 20 ? (element.title | slice:0: 20) + '...' : element.title }}
                             </mat-card-title>
                             <mat-card-subtitle class="mat-body-1">
-                                <p>
-                                    {{ element.content.length > 50 ? (element.content | slice:0: 50) + '...' : element.content }}
-                                </p>
+                                <div class="ql-editor">
+                                    <div [innerHTML]="element.content | sliceWithEllipsis:0:50  | safeHtml"></div>
+                                </div>
                             </mat-card-subtitle>
                             <div class="d-flex align-items-center justify-content-center m-t-24">
                                 <div class="d-flex align-items-center">

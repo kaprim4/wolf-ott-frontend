@@ -31,8 +31,13 @@
         </div>
     </mat-card-content>
     <mat-card-content class="p-24">
-        <h2 class="mat-headline-5 f-w-600 f-s-30">{{ article.title }}</h2>
-        <div class="mat-body-1 m-t-16" [innerHTML]="article.content | safeHtml"></div>
+        <h2 class="mat-headline-5 f-w-600 f-s-30 p-b-32">
+            {{ article.title }}
+        </h2>
+        <mat-divider></mat-divider>
+        <div class="ql-editor">
+            <div [innerHTML]="article.content | safeHtml"></div>
+        </div>
     </mat-card-content>
 </mat-card>
 <mat-card class="cardWithShadow">
