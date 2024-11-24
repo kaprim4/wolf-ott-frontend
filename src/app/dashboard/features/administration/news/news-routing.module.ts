@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import {NewsListComponent} from "./news-list/news-list.component";
 import {NewsAddComponent} from "./news-add/news-add.component";
 import {NewsEditComponent} from "./news-edit/news-edit.component";
+import {NewsViewComponent} from "./news-view/news-view.component";
 
 const routes: Routes = [
     {
@@ -20,6 +21,10 @@ const routes: Routes = [
             {
                 path: 'add',
                 component: NewsAddComponent
+            },
+            {
+                path: 'view/:id',
+                component: NewsViewComponent
             },
             {
                 path: ':id',

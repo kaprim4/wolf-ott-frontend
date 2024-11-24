@@ -9,3 +9,8 @@ export interface Article extends IArticle {
     createdAt?: Date;
     updatedAt?: Date;
 }
+
+export interface ArticleCard extends Article {
+    views: number;
+    comments: number;
+}

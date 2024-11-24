@@ -194,8 +194,11 @@
     <!-- --------------------------------------------------------------- -->
     <button mat-fab extended color="inherit" [matMenuTriggerFor]="profileMenu" aria-label="Notifications" matTooltip="Profile">
         <div class="d-flex align-items-center">
-            <img src="/assets/images/profile/user5.jpg" class="rounded-circle object-cover" width="40"/>
-
+            @if(user?.thumbnail){
+                <img [src]="user?.thumbnail" class="rounded-pill object-cover" width="40" />
+            } @else {
+                <img src="/assets/images/profile/default.jpg" class="rounded-pill" width="40"/>
+            }
             <div class="m-l-16 text-left d-none d-lg-flex">
                 <div>
                     <h5 class="f-s-16">{{ loggedInUser?.name }}</h5>
@@ -210,7 +213,11 @@
                 <h6 class="f-s-16 f-w-600 m-0 mat-subtitle-1">User Profile</h6>
 
                 <div class="d-flex align-items-center p-b-24 b-b-1 m-t-16">
-                    <img src="/assets/images/profile/user5.jpg" class="rounded-circle" width="95"/>
+                    @if(user?.thumbnail){
+                        <img [src]="user?.thumbnail" class="rounded-pill" width="95" />
+                    } @else {
+                        <img src="/assets/images/profile/default.jpg" class="rounded-pill" width="95"/>
+                    }
                     <div class="m-l-16">
                         <h6 class="f-s-16 f-w-600 m-0 mat-subtitle-1">
                             {{ loggedInUser?.name }}

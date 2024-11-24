@@ -1,4 +1,7 @@
 <mat-card class="cardWithShadow">
+    @if(isStatLoading){
+        <mat-progress-bar mode="query"></mat-progress-bar>
+    }
     <mat-card-header>
         <mat-card-title>
             Congratulations <b>{{ user?.username }}</b>
@@ -22,48 +25,75 @@
                 </div>
             </div>
         }
-        <img src="assets/images/backgrounds/Businessman-bro-600x600.webp" width="355" alt="welcome-bg" class="congrats-bg d-none d-lg-flex"/>
+        <img src="assets/images/backgrounds/Businessman-bro-600x600.webp" width="355" alt="welcome-bg"
+             class="congrats-bg d-none d-lg-flex"/>
     </mat-card-content>
+</mat-card>
 
-    <mat-divider></mat-divider>
-
+<mat-card class="cardWithShadow">
+    @if(isNewsLoading){
+        <mat-progress-bar mode="query"></mat-progress-bar>
+    }
     <mat-card-header>
-        <div class="d-flex w-100">
-            <div>
-                <mat-card-title>Total Orders</mat-card-title>
-                <mat-card-subtitle class="mat-body-1"
-                >Weekly order updates
-                </mat-card-subtitle
-                >
-            </div>
-            <div class="m-l-auto">
-                <mat-form-field class="theme-select" appearance="outline">
-                    <mat-select value="mar">
-                        @for (month of months; track month.value) {
-                            <mat-option [value]="month.value">
-                                {{ month.viewValue }}
-                            </mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
-            </div>
-        </div>
+        <mat-card-title>
+            Latest <b>News</b>
+        </mat-card-title>
+        <mat-card-subtitle class="mat-body-1">
+            Stay Updated with the Most Recent Highlights
+        </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-        <div class="row">
-            <div class="col-sm-12">
-                <apx-chart
-                    [series]="revenueChart.series"
-                    [dataLabels]="revenueChart.dataLabels"
-                    [chart]="revenueChart.chart"
-                    [legend]="revenueChart.legend"
-                    [stroke]="revenueChart.stroke"
-                    [grid]="revenueChart.grid"
-                    [xaxis]="revenueChart.xaxis"
-                    [yaxis]="revenueChart.yaxis"
-                    [tooltip]="revenueChart.tooltip"
-                ></apx-chart>
-            </div>
+        <div class="row justify-content-center">
+            <ng-container *ngFor="let element of visibleArticles">
+                <div class="col-sm-12 col-md-6 col-lg-6">
+                    <mat-card class="cardWithShadow card2 position-relative card-hover">
+                        <img matListItemAvatar [src]="element.thumbnail" alt="{{ element.title }}"/>
+                        <mat-card-content class="p-y-24">
+                            <mat-card-title>
+                                {{ element.title.length > 20 ? (element.title | slice:0: 20) + '...' : element.title }}
+                            </mat-card-title>
+                            <mat-card-subtitle class="mat-body-1">
+                                <p>
+                                    {{ element.content.length > 50 ? (element.content | slice:0: 50) + '...' : element.content }}
+                                </p>
+                            </mat-card-subtitle>
+                            <div class="d-flex align-items-center justify-content-center m-t-24">
+                                <div class="d-flex align-items-center">
+                                    <span class="m-r-12 f-s-14 d-flex align-items-center">
+                                        <i-tabler name="eye" class="icon-18 m-r-4"></i-tabler>
+                                        {{ element.views }}
+                                    </span>
+                                    <span class="f-s-14 d-flex align-items-center">
+                                        <i-tabler name="message-2" class="icon-18 m-r-4"></i-tabler>
+                                        {{ element.comments }}
+                                    </span>
+                                </div>
+                                <span class="m-l-auto f-s-14 d-flex align-items-center">
+                                    <i-tabler name="point" class="icon-14 m-r-4 d-flex"></i-tabler>
+                                    {{ element.createdAt ? (element.createdAt | date) : (element.updatedAt | date) }}
+                                </span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center m-t-24">
+                                <button [routerLink]="['/apps/administration/news/view', element.id]" mat-flat-button
+                                        color="primary" class="w-100">
+                                     <span class="m-l-auto f-s-14 d-flex align-items-center">
+                                         <i-tabler name="eye"
+                                                   class="icon-18 d-flex align-items-center m-r-10"></i-tabler> Read more...
+                                     </span>
+                                </button>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </ng-container>
+        </div>
+        <div class="row justify-content-between m-t-24">
+            <button mat-button color="primary" (click)="prevSlide()" [disabled]="currentIndex === 0">
+                Prev
+            </button>
+            <button mat-button color="primary" (click)="nextSlide()" [disabled]="currentIndex + 2 >= cardArticles.length">
+                Next
+            </button>
         </div>
     </mat-card-content>
 </mat-card>

@@ -7,13 +7,15 @@ import {NewsEditComponent} from "./news-edit/news-edit.component";
 import {NewsListComponent} from "./news-list/news-list.component";
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
+import {NewsViewComponent} from "./news-view/news-view.component";
 
 
 @NgModule({
   declarations: [
       NewsAddComponent,
       NewsEditComponent,
-      NewsListComponent
+      NewsListComponent,
+      NewsViewComponent
   ],
     imports: [
         CommonModule,
