@@ -15,6 +15,8 @@ import {TokenService} from "../../services/token.service";
 import { PresetList } from '../../models/preset';
 import { PresetService } from '../../services/preset.service';
 import { LineFactory } from '../../factories/line.factory';
+import {ParamsService} from "../../services/params.service";
+import {Params} from "../../models/params";
 
 @Component({
     selector: 'app-quick-smarters-pro',
@@ -41,6 +43,7 @@ export class QuickSmartersProComponent implements OnInit {
     selectedBundleOption: string = 'packages';
     selectedPresetId:number;
     selectedPackageId:number;
+    param: Params;
 
     addForm: UntypedFormGroup;
     packageForm: UntypedFormGroup;
@@ -54,7 +57,8 @@ export class QuickSmartersProComponent implements OnInit {
         private tokenService: TokenService,
         private userService: UserService,
         private fb: FormBuilder,
-        private presetService: PresetService
+        private presetService: PresetService,
+        private paramsService: ParamsService
     ) {
         const username = this.username = LineService.generateRandomUsername();
         const password = this.password = LineService.generateRandomPassword();
@@ -96,11 +100,22 @@ export class QuickSmartersProComponent implements OnInit {
         this.loggedInUser = this.tokenService.getPayload();
         this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
             this.user = user;
-            this.server = `http://${this.user.resellerDns}:80/`;
         });
 
         this.presetService.getAllPresets<PresetList>().subscribe(presets => {
             this.presets = presets;
+        });
+
+        this.paramsService.getParamByKey('smarters_pro').pipe(finalize(() => this.isLoading = false)).subscribe(param => {
+            console.log("Fetched Smarters PRO Param", param);
+            this.param = param;
+            if(this.param.value.length > 0){
+                var value = this.param.value[0];
+                if(value.dns.length > 0){
+                    console.log("Fetched Param smarters pro HOST:", value.dns[0]);
+                    this.server = `http://${value.dns[0]}:80`;
+                }
+            }
         });
     }
 

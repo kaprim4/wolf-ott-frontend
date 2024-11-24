@@ -30,3 +30,12 @@
     justify-content: end;
     margin-left: auto; /* Push icons to the right */
 }
+
+@media (max-width: 599.98px) and (orientation: portrait) {
+    .mat-mdc-card-header {
+        padding: 16px 10px !important;
+    }
+    .mat-mdc-card-content {
+        padding: 0 !important;
+    }
+}

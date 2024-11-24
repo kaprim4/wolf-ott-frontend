@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { finalize } from 'rxjs';
 import { Params } from 'src/app/shared/models/params';
 import { ParamsService } from 'src/app/shared/services/params.service';
@@ -8,7 +8,7 @@ import { ParamsService } from 'src/app/shared/services/params.service';
   templateUrl: './smarters-pro-params.component.html',
   styleUrl: './smarters-pro-params.component.scss'
 })
-export class SmartersProParamsComponent {
+export class SmartersProParamsComponent implements OnInit {
   loading:boolean = false;
 
   dnsToAdd:string = '';
@@ -18,7 +18,7 @@ export class SmartersProParamsComponent {
 
   param: Params;
 
-  // @Output() 
+  // @Output()
   // saveChanges = new EventEmitter<void>();
 
   onSaveChanges() {
@@ -31,9 +31,9 @@ export class SmartersProParamsComponent {
       this.paramsService.addParam(this.param).pipe(finalize(() => this.loading = false)).subscribe(param => {
         this.param = param
       });
-      
+
     }
-    
+
     // Emit the event when save is clicked
     // this.saveChanges.emit();
   }
@@ -44,12 +44,12 @@ export class SmartersProParamsComponent {
     this.loading = true;
     this.paramsService.getParamByKey('smarters_pro').pipe(finalize(() => this.loading = false)).subscribe(param => {
       console.log("Fetched Smarters PRO Param", param);
-      
+
       this.param = param;
       console.log("Fetched Param:", this.param);
-      
+
       console.log("DNS List:", this.defaultDNSList);
-      
+
     })
   }
 
@@ -61,7 +61,7 @@ export class SmartersProParamsComponent {
   addDNS(): void {
     if(!this.dnsToAdd)
       return;
-    
+
     const smarters = this.defaultSmartersPRO;
     smarters.dns.push(this.dnsToAdd);
     this.param.value = [smarters];
@@ -72,7 +72,7 @@ export class SmartersProParamsComponent {
   editDNS(index: number, str: string): void {
     this.editableDNSIndex = index;
     this.dnsToEdit = this.defaultDNSList[index];
-    
+
   }
 
   saveDNS(index: number): void {
@@ -81,7 +81,7 @@ export class SmartersProParamsComponent {
     this.defaultSmartersPRO.dns[index] = this.dnsToEdit; // Update the DNS at the given index
     this.dnsToEdit = ''; // Clear the input
   }
-  
+
   deleteDNS(index: number): void {
     // Remove the DNS at the given index
     this.defaultSmartersPRO.dns.splice(index, 1);
