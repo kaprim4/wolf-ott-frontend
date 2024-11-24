@@ -59,6 +59,7 @@ export interface LineDetail extends ILine {
 export interface CreateLine extends ILine {
     username: string;
     password: string;
+    useVPN?:boolean;
     memberId: number;
     packageId: number;
     isTrial: boolean;

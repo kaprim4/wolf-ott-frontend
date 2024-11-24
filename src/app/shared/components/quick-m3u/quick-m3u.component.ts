@@ -66,6 +66,7 @@ export class QuickM3uComponent implements OnInit {
         this.addForm = this.fb.group({
             username: [username, Validators.required],
             password: [password, Validators.required],
+            use_vpn: [false, Validators.required],
             owner: ['', Validators.required],
             package: ['', Validators.required],
             packageCost: [0],
@@ -116,10 +117,16 @@ export class QuickM3uComponent implements OnInit {
         this.isLoading = true;
         const bouquets: number[] = this.selectedPackage.bouquets;
         const isTrial: boolean = this.selectedPackage.isTrial;
+
+        const username: string = this.addForm.controls['username'].value;
+        const password: string = this.addForm.controls['password'].value;
+        const useVPN: boolean = this.addForm.controls['use_vpn'].value;
+    
         const line: CreateLine = {
             id: 0,
-            username: this.username,
-            password: this.password,
+            username: username,
+            password: password,
+            useVPN: useVPN,
             packageId: this.selectedPackage.id,
             isTrial: isTrial,
             bouquets: bouquets,

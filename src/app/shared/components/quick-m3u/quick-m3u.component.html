@@ -49,6 +49,21 @@
                                     <mat-label>Password</mat-label>
                                     <input matInput type="text" formControlName="password" class="fw-bold" />
                                 </mat-form-field>
+                                <!--
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>VPN</mat-label>
+                                    <input matCheck type="checkbox" formControlName="use_vpn" class="fw-bold" />
+                                </mat-form-field>
+                                -->
+                                <div class="d-flex justify-content-between p-8">
+                                    <div class="d-flex align-items-start">
+                                        <mat-label class="mat-subtitle-2 f-w-600">Use VPN</mat-label>
+                                    </div>
+                                    <div class="align-items-end">
+                                        <mat-slide-toggle formControlName="use_vpn" color="primary"></mat-slide-toggle>
+                                    </div>
+                                </div>
+                                
                             </mat-expansion-panel>
                         </mat-accordion>
 
