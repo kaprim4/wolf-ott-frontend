@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { finalize } from 'rxjs';
 import { Params } from 'src/app/shared/models/params';
 import { ParamsService } from 'src/app/shared/services/params.service';

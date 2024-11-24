@@ -40,7 +40,7 @@ export class ParametersComponent implements OnInit {
     if (this.selectedParam === 'VPN' && this.vpnParamsComponent) {
       this.vpnParamsComponent.onSaveChanges(); // Call save method on the VPN component
     } else if (this.selectedParam === 'Smarters PRO' && this.smartersProParamsComponent) {
-      // this.smartersProParamsComponent.saveChanges(); // Call save method on the Smarters PRO component
+      this.smartersProParamsComponent.onSaveChanges(); // Call save method on the Smarters PRO component
     }
   }
 
