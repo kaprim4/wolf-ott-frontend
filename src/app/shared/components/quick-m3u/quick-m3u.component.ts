@@ -151,7 +151,6 @@ export class QuickM3uComponent implements OnInit {
                 this.isLoading = false;
             })
         ).subscribe(l => {
-            console.log("Saved Line:", l);
             if(l.useVPN && l.vpnDns){
                 if(l.vpnDns.includes('http')){
                     this.server = `${l.vpnDns}/`;
