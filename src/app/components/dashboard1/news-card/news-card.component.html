@@ -1,0 +1,67 @@
+<mat-card class="cardWithShadow">
+    @if(isNewsLoading){
+        <mat-progress-bar mode="query"></mat-progress-bar>
+    }
+    <mat-card-header>
+        <mat-card-title>
+            Latest <b>News</b>
+        </mat-card-title>
+        <mat-card-subtitle class="mat-body-1">
+            Stay Updated with the Most Recent Highlights
+        </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="row justify-content-center">
+            <ng-container *ngFor="let element of visibleArticles">
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <mat-card class="cardWithShadow card2 position-relative card-hover">
+                        <img matListItemAvatar [src]="element.thumbnail" alt="{{ element.title }}"/>
+                        <mat-card-content class="p-y-24">
+                            <mat-card-title>
+                                {{ element.title.length > 20 ? (element.title | slice:0: 20) + '...' : element.title }}
+                            </mat-card-title>
+                            <mat-card-subtitle class="mat-body-1">
+                                <div class="ql-editor">
+                                    <div [innerHTML]="element.content | sliceWithEllipsis:0:50  | safeHtml"></div>
+                                </div>
+                            </mat-card-subtitle>
+                            <div class="d-flex align-items-center justify-content-center m-t-24">
+                                <div class="d-flex align-items-center">
+                                    <span class="m-r-12 f-s-14 d-flex align-items-center">
+                                        <i-tabler name="eye" class="icon-18 m-r-4"></i-tabler>
+                                        {{ element.views }}
+                                    </span>
+                                    <span class="f-s-14 d-flex align-items-center">
+                                        <i-tabler name="message-2" class="icon-18 m-r-4"></i-tabler>
+                                        {{ element.comments }}
+                                    </span>
+                                </div>
+                                <span class="m-l-auto f-s-14 d-flex align-items-center">
+                                    <i-tabler name="point" class="icon-14 m-r-4 d-flex"></i-tabler>
+                                    {{ element.createdAt ? (element.createdAt | date) : (element.updatedAt | date) }}
+                                </span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center m-t-24">
+                                <button [routerLink]="['/apps/administration/news/view', element.id]" mat-flat-button
+                                        color="primary" class="w-100">
+                                     <span class="m-l-auto f-s-14 d-flex align-items-center">
+                                         <i-tabler name="eye"
+                                                   class="icon-18 d-flex align-items-center m-r-10"></i-tabler> Read more...
+                                     </span>
+                                </button>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </ng-container>
+        </div>
+        <div class="row justify-content-between m-t-24">
+            <button mat-button color="primary" (click)="prevSlide()" [disabled]="currentIndex === 0">
+                Prev
+            </button>
+            <button mat-button color="primary" (click)="nextSlide()" [disabled]="currentIndex + 2 >= cardArticles.length">
+                Next
+            </button>
+        </div>
+    </mat-card-content>
+</mat-card>

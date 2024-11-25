@@ -77,19 +77,41 @@
         -->
     </div>
 
-    <!-- Mobile Menu -->
+    <!-- Mobile Menu
     <button title="toggle"
-        mat-icon-button
-        (click)="toggleMobileFilterNav.emit()"
-        class="d-flex d-lg-none justify-content-center"
+            mat-icon-button
+            (click)="toggleMobileFilterNav.emit()"
+            class="d-flex d-lg-none justify-content-center"
     >
         <i-tabler name="grid-dots" class="icon-20 d-flex"></i-tabler>
-    </button>
+    </button> -->
 
     <!-- --------------------------------------------------------------- -->
     <!--  Search -->
     <!-- --------------------------------------------------------------- -->
-    <div class="px-8">{{ datetime | date: 'dd / MM / yyyy - HH:mm:ss' }}</div>
+    @if (showToggle) {
+        <div class="row px-8">
+            <div class="col-sm-12 col-md-6 d-flex align-items-center">
+                <mat-icon>
+                    <i-tabler name="calendar" class="icon-24 m-r-20 text-primary"></i-tabler>
+                </mat-icon>
+                <span
+                    class="bg-light-primary text-primary border-primary border rounded f-w-600 p-6 p-y-2 f-s-14 m-l-10 m-r-20">
+                {{ datetime | date: 'dd / MM / yyyy' }}
+            </span>
+            </div>
+            <div class="col-sm-12 col-md-6 d-flex align-items-center">
+                <mat-icon>
+                    <i-tabler name="clock" class="icon-24 m-r-20 text-success"></i-tabler>
+                </mat-icon>
+                <span
+                    class="bg-light-success text-success border-success border rounded f-w-600 p-6 p-y-2 f-s-14 m-l-10"
+                    style="text-align:center;">
+                {{ datetime | date: 'HH:mm:ss' }}
+            </span>
+            </div>
+        </div>
+    }
     <!--
     <button mat-stroked-button class="d-none d-lg-flex" (click)="openDialog()">
         <div class="d-flex align-items-center">
@@ -117,8 +139,10 @@
         <div class="row m-x-0">
             @for (app of applications; track $index) {
                 <div class="col-6 p-x-0">
-                    <a class="bg-light-primary-hover d-flex justify-content-center flex-column gap-8 text-decoration-none p-x-20 p-y-12 text-center b-t-1 b-b-1 b-r-1" [href]="app.url" target="_blank">
-                        <div class="icon-45 bg-light-info rounded-circle m-auto round d-flex align-items-center justify-content-center">
+                    <a class="bg-light-primary-hover d-flex justify-content-center flex-column gap-8 text-decoration-none p-x-20 p-y-12 text-center b-t-1 b-b-1 b-r-1"
+                       [href]="app.url" target="_blank">
+                        <div
+                            class="icon-45 bg-light-info rounded-circle m-auto round d-flex align-items-center justify-content-center">
                             <img [src]="app.thumbnail" alt="app-logo" style="width: 55px; margin: 5px;">
                         </div>
                         <h6 class="f-s-16 f-w-600 m-0 mat-subtitle-1">{{ app.title }}</h6>
@@ -194,10 +218,11 @@
     <!-- --------------------------------------------------------------- -->
     <!-- profile Dropdown -->
     <!-- --------------------------------------------------------------- -->
-    <button mat-fab extended color="inherit" [matMenuTriggerFor]="profileMenu" aria-label="Notifications" matTooltip="Profile">
+    <button mat-fab extended color="inherit" [matMenuTriggerFor]="profileMenu" aria-label="Notifications"
+            matTooltip="Profile">
         <div class="d-flex align-items-center">
-            @if(user.thumbnail){
-                <img [src]="user.thumbnail" class="rounded-pill object-cover" width="40" />
+            @if (user.thumbnail) {
+                <img [src]="user.thumbnail" class="rounded-pill object-cover" width="40"/>
             } @else {
                 <img src="/assets/images/profile/default.jpg" class="rounded-pill" width="40"/>
             }
@@ -214,8 +239,8 @@
             <div class="p-x-32 p-y-16">
                 <h6 class="f-s-16 f-w-600 m-0 mat-subtitle-1">User Profile</h6>
                 <div class="d-flex align-items-center p-b-24 b-b-1 m-t-16">
-                    @if(user.thumbnail){
-                        <img [src]="user.thumbnail" class="rounded-pill" width="95" />
+                    @if (user.thumbnail) {
+                        <img [src]="user.thumbnail" class="rounded-pill" width="95"/>
                     } @else {
                         <img src="/assets/images/profile/default.jpg" class="rounded-pill" width="95"/>
                     }

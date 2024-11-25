@@ -12,6 +12,7 @@ import {AppCustomersComponent} from '../../../components/dashboard1/customers/cu
 import {AppTopProjectsComponent} from '../../../components/dashboard1/top-projects/top-projects.component';
 import {AppVisitUsaComponent} from '../../../components/dashboard1/visit-usa/visit-usa.component';
 import {AppLatestReviewsComponent} from '../../../components/dashboard1/latest-reviews/latest-reviews.component';
+import {AppNewsCardComponent} from "../../../components/dashboard1/news-card/news-card.component";
 
 @Component({
     selector: 'app-dashboard1',
@@ -27,6 +28,7 @@ import {AppLatestReviewsComponent} from '../../../components/dashboard1/latest-r
         AppVisitUsaComponent,
         AppProductsComponent,
         AppLatestReviewsComponent,
+        AppNewsCardComponent,
     ],
     templateUrl: './dashboard1.component.html',
 })

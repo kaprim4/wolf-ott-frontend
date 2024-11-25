@@ -23,8 +23,6 @@ import {TokenService} from "../../../shared/services/token.service";
 import {StatsService} from "../../../shared/services/stats.service";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 import {IDashboardStat} from "../../../shared/models/stats";
-import {ArticleService} from "../../../shared/services/article.service";
-import {Article, ArticleCard} from "../../../shared/models/article";
 import {DatePipe, NgForOf, SlicePipe} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {NotificationService} from "../../../shared/services/notification.service";
@@ -74,78 +72,26 @@ export class AppCongratulateCardComponent implements OnInit {
     activeAccounts: number = 0;
     creditsAssigned: number = 0;
     isStatLoading: boolean = false;
-    isNewsLoading: boolean = false;
 
     constructor(
         private userService: UserService,
         private tokenService: TokenService,
         private statsService: StatsService,
-        private articleService: ArticleService,
         protected notificationService: NotificationService
     ) {
     }
-
-    cardArticles: ArticleCard[] = [];
-    visibleArticles: ArticleCard[] = [];
     currentIndex = 0;
 
     ngOnInit(): void {
-        this.isNewsLoading = true;
+        this.isStatLoading = true;
         this.loggedInUser = this.tokenService.getPayload();
         this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
             this.user = user;
         });
         this.getStats();
-        this.articleService.getAllArticles<Article>().subscribe({
-            next: (value: Article[]) => {
-                if (value.length > 0) {
-                    value.map(article => {
-                        this.cardArticles.push({
-                            id: article.id,
-                            content: article.content,
-                            createdAt: article.createdAt,
-                            updatedAt: article.updatedAt,
-                            thumbnail: article.thumbnail,
-                            title: article.title,
-                            views: 1230,
-                            comments: 650,
-                        })
-                    })
-                }
-                this.updateVisibleArticles();
-            },
-            error: (err) => {
-                this.notificationService.error('Error while retrieving news');
-                console.error("'Error while retrieving news'", err);
-            },
-            complete: () => {
-                this.isNewsLoading = false;
-                this.notificationService.success('Retrieving news successfully');
-                console.info("'Retrieving news successfully'");
-            }
-        });
-    }
-
-    updateVisibleArticles(): void {
-        this.visibleArticles = this.cardArticles.slice(this.currentIndex, this.currentIndex + 2);
-    }
-
-    nextSlide(): void {
-        if (this.currentIndex + 2 < this.cardArticles.length) {
-            this.currentIndex += 2;
-            this.updateVisibleArticles();
-        }
-    }
-
-    prevSlide(): void {
-        if (this.currentIndex > 0) {
-            this.currentIndex -= 2;
-            this.updateVisibleArticles();
-        }
     }
 
     getStats(): void {
-        this.isStatLoading = true;
         const rStart = Date.now();
         this.statsService.getStats("dashboard").subscribe({
             next: (data: HttpResponse<IDashboardStat>) => {
