@@ -4,6 +4,7 @@ import {
     EventEmitter,
     Input,
     ViewEncapsulation, OnInit,
+    OnDestroy,
 } from '@angular/core';
 import {CoreService} from 'src/app/services/core.service';
 import {MatDialog} from '@angular/material/dialog';
@@ -24,6 +25,7 @@ import {UserService} from "../../../../shared/services/user.service";
 import {UserDetail} from "../../../../shared/models/user";
 import { AppsService } from 'src/app/shared/services/apps.service';
 import { Apps } from 'src/app/shared/models/apps';
+import { map, share, Subscription, timer } from 'rxjs';
 
 interface notifications {
     id: number;
@@ -72,7 +74,7 @@ interface quicklinks {
     templateUrl: './header.component.html',
     encapsulation: ViewEncapsulation.None,
 })
-export class HeaderComponent implements OnInit{
+export class HeaderComponent implements OnInit, OnDestroy {
     searchText: string = '';
     navItems = navItems;
 
@@ -151,6 +153,9 @@ export class HeaderComponent implements OnInit{
         this.selectedLanguage = lang;
     }
 
+    datetime: Date = new Date();
+    $clock:Subscription;
+
     ngOnInit(): void {
         this.loggedInUser = this.tokenService.getPayload();
         this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
@@ -159,7 +164,14 @@ export class HeaderComponent implements OnInit{
 
         this.appsService.getAllApps().subscribe(apps => {
             this.applications = apps;
-        })
+        });
+
+        this.$clock = timer(0, 1000).pipe(map(() => new Date()), share())
+                                    .subscribe(datetime => { this.datetime = datetime; });
+    }
+
+    ngOnDestroy(): void {
+        if(this.$clock) this.$clock.unsubscribe();
     }
 
     notifications: notifications[] = [
@@ -340,4 +352,5 @@ export class AppSearchDialogComponent {
 
     navItemsData = navItems.filter((navitem) => navitem.displayName);
 
+    
 }
