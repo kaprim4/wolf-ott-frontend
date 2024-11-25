@@ -54,6 +54,9 @@ export interface LineDetail extends ILine {
     lastActivity: number; // Consider converting to Date in your application logic
     lastActivityArray: any; // Consider parsing this if needed
     updated: number | null; // Consider converting to Date in your application logic
+
+    useVPN?:boolean;
+    vpnDns?:string;
 }
 
 export interface CreateLine extends ILine {

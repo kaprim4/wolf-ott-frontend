@@ -83,6 +83,7 @@ export class QuickM3uComponent implements OnInit {
         this.packageForm = this.fb.group({
             username: [username, Validators.required],
             password: [password, Validators.required],
+            use_vpn: [false, Validators.required],
             package: ['', Validators.required],
         });
         this.bundleForm = this.fb.group({
@@ -118,9 +119,9 @@ export class QuickM3uComponent implements OnInit {
         const bouquets: number[] = this.selectedPackage.bouquets;
         const isTrial: boolean = this.selectedPackage.isTrial;
 
-        const username: string = this.addForm.controls['username'].value;
-        const password: string = this.addForm.controls['password'].value;
-        const useVPN: boolean = this.addForm.controls['use_vpn'].value;
+        const username: string = this.packageForm.controls['username'].value;
+        const password: string = this.packageForm.controls['password'].value;
+        const useVPN: boolean = this.packageForm.controls['use_vpn'].value;
     
         const line: CreateLine = {
             id: 0,
@@ -134,7 +135,7 @@ export class QuickM3uComponent implements OnInit {
             createdAt: Date.now()
         };
         console.log("line:", line)
-        this.lineService.addLine(line).pipe(
+        this.lineService.addLine<LineDetail>(line).pipe(
             tap(() => {
                 // This will only run if the line creation is successful
                 this.notificationService.success('Line Created Successfully');
@@ -149,7 +150,17 @@ export class QuickM3uComponent implements OnInit {
             finalize(() => {
                 this.isLoading = false;
             })
-        ).subscribe();
+        ).subscribe(l => {
+            console.log("Saved Line:", l);
+            if(l.useVPN && l.vpnDns){
+                if(l.vpnDns.includes('http')){
+                    this.server = `${l.vpnDns}/`;
+                }else{
+                    this.server = `http://${l.vpnDns}:80/`;
+                }
+                
+            }
+        });
     }
 
     get canCreate(): boolean {

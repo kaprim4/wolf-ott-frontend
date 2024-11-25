@@ -59,8 +59,8 @@ export class LineService extends CrudService<ILine> {
         return this.getOneById(id_line).pipe(map(res => res.body as T));
     }
 
-    public addLine(line: ILine): Observable<HttpResponse<ILine>> {
-        return this.add(line);
+    public addLine<T extends ILine>(line: ILine): Observable<T> {
+        return this.add(line).pipe(map(res => res.body as T));
     }
 
     public updateLine(line: ILine): Observable<HttpResponse<ILine>> {
