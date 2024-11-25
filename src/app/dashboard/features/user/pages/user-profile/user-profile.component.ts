@@ -6,6 +6,9 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {TokenService} from "../../../../../shared/services/token.service";
 import {NotificationService} from "../../../../../shared/services/notification.service";
+import {Rank} from "../../../../../shared/models/rank";
+import {RankingService} from "../../../../../shared/services/ranking.service";
+import {LineService} from "../../../../../shared/services/line.service";
 
 @Component({
     selector: 'app-user-profile',
@@ -29,6 +32,17 @@ export class UserProfileComponent implements OnInit {
     };
     userLoading: boolean;
     imagePreview: string | ArrayBuffer | null = null;
+    registrationDate: any;
+    credits: number;
+    rank: Rank = {
+        id: 0,
+        title: '',
+        maxPoints: 0,
+        minPoints: 0,
+        badgeImage: ''
+    };
+    badgePreview: string | ArrayBuffer | null = null;
+    badgeLoading: boolean = true;
 
     constructor(
         private fb: UntypedFormBuilder,
@@ -37,6 +51,8 @@ export class UserProfileComponent implements OnInit {
         public dialog: MatDialog,
         private tokenService: TokenService,
         private notificationService: NotificationService,
+        private lineService: LineService,
+        private rankingService: RankingService,
     ) {
         this.initializeForm(this.user)
     }
@@ -44,11 +60,44 @@ export class UserProfileComponent implements OnInit {
     ngOnInit(): void {
         this.userLoading = true;
         this.loggedInUser = this.tokenService.getPayload();
-        this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe(user => {
-            this.user = user;
-            this.initializeForm(user);
-            this.userLoading = false;
-            console.log(this.user)
+        this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe({
+            next: (user) => {
+                this.user = user;
+                this.registrationDate = user.dateRegistered
+                this.initializeForm(user);
+                this.userLoading = false;
+                console.log(this.user)
+            },
+            error: err => {
+                this.notificationService.error('Error while get User');
+            },
+            complete : () => {
+                this.badgeLoading = true;
+                this.lineService.getAllLinesWithMemberId(this.user.id).subscribe(
+                    {
+                        next: (count) => {
+                            this.credits = count
+                        },
+                        error: (err) => {
+                            this.notificationService.error('Error while get All Lines With Member Id');
+                            console.error("'Error while get All Lines With Member Id'", err);
+                        },
+                        complete: () => {
+                            this.rankingService.getAllRanks<Rank>().subscribe(ranks => {
+                                ranks.forEach(r => {
+                                    //console.log(r)
+                                    if (r.minPoints <= this.credits && r.maxPoints >= this.credits) {
+                                        console.log("condiction Rank:", r)
+                                        this.rank = r;
+                                        this.badgePreview = this.rank.badgeImage;
+                                    }
+                                });
+                                this.badgeLoading = false;
+                            })
+                        }
+                    }
+                );
+            }
         });
     }
 
