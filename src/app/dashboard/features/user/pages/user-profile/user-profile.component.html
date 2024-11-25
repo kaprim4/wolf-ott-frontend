@@ -1184,6 +1184,14 @@
                                                         <mat-option value="UTC">UTC [UTC 00:00]</mat-option>
                                                     </mat-select>
                                                 </mat-form-field>
+                                                <!-- input -->
+                                                <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">
+                                                    API Key
+                                                </mat-label>
+                                                <mat-form-field appearance="outline" class="w-100" color="primary">
+                                                    <input matInput type="text" placeholder="Enter API Key"
+                                                           formControlName="apiKey"/>
+                                                </mat-form-field>
                                             </div>
                                             <div class="col-sm-6">
                                                 <!-- input -->
@@ -1199,7 +1207,7 @@
                                                     Custom DNS
                                                 </mat-label>
                                                 <mat-form-field appearance="outline" class="w-100" color="primary">
-                                                    <input matInput type="resellerDns" placeholder="Enter Custom DNS"
+                                                    <input matInput type="text" placeholder="Enter Custom DNS"
                                                            formControlName="resellerDns"/>
                                                 </mat-form-field>
                                             </div>

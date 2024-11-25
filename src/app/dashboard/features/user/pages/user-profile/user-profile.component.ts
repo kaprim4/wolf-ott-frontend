@@ -5,6 +5,7 @@ import {UserService} from "../../../../../shared/services/user.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {TokenService} from "../../../../../shared/services/token.service";
+import {NotificationService} from "../../../../../shared/services/notification.service";
 
 @Component({
     selector: 'app-user-profile',
@@ -19,10 +20,12 @@ export class UserProfileComponent implements OnInit {
     user: UserDetail = {
         email: "",
         id: 0,
+        ownerId: 0,
         resellerDns: "",
         thumbnail: "",
         timezone: "",
-        username: ""
+        username: "",
+        apiKey: ""
     };
     userLoading: boolean;
     imagePreview: string | ArrayBuffer | null = null;
@@ -33,6 +36,7 @@ export class UserProfileComponent implements OnInit {
         private router: Router,
         public dialog: MatDialog,
         private tokenService: TokenService,
+        private notificationService: NotificationService,
     ) {
         this.initializeForm(this.user)
     }
@@ -41,14 +45,7 @@ export class UserProfileComponent implements OnInit {
         this.userLoading = true;
         this.loggedInUser = this.tokenService.getPayload();
         this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe(user => {
-            this.user = {
-                email: user.email,
-                id: user.id,
-                resellerDns:user.resellerDns,
-                thumbnail: user.thumbnail,
-                timezone: user.timezone,
-                username: user.username
-            };
+            this.user = user;
             this.initializeForm(user);
             this.userLoading = false;
             console.log(this.user)
@@ -76,6 +73,7 @@ export class UserProfileComponent implements OnInit {
             //new_password: [''],
             //confirm_password: [''],
             resellerDns: [user.resellerDns || ''],
+            apiKey: [user.apiKey || ''],
             rows: this.fb.array([]) // Initialize rows here
         });
     }
@@ -85,8 +83,17 @@ export class UserProfileComponent implements OnInit {
         /*if(this.fb.control("current_password").value !== ""){
 
         }*/
-        this.userService.updateUser(this.user);
-        this.router.navigate(['/apps/users/profile']);
+        this.userService.updateUser(this.user).subscribe({
+            next: value => {
+                this.router.navigate(['/apps/users/profile']);
+            },
+            error: err => {
+                this.notificationService.error("An error has occurred", err);
+            },
+            complete: () => {
+                this.notificationService.success("Profile updated successfully.");
+            }
+        });
     }
 
     get loading(): boolean {

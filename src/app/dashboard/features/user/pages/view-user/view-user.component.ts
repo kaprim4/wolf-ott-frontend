@@ -5,11 +5,12 @@ import {UserService} from 'src/app/shared/services/user.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {IUser, UserDetail, UserList} from "../../../../../shared/models/user";
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { map, startWith } from 'rxjs';
-import { TokenService } from 'src/app/shared/services/token.service';
-import { GroupList } from 'src/app/shared/models/group';
-import { GroupService } from 'src/app/shared/services/group.service';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {map, startWith} from 'rxjs';
+import {TokenService} from 'src/app/shared/services/token.service';
+import {GroupList} from 'src/app/shared/models/group';
+import {GroupService} from 'src/app/shared/services/group.service';
+import {NotificationService} from "../../../../../shared/services/notification.service";
 
 @Component({
     selector: 'app-view-user',
@@ -17,7 +18,7 @@ import { GroupService } from 'src/app/shared/services/group.service';
     styleUrl: './view-user.component.scss'
 })
 export class ViewUserComponent implements OnInit {
-    
+
     id: number;
 
     financialMetrics: any[] = [
@@ -45,7 +46,7 @@ export class ViewUserComponent implements OnInit {
     userForm: UntypedFormGroup | any = {};
     rows: UntypedFormArray;
     user: UserDetail = {id: 0, username: ''};
-    groups:GroupList[] = [];
+    groups: GroupList[] = [];
 
     principal: any;
 
@@ -71,7 +72,8 @@ export class ViewUserComponent implements OnInit {
         private router: Router,
         public dialog: MatDialog,
         private activatedRouter: ActivatedRoute,
-        private tokenService: TokenService
+        private tokenService: TokenService,
+        private notificationService: NotificationService,
     ) {
         this.id = this.activatedRouter.snapshot.paramMap.get(
             'id'
@@ -112,17 +114,17 @@ export class ViewUserComponent implements OnInit {
 
         this.groupService.getAllGroups<GroupList>().subscribe(groups => {
             this.groups = groups;
-          })
+        })
     }
 
     initializeForm(user: UserDetail): void {
         this.userForm = this.fb.group({
             username: [user.username || '', Validators.required],
             email: [user.email || '', Validators.required], // Fix typo: eamil -> email
-            password: [user.password || '', Validators.required],
+            password: [user.password || ''],
             ownerId: [user.ownerId || '', Validators.required],
-            resellerDns: [user.resellerDns || '', Validators.required],
-            notes: [user.notes || '', Validators.required],
+            resellerDns: [user.resellerDns || ''],
+            notes: [user.notes || ''],
             duration: [0, Validators.required],
             rows: this.fb.array([]) // Initialize rows here
         });
@@ -132,63 +134,73 @@ export class ViewUserComponent implements OnInit {
     saveDetail(): void {
         // this.dialog.open(UserDialogComponent);
         this.user.id = this.id
-        this.userService.updateUser(this.user);
-        this.router.navigate(['/apps/users']);
+        this.userService.updateUser(this.user).subscribe({
+            next: value => {
+                this.router.navigate(['/apps/users']);
+            },
+            error: err => {
+                this.notificationService.error("An error has occurred", err);
+            },
+            complete: () => {
+                this.notificationService.success("Profile updated successfully.");
+            }
+        });
     }
 
     private filterOwners(value: string): any[] {
         const filterValue = value?.toLowerCase();
         return this.owners.filter(owner => owner?.username?.toLowerCase().includes(filterValue));
     }
+
     private filterGroups(value: string): GroupList[] {
         const filterValue = value?.toLowerCase();
         return this.groups.filter(group => group?.groupName?.toLowerCase().includes(filterValue));
-      }
-      
+    }
+
 
     ownersFilterOptions() {
         const searchTermLower = this.ownerSearchTerm.toLowerCase();
         this.filteredOwners = this.owners.filter((owner) =>
             owner?.username?.toLowerCase().includes(searchTermLower)
         );
-      }
+    }
 
-      groupsFilterOptions() {
+    groupsFilterOptions() {
         const searchTermLower = this.groupSearchTerm.toLowerCase();
         // this.filterGroups = this.groups.filter((group) =>group?.groupName?.toLowerCase().includes(searchTermLower));
-      }
-      
-      onOwnersDropdownOpened(opened: boolean) {
+    }
+
+    onOwnersDropdownOpened(opened: boolean) {
         this.dropdownOpened = opened;
         if (opened) {
             // Reset search term and filter options when the dropdown opens
             this.ownerSearchTerm = '';
             this.ownersFilterOptions();
         }
-      }
+    }
 
-      onGroupsDropdownOpened(opened: boolean) {
+    onGroupsDropdownOpened(opened: boolean) {
         this.dropdownOpened = opened;
         if (opened) {
             // Reset search term and filter options when the dropdown opens
             this.groupSearchTerm = '';
             this.groupsFilterOptions();
         }
-      }
-      
-      get selectedOwner():IUser {
+    }
+
+    get selectedOwner(): IUser {
         return this.owners.find(owner => owner.id == this.user.ownerId) as IUser;
-      }
+    }
 
-      get selectedGroup():GroupList {
+    get selectedGroup(): GroupList {
         return this.groups.find(group => group.groupId == this.user.groupId) as GroupList;
-      }
+    }
 
-      get loading():boolean{
+    get loading(): boolean {
         return this.userLoading || this.ownersLoading;
-      }
+    }
 
-      get isAdmin() {
+    get isAdmin() {
         return !!this.principal?.isAdmin;
-      }
+    }
 }
