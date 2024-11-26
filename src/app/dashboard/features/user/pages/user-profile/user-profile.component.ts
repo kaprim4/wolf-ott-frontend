@@ -63,6 +63,7 @@ export class UserProfileComponent implements OnInit {
         this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe({
             next: (user) => {
                 this.user = user;
+                console.log('userService.getUser :', this.user);
                 this.registrationDate = user.dateRegistered
                 this.initializeForm(user);
                 this.userLoading = false;
@@ -73,6 +74,7 @@ export class UserProfileComponent implements OnInit {
             },
             complete : () => {
                 this.badgeLoading = true;
+                this.imagePreview = this.user.thumbnail != null ? this.user.thumbnail : null;
                 this.lineService.getAllLinesWithMemberId(this.user.id).subscribe(
                     {
                         next: (count) => {
