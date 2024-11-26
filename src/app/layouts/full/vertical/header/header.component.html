@@ -90,25 +90,26 @@
     <!--  Search -->
     <!-- --------------------------------------------------------------- -->
     @if (showToggle) {
-        <div class="row px-8">
+        <div class="row d-lg-flex">
             <div class="col-sm-12 col-md-6 d-flex align-items-center">
-                <mat-icon>
-                    <i-tabler name="calendar" class="icon-24 m-r-20 text-primary"></i-tabler>
-                </mat-icon>
-                <span
-                    class="bg-light-primary text-primary border-primary border rounded f-w-600 p-6 p-y-2 f-s-14 m-l-10 m-r-20">
-                {{ datetime | date: 'dd / MM / yyyy' }}
-            </span>
+                <span>
+                    <mat-icon>
+                        <i-tabler name="calendar" class="icon-24 m-r-10 text-primary"></i-tabler>
+                    </mat-icon>
+                </span>
+                <span class="bg-light-primary text-primary border-primary border rounded f-w-600 p-6 p-y-2 f-s-14 m-l-10 m-r-20">
+                    {{ datetime | date: 'dd / MM / yyyy' }}
+                </span>
             </div>
             <div class="col-sm-12 col-md-6 d-flex align-items-center">
-                <mat-icon>
-                    <i-tabler name="clock" class="icon-24 m-r-20 text-success"></i-tabler>
-                </mat-icon>
-                <span
-                    class="bg-light-success text-success border-success border rounded f-w-600 p-6 p-y-2 f-s-14 m-l-10"
-                    style="text-align:center;">
-                {{ datetime | date: 'HH:mm:ss' }}
-            </span>
+                <span>
+                    <mat-icon>
+                        <i-tabler name="clock" class="icon-24 m-r-10 text-success"></i-tabler>
+                    </mat-icon>
+                </span>
+                <span class="bg-light-success text-success border-success border rounded f-w-600 p-6 p-y-2 f-s-14 m-l-10" style="text-align:center;">
+                    {{ datetime | date: 'HH:mm:ss' }}
+                </span>
             </div>
         </div>
     }
