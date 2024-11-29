@@ -40,7 +40,7 @@
                       </div>
                       <div class="col-sm-8">
                         <mat-form-field appearance="outline" class="w-100">
-                          <input matInput placeholder="Username" formControlName="username" required />
+                          <input matInput placeholder="Username" formControlName="username" />
                         </mat-form-field>
                       </div>
                     </div>
@@ -51,7 +51,7 @@
                       </div>
                       <div class="col-sm-8">
                         <mat-form-field appearance="outline" class="w-100">
-                          <input matInput type="email" placeholder="Enter Email" formControlName="email" required />
+                          <input matInput type="email" placeholder="Enter Email" formControlName="email" />
                         </mat-form-field>
                       </div>
                     </div>
@@ -62,7 +62,7 @@
                       </div>
                       <div class="col-sm-8">
                         <mat-form-field appearance="outline" class="w-100">
-                          <input matInput type="text" placeholder="Password" formControlName="password" required />
+                          <input matInput type="text" placeholder="Password" formControlName="password" />
                         </mat-form-field>
                       </div>
                     </div>
@@ -73,7 +73,7 @@
                       </div>
                       <div class="col-sm-8">
                           <mat-form-field appearance="outline" class="w-100">
-                              <mat-select formControlName="ownerId" name="owner" (openedChange)="onOwnersDropdownOpened($event)" required placeholder="Select Owner">
+                              <mat-select formControlName="ownerId" name="owner" (openedChange)="onOwnersDropdownOpened($event)" placeholder="Select Owner">
                                   <mat-select-trigger>
                                       {{ selectedOwner ? selectedOwner.username : 'Select Owner' }}
                                   </mat-select-trigger>
@@ -97,7 +97,7 @@
                       </div>
                       <div class="col-sm-8">
                           <mat-form-field appearance="outline" class="w-100">
-                              <mat-select [(ngModel)]="user.groupId" name="group" (openedChange)="onGroupsDropdownOpened($event)" required placeholder="Select Group">
+                              <mat-select formControlName="groupId"  name="group" (openedChange)="onGroupsDropdownOpened($event)" placeholder="Select Group">
                                   <mat-select-trigger>
                                       {{ selectedGroup ? selectedGroup.groupName : 'Select Owner' }}
                                   </mat-select-trigger>

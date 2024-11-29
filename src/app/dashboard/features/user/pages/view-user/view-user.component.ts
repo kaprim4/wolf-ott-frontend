@@ -119,11 +119,12 @@ export class ViewUserComponent implements OnInit {
         this.userForm = this.fb.group({
             username: [user.username || '', Validators.required],
             email: [user.email || '', Validators.required], // Fix typo: eamil -> email
-            password: [user.password || '', Validators.required],
-            ownerId: [user.ownerId || '', Validators.required],
-            resellerDns: [user.resellerDns || '', Validators.required],
-            notes: [user.notes || '', Validators.required],
-            duration: [0, Validators.required],
+            password: [user.password || ''],
+            ownerId: [user.ownerId || ''],
+            groupId: [user.groupId || ''],
+            resellerDns: [user.resellerDns || ''],
+            notes: [user.notes || ''],
+            duration: [0],
             rows: this.fb.array([]) // Initialize rows here
         });
 
@@ -132,8 +133,11 @@ export class ViewUserComponent implements OnInit {
     saveDetail(): void {
         // this.dialog.open(UserDialogComponent);
         this.user.id = this.id
-        this.userService.updateUser(this.user);
-        this.router.navigate(['/apps/users']);
+        this.userService.updateUser(this.user).subscribe((user) => {
+            console.log("Saved User:", user);
+            this.router.navigate(['/apps/users']);
+        });
+        
     }
 
     private filterOwners(value: string): any[] {
