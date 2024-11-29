@@ -3,7 +3,7 @@
     @if(loading){
       <mat-progress-bar mode="query"></mat-progress-bar>
     }
-    
+
   <mat-card-header>
         <div class="w-100 d-flex justify-content-between align-items-center">
           <h4 class="mat-subtitle-2 f-s-18 f-w-600 m-b-0">
@@ -29,7 +29,7 @@
           </div>
         </div>
       </mat-card-header>
-      
+
     <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0ms">
         <mat-tab label="Details">
             <mat-card-content class="b-t-1">
@@ -44,7 +44,7 @@
                         </mat-form-field>
                       </div>
                     </div>
-                  
+
                     <div class="row">
                       <div class="col-sm-4 d-flex align-items-center">
                         <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Email Address</mat-label>
@@ -55,7 +55,7 @@
                         </mat-form-field>
                       </div>
                     </div>
-                    
+
                     <div class="row">
                       <div class="col-sm-4 d-flex align-items-center">
                         <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Password</mat-label>
@@ -66,7 +66,7 @@
                         </mat-form-field>
                       </div>
                     </div>
-                  
+
                     <div class="row">
                       <div class="col-sm-4 d-flex align-items-start">
                           <mat-label class="mat-subtitle-2 f-w-600">Owner</mat-label>
@@ -77,11 +77,11 @@
                                   <mat-select-trigger>
                                       {{ selectedOwner ? selectedOwner.username : 'Select Owner' }}
                                   </mat-select-trigger>
-                                  
+
                                   <mat-option>
                                     <ngx-mat-select-search [formControl]="ownerSearchCtrl" placeholderLabel="Search" noEntriesFoundLabel="No options found"></ngx-mat-select-search>
                                   </mat-option>
-  
+
                                   <mat-option *ngFor="let owner of filteredOwners" [value]="owner.id" (click)="$event.stopPropagation()">
                                       {{ owner.username }}
                                   </mat-option>
@@ -101,11 +101,11 @@
                                   <mat-select-trigger>
                                       {{ selectedGroup ? selectedGroup.groupName : 'Select Owner' }}
                                   </mat-select-trigger>
-    
+
                                   <mat-option>
                                     <ngx-mat-select-search [formControl]="groupSearchCtrl" placeholderLabel="Search" noEntriesFoundLabel="No options found"></ngx-mat-select-search>
                                   </mat-option>
-    
+
                                   <mat-option *ngFor="let group of filteredGroups" [value]="group.groupId" (click)="$event.stopPropagation()">
                                       {{ group.groupName }}
                                   </mat-option>
@@ -114,7 +114,7 @@
                       </div>
                   </div>
                   }
-                  
+
                     <div class="row">
                       <div class="col-sm-4 d-flex align-items-center">
                         <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Custom DNS</mat-label>
@@ -125,7 +125,7 @@
                         </mat-form-field>
                       </div>
                     </div>
-                  
+
                     <div class="row">
                       <div class="col-sm-4 d-flex align-items-center">
                         <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Notes</mat-label>
@@ -136,14 +136,14 @@
                         </mat-form-field>
                       </div>
                     </div>
-                  
+
                     <!-- <div class="row justify-content-end">
                       <div class="col-sm-8">
                         <button mat-flat-button color="primary" type="submit" [disabled]="userForm.invalid">Create User</button>
                       </div>
                     </div> -->
                   </form>
-                  
+
               </mat-card-content>
         </mat-tab>
         <mat-tab label="Review Purchase">
@@ -173,9 +173,8 @@
                   </div>
                 }
               </div>
-              
+
         </mat-tab>
     </mat-tab-group>
-    
+
   </mat-card>
-  

@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {ITokenUser} from "../models/user";
 import {jwtDecode} from "jwt-decode";
+import * as moment from 'moment';
+import {now} from "moment";
 
 @Injectable({
     providedIn: 'root'
@@ -48,10 +50,15 @@ export class TokenService {
         return jwtDecode<ITokenUser>(this.getToken());
     }
 
-    tokenExpired() {
+    tokenExpired(): boolean {
         if (this.isLogged()) {
-            const expiry = (JSON.parse(atob(this.getToken().split('.')[1]))).exp;
-            return (Math.floor((new Date).getTime() / 1000)) >= expiry;
+            const token = this.getToken();
+            const decodedToken: any = jwtDecode(token);
+            const currentTime = now().valueOf();
+            const expiryTimeInMs = moment.unix(decodedToken.exp).valueOf();
+            console.log("now : ", moment(currentTime).format('YYYY-MM-DD HH:mm:ss'))
+            console.log("expiry : ", moment(expiryTimeInMs).format('YYYY-MM-DD HH:mm:ss'))
+            return currentTime >= expiryTimeInMs;
         }
         return false;
     }

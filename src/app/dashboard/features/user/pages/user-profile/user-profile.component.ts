@@ -5,6 +5,10 @@ import {UserService} from "../../../../../shared/services/user.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {TokenService} from "../../../../../shared/services/token.service";
+import {NotificationService} from "../../../../../shared/services/notification.service";
+import {Rank} from "../../../../../shared/models/rank";
+import {RankingService} from "../../../../../shared/services/ranking.service";
+import {LineService} from "../../../../../shared/services/line.service";
 
 @Component({
     selector: 'app-user-profile',
@@ -19,13 +23,26 @@ export class UserProfileComponent implements OnInit {
     user: UserDetail = {
         email: "",
         id: 0,
+        ownerId: 0,
         resellerDns: "",
         thumbnail: "",
         timezone: "",
-        username: ""
+        username: "",
+        apiKey: ""
     };
     userLoading: boolean;
     imagePreview: string | ArrayBuffer | null = null;
+    registrationDate: any;
+    credits: number;
+    rank: Rank = {
+        id: 0,
+        title: '',
+        maxPoints: 0,
+        minPoints: 0,
+        badgeImage: ''
+    };
+    badgePreview: string | ArrayBuffer | null = null;
+    badgeLoading: boolean = true;
 
     constructor(
         private fb: UntypedFormBuilder,
@@ -33,6 +50,9 @@ export class UserProfileComponent implements OnInit {
         private router: Router,
         public dialog: MatDialog,
         private tokenService: TokenService,
+        private notificationService: NotificationService,
+        private lineService: LineService,
+        private rankingService: RankingService,
     ) {
         this.initializeForm(this.user)
     }
@@ -40,18 +60,46 @@ export class UserProfileComponent implements OnInit {
     ngOnInit(): void {
         this.userLoading = true;
         this.loggedInUser = this.tokenService.getPayload();
-        this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe(user => {
-            this.user = {
-                email: user.email,
-                id: user.id,
-                resellerDns:user.resellerDns,
-                thumbnail: user.thumbnail,
-                timezone: user.timezone,
-                username: user.username
-            };
-            this.initializeForm(user);
-            this.userLoading = false;
-            console.log(this.user)
+        this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe({
+            next: (user) => {
+                this.user = user;
+                console.log('userService.getUser :', this.user);
+                this.registrationDate = user.dateRegistered
+                this.initializeForm(user);
+                this.userLoading = false;
+                console.log(this.user)
+            },
+            error: err => {
+                this.notificationService.error('Error while get User');
+            },
+            complete : () => {
+                this.badgeLoading = true;
+                this.imagePreview = this.user.thumbnail != null ? this.user.thumbnail : null;
+                this.lineService.getAllLinesWithMemberId(this.user.id).subscribe(
+                    {
+                        next: (count) => {
+                            this.credits = count
+                        },
+                        error: (err) => {
+                            this.notificationService.error('Error while get All Lines With Member Id');
+                            console.error("'Error while get All Lines With Member Id'", err);
+                        },
+                        complete: () => {
+                            this.rankingService.getAllRanks<Rank>().subscribe(ranks => {
+                                ranks.forEach(r => {
+                                    //console.log(r)
+                                    if (r.minPoints <= this.credits && r.maxPoints >= this.credits) {
+                                        console.log("condiction Rank:", r)
+                                        this.rank = r;
+                                        this.badgePreview = this.rank.badgeImage;
+                                    }
+                                });
+                                this.badgeLoading = false;
+                            })
+                        }
+                    }
+                );
+            }
         });
     }
 
@@ -76,6 +124,7 @@ export class UserProfileComponent implements OnInit {
             //new_password: [''],
             //confirm_password: [''],
             resellerDns: [user.resellerDns || ''],
+            apiKey: [user.apiKey || ''],
             rows: this.fb.array([]) // Initialize rows here
         });
     }
@@ -85,8 +134,17 @@ export class UserProfileComponent implements OnInit {
         /*if(this.fb.control("current_password").value !== ""){
 
         }*/
-        this.userService.updateUser(this.user);
-        this.router.navigate(['/apps/users/profile']);
+        this.userService.updateUser(this.user).subscribe({
+            next: value => {
+                this.router.navigate(['/apps/users/profile']);
+            },
+            error: err => {
+                this.notificationService.error("An error has occurred", err);
+            },
+            complete: () => {
+                this.notificationService.success("Profile updated successfully.");
+            }
+        });
     }
 
     get loading(): boolean {

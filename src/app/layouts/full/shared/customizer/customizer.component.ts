@@ -76,7 +76,7 @@ export class CustomizerComponent implements OnInit {
                     this.options = {
                         dir: 'ltr',
                         theme: value.body.theme,
-                        sidenavOpened: false,
+                        sidenavOpened: true,
                         sidenavCollapsed: false,
                         boxed: false,
                         horizontal: false,

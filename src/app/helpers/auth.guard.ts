@@ -41,8 +41,10 @@ export class AuthGuard implements CanActivate {
         state: RouterStateSnapshot
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         if (this.tokenService.isLogged()) {
+            console.log("isLogged:", this.tokenService.isLogged());
             this.token = this.tokenService.getPayload();
-            console.log("token:", this.token)
+            console.log("token:", this.token);
+            console.log("tokenExpired:", this.tokenService.tokenExpired());
             if (this.tokenService.tokenExpired()) {
                 console.log("expired");
                 this.tokenService.clearToken();

@@ -13,7 +13,48 @@
                     </ng-template>
                     <mat-card-content class="p-y-24 b-t-1">
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <mat-card class="cardWithShadow">
+                                    @if (badgeLoading) {
+                                        <mat-progress-bar mode="query"></mat-progress-bar>
+                                    }
+                                    <mat-card-header>
+                                        <div class="d-flex align-items-center justify-content-between w-100">
+                                            <div>
+                                                <mat-card-title>My account</mat-card-title>
+                                                <mat-card-subtitle class="mat-body-1">rank</mat-card-subtitle>
+                                            </div>
+                                            <div class="text-right">
+                                                <mat-card-title>
+                <span class="bg-light-warning text-warning border-warning border rounded f-w-600 p-6 p-y-2 f-s-14">
+                    {{ credits }}
+                </span>
+                                                </mat-card-title>
+                                                Line(s) sold
+                                            </div>
+                                        </div>
+                                    </mat-card-header>
+                                    <mat-card-content>
+                                        @if (loading) {
+                                            <mat-progress-bar mode="query"></mat-progress-bar>
+                                        } @else {
+                                            <div class="text-center">
+                                                <img [src]="badgePreview" alt="Aperçu de l'image" style="height: 200px;">
+                                            </div>
+                                            <div class="text-center m-t-15">
+            <span class="bg-light-primary text-primary border-primary border rounded f-w-600 p-6 f-s-16">
+                {{ rank.title }}
+            </span>
+                                            </div>
+                                            <div class="text-center m-t-10 p-t-8 p-b-10">
+                                                <span>Since {{ registrationDate | date }}</span>
+                                            </div>
+                                        }
+                                    </mat-card-content>
+                                </mat-card>
+
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
                                 <mat-card class="cardWithShadow">
                                     <mat-card-content class="p-y-24">
                                         <mat-card-title>Change Profile</mat-card-title>
@@ -21,11 +62,10 @@
                                             Change your profile picture from here
                                         </mat-card-subtitle>
                                         <div class="text-center m-t-24">
-                                            @if (imagePreview) {
+                                            @if (imagePreview != null) {
                                                 <img [src]="imagePreview" class="rounded-pill" width="200"/>
                                             } @else {
-                                                <img src="/assets/images/profile/default.jpg" class="rounded-pill"
-                                                     width="200"/>
+                                                <img src="/assets/images/profile/default.jpg" class="rounded-pill" width="200"/>
                                             }
                                             <div class="m-t-24">
                                                 <input mat-button color="primary" type="file" id="file"
@@ -36,7 +76,7 @@
                                     </mat-card-content>
                                 </mat-card>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-12 col-md-12 col-lg-4">
                                 @if (loggedInUser.role === 'Administrators') {
                                     <mat-card class="cardWithShadow">
                                         <mat-card-content class="p-y-24">
@@ -1184,6 +1224,14 @@
                                                         <mat-option value="UTC">UTC [UTC 00:00]</mat-option>
                                                     </mat-select>
                                                 </mat-form-field>
+                                                <!-- input -->
+                                                <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block">
+                                                    API Key
+                                                </mat-label>
+                                                <mat-form-field appearance="outline" class="w-100" color="primary">
+                                                    <input matInput type="text" placeholder="Enter API Key"
+                                                           formControlName="apiKey"/>
+                                                </mat-form-field>
                                             </div>
                                             <div class="col-sm-6">
                                                 <!-- input -->
@@ -1199,7 +1247,7 @@
                                                     Custom DNS
                                                 </mat-label>
                                                 <mat-form-field appearance="outline" class="w-100" color="primary">
-                                                    <input matInput type="resellerDns" placeholder="Enter Custom DNS"
+                                                    <input matInput type="text" placeholder="Enter Custom DNS"
                                                            formControlName="resellerDns"/>
                                                 </mat-form-field>
                                             </div>
@@ -1751,7 +1799,8 @@
                 -->
             </mat-tab-group>
             <div class="text-right p-24 p-t-0">
-                <button mat-flat-button color="primary" class="m-r-8" (click)="$event.preventDefault(); saveDetail()" [disabled]="userForm.invalid">
+                <button mat-flat-button color="primary" class="m-r-8" (click)="$event.preventDefault(); saveDetail()"
+                        [disabled]="userForm.invalid">
                     Save
                 </button>
                 <a routerLink="/apps/users/profile" mat-stroked-button color="warn" class="m-r-10">

@@ -72,12 +72,17 @@ export class LineService extends CrudService<ILine> {
     }
 
     public static generateRandomUsername(length: number = 8): string {
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'; // Added hyphen and underscore
+        //const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+        const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+        const numbers = '0123456789';
+        //const specialChars = '!@#$%^*()_+-[]{}|;:<>';
+        const allCharacters = uppercase + lowercase + numbers;
         let username = '';
 
         for (let i = 0; i < length; i++) {
-            const randomIndex = Math.floor(Math.random() * characters.length);
-            username += characters[randomIndex];
+            const randomIndex = Math.floor(Math.random() * allCharacters.length);
+            username += allCharacters[randomIndex];
         }
         return username;
     }
@@ -86,14 +91,14 @@ export class LineService extends CrudService<ILine> {
         const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         const lowercase = 'abcdefghijklmnopqrstuvwxyz';
         const numbers = '0123456789';
-        const specialChars = '!@#$%^*()_+-[]{}|;:<>';
-        const allCharacters = uppercase + lowercase + numbers + specialChars;
+        //const specialChars = '!@#$%^*()_+-[]{}|;:<>';
+        const allCharacters = uppercase + lowercase + numbers;
 
         let password = '';
         password += uppercase.charAt(Math.floor(Math.random() * uppercase.length)); // At least one uppercase
         password += lowercase.charAt(Math.floor(Math.random() * lowercase.length)); // At least one lowercase
         password += numbers.charAt(Math.floor(Math.random() * numbers.length)); // At least one number
-        password += specialChars.charAt(Math.floor(Math.random() * specialChars.length)); // At least one special character
+        //password += specialChars.charAt(Math.floor(Math.random() * specialChars.length)); // At least one special character
 
         for (let i = 4; i < length; i++) {
             const randomIndex = Math.floor(Math.random() * allCharacters.length);
