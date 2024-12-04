@@ -26,6 +26,7 @@ import {IDashboardStat} from "../../../shared/models/stats";
 import {DatePipe, NgForOf, SlicePipe} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {NotificationService} from "../../../shared/services/notification.service";
+import { DashboardService } from 'src/app/shared/services/dashboard.service';
 
 interface month {
     value: string;
@@ -38,6 +39,7 @@ interface stats {
     title: string;
     subtitle: string;
     icon: string;
+    getValue: Function
 }
 
 export interface revenueChart {
@@ -77,13 +79,14 @@ export class AppCongratulateCardComponent implements OnInit {
         private userService: UserService,
         private tokenService: TokenService,
         private statsService: StatsService,
-        protected notificationService: NotificationService
+        protected notificationService: NotificationService,
+        private dashboardService: DashboardService
     ) {
     }
     currentIndex = 0;
 
     ngOnInit(): void {
-        this.isStatLoading = true;
+        // this.isStatLoading = true;
         this.loggedInUser = this.tokenService.getPayload();
         this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
             this.user = user;
@@ -92,38 +95,95 @@ export class AppCongratulateCardComponent implements OnInit {
     }
 
     getStats(): void {
+        this.isStatLoading = true;
         const rStart = Date.now();
-        this.statsService.getStats("dashboard").subscribe({
-            next: (data: HttpResponse<IDashboardStat>) => {
-                if (data.status === 200 || data.status === 202) {
-                    console.log(`Got a successfull status code: ${data.status}`);
-                }
-                if (data.body) {
-                    this.openConnections = data.body.open_connections;
-                    this.onlineUsers = data.body.online_users;
-                    this.activeAccounts = data.body.active_accounts;
-                    this.creditsAssigned = data.body.credits_assigned;
-                    const delay = 1000 - (Date.now() - rStart);
-                    setTimeout(() => this.getStats(), delay > 0 ? delay : 0);
-                }
-                console.log('This contains body: ', data.body);
-            },
-            error: (err: HttpErrorResponse) => {
-                if (err.status === 403 || err.status === 404) {
-                    console.error(`${err.status} status code caught`);
-                    setTimeout(() => this.getStats(), 1000);
-                    this.notificationService.error('Error while Retrieving Stats');
-                    console.error("'Error while Retrieving Stats: '", err.message);
-                }
-            },
-            complete: () => {
-                this.isStatLoading = false;
-                this.notificationService.success('Retrieving Stats successfully');
-                console.info("'Retrieving Stats successfully'");
-            }
+        this.dashboardService.getGlobalStates().subscribe((state) => {
+            console.log("Global State:", state);
+            
+            this.openConnections = state.onlineLines;
+            this.onlineUsers = state.onlineUsers;
+            this.activeAccounts = state.activeLines;
+            this.creditsAssigned = state.assignedCredits;
+            this.isStatLoading = false;
+            const delay = 10000 - (Date.now() - rStart);
+            setTimeout(() => this.getStats(), delay > 0 ? delay : 0);
+            
         });
+        // this.statsService.getStats("dashboard").subscribe({
+        //     next: (data: HttpResponse<IDashboardStat>) => {
+        //         if (data.status === 200 || data.status === 202) {
+        //             console.log(`Got a successfull status code: ${data.status}`);
+        //         }
+        //         if (data.body) {
+        //             this.openConnections = data.body.open_connections;
+        //             this.onlineUsers = data.body.online_users;
+        //             this.activeAccounts = data.body.active_accounts;
+        //             this.creditsAssigned = data.body.credits_assigned;
+        //             const delay = 1000 - (Date.now() - rStart);
+        //             setTimeout(() => this.getStats(), delay > 0 ? delay : 0);
+        //         }
+        //         console.log('This contains body: ', data.body);
+        //     },
+        //     error: (err: HttpErrorResponse) => {
+        //         if (err.status === 403 || err.status === 404) {
+        //             console.error(`${err.status} status code caught`);
+        //             setTimeout(() => this.getStats(), 1000);
+        //             this.notificationService.error('Error while Retrieving Stats');
+        //             console.error("'Error while Retrieving Stats: '", err.message);
+        //         }
+        //     },
+        //     complete: () => {
+        //         this.isStatLoading = false;
+        //         this.notificationService.success('Retrieving Stats successfully');
+        //         console.info("'Retrieving Stats successfully'");
+        //     }
+        // });
     }
 
+    get getStates(): stats[] {
+        return [
+            {
+                id: 1,
+                color: 'success',
+                title: `${this.openConnections} Connections`,
+                subtitle: 'Live Connections',
+                icon: 'plug-connected',
+                getValue: () => {
+                    return this.openConnections;
+                }
+            },
+            {
+                id: 2,
+                color: 'info',
+                title: `${this.onlineUsers} Line online`,
+                subtitle: 'Live Connections',
+                icon: 'users',
+                getValue: () => {
+                    return this.onlineUsers;
+                }
+            },
+            {
+                id: 3,
+                color: 'warning',
+                title: `${this.activeAccounts} Active Lines`,
+                subtitle: 'Manage Lines',
+                icon: 'activity-heartbeat',
+                getValue: () => {
+                    return this.activeAccounts;
+                }
+            },
+            {
+                id: 4,
+                color: 'info',
+                title: `${this.creditsAssigned} Assigned Credits`,
+                subtitle: 'Users',
+                icon: 'coins',
+                getValue: () => {
+                    return this.creditsAssigned;
+                }
+            },
+        ];
+    }
     stats: stats[] = [
         {
             id: 1,
@@ -131,6 +191,9 @@ export class AppCongratulateCardComponent implements OnInit {
             title: `${this.openConnections} Connections`,
             subtitle: 'Live Connections',
             icon: 'plug-connected',
+            getValue: () => {
+                return this.openConnections;
+            }
         },
         {
             id: 2,
@@ -138,6 +201,9 @@ export class AppCongratulateCardComponent implements OnInit {
             title: `${this.onlineUsers} Line online`,
             subtitle: 'Live Connections',
             icon: 'users',
+            getValue: () => {
+                return this.onlineUsers;
+            }
         },
         {
             id: 3,
@@ -145,6 +211,9 @@ export class AppCongratulateCardComponent implements OnInit {
             title: `${this.activeAccounts} Active Lines`,
             subtitle: 'Manage Lines',
             icon: 'activity-heartbeat',
+            getValue: () => {
+                return this.activeAccounts;
+            }
         },
         {
             id: 4,
@@ -152,6 +221,9 @@ export class AppCongratulateCardComponent implements OnInit {
             title: `${this.creditsAssigned} Assigned Credits`,
             subtitle: 'Users',
             icon: 'coins',
+            getValue: () => {
+                return this.creditsAssigned;
+            }
         },
     ];
 }
