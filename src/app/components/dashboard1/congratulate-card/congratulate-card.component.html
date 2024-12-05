@@ -11,7 +11,6 @@
         </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content class="p-b-30 position-relative">
-        
         @for (stat of getStates; track stat.title) {
             <div class="m-t-24">
                 <div class="d-flex align-items-center">
@@ -25,58 +24,6 @@
                 </div>
             </div>
         }
-       
-
-<!-- 
-        <div class="m-t-24">
-            <div class="d-flex align-items-center">
-                <span class="text-success bg-light-success rounded-circle icon-46 d-flex align-items-center justify-content-center">
-                    <i-tabler name="plug-connected" class="icon-22 d-flex"></i-tabler>
-                </span>
-                <div class="m-l-16 m-r-auto">
-                    <h6 class="mat-subtitle-1 f-s-16 f-w-600">{{this.openConnections}} Connections</h6>
-                    <span class="mat-body-1">Live Connections</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="m-t-24">
-            <div class="d-flex align-items-center">
-                <span class="text-info bg-light-info rounded-circle icon-46 d-flex align-items-center justify-content-center">
-                    <i-tabler name="users" class="icon-22 d-flex"></i-tabler>
-                </span>
-                <div class="m-l-16 m-r-auto">
-                    <h6 class="mat-subtitle-1 f-s-16 f-w-600">{{this.onlineUsers}} Line online</h6>
-                    <span class="mat-body-1">Live Connections</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="m-t-24">
-            <div class="d-flex align-items-center">
-                <span class="text-warning bg-light-warning rounded-circle icon-46 d-flex align-items-center justify-content-center">
-                    <i-tabler name="activity-heartbeat" class="icon-22 d-flex"></i-tabler>
-                </span>
-                <div class="m-l-16 m-r-auto">
-                    <h6 class="mat-subtitle-1 f-s-16 f-w-600">{{this.activeAccounts}} Active Lines</h6>
-                    <span class="mat-body-1">Manage Lines</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="m-t-24">
-            <div class="d-flex align-items-center">
-                <span class="text-info bg-light-info rounded-circle icon-46 d-flex align-items-center justify-content-center">
-                    <i-tabler name="coins" class="icon-22 d-flex"></i-tabler>
-                </span>
-                <div class="m-l-16 m-r-auto">
-                    <h6 class="mat-subtitle-1 f-s-16 f-w-600">{{this.creditsAssigned}} Assigned Credits</h6>
-                    <span class="mat-body-1">Users</span>
-                </div>
-            </div>
-        </div> -->
-
-
         <img src="assets/images/backgrounds/Businessman-bro-600x600.webp" width="355" alt="welcome-bg"
              class="congrats-bg d-none d-lg-flex"/>
     </mat-card-content>

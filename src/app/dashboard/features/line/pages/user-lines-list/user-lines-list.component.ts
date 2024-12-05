@@ -143,4 +143,42 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
         // dialogRef.componentInstance.username = username;
         // dialogRef.componentInstance.password = password;
     }
+
+    banLine(id: number): void {
+        if (confirm('Are you sure you want to ban this record?')) {
+            this.lineService.banLine(id).subscribe({
+                next: (response)=>{
+                    console.log("banLine rep: ", response)
+
+                    //if(response.status === 200 && response.body !== null){
+                        //this.notificationService.success(response.body)
+                    //}
+                },
+                error: (err)=>{
+                    console.log("banLine error: ", err)
+                },
+                complete: ()=>{
+
+                },
+            })
+        }
+    }
+
+    disableLine(id: number): void {
+        if (confirm('Are you sure you want to disable this record?')) {
+            this.notificationService.success("This line has been disabled.")
+        }
+    }
+
+    killLineConnection(id: number): void {
+        if (confirm('Are you sure you want to kill this Line Connection?')) {
+            this.notificationService.success("This line Connection has been killed.")
+        }
+    }
+
+    killLiveLine(id: number): void {
+        if (confirm('Are you sure you want to kill this Live Line?')) {
+            this.notificationService.success("This line Live has been killed.")
+        }
+    }
 }

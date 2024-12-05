@@ -5,10 +5,10 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import {JwtService} from './jwt.service';
 import {map, Observable} from 'rxjs';
 import {Page} from '../models/page';
-import { MatDialog } from '@angular/material/dialog';
-import { QuickM3uComponent } from '../components/quick-m3u/quick-m3u.component';
+import {MatDialog} from '@angular/material/dialog';
+import {QuickM3uComponent} from '../components/quick-m3u/quick-m3u.component';
 import {environment} from "../../../environments/environment";
-import { Patch } from '../models/patch';
+import {Patch} from '../models/patch';
 
 @Injectable({
     providedIn: 'root'
@@ -52,7 +52,9 @@ export class LineService extends CrudService<ILine> {
     }
 
     public getCreatedLinesLastSixMonths(): Observable<{ [key: string]: number }> {
-        return this.httpClient.get<{ [key: string]: number }>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/created-last-six-months`, {headers: this.headers});
+        return this.httpClient.get<{
+            [key: string]: number
+        }>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/created-last-six-months`, {headers: this.headers});
     }
 
     public getLine<T extends ILine>(id_line: number): Observable<T> {
@@ -109,13 +111,36 @@ export class LineService extends CrudService<ILine> {
     }
 
 
-    public patch<T extends ILine>(id:number, patch:Patch): Observable<T>{
+    public patch<T extends ILine>(id: number, patch: Patch): Observable<T> {
         const url = `${this.apiBaseUrl}/api/v1/${this.endpoint}/${id}`
-        return this.httpClient.patch<HttpResponse<T>>(url, patch, {headers: this.headers}).pipe(map(res => res.body as T));;
+        return this.httpClient.patch<HttpResponse<T>>(url, patch, {headers: this.headers}).pipe(map(res => res.body as T));
+        ;
     }
 
-    public refreshVPN<T extends ILine>(id:number): Observable<T>{
+    public refreshVPN<T extends ILine>(id: number): Observable<T> {
         const url = `${this.apiBaseUrl}/api/v1/${this.endpoint}/${id}/vpn/refresh`
-        return this.httpClient.post<HttpResponse<T>>(url, null, {headers: this.headers}).pipe(map(res => res.body as T));;
+        return this.httpClient.post<HttpResponse<T>>(url, null, {headers: this.headers}).pipe(map(res => res.body as T));
+        ;
+    }
+
+    public banLine(id: number): Observable<String> {
+        const url = `${this.apiBaseUrl}/api/v1/${this.endpoint}/${id}/ban-line`
+        console.log("banLine url:", url)
+        return this.httpClient.post<String>(url, null, {headers: this.headers});
+    }
+
+    public disableLine(id: number): Observable<String> {
+        const url = `${this.apiBaseUrl}/api/v1/${this.endpoint}/${id}/disable-line`
+        return this.httpClient.post<String>(url, null, {headers: this.headers});
+    }
+
+    public killLineConnection(id: number): Observable<String> {
+        const url = `${this.apiBaseUrl}/api/v1/${this.endpoint}/${id}/kill-line-connection`
+        return this.httpClient.post<String>(url, null, {headers: this.headers});
+    }
+
+    public killLiveLine(id: number): Observable<String> {
+        const url = `${this.apiBaseUrl}/api/v1/${this.endpoint}/${id}/kill-live-line`
+        return this.httpClient.post<String>(url, null, {headers: this.headers});
     }
 }

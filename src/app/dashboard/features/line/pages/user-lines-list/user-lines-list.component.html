@@ -114,10 +114,17 @@
                         <i-tabler name="download" class="icon-18 d-flex align-items-center"></i-tabler>
                     </button>
 
-                    <button title="kill" mat-icon-button color="primary" class="w-100">
+                    <button title="ban" mat-icon-button color="primary" class="w-100" (click)="banLine(element.id)">
+                        <i-tabler name="{{ element.is_ban ? 'power' : 'power' }}" class="icon-18 d-flex align-items-center {{element.is_ban ? 'text-error' : 'text-success'}}"></i-tabler>
+                    </button>
+                    <button title="disable" mat-icon-button color="primary" class="w-100" (click)="disableLine(element.id)">
+                        <i-tabler name="{{ element.is_disable ? 'lock' : 'lock-open-2' }}" class="icon-18 d-flex align-items-center {{element.is_disable ? 'text-error' : 'text-success'}}"></i-tabler>
+                    </button>
+
+                    <button title="kill Line Connection" mat-icon-button color="primary" class="w-100" (click)="killLineConnection(element.id)">
                         <i-tabler name="plug-connected-x" class="icon-18 d-flex align-items-center"></i-tabler>
                     </button>
-                    <button title="kill Line" mat-icon-button color="primary" class="w-100">
+                    <button title="kill Live Line" mat-icon-button color="primary" class="w-100" (click)="killLiveLine(element.id)">
                         <i-tabler name="skull" class="icon-18 d-flex align-items-center"></i-tabler>
                     </button>
 

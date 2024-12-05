@@ -15,7 +15,6 @@ import {TablerIconsModule} from 'angular-tabler-icons';
 import {LineList} from "../../../shared/models/line";
 import {UserService} from "../../../shared/services/user.service";
 import {TokenService} from "../../../shared/services/token.service";
-import {StatsService} from "../../../shared/services/stats.service";
 import {LineService} from "../../../shared/services/line.service";
 import {DecimalPipe, NgIf} from "@angular/common";
 
@@ -51,7 +50,6 @@ export class AppCustomersComponent implements OnInit {
     constructor(
         private userService: UserService,
         private tokenService: TokenService,
-        private statsService: StatsService,
         private lineService: LineService
     ) {
 

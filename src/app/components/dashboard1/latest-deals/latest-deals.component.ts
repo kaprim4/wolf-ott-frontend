@@ -3,7 +3,6 @@ import {MaterialModule} from '../../../material.module';
 import {TablerIconsModule} from 'angular-tabler-icons';
 import {UserService} from "../../../shared/services/user.service";
 import {TokenService} from "../../../shared/services/token.service";
-import {StatsService} from "../../../shared/services/stats.service";
 import {UserDetail} from "../../../shared/models/user";
 import {LineService} from "../../../shared/services/line.service";
 import {ILine, LineDetail, LineList} from "../../../shared/models/line";
@@ -29,7 +28,6 @@ export class AppLatestDealsComponent implements OnInit {
     constructor(
         private userService: UserService,
         private tokenService: TokenService,
-        private statsService: StatsService,
         private lineService: LineService
     ) {
         this.sevenDaysAgo = Date.now() - this.sevenDaysInMilliseconds;

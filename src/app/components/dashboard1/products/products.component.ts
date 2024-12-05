@@ -76,7 +76,7 @@ export class AppProductsComponent implements OnInit {
                             complete: () => {
                                 this.rankingService.getAllRanks<Rank>().subscribe(ranks => {
                                     ranks.forEach(r => {
-                                        //console.log(r)
+                                        console.log("rank: ", r)
                                         if (r.minPoints <= this.credits && r.maxPoints >= this.credits) {
                                             console.log("condiction Rank:", r)
                                             this.rank = r;
