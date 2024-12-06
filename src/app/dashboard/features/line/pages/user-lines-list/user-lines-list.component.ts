@@ -148,37 +148,60 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
         if (confirm('Are you sure you want to ban this record?')) {
             this.lineService.banLine(id).subscribe({
                 next: (response)=>{
-                    console.log("banLine rep: ", response)
-
-                    //if(response.status === 200 && response.body !== null){
-                        //this.notificationService.success(response.body)
-                    //}
+                    console.log("Success to Suspend Connection: ", response);
+                    this.notificationService.success("This line Connection has been killed.");
                 },
                 error: (err)=>{
-                    console.log("banLine error: ", err)
+                    console.error("Failed to Suspend Line: ", err)
                 },
-                complete: ()=>{
-
-                },
-            })
+                complete: ()=>{}
+            });
         }
     }
 
     disableLine(id: number): void {
         if (confirm('Are you sure you want to disable this record?')) {
-            this.notificationService.success("This line has been disabled.")
+            // this.notificationService.success("This line has been disabled.")
+            this.lineService.disableLine(id).subscribe({
+                next: (response)=>{
+                    console.log("Success to Disable Line: ", response);
+                    this.notificationService.success("This line has been disabled.");
+                },
+                error: (err)=>{
+                    console.error("Failed to Disable Line: ", err)
+                },
+                complete: ()=>{}
+            });
         }
     }
 
     killLineConnection(id: number): void {
         if (confirm('Are you sure you want to kill this Line Connection?')) {
-            this.notificationService.success("This line Connection has been killed.")
+            this.lineService.killLineConnection(id).subscribe({
+                next: (response)=>{
+                    console.log("Success to Kill Line Connections: ", response);
+                    this.notificationService.success("This line connections has been killed.");
+                },
+                error: (err)=>{
+                    console.error("Failed to Kill Line Connections: ", err)
+                },
+                complete: ()=>{}
+            });
         }
     }
 
     killLiveLine(id: number): void {
         if (confirm('Are you sure you want to kill this Live Line?')) {
-            this.notificationService.success("This line Live has been killed.")
+            this.lineService.killLineConnection(id).subscribe({
+                next: (response)=>{
+                    console.log("Success to Kill Line Lives: ", response);
+                    this.notificationService.success("This line lives has been killed.");
+                },
+                error: (err)=>{
+                    console.error("Failed to Kill Line Lives: ", err)
+                },
+                complete: ()=>{}
+            });
         }
     }
 }
