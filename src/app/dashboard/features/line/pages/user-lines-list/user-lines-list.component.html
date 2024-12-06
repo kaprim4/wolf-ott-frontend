@@ -40,7 +40,9 @@
 
             <ng-container matColumnDef="username">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-12">Username</th>
-                <td mat-cell *matCellDef="let element" class="f-s-12 position-relative" [ngClass]="{'indirect': (element.owner !== principal.sub)}">{{ element.username }}</td>
+                <td mat-cell *matCellDef="let element" class="f-s-12 position-relative"
+                    [ngClass]="{'indirect': (element.owner !== principal.sub)}">{{ element.username }}
+                </td>
             </ng-container>
 
             <ng-container matColumnDef="password">
@@ -103,28 +105,54 @@
             <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef class="f-w-600 f-s-12">Action</th>
                 <td mat-cell *matCellDef="let element" class="f-s-11 d-flex">
-                    <button title="open dialog" mat-icon-button color="primary" (click)="openWolfGuard(element)" class="w-100">
-                        <img src="assets/images/vpn/wolf-guard-{{ element.useVPN ? 'active' : 'inactive' }}-icon.png" alt="wolf-guard-icon" style="width: 20px; height: 20px;">
+                    <button title="open dialog" mat-icon-button color="primary" (click)="openWolfGuard(element)"
+                            class="w-100">
+                        <img src="assets/images/vpn/wolf-guard-{{ element.useVPN ? 'active' : 'inactive' }}-icon.png"
+                             alt="wolf-guard-icon" style="width: 20px; height: 20px;">
                     </button>
+
                     <a mat-icon-button [routerLink]="['/apps/lines/users/', element.id]"
                        class="d-flex align-items-center justify-content-center">
                         <i-tabler name="eye" class="icon-18 d-flex align-items-center"></i-tabler>
                     </a>
-                    <button title="open dialog" mat-icon-button color="primary" (click)="openDialog(element.username, element.password)" class="w-100">
+                    <button title="open dialog" mat-icon-button color="primary"
+                            (click)="openDialog(element.username, element.password)" class="w-100">
                         <i-tabler name="download" class="icon-18 d-flex align-items-center"></i-tabler>
                     </button>
+                    @if (principal.role === "Administrators") {
+                        @if (element.adminEnabled) {
+                            <button title="ban" mat-icon-button color="primary" class="w-100"
+                                    (click)="banLine(element.id)">
+                                <i-tabler name="power"
+                                          class="icon-18 d-flex align-items-center text-success"></i-tabler>
+                            </button>
+                        } @else {
+                            <button title="unban" mat-icon-button color="primary" class="w-100"
+                                    (click)="banLine(element.id)">
+                                <i-tabler name="power" class="icon-18 d-flex align-items-center text-error"></i-tabler>
+                            </button>
+                        }
+                    }
 
-                    <button title="ban" mat-icon-button color="primary" class="w-100" (click)="banLine(element.id)">
-                        <i-tabler name="{{ element.is_ban ? 'power' : 'power' }}" class="icon-18 d-flex align-items-center {{element.is_ban ? 'text-error' : 'text-success'}}"></i-tabler>
-                    </button>
-                    <button title="disable" mat-icon-button color="primary" class="w-100" (click)="disableLine(element.id)">
-                        <i-tabler name="{{ element.is_disable ? 'lock' : 'lock-open-2' }}" class="icon-18 d-flex align-items-center {{element.is_disable ? 'text-error' : 'text-success'}}"></i-tabler>
-                    </button>
+                    @if (element.enabled) {
+                        <button title="disable" mat-icon-button color="primary" class="w-100"
+                                (click)="disableLine(element.id)">
+                            <i-tabler name="lock" class="icon-18 d-flex align-items-center text-success"></i-tabler>
+                        </button>
+                    } @else {
+                        <button title="enable" mat-icon-button color="primary" class="w-100"
+                                (click)="disableLine(element.id)">
+                            <i-tabler name="lock-open-2"
+                                      class="icon-18 d-flex align-items-center text-error"></i-tabler>
+                        </button>
+                    }
 
-                    <button title="kill Line Connection" mat-icon-button color="primary" class="w-100" (click)="killLineConnection(element.id)">
+                    <button title="kill Line Connection" mat-icon-button color="primary" class="w-100"
+                            (click)="killLineConnection(element.id)">
                         <i-tabler name="plug-connected-x" class="icon-18 d-flex align-items-center"></i-tabler>
                     </button>
-                    <button title="kill Live Line" mat-icon-button color="primary" class="w-100" (click)="killLiveLine(element.id)">
+                    <button title="kill Live Line" mat-icon-button color="primary" class="w-100"
+                            (click)="killLiveLine(element.id)">
                         <i-tabler name="skull" class="icon-18 d-flex align-items-center"></i-tabler>
                     </button>
 

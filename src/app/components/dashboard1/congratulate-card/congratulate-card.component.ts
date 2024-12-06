@@ -71,13 +71,13 @@ export class AppCongratulateCardComponent implements OnInit {
                 this.creditsAssigned = state.assignedCredits;
                 this.isStatLoading = false;
                 const delay = 10000 - (Date.now() - rStart);
-                setTimeout(() => this.getStats(), delay > 0 ? delay : 0);
+                //setTimeout(() => this.getStats(), delay > 0 ? delay : 0);
 
             },
             error: (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
                     console.error(`${err.status} status code caught`);
-                    setTimeout(() => this.getStats(), 1000);
+                    //setTimeout(() => this.getStats(), 1000);
                     this.notificationService.error('Error while Retrieving Stats');
                     console.error("'Error while Retrieving Stats: '", err.message);
                 }

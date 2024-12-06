@@ -5,6 +5,8 @@ export interface ILine {
 export interface LineList extends ILine {
     username: string,
     memberId: number,
+    adminEnabled: boolean;
+    enabled: boolean;
     password: string,
     owner: string,
     status: string,
@@ -15,8 +17,6 @@ export interface LineList extends ILine {
     expiration: Date,
     lastConnection: Date,
     useVPN: boolean,
-    is_ban: boolean,
-    is_disable: boolean,
     vpnDns: string
 }
 

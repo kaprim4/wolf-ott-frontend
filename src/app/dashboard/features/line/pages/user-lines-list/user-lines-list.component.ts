@@ -8,9 +8,9 @@ import {Page} from 'src/app/shared/models/page';
 import {LineService} from 'src/app/shared/services/line.service';
 import {NotificationService} from 'src/app/shared/services/notification.service';
 import {MatDialog} from '@angular/material/dialog';
-import { WolfGuardDialogComponent } from '../../components/wolf-guard-dialog/wolf-guard-dialog.component';
-import { M3UDialogComponent } from '../../components/m3u-dialog/m3u-dialog.component';
-import { TokenService } from 'src/app/shared/services/token.service';
+import {WolfGuardDialogComponent} from '../../components/wolf-guard-dialog/wolf-guard-dialog.component';
+import {M3UDialogComponent} from '../../components/m3u-dialog/m3u-dialog.component';
+import {TokenService} from 'src/app/shared/services/token.service';
 
 @Component({
     selector: 'app-user-lines-list',
@@ -46,7 +46,7 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
     private searchSubject = new Subject<string>();
     searchValue = '';
 
-    principal:any;
+    principal: any;
 
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -107,6 +107,7 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
             })
         ).subscribe(pageResponse => {
             this.dataSource.data = pageResponse.content;
+            console.log(pageResponse.content)
             this.totalElements = pageResponse.totalElements;
             this.loading = false;
         });
@@ -147,14 +148,16 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
     banLine(id: number): void {
         if (confirm('Are you sure you want to ban this record?')) {
             this.lineService.banLine(id).subscribe({
-                next: (response)=>{
+                next: (response) => {
                     console.log("Success to Suspend Connection: ", response);
+                    this.loadLines();
                     this.notificationService.success("This line Connection has been killed.");
                 },
-                error: (err)=>{
+                error: (err) => {
                     console.error("Failed to Suspend Line: ", err)
                 },
-                complete: ()=>{}
+                complete: () => {
+                }
             });
         }
     }
@@ -163,14 +166,16 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
         if (confirm('Are you sure you want to disable this record?')) {
             // this.notificationService.success("This line has been disabled.")
             this.lineService.disableLine(id).subscribe({
-                next: (response)=>{
+                next: (response) => {
                     console.log("Success to Disable Line: ", response);
+                    this.loadLines();
                     this.notificationService.success("This line has been disabled.");
                 },
-                error: (err)=>{
+                error: (err) => {
                     console.error("Failed to Disable Line: ", err)
                 },
-                complete: ()=>{}
+                complete: () => {
+                }
             });
         }
     }
@@ -178,14 +183,15 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
     killLineConnection(id: number): void {
         if (confirm('Are you sure you want to kill this Line Connection?')) {
             this.lineService.killLineConnection(id).subscribe({
-                next: (response)=>{
+                next: (response) => {
                     console.log("Success to Kill Line Connections: ", response);
                     this.notificationService.success("This line connections has been killed.");
                 },
-                error: (err)=>{
+                error: (err) => {
                     console.error("Failed to Kill Line Connections: ", err)
                 },
-                complete: ()=>{}
+                complete: () => {
+                }
             });
         }
     }
@@ -193,14 +199,15 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
     killLiveLine(id: number): void {
         if (confirm('Are you sure you want to kill this Live Line?')) {
             this.lineService.killLineConnection(id).subscribe({
-                next: (response)=>{
+                next: (response) => {
                     console.log("Success to Kill Line Lives: ", response);
                     this.notificationService.success("This line lives has been killed.");
                 },
-                error: (err)=>{
+                error: (err) => {
                     console.error("Failed to Kill Line Lives: ", err)
                 },
-                complete: ()=>{}
+                complete: () => {
+                }
             });
         }
     }
