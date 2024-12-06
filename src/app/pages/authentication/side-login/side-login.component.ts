@@ -62,7 +62,7 @@ export class AppSideLoginComponent implements OnInit {
     }
     captchaConfig = {
         config: {
-            captchaId: "3474b7f80d5f0cdcefcc27778bed5ff2",
+            captchaId: "6f1196717598a32c3f8e9b71c03b5782",
             language: "en",
             product: "bind",
         },
