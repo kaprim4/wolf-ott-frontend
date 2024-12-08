@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {CoreService} from 'src/app/services/core.service';
 import {FormGroup, Validators, FormsModule, ReactiveFormsModule, FormBuilder} from '@angular/forms';
 import {ActivatedRoute, RouterModule} from '@angular/router';
@@ -19,8 +19,10 @@ import {NotificationService} from "../../../shared/services/notification.service
     standalone: true,
     imports: [RouterModule, MaterialModule, FormsModule, ReactiveFormsModule, SharedModule],
     templateUrl: './side-login.component.html',
+    styleUrl: './side-login.component.scss'
 })
-export class AppSideLoginComponent implements OnInit {
+export class AppSideLoginComponent implements OnInit, AfterViewInit {
+    @ViewChild('backgroundVideo') backgroundVideo!: ElementRef<HTMLVideoElement>;
     @Output() optionsChange = new EventEmitter<AppSettings>();
     protected apiBaseUrl = environment.apiBaseUrl;
     currYear: number = new Date().getFullYear();
@@ -33,12 +35,15 @@ export class AppSideLoginComponent implements OnInit {
         username: '',
         password: ''
     }
+
     userThemeOptionsRequest: IUserThemeOptionsRequest = {
         activeTheme: "", language: "", theme: "", userId: 0
     }
+
     userThemeOptions: IUserThemeOptions = {
         id: 0, activeTheme: "", language: "", theme: "", userId: 0
     }
+
     captchaHandler = (captchaObj: any) => {
         (window as any).captchaObj = captchaObj;
         captchaObj.appendTo("#captcha")
@@ -60,6 +65,7 @@ export class AppSideLoginComponent implements OnInit {
                 }
             });
     }
+
     captchaConfig = {
         config: {
             captchaId: "6f1196717598a32c3f8e9b71c03b5782",
@@ -92,6 +98,14 @@ export class AppSideLoginComponent implements OnInit {
 
     ngOnInit(): void {
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || this.returnUrl;
+    }
+
+    ngAfterViewInit(): void {
+        const videoElement = this.backgroundVideo.nativeElement;
+        videoElement.muted = true;
+        videoElement.play().catch((err) => {
+            console.error('Erreur de lecture vidéo:', err);
+        });
     }
 
     get formValues() {
