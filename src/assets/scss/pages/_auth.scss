@@ -113,7 +113,7 @@
 }
 
 .shaper-wrapper {
-  &:before {
+  /*&:before {
     content: "";
     position: absolute;
     left: -125px;
@@ -131,7 +131,7 @@
     width: 304px;
     height: 315px;
     background: url("../../images/backgrounds/shap-login.png");
-  }
+  }*/
 }
 
 .auth-card {
