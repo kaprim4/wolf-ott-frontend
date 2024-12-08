@@ -1,7 +1,8 @@
 export const environment = {
-    production: false,
+    production: true,
     GOOGLE_MAPS_API_KEY: 'AIzaSyDpgQMpcfx1QU-8SM-ljcgjG4xrYtIYby4',
     apiBaseUrl: 'https://api.wolfguard.sbs',
+    //apiBaseUrl: 'https://212.237.231.147:30100',
     // apiBaseUrl: 'http://localhost:8181',
     APP_ENV: "dev",
     APP_VERSION: "2.0.0",

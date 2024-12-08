@@ -1,7 +1,7 @@
 export const environment = {
-    production: false,
+    production: true,
     GOOGLE_MAPS_API_KEY: 'AIzaSyDpgQMpcfx1QU-8SM-ljcgjG4xrYtIYby4',
-    apiBaseUrl: 'https://212.237.231.147:30100',
+    apiBaseUrl: 'https://api.wolfguard.sbs',
     APP_ENV: "prod",
     APP_VERSION: "2.0.0",
     APP_NAME: "WOLF OTT Manager Pro",
