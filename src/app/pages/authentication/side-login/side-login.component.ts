@@ -102,9 +102,12 @@ export class AppSideLoginComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
         const videoElement = this.backgroundVideo.nativeElement;
-        videoElement.muted = true;
+
+        videoElement.muted = true; // Obligation pour Safari
+        videoElement.playsInline = true; // Important pour éviter le plein écran sur iOS
+
         videoElement.play().catch((err) => {
-            console.error('Erreur de lecture vidéo:', err);
+            console.error('Erreur de lecture vidéo sur Safari:', err);
         });
     }
 
