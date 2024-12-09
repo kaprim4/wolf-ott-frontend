@@ -36,11 +36,11 @@ export class WolfGuardDialogComponent {
             value: this.line.useVPN
         }
         this.lineService.patch(id, patch).subscribe({
-            next:line => {
-                this.loggingService.log("Line updated successfuly", line);
+            next: () => {
+                this.loggingService.log("Line updated successfuly");
                 this.notificationService.success("Line updated successfuly");
             },
-            error: error => {
+            error: (error) => {
                 this.loggingService.log("An error occurred", error);
                 this.notificationService.error("An error occurred", error);
             },
@@ -54,11 +54,11 @@ export class WolfGuardDialogComponent {
         const id = this.line.id;
         this.loading = true;
         this.lineService.refreshVPN(id).subscribe({
-            next:line => {
-                this.loggingService.log("Line VPN changed successfuly", line);
-                this.notificationService.success("Line VPN changed successfuly");
+            next: () => {
+                this.loggingService.log("Line VPN changed successfuly.");
+                this.notificationService.success("Line VPN changed successfuly.");
             },
-            error: error => {
+            error: (error) => {
                 this.loggingService.log("An error occurred", error);
                 this.notificationService.error("An error occurred", error);
             },

@@ -74,7 +74,7 @@ export class UserProfileComponent implements OnInit {
             error: err => {
                 this.notificationService.error('Error while get User');
             },
-            complete : () => {
+            complete: () => {
                 this.badgeLoading = true;
                 this.imagePreview = this.user.thumbnail != null ? this.user.thumbnail : null;
                 this.lineService.getAllLinesWithMemberId(this.user.id).subscribe(
@@ -136,17 +136,28 @@ export class UserProfileComponent implements OnInit {
         /*if(this.fb.control("current_password").value !== ""){
 
         }*/
-        this.userService.updateUser(this.user).subscribe({
-            next: value => {
-                this.router.navigate(['/apps/users/profile']);
-            },
-            error: err => {
-                this.notificationService.error("An error has occurred", err);
-            },
-            complete: () => {
-                this.notificationService.success("Profile updated successfully.");
-            }
-        });
+        if (this.userForm.valid) {
+            const formValues = this.userForm.value;
+            Object.assign(this.user, {
+                email: formValues.email,
+                resellerDns: formValues.resellerDns,
+                apiKey: formValues.apiKey,
+            });
+            this.userService.updateUser(this.user).subscribe({
+                next: value => {
+                    this.router.navigate(['/apps/users/profile']);
+                },
+                error: err => {
+                    this.notificationService.error("An error has occurred", err);
+                },
+                complete: () => {
+                    this.notificationService.success("Profile updated successfully.");
+                }
+            });
+        } else {
+            this.loggingService.error('Form is invalid', this.userForm.errors);
+            this.notificationService.error('Form is invalid.');
+        }
     }
 
     get loading(): boolean {

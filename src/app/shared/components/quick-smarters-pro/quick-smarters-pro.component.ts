@@ -115,7 +115,7 @@ export class QuickSmartersProComponent implements OnInit {
                 var value = this.param.value[0];
                 if(value.dns.length > 0){
                     this.loggingService.log("Fetched Param smarters pro HOST:", value.dns[0]);
-                    this.server = `http://${value.dns[0]}:80`;
+                    this.server = `http://${value.dns[0]}`;
                 }
             }
         });
@@ -129,6 +129,7 @@ export class QuickSmartersProComponent implements OnInit {
             id: 0,
             username: this.username,
             password: this.password,
+            useVPN: false,
             packageId: this.selectedPackage.id,
             isTrial: isTrial,
             bouquets: bouquets,

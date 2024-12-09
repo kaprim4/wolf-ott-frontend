@@ -116,13 +116,11 @@ export class LineService extends CrudService<ILine> {
     public patch<T extends ILine>(id: number, patch: Patch): Observable<T> {
         const url = `${this.apiBaseUrl}/api/v1/${this.endpoint}/${id}`
         return this.httpClient.patch<HttpResponse<T>>(url, patch, {headers: this.headers}).pipe(map(res => res.body as T));
-        ;
     }
 
-    public refreshVPN<T extends ILine>(id: number): Observable<T> {
+    public refreshVPN(id: number): Observable<String> {
         const url = `${this.apiBaseUrl}/api/v1/${this.endpoint}/${id}/vpn/refresh`
-        return this.httpClient.post<HttpResponse<T>>(url, null, {headers: this.headers}).pipe(map(res => res.body as T));
-        ;
+        return this.httpClient.post<String>(url, null, {headers: this.headers});
     }
 
     public banLine(id: number): Observable<String> {

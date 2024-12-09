@@ -36,7 +36,7 @@ import {LoggingService} from "../../../../../services/logging.service";
     templateUrl: './view-user-line.component.html',
     styleUrl: './view-user-line.component.scss',
 })
-export class ViewUserLineComponent {
+export class ViewUserLineComponent implements OnInit{
     id: number;
     loading:boolean = false;
     bouquetsDisplayedColumns: string[] = [

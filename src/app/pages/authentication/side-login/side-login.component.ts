@@ -90,8 +90,8 @@ export class AppSideLoginComponent implements OnInit, AfterViewInit {
     }
 
     loginForm: FormGroup = this.fb.group({
-        username: ['whmcssupport', [Validators.required, Validators.minLength(6)]],
-        password: ['Blackhandler1020@@', [Validators.required]]
+        username: ['', [Validators.required, Validators.minLength(6)]],
+        password: ['', [Validators.required]]
     });
     formSubmitted: boolean = false;
     error: string = '';
