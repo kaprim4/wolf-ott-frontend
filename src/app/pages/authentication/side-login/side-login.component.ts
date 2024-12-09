@@ -48,17 +48,17 @@ export class AppSideLoginComponent implements OnInit, AfterViewInit {
     captchaHandler = (captchaObj: any) => {
         (window as any).captchaObj = captchaObj;
         captchaObj.appendTo("#captcha")
-            .onReady(function (loggingService: LoggingService) {
-                loggingService.log("ready");
+            .onReady(function () {
+                console.log("ready");
             })
-            .onNextReady(function (loggingService: LoggingService) {
-                loggingService.log("nextReady");
+            .onNextReady(function () {
+                console.log("nextReady");
             })
-            .onBoxShow(function (loggingService: LoggingService) {
-                loggingService.log("boxShow");
+            .onBoxShow(function () {
+                console.log("boxShow");
             })
-            .onError(function (loggingService: LoggingService, e: any) {
-                loggingService.log(e);
+            .onError(function (e: any) {
+                console.error("captchaObj error: ", e);
             })
             .onSuccess(() => {
                 if (this.captchaConfig.config.product === "bind") {
