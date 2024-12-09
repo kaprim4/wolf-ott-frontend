@@ -11,6 +11,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {UserLogService} from "../../../shared/services/user-log.service";
 import {catchError, of} from "rxjs";
 import {Page} from "../../../shared/models/page";
+import {LoggingService} from "../../../services/logging.service";
 
 @Component({
     selector: 'app-latest-reviews',
@@ -45,7 +46,8 @@ export class AppLatestReviewsComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
     constructor(
-        private logService:UserLogService
+        private logService:UserLogService,
+        private loggingService: LoggingService
     ) {
         // this.loadStreams();
     }
@@ -73,7 +75,7 @@ export class AppLatestReviewsComponent implements OnInit, AfterViewInit {
         this.expiringLinesloading = true; // Start loading
         this.logService.getUserLogs<UserLogList>('', page, size).pipe(
             catchError(error => {
-                console.error('Failed to load streams', error);
+                this.loggingService.error('Failed to load streams', error);
                 this.expiringLinesloading = false;
                 return of({content: [], totalElements: 0, totalPages: 0, size: 0, number: 0} as Page<UserLogList>);
             })

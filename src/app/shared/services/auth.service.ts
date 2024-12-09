@@ -5,6 +5,7 @@ import {environment} from "../../../environments/environment";
 import {TokenService} from "./token.service";
 import {IUser} from "../models/user";
 import {IToken} from "../models/token";
+import {LoggingService} from "../../services/logging.service";
 
 @Injectable({providedIn: 'root'})
 export class AuthenticationService {
@@ -14,7 +15,8 @@ export class AuthenticationService {
 
     constructor(
         private http: HttpClient,
-        private tokenService: TokenService
+        private tokenService: TokenService,
+        private loggingService: LoggingService
     ) {
         this.header1 = new HttpHeaders();
         this.header1 = this.header1.append('Content-Type', 'application/json');
@@ -29,9 +31,9 @@ export class AuthenticationService {
     }
 
     signup(name: string, username: string, password: string): Observable<HttpResponse<IUser>> {
-        console.log("signup_username:", username);
-        console.log("signup_password:", password);
-        console.log("API_URL:", `${this.apiServerUrl}/signup`);
+        this.loggingService.log("signup_username:", username);
+        this.loggingService.log("signup_password:", password);
+        this.loggingService.log("API_URL:", `${this.apiServerUrl}/signup`);
         return this.http.post<IUser>(
             `${this.apiServerUrl}/api/v1/auth/signup`,
             {name, username, password},

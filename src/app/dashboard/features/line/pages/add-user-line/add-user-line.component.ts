@@ -30,6 +30,7 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
 import { TokenService } from 'src/app/shared/services/token.service';
 import { PresetService } from 'src/app/shared/services/preset.service';
 import { PresetList } from 'src/app/shared/models/preset';
+import {LoggingService} from "../../../../../services/logging.service";
 
 @Component({
     selector: 'app-add-user-line',
@@ -118,7 +119,8 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
         private toastr: ToastrService,
         private notificationService: NotificationService,
         private tokenService: TokenService,
-        private presetService: PresetService
+        private presetService: PresetService,
+        private loggingService: LoggingService
     ) {
         const username = LineService.generateRandomUsername();
         const password = LineService.generateRandomPassword();
@@ -159,7 +161,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
         this.bouquetSort?.sortChange.subscribe(() => this.loadBouquets());
         this.bouquetPaginator?.page.subscribe(() => this.loadBouquets());
 
-        // console.log(`Form { valid: ${this.addForm.valid}, invalid: ${this.addForm.invalid} }`);
+        // this.loggingService.log(`Form { valid: ${this.addForm.valid}, invalid: ${this.addForm.invalid} }`);
 
     }
 
@@ -201,7 +203,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
 
         this.bouquetService.getBouquets<BouquetList>('', page, size).pipe(
             catchError(error => {
-            console.error('Failed to load bouquets', error);
+            this.loggingService.error('Failed to load bouquets', error);
             this.bouquetsLoading = false;
             this.notificationService.error('Failed to load bouquets. Please try again.');
             return of({ content: [], totalPages: 0, totalElements: 0, size: 0, number:0 } as Page<BouquetList>);
@@ -232,7 +234,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
     }
 
     saveDetail(): void {
-       console.log(`Form { valid: ${this.addForm.valid}, invalid: ${this.addForm.invalid} }`);
+       this.loggingService.log(`Form { valid: ${this.addForm.valid}, invalid: ${this.addForm.invalid} }`);
        this.loading = true;
         if (this.addForm.valid) {
             const formValues = this.addForm.value;
@@ -253,13 +255,13 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
             });
             this.lineService.addLine(this.line)
                             .pipe(catchError(error => {
-                                console.error("Line Update Failed :", error);
+                                this.loggingService.error("Line Update Failed :", error);
                                 this.notificationService.error("Line Update Failed : "+error);
                                 throw new Error(error);
                             }), finalize(() => this.loading = false))
                             .subscribe(line => {
                                 // this.loading = false;
-                                console.log("Created Line :", line);
+                                this.loggingService.log("Created Line :", line);
                                 this.router.navigate(['/apps/lines/users/list']);
                                 this.toastr.success('Line added successfully.', 'Succès');
                             });
@@ -271,12 +273,12 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
                 if(control && control.valid)
                     continue;
                 if(control)
-                    console.log(`Control: ${controlName}:`, {valid: control.valid, value: control.value, errors: control.errors});
+                    this.loggingService.log(`Control: ${controlName}:`, {valid: control.valid, value: control.value, errors: control.errors});
                 else
-                    console.log(`Control[${controlName}] Not Found`);
+                    this.loggingService.log(`Control[${controlName}] Not Found`);
 
             }
-            // console.error('Form is invalid', this.addForm.errors);
+            // this.loggingService.error('Form is invalid', this.addForm.errors);
             this.toastr.error('Form is invalid.', 'Erreur');
         }
     }
@@ -373,7 +375,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
         if(owner)
             this.selectedOwner = owner;
         else
-            console.log(`Ops!! Owner[${id}] not found`);
+            this.loggingService.log(`Ops!! Owner[${id}] not found`);
     }
 
     onPackagesDropdownOpened(opened: boolean) {
@@ -385,7 +387,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
         }
     }
     onSelectPackage($event: any) {
-        // console.log("Package Event", $event);
+        // this.loggingService.log("Package Event", $event);
         const id = $event; // this.addForm.controls["package"].value;
         if(id != this.addForm.controls["package"].value)
             this.addForm.controls["package"].setValue(id);
@@ -397,13 +399,13 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
                 this.addForm.controls["packageCost"].setValue(pkg.officialCredits);
                 this.addForm.controls["duration"].setValue(pkg.officialDuration);
                 const expiration = PackageService.getPackageExpirationDate(pkg.officialDuration, pkg.officialDurationIn);
-                // console.log("Official Expiration :", expiration);
+                // this.loggingService.log("Official Expiration :", expiration);
                 this.addForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
             }else{
                 this.addForm.controls["packageCost"].setValue(pkg.trialCredits);
                 this.addForm.controls["duration"].setValue(pkg.trialDuration);
                 const expiration = PackageService.getPackageExpirationDate(pkg.trialDuration, pkg.trialDurationIn);
-                // console.log("Trial Expiration :", expiration);
+                // this.loggingService.log("Trial Expiration :", expiration);
                 this.addForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
             }
             if(this.selectedBundleOption === 'packages')
@@ -415,9 +417,9 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
             this.updateMatrix();
         }
         else
-            console.log(`Ops!! Package[${id}] not found`);
+            this.loggingService.log(`Ops!! Package[${id}] not found`);
 
-        // console.log("Select Package", this.selectedPackage);
+        // this.loggingService.log("Select Package", this.selectedPackage);
     }
 
     formatDateTime(date:Date) {
@@ -433,7 +435,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
         const id = $event;
         this.bouquetsLoading = true;
         this.presetService.getAllPresetBouquets(id).subscribe(res => {
-            console.log("Preset Bouquets:", res);
+            this.loggingService.log("Preset Bouquets:", res);
 
             this.presetBouquets = res || [];
             this.bouquetsLoading = false;
@@ -485,7 +487,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
                 this.line.bouquets.splice(index, 1);
             }
         }
-        console.log("Line Bouquets ", this.line.bouquets.length);
+        this.loggingService.log("Line Bouquets ", this.line.bouquets.length);
 
     }
     updatePresetSelection() {
@@ -534,7 +536,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
                 this.line.bouquets.splice(index, 1);
             }
         }
-        console.log("Line Bouquets ", this.line.bouquets.length);
+        this.loggingService.log("Line Bouquets ", this.line.bouquets.length);
     }
     updateSelection() {
         this.bouquetsSelection.clear();
@@ -565,7 +567,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
     }
 
     bundleToggle($event: any) {
-        console.log("Toggle to: ", $event.value);
+        this.loggingService.log("Toggle to: ", $event.value);
         switch ($event.value) {
             case 'packages':
                 const pkg = this.packages.find(p => p.id === this.addForm.controls['package'].value);
@@ -592,7 +594,7 @@ export class AddUserLineComponent implements OnInit, AfterViewInit {
                 this.presetBouquetsSelection.select(...this.presetBouquets);
                 break;
             default:
-                console.log("Unknown Bundle");
+                this.loggingService.log("Unknown Bundle");
         }
 
     }

@@ -5,6 +5,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {NotificationService} from "../../../../../shared/services/notification.service";
 import {ArticleService} from "../../../../../shared/services/article.service";
+import {LoggingService} from "../../../../../services/logging.service";
 
 @Component({
     selector: 'app-news-edit',
@@ -31,6 +32,7 @@ export class NewsEditComponent implements OnInit {
         public dialog: MatDialog,
         protected notificationService: NotificationService,
         private activatedRouter: ActivatedRoute,
+        private loggingService: LoggingService
     ) {
         this.id = this.activatedRouter.snapshot.paramMap.get('id') as unknown as number;
         this.editForm = this.fb.group({
@@ -86,7 +88,7 @@ export class NewsEditComponent implements OnInit {
             error: (err) => {
                 // Handle error (show notification or alert)
                 this.notificationService.error('Error while saving news');
-                console.error("'Error while saving news'", err);
+                this.loggingService.error("'Error while saving news'", err);
             },
             complete:()=>{
                 this.loading = false;

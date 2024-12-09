@@ -11,6 +11,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {WolfGuardDialogComponent} from '../../components/wolf-guard-dialog/wolf-guard-dialog.component';
 import {M3UDialogComponent} from '../../components/m3u-dialog/m3u-dialog.component';
 import {TokenService} from 'src/app/shared/services/token.service';
+import {LoggingService} from "../../../../../services/logging.service";
 
 @Component({
     selector: 'app-user-lines-list',
@@ -55,7 +56,8 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
         private lineService: LineService,
         private notificationService: NotificationService,
         public dialog: MatDialog,
-        private tokenService: TokenService
+        private tokenService: TokenService,
+        private loggingService: LoggingService
     ) {
         // this.loadLines();
         this.principal = this.tokenService.getPayload();
@@ -100,14 +102,14 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
 
         this.lineService.getLines<LineList>('', page, size).pipe(
             catchError(error => {
-                console.error('Failed to load lines', error);
+                this.loggingService.error('Failed to load lines', error);
                 this.loading = false;
                 this.notificationService.error('Failed to load lines. Please try again.');
                 return of({content: [], totalPages: 0, totalElements: 0, size: 0, number: 0} as Page<LineList>);
             })
         ).subscribe(pageResponse => {
             this.dataSource.data = pageResponse.content;
-            console.log(pageResponse.content)
+            this.loggingService.log(pageResponse.content)
             this.totalElements = pageResponse.totalElements;
             this.loading = false;
         });
@@ -149,12 +151,12 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
         if (confirm('Are you sure you want to ban this record?')) {
             this.lineService.banLine(id).subscribe({
                 next: (response) => {
-                    console.log("Success to Suspend Connection: ", response);
+                    this.loggingService.log("Success to Suspend Connection: ", response);
                     this.loadLines();
                     this.notificationService.success("This line Connection has been killed.");
                 },
                 error: (err) => {
-                    console.error("Failed to Suspend Line: ", err)
+                    this.loggingService.error("Failed to Suspend Line: ", err)
                 },
                 complete: () => {
                 }
@@ -167,12 +169,12 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
             // this.notificationService.success("This line has been disabled.")
             this.lineService.disableLine(id).subscribe({
                 next: (response) => {
-                    console.log("Success to Disable Line: ", response);
+                    this.loggingService.log("Success to Disable Line: ", response);
                     this.loadLines();
                     this.notificationService.success("This line has been disabled.");
                 },
                 error: (err) => {
-                    console.error("Failed to Disable Line: ", err)
+                    this.loggingService.error("Failed to Disable Line: ", err)
                 },
                 complete: () => {
                 }
@@ -184,11 +186,11 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
         if (confirm('Are you sure you want to kill this Line Connection?')) {
             this.lineService.killLineConnection(id).subscribe({
                 next: (response) => {
-                    console.log("Success to Kill Line Connections: ", response);
+                    this.loggingService.log("Success to Kill Line Connections: ", response);
                     this.notificationService.success("This line connections has been killed.");
                 },
                 error: (err) => {
-                    console.error("Failed to Kill Line Connections: ", err)
+                    this.loggingService.error("Failed to Kill Line Connections: ", err)
                 },
                 complete: () => {
                 }
@@ -200,11 +202,11 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
         if (confirm('Are you sure you want to kill this Live Line?')) {
             this.lineService.killLineConnection(id).subscribe({
                 next: (response) => {
-                    console.log("Success to Kill Line Lives: ", response);
+                    this.loggingService.log("Success to Kill Line Lives: ", response);
                     this.notificationService.success("This line lives has been killed.");
                 },
                 error: (err) => {
-                    console.error("Failed to Kill Line Lives: ", err)
+                    this.loggingService.error("Failed to Kill Line Lives: ", err)
                 },
                 complete: () => {
                 }

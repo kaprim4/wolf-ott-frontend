@@ -18,6 +18,7 @@ import {UserService} from "../../../../shared/services/user.service";
 import {IUserThemeOptionsRequest, UserDetail} from "../../../../shared/models/user";
 import {TokenService} from "../../../../shared/services/token.service";
 import {NotificationService} from "../../../../shared/services/notification.service";
+import {LoggingService} from "../../../../services/logging.service";
 
 @Component({
     selector: 'app-customizer',
@@ -51,6 +52,7 @@ export class CustomizerComponent implements OnInit {
         private userService: UserService,
         private tokenService: TokenService,
         protected notificationService: NotificationService,
+        private loggingService: LoggingService
     ) {
     }
 
@@ -91,7 +93,7 @@ export class CustomizerComponent implements OnInit {
             error: (err) => {
                 // Handle error (show notification or alert)
                 this.notificationService.error('Error while saving user theme options');
-                console.error("'Error while saving user theme options'", err);
+                this.loggingService.error("'Error while saving user theme options'", err);
             },
             complete:()=>{
                 this.optionsChange.emit(this.options);
@@ -102,13 +104,13 @@ export class CustomizerComponent implements OnInit {
 
     setDark() {
         this.optionsChange.emit(this.options);
-        console.log(this.options);
+        this.loggingService.log(this.options);
         this.updateUserThemeConfig(this.options);
     }
 
     setColor() {
         this.optionsChange.emit(this.options);
-        console.log(this.options);
+        this.loggingService.log(this.options);
         this.updateUserThemeConfig(this.options);
     }
 }

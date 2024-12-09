@@ -10,6 +10,7 @@ import { map, startWith } from 'rxjs';
 import { GroupService } from 'src/app/shared/services/group.service';
 import { GroupList, IGroup } from 'src/app/shared/models/group';
 import { TokenService } from 'src/app/shared/services/token.service';
+import {LoggingService} from "../../../../../services/logging.service";
 
 @Component({
   selector: 'app-add-user',
@@ -38,8 +39,8 @@ export class AddUserComponent implements OnInit {
       subtitle: 'Remaining Credits',
     },
   ];
-  
-  
+
+
   addForm: UntypedFormGroup | any;
   rows: UntypedFormArray;
   user: UserDetail  = { id: 0, username: ''};
@@ -65,7 +66,8 @@ export class AddUserComponent implements OnInit {
     private groupService: GroupService,
     private router: Router,
     private dialog: MatDialog,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private loggingService: LoggingService
   ) {
     this.user.id = 0;
     this.addForm = this.fb.group({});
@@ -89,8 +91,8 @@ export class AddUserComponent implements OnInit {
     this.userService.getAllUsers<UserList>().subscribe((users: UserList[]) => {
         this.owners = users;
         this.filteredOwners = this.owners;
-        console.log("Selected Owner", this.selectedOwner);
-        
+        this.loggingService.log("Selected Owner", this.selectedOwner);
+
     });
 
     this.groupService.getAllGroups<GroupList>().subscribe(groups => {
@@ -101,12 +103,12 @@ export class AddUserComponent implements OnInit {
 
   saveDetail(): void {
     this.user.ownerId = this.selectedOwner.id;
-    console.log("Save User", this.user);
+    this.loggingService.log("Save User", this.user);
     // this.dialog.open(UserDialogComponent);
     // this.userService.addUser(this.user);
     // this.router.navigate(['/apps/users']);
 
-    
+
   }
 
   private filterOwners(value: string): IUser[] {

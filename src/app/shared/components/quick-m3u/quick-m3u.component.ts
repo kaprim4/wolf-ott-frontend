@@ -15,6 +15,7 @@ import {TokenService} from "../../services/token.service";
 import { PresetList } from '../../models/preset';
 import { PresetService } from '../../services/preset.service';
 import { LineFactory } from '../../factories/line.factory';
+import {LoggingService} from "../../../services/logging.service";
 
 @Component({
     selector: 'app-quick-m3u',
@@ -58,7 +59,8 @@ export class QuickM3uComponent implements OnInit {
         private tokenService: TokenService,
         private userService: UserService,
         private fb: FormBuilder,
-        private presetService: PresetService
+        private presetService: PresetService,
+        private loggingService: LoggingService
     ) {
         const username = this.username = LineService.generateRandomUsername();
         const password = this.password = LineService.generateRandomPassword();
@@ -105,7 +107,7 @@ export class QuickM3uComponent implements OnInit {
         this.loggedInUser = this.tokenService.getPayload();
         this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
             this.user = user;
-            console.log(this.user);
+            this.loggingService.log(this.user);
             this.server = `http://${this.user.resellerDns}:80/`;
         });
 
@@ -122,7 +124,7 @@ export class QuickM3uComponent implements OnInit {
         const username: string = this.packageForm.controls['username'].value;
         const password: string = this.packageForm.controls['password'].value;
         const useVPN: boolean = this.packageForm.controls['use_vpn'].value;
-    
+
         const line: CreateLine = {
             id: 0,
             username: username,
@@ -134,7 +136,7 @@ export class QuickM3uComponent implements OnInit {
             memberId: this.user.id,
             createdAt: Date.now()
         };
-        console.log("line:", line)
+        this.loggingService.log("line:", line)
         this.lineService.addLine<LineDetail>(line).pipe(
             tap(() => {
                 // This will only run if the line creation is successful
@@ -157,7 +159,7 @@ export class QuickM3uComponent implements OnInit {
                 }else{
                     this.server = `http://${l.vpnDns}:80/`;
                 }
-                
+
             }
         });
     }
@@ -177,11 +179,11 @@ export class QuickM3uComponent implements OnInit {
     copyToClipboard(url: string) {
         this.isLoading = true;
         navigator.clipboard.writeText(url).then(() => {
-            console.log('Copied to clipboard: ', url);
+            this.loggingService.log('Copied to clipboard: ', url);
             this.toastr.success('Copied to clipboard.', 'Succès');
             this.isLoading = false; // Fin du chargement
         }).catch(err => {
-            console.error('Could not copy: ', err);
+            this.loggingService.error('Could not copy: ', err);
             this.toastr.error('Could not copy.', 'Erreur');
             this.isLoading = false;
         });
@@ -216,7 +218,7 @@ export class QuickM3uComponent implements OnInit {
             this.isLoading = false;
             this.toastr.success('Download completed', 'Succès');
         }).catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
+            this.loggingService.error('There was a problem with the fetch operation:', error);
             this.isLoading = false;
             this.toastr.error('Download failed', 'Erreur');
         });
@@ -263,7 +265,7 @@ export class QuickM3uComponent implements OnInit {
     }
 
     bundleToggle($event: any) {
-        console.log("Toggle to: ", $event.value);
+        this.loggingService.log("Toggle to: ", $event.value);
         switch ($event.value) {
             case 'packages':
                 const pkg = this.packages.find(p => p.id === this.addForm.controls['package'].value);
@@ -276,15 +278,15 @@ export class QuickM3uComponent implements OnInit {
                 // this.line.bouquets = this.presetBouquets.map(bouquet => bouquet.id);
                 break;
             default:
-                console.log("Unknown Bundle");
+                this.loggingService.log("Unknown Bundle");
         }
 
     }
 
     onSelectPackage($event: any) {
-        // console.log("Package Event", $event);
+        // this.loggingService.log("Package Event", $event);
         const id = $event.value; // this.addForm.controls["package"].value;
-        console.log("Selection:",$event.value);
+        this.loggingService.log("Selection:",$event.value);
 
         this.selectedPackageId = id;
         if(id != this.addForm.controls["package"].value)
@@ -294,7 +296,7 @@ export class QuickM3uComponent implements OnInit {
         if(id != this.bundleForm.controls["package"].value)
             this.bundleForm.controls["package"].setValue(id);
         const pkg = this.packages.find(o => o.id === id);
-        console.log("Selected Package:", pkg);
+        this.loggingService.log("Selected Package:", pkg);
 
         if(pkg){
             this.line.packageId = pkg.id;
@@ -303,13 +305,13 @@ export class QuickM3uComponent implements OnInit {
                 this.addForm.controls["packageCost"].setValue(pkg.officialCredits);
                 this.addForm.controls["duration"].setValue(pkg.officialDuration);
                 const expiration = PackageService.getPackageExpirationDate(pkg.officialDuration, pkg.officialDurationIn);
-                // console.log("Official Expiration :", expiration);
+                // this.loggingService.log("Official Expiration :", expiration);
                 this.addForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
             }else{
                 this.addForm.controls["packageCost"].setValue(pkg.trialCredits);
                 this.addForm.controls["duration"].setValue(pkg.trialDuration);
                 const expiration = PackageService.getPackageExpirationDate(pkg.trialDuration, pkg.trialDurationIn);
-                // console.log("Trial Expiration :", expiration);
+                // this.loggingService.log("Trial Expiration :", expiration);
                 this.addForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
             }
             if(this.selectedBundleOption === 'packages')
@@ -319,9 +321,9 @@ export class QuickM3uComponent implements OnInit {
             this.line.forcedCountry = pkg.forcedCountry;
         }
         else
-            console.log(`Ops!! Package[${id}] not found`);
+            this.loggingService.log(`Ops!! Package[${id}] not found`);
 
-        // console.log("Select Package", this.selectedPackage);
+        // this.loggingService.log("Select Package", this.selectedPackage);
     }
 
     formatDateTime(date:Date) {

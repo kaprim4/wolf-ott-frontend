@@ -8,6 +8,7 @@ import { Page } from 'src/app/shared/models/page';
 import { BouquetService } from 'src/app/shared/services/bouquet.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { TokenService } from 'src/app/shared/services/token.service';
+import {LoggingService} from "../../../../services/logging.service";
 
 @Component({
   selector: 'app-bouquets-list',
@@ -42,7 +43,8 @@ export class BouquetsListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private bouquetService: BouquetService, private notificationService: NotificationService, private tokenService: TokenService) {
+  constructor(private bouquetService: BouquetService, private notificationService: NotificationService, private tokenService: TokenService,
+              private loggingService: LoggingService) {
     this.loadBouquets();
     this.principal = this.tokenService.getPayload();
   }
@@ -83,10 +85,10 @@ ngAfterViewInit(): void {
     const page = this.paginator?.pageIndex || this.pageIndex;
     const size = this.paginator?.pageSize || this.pageSize;
     this.loading = true;
-    
+
     this.bouquetService.getBouquets<BouquetList>('', page, size).pipe(
       catchError(error => {
-        console.error('Failed to load bouquets', error);
+        this.loggingService.error('Failed to load bouquets', error);
         this.loading = false;
         this.notificationService.error('Failed to load bouquets. Please try again.');
         return of({ content: [], totalPages: 0, totalElements: 0, size: 0, number:0 } as Page<BouquetList>);

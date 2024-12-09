@@ -16,6 +16,7 @@ import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from '@angular/cdk/d
 import { trigger, transition, style, animate } from '@angular/animations';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { TokenService } from 'src/app/shared/services/token.service';
+import {LoggingService} from "../../../../services/logging.service";
 
 @Component({
     selector: 'app-view-preset',
@@ -96,7 +97,8 @@ export class ViewPresetComponent implements OnInit, AfterViewInit {
         // public dialog: MatDialog,
         private activatedRouter: ActivatedRoute,
         private notificationService: NotificationService,
-        private tokenService: TokenService
+        private tokenService: TokenService,
+        private loggingService: LoggingService
     ) {
         this.id = this.activatedRouter.snapshot.paramMap.get('id') as unknown as number;
         this.editForm = this.fb.group({
@@ -313,7 +315,7 @@ export class ViewPresetComponent implements OnInit, AfterViewInit {
     }
 
     onStepChange(event: StepperSelectionEvent) {
-        console.log("event:", event)
+        this.loggingService.log("event:", event)
         this.isFinishStep = event.selectedIndex === 2; // Assuming finish step is at index 2
     }
 
@@ -325,12 +327,12 @@ export class ViewPresetComponent implements OnInit, AfterViewInit {
 
     // Optional: Handle the drag started event
     onDragStarted(bouquet: BouquetList): void {
-        console.log('Drag started for:', bouquet.bouquetName);
+        this.loggingService.log('Drag started for:', bouquet.bouquetName);
     }
 
     // Optional: Handle the drag ended event
     onDragEnded(bouquet: BouquetList): void {
-        console.log('Drag ended for:', bouquet.bouquetName);
+        this.loggingService.log('Drag ended for:', bouquet.bouquetName);
     }
 
     /**

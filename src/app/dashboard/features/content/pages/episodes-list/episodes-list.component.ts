@@ -7,6 +7,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {EpisodeService} from "../../../../../shared/services/episode.service";
 import {Page} from "../../../../../shared/models/page";
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import {LoggingService} from "../../../../../services/logging.service";
 
 @Component({
     selector: 'app-episodes-list',
@@ -38,7 +39,8 @@ export class EpisodesListComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    constructor(private episodeService: EpisodeService, private notificationService: NotificationService) {
+    constructor(private episodeService: EpisodeService, private notificationService: NotificationService,
+                private loggingService: LoggingService) {
         // this.loadEpisodes();
     }
 
@@ -72,7 +74,7 @@ export class EpisodesListComponent implements OnInit, AfterViewInit {
         this.loading = true; // Start loading
         this.episodeService.getEpisodes<EpisodeList>('', page, size).pipe(
             catchError(error => {
-                console.error('Failed to load episodes', error);
+                this.loggingService.error('Failed to load episodes', error);
                 this.loading = false;
                 this.notificationService.error('Failed to load episodes. Please try again.');
                 return of({content: [], totalElements: 0, totalPages: 0, size: 0, number: 0} as Page<EpisodeList>);

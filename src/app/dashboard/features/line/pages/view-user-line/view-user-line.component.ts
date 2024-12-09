@@ -29,6 +29,7 @@ import { TokenService } from 'src/app/shared/services/token.service';
 import { PresetService } from 'src/app/shared/services/preset.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import {LoggingService} from "../../../../../services/logging.service";
 
 @Component({
     selector: 'app-view-user-line',
@@ -121,7 +122,8 @@ export class ViewUserLineComponent {
         private notificationService: NotificationService,
         private tokenService: TokenService,
         private presetService: PresetService,
-        private activatedRouter: ActivatedRoute
+        private activatedRouter: ActivatedRoute,
+        private loggingService: LoggingService
     ) {
         this.id = this.activatedRouter.snapshot.paramMap.get(
             'id'
@@ -163,7 +165,7 @@ export class ViewUserLineComponent {
         this.bouquetSort?.sortChange.subscribe(() => this.loadBouquets());
         this.bouquetPaginator?.page.subscribe(() => this.loadBouquets());
 
-        // console.log(`Form { valid: ${this.addForm.valid}, invalid: ${this.addForm.invalid} }`);
+        // this.loggingService.log(`Form { valid: ${this.addForm.valid}, invalid: ${this.addForm.invalid} }`);
 
     }
 
@@ -172,7 +174,7 @@ export class ViewUserLineComponent {
         this.loading = true;
         this.lineService.getLine<LineDetail>(this.id)
                         .pipe(catchError(error => {
-                            console.error("Line Update Failed :", error);
+                            this.loggingService.error("Line Update Failed :", error);
                             this.notificationService.error("Line Update Failed");
                             throw new Error(error);
                         }), finalize(() => this.loading = false))
@@ -184,9 +186,9 @@ export class ViewUserLineComponent {
                             this.selectedOwnerId = line.memberId;
                             this.editForm.controls['package'].setValue(line.packageId);
                             this.selectedPackageId = line.packageId || 0;
-                            // console.log("Selected Package:", this.selectedPackageId);
-                            setTimeout(() => console.log("Selected Package:", this.selectedPackage?.packageName), 5000);
-                            
+                            // this.loggingService.log("Selected Package:", this.selectedPackageId);
+                            setTimeout(() => this.loggingService.log("Selected Package:", this.selectedPackage?.packageName), 5000);
+
                             const expirationDate = new Date(line.expDate * 1000);
                             this.editForm.controls['expirationDate'].setValue(this.formatDateTime(expirationDate));
                             const duration = this.selectedPackage?.isOfficial ? this.selectedPackage?.officialDuration : this.selectedPackage?.trialDuration || 0;
@@ -232,7 +234,7 @@ export class ViewUserLineComponent {
 
         this.bouquetService.getBouquets<BouquetList>('', page, size).pipe(
             catchError(error => {
-            console.error('Failed to load bouquets', error);
+            this.loggingService.error('Failed to load bouquets', error);
             this.bouquetsLoading = false;
             this.notificationService.error('Failed to load bouquets. Please try again.');
             return of({ content: [], totalPages: 0, totalElements: 0, size: 0, number:0 } as Page<BouquetList>);
@@ -263,7 +265,7 @@ export class ViewUserLineComponent {
     }
 
     saveDetail(): void {
-       console.log(`Form { valid: ${this.editForm.valid}, invalid: ${this.editForm.invalid} }`);
+       this.loggingService.log(`Form { valid: ${this.editForm.valid}, invalid: ${this.editForm.invalid} }`);
        this.loading = true;
         if (this.editForm.valid) {
             const formValues = this.editForm.value;
@@ -284,13 +286,13 @@ export class ViewUserLineComponent {
             });
             this.lineService.updateLine(this.line)
                             .pipe(catchError(error => {
-                                console.error("Line Update Failed :", error);
+                                this.loggingService.error("Line Update Failed :", error);
                                 this.notificationService.error("Line Update Failed");
                                 throw new Error(error);
                             }), finalize(() => this.loading = false))
                             .subscribe(line => {
                                 // this.loading = false;
-                                console.log("Created Line :", line);
+                                this.loggingService.log("Created Line :", line);
                                 this.router.navigate(['/apps/lines/users/list']);
                                 this.toastr.success('Line updated successfully.', 'Succès');
                             });
@@ -302,12 +304,12 @@ export class ViewUserLineComponent {
                 if(control && control.valid)
                     continue;
                 if(control)
-                    console.log(`Control: ${controlName}:`, {valid: control.valid, value: control.value, errors: control.errors});
+                    this.loggingService.log(`Control: ${controlName}:`, {valid: control.valid, value: control.value, errors: control.errors});
                 else
-                    console.log(`Control[${controlName}] Not Found`);
+                    this.loggingService.log(`Control[${controlName}] Not Found`);
 
             }
-            // console.error('Form is invalid', this.addForm.errors);
+            // this.loggingService.error('Form is invalid', this.addForm.errors);
             this.toastr.error('Form is invalid.', 'Erreur');
         }
     }
@@ -410,7 +412,7 @@ export class ViewUserLineComponent {
         if(owner)
             this.selectedOwnerId = id; // owner
         else
-            console.log(`Ops!! Owner[${id}] not found`);
+            this.loggingService.log(`Ops!! Owner[${id}] not found`);
     }
 
     get selectedPackage():PackageList|undefined{
@@ -428,7 +430,7 @@ export class ViewUserLineComponent {
         }
     }
     onSelectPackage($event: any) {
-        // console.log("Package Event", $event);
+        // this.loggingService.log("Package Event", $event);
         const id = $event; // this.addForm.controls["package"].value;
         if(id != this.editForm.controls["package"].value)
             this.editForm.controls["package"].setValue(id);
@@ -440,13 +442,13 @@ export class ViewUserLineComponent {
                 this.editForm.controls["packageCost"].setValue(pkg.officialCredits);
                 this.editForm.controls["duration"].setValue(pkg.officialDuration);
                 const expiration = PackageService.getPackageExpirationDate(pkg.officialDuration, pkg.officialDurationIn);
-                // console.log("Official Expiration :", expiration);
+                // this.loggingService.log("Official Expiration :", expiration);
                 this.editForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
             }else{
                 this.editForm.controls["packageCost"].setValue(pkg.trialCredits);
                 this.editForm.controls["duration"].setValue(pkg.trialDuration);
                 const expiration = PackageService.getPackageExpirationDate(pkg.trialDuration, pkg.trialDurationIn);
-                // console.log("Trial Expiration :", expiration);
+                // this.loggingService.log("Trial Expiration :", expiration);
                 this.editForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
             }
             if(this.selectedBundleOption === 'packages')
@@ -458,9 +460,9 @@ export class ViewUserLineComponent {
             this.updateMatrix();
         }
         else
-            console.log(`Ops!! Package[${id}] not found`);
+            this.loggingService.log(`Ops!! Package[${id}] not found`);
 
-        // console.log("Select Package", this.selectedPackage);
+        // this.loggingService.log("Select Package", this.selectedPackage);
     }
 
     formatDateTime(date:Date) {
@@ -476,7 +478,7 @@ export class ViewUserLineComponent {
         const id = $event;
         this.bouquetsLoading = true;
         this.presetService.getAllPresetBouquets(id).subscribe(res => {
-            console.log("Preset Bouquets:", res);
+            this.loggingService.log("Preset Bouquets:", res);
 
             this.presetBouquets = res || [];
             this.bouquetsLoading = false;
@@ -528,7 +530,7 @@ export class ViewUserLineComponent {
                 this.line.bouquets.splice(index, 1);
             }
         }
-        console.log("Line Bouquets ", this.line.bouquets.length);
+        this.loggingService.log("Line Bouquets ", this.line.bouquets.length);
 
     }
     updatePresetSelection() {
@@ -577,7 +579,7 @@ export class ViewUserLineComponent {
                 this.line.bouquets.splice(index, 1);
             }
         }
-        console.log("Line Bouquets ", this.line.bouquets.length);
+        this.loggingService.log("Line Bouquets ", this.line.bouquets.length);
     }
     updateSelection() {
         this.bouquetsSelection.clear();
@@ -608,7 +610,7 @@ export class ViewUserLineComponent {
     }
 
     bundleToggle($event: any) {
-        console.log("Toggle to: ", $event.value);
+        this.loggingService.log("Toggle to: ", $event.value);
         switch ($event.value) {
             case 'packages':
                 const pkg = this.packages.find(p => p.id === this.editForm.controls['package'].value);
@@ -635,7 +637,7 @@ export class ViewUserLineComponent {
                 this.presetBouquetsSelection.select(...this.presetBouquets);
                 break;
             default:
-                console.log("Unknown Bundle");
+                this.loggingService.log("Unknown Bundle");
         }
 
     }

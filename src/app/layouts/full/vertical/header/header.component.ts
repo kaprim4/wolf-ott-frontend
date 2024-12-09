@@ -26,6 +26,7 @@ import {UserDetail} from "../../../../shared/models/user";
 import { AppsService } from 'src/app/shared/services/apps.service';
 import { Apps } from 'src/app/shared/models/apps';
 import { map, share, Subscription, timer } from 'rxjs';
+import {LoggingService} from "../../../../services/logging.service";
 
 interface notifications {
     id: number;
@@ -135,7 +136,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
         public dialog: MatDialog,
         private translate: TranslateService,
         private userService: UserService,
-        private appsService: AppsService
+        private appsService: AppsService,
+        private loggingService: LoggingService
     ) {
         translate.setDefaultLang('en');
     }
@@ -144,7 +146,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         const dialogRef = this.dialog.open(AppSearchDialogComponent);
 
         dialogRef.afterClosed().subscribe((result) => {
-            console.log(`Dialog result: ${result}`);
+            this.loggingService.log(`Dialog result: ${result}`);
         });
     }
 
@@ -352,5 +354,5 @@ export class AppSearchDialogComponent {
 
     navItemsData = navItems.filter((navitem) => navitem.displayName);
 
-    
+
 }

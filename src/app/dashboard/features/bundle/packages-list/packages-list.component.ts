@@ -8,6 +8,7 @@ import {Page} from 'src/app/shared/models/page';
 import {NotificationService} from 'src/app/shared/services/notification.service';
 import {PackageService} from 'src/app/shared/services/package.service';
 import { TokenService } from 'src/app/shared/services/token.service';
+import {LoggingService} from "../../../../services/logging.service";
 
 @Component({
     selector: 'app-packages-list',
@@ -41,7 +42,8 @@ export class PackagesListComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    constructor(private packageService: PackageService, private notificationService: NotificationService, private tokenService: TokenService) {
+    constructor(private packageService: PackageService, private notificationService: NotificationService, private tokenService: TokenService,
+                private loggingService: LoggingService) {
         this.loadPackages();
         this.principal = this.tokenService.getPayload();
     }
@@ -86,7 +88,7 @@ export class PackagesListComponent implements OnInit, AfterViewInit {
 
         this.packageService.getPackages<PackageList>('', page, size).pipe(
             catchError(error => {
-                console.error('Failed to load packages', error);
+                this.loggingService.error('Failed to load packages', error);
                 this.loading = false;
                 this.notificationService.error('Failed to load packages. Please try again.');
                 return of({content: [], totalPages: 0, totalElements: 0, size: 0, number: 0} as Page<PackageList>);

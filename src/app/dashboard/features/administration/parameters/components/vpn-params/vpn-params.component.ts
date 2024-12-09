@@ -2,6 +2,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {finalize} from 'rxjs';
 import {Params} from 'src/app/shared/models/params';
 import {ParamsService} from 'src/app/shared/services/params.service';
+import {LoggingService} from "../../../../../../services/logging.service";
 
 @Component({
     selector: 'app-vpn-params',
@@ -38,19 +39,22 @@ export class VpnParamsComponent implements OnInit {
         // this.saveChanges.emit();
     }
 
-    constructor(private paramsService: ParamsService) {
+    constructor(
+        private paramsService: ParamsService,
+        private loggingService: LoggingService
+    ) {
         this.param = this.initParam;
     }
 
     ngOnInit(): void {
         this.loading = true;
         this.paramsService.getParamByKey('vpn').pipe(finalize(() => this.loading = false)).subscribe(param => {
-            console.log("Fetched VPN Param", param);
+            this.loggingService.log("Fetched VPN Param", param);
 
             this.param = param;
-            console.log("Fetched Param:", this.param);
+            this.loggingService.log("Fetched Param:", this.param);
 
-            console.log("DNS List:", this.defaultDNSList);
+            this.loggingService.log("DNS List:", this.defaultDNSList);
 
         })
     }

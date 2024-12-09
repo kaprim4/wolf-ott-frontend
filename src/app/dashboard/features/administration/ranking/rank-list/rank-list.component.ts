@@ -7,6 +7,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {RankingService} from "../../../../../shared/services/ranking.service";
 import {NotificationService} from "../../../../../shared/services/notification.service";
 import {Page} from "../../../../../shared/models/page";
+import {LoggingService} from "../../../../../services/logging.service";
 
 @Component({
     selector: 'app-rank-list',
@@ -40,7 +41,8 @@ export class RankListComponent  implements OnInit {
 
     constructor(
         private rankingService: RankingService,
-        private notificationService: NotificationService
+        private notificationService: NotificationService,
+        private loggingService: LoggingService
     ) {
         this.loadRanks();
     }
@@ -85,7 +87,7 @@ export class RankListComponent  implements OnInit {
 
         this.rankingService.getRanks<Rank>('', page, size).pipe(
             catchError(error => {
-                console.error('Failed to load ranks', error);
+                this.loggingService.error('Failed to load ranks', error);
                 this.loading = false;
                 this.notificationService.error('Failed to load ranks. Please try again.');
                 return of({content: [], totalPages: 0, totalElements: 0, size: 0, number: 0} as Page<Rank>);

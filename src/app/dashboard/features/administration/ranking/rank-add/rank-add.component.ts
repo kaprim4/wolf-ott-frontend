@@ -6,6 +6,7 @@ import {MatDialog} from "@angular/material/dialog";
 import { Rank } from 'src/app/shared/models/rank';
 import { RankingService } from 'src/app/shared/services/ranking.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import {LoggingService} from "../../../../../services/logging.service";
 
 @Component({
   selector: 'app-rank-add',
@@ -30,7 +31,8 @@ export class RankAddComponent implements OnInit {
       private rankingService: RankingService,
       private router: Router,
       public dialog: MatDialog,
-      protected notificationService: NotificationService
+      protected notificationService: NotificationService,
+      private loggingService: LoggingService
   ) {
       this.addForm = this.fb.group({
           title: new FormControl("", [Validators.required]),
@@ -71,10 +73,10 @@ export class RankAddComponent implements OnInit {
       error: (err) => {
         // Handle error (show notification or alert)
         this.notificationService.error('Error while saving rank');
-        console.error("'Error while saving rank'", err);
-        
+        this.loggingService.error("'Error while saving rank'", err);
+
       }
     });
-    
+
   }
 }

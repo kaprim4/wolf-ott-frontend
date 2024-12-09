@@ -14,6 +14,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {navItems} from '../sidebar/sidebar-data';
 import {TokenService} from "../../../../shared/services/token.service";
 import {AuthenticationService} from "../../../../shared/services/auth.service";
+import {LoggingService} from "../../../../services/logging.service";
 
 interface notifications {
     id: number;
@@ -91,7 +92,8 @@ export class AppHorizontalHeaderComponent implements OnInit {
         private tokenService: TokenService,
         private vsidenav: CoreService,
         public dialog: MatDialog,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private loggingService: LoggingService
     ) {
         translate.setDefaultLang('en');
     }
@@ -109,7 +111,7 @@ export class AppHorizontalHeaderComponent implements OnInit {
         const dialogRef = this.dialog.open(AppSearchDialogComponent);
 
         dialogRef.afterClosed().subscribe((result) => {
-            console.log(`Dialog result: ${result}`);
+            this.loggingService.log(`Dialog result: ${result}`);
         });
     }
 

@@ -15,6 +15,7 @@ import {TokenService} from "../../services/token.service";
 import { PresetList } from '../../models/preset';
 import { PresetService } from '../../services/preset.service';
 import { LineFactory } from '../../factories/line.factory';
+import {LoggingService} from "../../../services/logging.service";
 
 @Component({
     selector: 'app-quick-xtream',
@@ -54,7 +55,8 @@ export class QuickXtreamComponent implements OnInit {
         private tokenService: TokenService,
         private userService: UserService,
         private fb: FormBuilder,
-        private presetService: PresetService
+        private presetService: PresetService,
+        private loggingService: LoggingService
     ) {
         const username = this.username = LineService.generateRandomUsername();
         const password = this.password = LineService.generateRandomPassword();
@@ -122,7 +124,7 @@ export class QuickXtreamComponent implements OnInit {
             memberId: this.user.id,
             createdAt: Date.now()
         };
-        console.log("line:", line)
+        this.loggingService.log("line:", line)
         this.lineService.addLine<LineDetail>(line).pipe(
             tap(() => {
                 this.notificationService.success('Line Created Successfully');
@@ -130,7 +132,7 @@ export class QuickXtreamComponent implements OnInit {
             }),
             catchError((ex) => {
                 this.notificationService.error('Failed to create line.');
-                console.log(ex)
+                this.loggingService.log(ex)
                 return throwError(ex);
             }),
             finalize(() => {
@@ -143,7 +145,7 @@ export class QuickXtreamComponent implements OnInit {
                 }else{
                     this.server = `http://${l.vpnDns}:80/`;
                 }
-                
+
             }
         });
     }
@@ -152,11 +154,11 @@ export class QuickXtreamComponent implements OnInit {
         this.isLoading = true;
         var texto: string = `HOST: ${this.server}\rUSERNAME: ${this.username}\rPASSWORD: ${this.password}`;
         navigator.clipboard.writeText(texto).then(() => {
-            console.log('Copied to clipboard: ', texto);
+            this.loggingService.log('Copied to clipboard: ', texto);
             this.toastr.success('Copied to clipboard.', 'Succès');
             this.isLoading = false; // Fin du chargement
         }).catch(err => {
-            console.error('Could not copy: ', err);
+            this.loggingService.error('Could not copy: ', err);
             this.toastr.error('Could not copy.', 'Erreur');
             this.isLoading = false;
         });
@@ -203,7 +205,7 @@ export class QuickXtreamComponent implements OnInit {
     }
 
     bundleToggle($event: any) {
-        console.log("Toggle to: ", $event.value);
+        this.loggingService.log("Toggle to: ", $event.value);
         switch ($event.value) {
             case 'packages':
                 const pkg = this.packages.find(p => p.id === this.addForm.controls['package'].value);
@@ -216,15 +218,15 @@ export class QuickXtreamComponent implements OnInit {
                 // this.line.bouquets = this.presetBouquets.map(bouquet => bouquet.id);
                 break;
             default:
-                console.log("Unknown Bundle");
+                this.loggingService.log("Unknown Bundle");
         }
 
     }
 
     onSelectPackage($event: any) {
-        // console.log("Package Event", $event);
+        // this.loggingService.log("Package Event", $event);
         const id = $event.value; // this.addForm.controls["package"].value;
-        console.log("Selection:",$event.value);
+        this.loggingService.log("Selection:",$event.value);
 
         this.selectedPackageId = id;
         if(id != this.addForm.controls["package"].value)
@@ -234,7 +236,7 @@ export class QuickXtreamComponent implements OnInit {
         if(id != this.bundleForm.controls["package"].value)
             this.bundleForm.controls["package"].setValue(id);
         const pkg = this.packages.find(o => o.id === id);
-        console.log("Selected Package:", pkg);
+        this.loggingService.log("Selected Package:", pkg);
 
         if(pkg){
             this.line.packageId = pkg.id;
@@ -243,13 +245,13 @@ export class QuickXtreamComponent implements OnInit {
                 this.addForm.controls["packageCost"].setValue(pkg.officialCredits);
                 this.addForm.controls["duration"].setValue(pkg.officialDuration);
                 const expiration = PackageService.getPackageExpirationDate(pkg.officialDuration, pkg.officialDurationIn);
-                // console.log("Official Expiration :", expiration);
+                // this.loggingService.log("Official Expiration :", expiration);
                 this.addForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
             }else{
                 this.addForm.controls["packageCost"].setValue(pkg.trialCredits);
                 this.addForm.controls["duration"].setValue(pkg.trialDuration);
                 const expiration = PackageService.getPackageExpirationDate(pkg.trialDuration, pkg.trialDurationIn);
-                // console.log("Trial Expiration :", expiration);
+                // this.loggingService.log("Trial Expiration :", expiration);
                 this.addForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
             }
             if(this.selectedBundleOption === 'packages')
@@ -259,9 +261,9 @@ export class QuickXtreamComponent implements OnInit {
             this.line.forcedCountry = pkg.forcedCountry;
         }
         else
-            console.log(`Ops!! Package[${id}] not found`);
+            this.loggingService.log(`Ops!! Package[${id}] not found`);
 
-        // console.log("Select Package", this.selectedPackage);
+        // this.loggingService.log("Select Package", this.selectedPackage);
     }
 
     formatDateTime(date:Date) {

@@ -7,6 +7,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {ArticleService} from "../../../../../shared/services/article.service";
 import {NotificationService} from "../../../../../shared/services/notification.service";
 import {Page} from "../../../../../shared/models/page";
+import {LoggingService} from "../../../../../services/logging.service";
 
 @Component({
   selector: 'app-news-list',
@@ -41,7 +42,8 @@ export class NewsListComponent implements OnInit {
 
     constructor(
         private articleService: ArticleService,
-        private notificationService: NotificationService
+        private notificationService: NotificationService,
+        private loggingService: LoggingService
     ) {
         this.loadArticles();
     }
@@ -86,7 +88,7 @@ export class NewsListComponent implements OnInit {
 
         this.articleService.getArticles<Article>('', page, size).pipe(
             catchError(error => {
-                console.error('Failed to load articles', error);
+                this.loggingService.error('Failed to load articles', error);
                 this.loading = false;
                 this.notificationService.error('Failed to load articles. Please try again.');
                 return of({content: [], totalPages: 0, totalElements: 0, size: 0, number: 0} as Page<Article>);

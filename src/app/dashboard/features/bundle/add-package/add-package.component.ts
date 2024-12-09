@@ -9,13 +9,14 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { BouquetList, IBouquet } from 'src/app/shared/models/bouquet';
 import { MatTableDataSource } from '@angular/material/table';
 import { BouquetService } from 'src/app/shared/services/bouquet.service';
+import {LoggingService} from "../../../../services/logging.service";
 
 @Component({
   selector: 'app-add-package',
   templateUrl: './add-package.component.html',
   styleUrl: './add-package.component.scss'
 })
-export class AddPackageComponent implements OnInit {  
+export class AddPackageComponent implements OnInit {
 
   bouquetsDisplayedColumns: string[] = [
     'select',
@@ -30,7 +31,7 @@ export class AddPackageComponent implements OnInit {
 bouquets: BouquetList[];
 bouquetsSelection = new SelectionModel<IBouquet>(true, []);
 bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
-  
+
   addForm: UntypedFormGroup | any;
   rows: UntypedFormArray;
   package: PackageDetail;
@@ -45,7 +46,8 @@ bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
     private packageService: PackageService,
     private bouquetService: BouquetService,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private loggingService: LoggingService
   ) {
     // tslint:disable-next-line - Disables all
     this.package = PackageFactory.initPackageDetail();

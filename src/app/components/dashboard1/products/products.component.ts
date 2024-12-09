@@ -9,6 +9,7 @@ import {Rank} from "../../../shared/models/rank";
 import {LineService} from "../../../shared/services/line.service";
 import {NotificationService} from "../../../shared/services/notification.service";
 import {MatProgressBar} from "@angular/material/progress-bar";
+import {LoggingService} from "../../../services/logging.service";
 
 @Component({
     selector: 'app-products',
@@ -45,7 +46,8 @@ export class AppProductsComponent implements OnInit {
         private tokenService: TokenService,
         private rankingService: RankingService,
         private lineService: LineService,
-        protected notificationService: NotificationService
+        protected notificationService: NotificationService,
+        private loggingService: LoggingService
     ) {
 
     }
@@ -61,7 +63,7 @@ export class AppProductsComponent implements OnInit {
                 },
                 error: (err) => {
                     this.notificationService.error('Error while get User');
-                    console.error("'Error while get User'", err);
+                    this.loggingService.error("'Error while get User'", err);
                 },
                 complete: () => {
                     this.lineService.getAllLinesWithMemberId(this.user.id).subscribe(
@@ -71,14 +73,14 @@ export class AppProductsComponent implements OnInit {
                             },
                             error: (err) => {
                                 this.notificationService.error('Error while get All Lines With Member Id');
-                                console.error("'Error while get All Lines With Member Id'", err);
+                                this.loggingService.error("'Error while get All Lines With Member Id'", err);
                             },
                             complete: () => {
                                 this.rankingService.getAllRanks<Rank>().subscribe(ranks => {
                                     ranks.forEach(r => {
-                                        console.log("rank: ", r)
+                                        this.loggingService.log("rank: ", r)
                                         if (r.minPoints <= this.credits && r.maxPoints >= this.credits) {
-                                            console.log("condiction Rank:", r)
+                                            this.loggingService.log("condiction Rank:", r)
                                             this.rank = r;
                                             this.imagePreview = this.rank.badgeImage;
                                         }

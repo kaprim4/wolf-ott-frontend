@@ -9,6 +9,7 @@ import { Page } from 'src/app/shared/models/page';
 import { IUser, UserList } from 'src/app/shared/models/user';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { UserService } from 'src/app/shared/services/user.service';
+import {LoggingService} from "../../../../../services/logging.service";
 
 @Component({
   selector: 'app-users-list',
@@ -49,7 +50,8 @@ export class UsersListComponent implements OnInit, AfterViewInit {
   horizontalPosition: MatSnackBarHorizontalPosition = 'start';
   verticalPosition: MatSnackBarVerticalPosition = 'bottom';
 
-  constructor(private userService: UserService, private notificationService: NotificationService) {
+  constructor(private userService: UserService,
+              private loggingService: LoggingService, private notificationService: NotificationService) {
     // this.loadUsers();
   }
 
@@ -61,11 +63,11 @@ export class UsersListComponent implements OnInit, AfterViewInit {
         debounceTime(300), // Wait for 300ms pause in events
         switchMap(searchTerm => this.userService.getUsers<UserList>(searchTerm, this.pageIndex, this.pageSize)),
         catchError(error => {
-          console.error('Search error:', error);
+          this.loggingService.error('Search error:', error);
           // Optionally, you could return an empty data source or show a user-friendly message
 
           this.notificationService.error('Failed to load users. Please try again.');
-          
+
           return of({ content: [], totalElements: 0 } as unknown as Page<UserList>);
       })
     ).subscribe(response => {
@@ -99,10 +101,10 @@ ngAfterViewInit(): void {
     const page = (this.paginator?.pageIndex || this.pageIndex);
     const size = (this.paginator?.pageSize || this.pageSize);
     this.loading = true; // Start loading
-    
+
     this.userService.getUsers<UserList>('', page, size).pipe(
       catchError(error => {
-        console.error('Failed to load users', error);
+        this.loggingService.error('Failed to load users', error);
         this.loading = false;
         this.notificationService.error('Failed to load users. Please try again.');
         // return of({ content: [], totalElements: 0, totalPages: 0, size: 0, number: 0 } as Page<UserList>);
@@ -115,7 +117,7 @@ ngAfterViewInit(): void {
       // this.notificationService.success('User loaded successfully!');
     });
   }
-  
+
   // get loading():boolean{
   //   return this.userLoading || this.ownersLoading;
   // }

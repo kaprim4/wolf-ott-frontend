@@ -94,9 +94,9 @@ export class AppTodoComponent implements OnInit {
   }
 
   editTodo(i: number, str: string): void {
-    
+
     if (this.copyTodos) {
-      if (str === 'edit') {      
+      if (str === 'edit') {
         this.copyTodos.find((x) => x.id === i )!.edit=true;
       }
       if(str === 'save') {
@@ -106,7 +106,7 @@ export class AppTodoComponent implements OnInit {
   }
 
   deleteTodo(id: number): void {
-    console.log(id);
+    this.loggingService.log(id);
     this.todos.splice(id, 1);
   }
 

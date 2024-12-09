@@ -11,6 +11,7 @@ import {TokenService} from 'src/app/shared/services/token.service';
 import {GroupList} from 'src/app/shared/models/group';
 import {GroupService} from 'src/app/shared/services/group.service';
 import {NotificationService} from "../../../../../shared/services/notification.service";
+import {LoggingService} from "../../../../../services/logging.service";
 
 @Component({
     selector: 'app-view-user',
@@ -74,6 +75,7 @@ export class ViewUserComponent implements OnInit {
         private activatedRouter: ActivatedRoute,
         private tokenService: TokenService,
         private notificationService: NotificationService,
+        private loggingService: LoggingService
     ) {
         this.id = this.activatedRouter.snapshot.paramMap.get(
             'id'
@@ -108,7 +110,7 @@ export class ViewUserComponent implements OnInit {
         this.userService.getAllUsers<UserList>().subscribe((users: UserList[]) => {
             this.owners = users;
             this.filteredOwners = this.owners;
-            console.log("Selected Owner", this.selectedOwner);
+            this.loggingService.log("Selected Owner", this.selectedOwner);
             this.ownersLoading = false;
         });
 

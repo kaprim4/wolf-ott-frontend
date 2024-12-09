@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Apps } from 'src/app/shared/models/apps';
 import { AppsService } from 'src/app/shared/services/apps.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import {LoggingService} from "../../../../../../services/logging.service";
 
 @Component({
   selector: 'app-edit-application',
@@ -44,6 +45,7 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
       public dialog: MatDialog,
       protected notificationService: NotificationService,
       private activatedRouter: ActivatedRoute,
+      private loggingService: LoggingService
   ) {
     this.id = this.activatedRouter.snapshot.paramMap.get('id') as unknown as number;
       this.editForm = this.fb.group({
@@ -79,7 +81,7 @@ export class EditApplicationComponent implements OnInit, OnDestroy {
           error: (err) => {
               // Handle error (show notification or alert)
               this.notificationService.error('Error while saving application');
-              console.error("'Error while saving application'", err);
+              this.loggingService.error("'Error while saving application'", err);
           },
           complete: () => {
               this.loading = false;

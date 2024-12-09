@@ -6,6 +6,7 @@ import {MaterialModule} from '../../../material.module';
 import {AuthenticationService} from "../../../shared/services/auth.service";
 import {TokenService} from "../../../shared/services/token.service";
 import {environment} from "../../../../environments/environment";
+import {LoggingService} from "../../../services/logging.service";
 
 @Component({
     selector: 'app-side-forgot-password',
@@ -26,7 +27,8 @@ export class AppSideForgotPasswordComponent implements OnInit {
         private tokenService: TokenService,
         private route: ActivatedRoute,
         private fb: FormBuilder,
-        private router: Router
+        private router: Router,
+        private loggingService: LoggingService
     ) {
     }
 
@@ -54,7 +56,7 @@ export class AppSideForgotPasswordComponent implements OnInit {
         if (this.forgotPasswordForm.valid) {
             this.loading = true;
             this.router.navigate(['/auth/login']).then(r =>
-                console.log("Forgot Password Form.")
+                this.loggingService.log("Forgot Password Form.")
             )
         }
     }

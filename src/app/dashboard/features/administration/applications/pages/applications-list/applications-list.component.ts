@@ -7,6 +7,7 @@ import { Apps } from 'src/app/shared/models/apps';
 import { Page } from 'src/app/shared/models/page';
 import { AppsService } from 'src/app/shared/services/apps.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import {LoggingService} from "../../../../../../services/logging.service";
 
 @Component({
   selector: 'app-applications-list',
@@ -41,7 +42,8 @@ export class ApplicationsListComponent implements OnInit {
 
   constructor(
       private appsService: AppsService,
-      private notificationService: NotificationService
+      private notificationService: NotificationService,
+      private loggingService: LoggingService
   ) {
       this.loadApplications();
   }
@@ -86,7 +88,7 @@ export class ApplicationsListComponent implements OnInit {
 
       this.appsService.getApps<Apps>('', page, size).pipe(
           catchError(error => {
-              console.error('Failed to load applications', error);
+              this.loggingService.error('Failed to load applications', error);
               this.loading = false;
               this.notificationService.error('Failed to load applications. Please try again.');
               return of({content: [], totalPages: 0, totalElements: 0, size: 0, number: 0} as Page<Apps>);

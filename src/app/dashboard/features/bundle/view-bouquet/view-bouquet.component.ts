@@ -26,6 +26,7 @@ import { IStation, StationList } from 'src/app/shared/models/station';
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from '@angular/cdk/drag-drop';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { TokenService } from 'src/app/shared/services/token.service';
+import {LoggingService} from "../../../../services/logging.service";
 
 @Component({
   selector: 'app-view-bouquet',
@@ -125,8 +126,9 @@ constructor(
     private router: Router,
     public dialog: MatDialog,
     protected notificationService: NotificationService,
-    private activatedRouter: ActivatedRoute, 
-    private tokenService: TokenService
+    private activatedRouter: ActivatedRoute,
+    private tokenService: TokenService,
+    private loggingService: LoggingService
 ) {
     this.id = this.activatedRouter.snapshot.paramMap.get('id') as unknown as number;
     this.bouquet = BouquetFactory.initBouquetDetail();
@@ -277,7 +279,7 @@ loadStreams(): void {
     this.loadingStreams = true; // Start loading
     this.streamService.getStreams<StreamList>('', page, size).pipe(
         catchError(error => {
-            console.error('Failed to load streams', error);
+            this.loggingService.error('Failed to load streams', error);
             this.loadingStreams = false;
             this.notificationService.error('Failed to load streams. Please try again.');
             return of({ content: [], totalElements: 0, totalPages: 0, size: 0, number: 0 } as Page<StreamList>);
@@ -296,7 +298,7 @@ loadMovies(): void {
     this.loadingMovies = true; // Start loading
     this.movieService.getMovies<MovieList>('', page, size).pipe(
         catchError(error => {
-            console.error('Failed to load movies', error);
+            this.loggingService.error('Failed to load movies', error);
             this.loadingMovies = false;
             this.notificationService.error('Failed to load movies. Please try again.');
             return of({ content: [], totalElements: 0, totalPages: 0, size: 0, number: 0 } as Page<MovieList>);
@@ -315,7 +317,7 @@ loadSeries(): void {
     this.loadingSeries = true; // Start loading
     this.serieService.getSeries<SerieList>('', page, size).pipe(
         catchError(error => {
-            console.error('Failed to load series', error);
+            this.loggingService.error('Failed to load series', error);
             this.loadingSeries = false;
             this.notificationService.error('Failed to load series. Please try again.');
             return of({ content: [], totalElements: 0, totalPages: 0, size: 0, number: 0 } as Page<SerieList>);
@@ -334,7 +336,7 @@ loadStations(): void {
     this.loadingStations = true; // Start loading
     this.stationService.getStations<StationList>('', page, size).pipe(
         catchError(error => {
-            console.error('Failed to load series', error);
+            this.loggingService.error('Failed to load series', error);
             this.loadingStations = false;
             this.notificationService.error('Failed to load stations. Please try again.');
             return of({ content: [], totalElements: 0, totalPages: 0, size: 0, number: 0 } as Page<StationList>);

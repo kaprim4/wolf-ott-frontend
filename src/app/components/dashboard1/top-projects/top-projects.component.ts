@@ -13,6 +13,7 @@ import {Page} from "../../../shared/models/page";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {CategoryList} from "../../../shared/models/category";
+import {LoggingService} from "../../../services/logging.service";
 
 interface month {
     value: string;
@@ -47,7 +48,8 @@ export class AppTopProjectsComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
     constructor(
-        private logService:UserLogService
+        private logService:UserLogService,
+        private loggingService: LoggingService
     ) {
         // this.loadStreams();
     }
@@ -75,7 +77,7 @@ export class AppTopProjectsComponent implements OnInit, AfterViewInit {
         this.loading = true; // Start loading
         this.logService.getUserLogs<UserLogList>('', page, size).pipe(
             catchError(error => {
-                console.error('Failed to load streams', error);
+                this.loggingService.error('Failed to load streams', error);
                 this.loading = false;
                 // this.notificationService.error('Failed to load streams. Please try again.');
                 return of({content: [], totalElements: 0, totalPages: 0, size: 0, number: 0} as Page<UserLogList>);

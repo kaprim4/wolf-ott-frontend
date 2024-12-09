@@ -17,6 +17,7 @@ import {UserService} from "../../../shared/services/user.service";
 import {TokenService} from "../../../shared/services/token.service";
 import {LineService} from "../../../shared/services/line.service";
 import {DecimalPipe, NgIf} from "@angular/common";
+import {LoggingService} from "../../../services/logging.service";
 
 export interface customersChart {
     series: ApexAxisChartSeries;
@@ -50,7 +51,8 @@ export class AppCustomersComponent implements OnInit {
     constructor(
         private userService: UserService,
         private tokenService: TokenService,
-        private lineService: LineService
+        private lineService: LineService,
+        private loggingService: LoggingService
     ) {
 
     }
@@ -130,6 +132,6 @@ export class AppCustomersComponent implements OnInit {
                 enabled: false,
             },
         };
-        console.log(this.customersChart);
+        this.loggingService.log(this.customersChart);
     }
 }

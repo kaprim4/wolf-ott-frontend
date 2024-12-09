@@ -6,6 +6,7 @@ import {Article, ArticleCard} from "../../../shared/models/article";
 import {DatePipe, NgForOf, SlicePipe} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {NotificationService} from "../../../shared/services/notification.service";
+import {LoggingService} from "../../../services/logging.service";
 
 @Component({
     selector: 'app-news-card',
@@ -18,7 +19,8 @@ export class AppNewsCardComponent implements OnInit {
 
     constructor(
         private articleService: ArticleService,
-        protected notificationService: NotificationService
+        protected notificationService: NotificationService,
+        private loggingService: LoggingService
     ) {
     }
 
@@ -48,12 +50,12 @@ export class AppNewsCardComponent implements OnInit {
             },
             error: (err) => {
                 this.notificationService.error('Error while retrieving news');
-                console.error("'Error while retrieving news'", err);
+                this.loggingService.error("'Error while retrieving news'", err);
             },
             complete: () => {
                 this.isNewsLoading = false;
                 this.notificationService.success('Retrieving news successfully');
-                console.info("'Retrieving news successfully'");
+                this.loggingService.info("'Retrieving news successfully'");
             }
         });
     }

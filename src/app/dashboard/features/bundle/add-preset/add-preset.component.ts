@@ -14,6 +14,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import {LoggingService} from "../../../../services/logging.service";
 
 @Component({
   selector: 'app-add-preset',
@@ -80,7 +81,8 @@ bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
     private bouquetService: BouquetService,
     private router: Router,
     // public dialog: MatDialog
-    private notificationService:NotificationService
+    private notificationService:NotificationService,
+    private loggingService: LoggingService
   ) {
 
     this.preset = PresetFactory.initPresetDetail();
@@ -304,12 +306,12 @@ onStepChange(event: StepperSelectionEvent) {
 
   // Optional: Handle the drag started event
   onDragStarted(bouquet: BouquetList): void {
-    console.log('Drag started for:', bouquet.bouquetName);
+    this.loggingService.log('Drag started for:', bouquet.bouquetName);
   }
 
   // Optional: Handle the drag ended event
   onDragEnded(bouquet: BouquetList): void {
-    console.log('Drag ended for:', bouquet.bouquetName);
+    this.loggingService.log('Drag ended for:', bouquet.bouquetName);
   }
 
 }

@@ -9,6 +9,7 @@ import {StreamService} from "../../../../../shared/services/stream.service";
 import {CategoryService} from "../../../../../shared/services/category.service";
 import {NotificationService} from "../../../../../shared/services/notification.service";
 import {Page} from "../../../../../shared/models/page";
+import {LoggingService} from "../../../../../services/logging.service";
 
 @Component({
     selector: 'app-live-connections-list',
@@ -40,7 +41,8 @@ export class LiveConnectionsListComponent implements OnInit, AfterViewInit {
 
     categories: CategoryList[] = [];
 
-    constructor(private streamService: StreamService, private categoryService: CategoryService, private notificationService: NotificationService) {
+    constructor(private streamService: StreamService,
+                private loggingService: LoggingService, private categoryService: CategoryService, private notificationService: NotificationService) {
         // this.loadStreams();
     }
 
@@ -79,7 +81,7 @@ export class LiveConnectionsListComponent implements OnInit, AfterViewInit {
         this.loading = true; // Start loading
         this.streamService.getStreams<StreamList>('', page, size).pipe(
             catchError(error => {
-                console.error('Failed to load streams', error);
+                this.loggingService.error('Failed to load streams', error);
                 this.loading = false;
                 this.notificationService.error('Failed to load streams. Please try again.');
                 return of({content: [], totalElements: 0, totalPages: 0, size: 0, number: 0} as Page<StreamList>);

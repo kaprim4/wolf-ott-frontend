@@ -4,6 +4,7 @@ import {ITokenUser} from "../models/user";
 import {jwtDecode} from "jwt-decode";
 import * as moment from 'moment';
 import {now} from "moment";
+import {LoggingService} from "../../services/logging.service";
 
 @Injectable({
     providedIn: 'root'
@@ -11,14 +12,15 @@ import {now} from "moment";
 export class TokenService {
 
     constructor(
-        private router: Router
+        private router: Router,
+        private loggingService: LoggingService
     ) {
     }
 
     saveToken(token: string): void {
         localStorage.setItem('token', token)
         this.router.navigate(['dashboard']).then(r =>
-            console.log("Save Token : ", token)
+            this.loggingService.log("Save Token : ", token)
         );
     }
 
@@ -30,14 +32,14 @@ export class TokenService {
     clearToken(): void {
         localStorage.removeItem('token')
         this.router.navigate(['/auth/login']).then(r =>
-            console.log("Clear Token : ", localStorage.getItem('token'))
+            this.loggingService.log("Clear Token : ", localStorage.getItem('token'))
         )
     }
 
     clearTokenExpired(): void {
         localStorage.removeItem('token')
         this.router.navigate(['/auth/logout']).then(r =>
-            console.log("Clear Token Expired : ", localStorage.getItem('token'))
+            this.loggingService.log("Clear Token Expired : ", localStorage.getItem('token'))
         )
     }
 
@@ -56,8 +58,8 @@ export class TokenService {
             const decodedToken: any = jwtDecode(token);
             const currentTime = now().valueOf();
             const expiryTimeInMs = moment.unix(decodedToken.exp).valueOf();
-            console.log("now : ", moment(currentTime).format('YYYY-MM-DD HH:mm:ss'))
-            console.log("expiry : ", moment(expiryTimeInMs).format('YYYY-MM-DD HH:mm:ss'))
+            this.loggingService.log("now : ", moment(currentTime).format('YYYY-MM-DD HH:mm:ss'))
+            this.loggingService.log("expiry : ", moment(expiryTimeInMs).format('YYYY-MM-DD HH:mm:ss'))
             return currentTime >= expiryTimeInMs;
         }
         return false;

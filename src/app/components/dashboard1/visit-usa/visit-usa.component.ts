@@ -11,6 +11,7 @@ import {catchError, of} from "rxjs";
 import {Page} from "../../../shared/models/page";
 import {NotificationService} from "../../../shared/services/notification.service";
 import {DecimalPipe, NgClass, NgForOf, NgIf} from "@angular/common";
+import {LoggingService} from "../../../services/logging.service";
 
 @Component({
     selector: 'app-visit-usa',
@@ -39,6 +40,7 @@ export class AppVisitUsaComponent implements OnInit
     constructor(
         private activityService:LineActivityService,
         private notificationService:NotificationService,
+        private loggingService: LoggingService
     ) {
     }
 
@@ -46,14 +48,14 @@ export class AppVisitUsaComponent implements OnInit
         this.topCountries = this.processData(this.lineActivityList);
         this.activityService.getLineActivities<LineActivityList>('', this.page, this.size).pipe(
             catchError(error => {
-                console.error('Failed to load streams', error);
+                this.loggingService.error('Failed to load streams', error);
                 this.logsLoading = false;
                 this.notificationService.error('Failed to load streams. Please try again.');
                 return of({content: [], totalElements: 0, totalPages: 0, size: 0, number: 0} as Page<LineActivityList>);
             })
         ).subscribe(pageResponse => {
             this.lineActivityList = pageResponse.content;
-            console.log("lineActivityList: ", this.lineActivityList)
+            this.loggingService.log("lineActivityList: ", this.lineActivityList)
             this.totalElements = pageResponse.totalElements;
             this.logsLoading = false;
             this.topCountries = this.processData(this.lineActivityList);

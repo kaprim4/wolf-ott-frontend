@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { VpnParamsComponent } from './components/vpn-params/vpn-params.component';
 import { SmartersProParamsComponent } from './components/smarters-pro-params/smarters-pro-params.component';
+import {LoggingService} from "../../../../services/logging.service";
 
 @Component({
   selector: 'app-parameters',
@@ -17,7 +18,8 @@ export class ParametersComponent implements OnInit {
   @ViewChild(SmartersProParamsComponent, { static: false }) smartersProParamsComponent: SmartersProParamsComponent;
 
 
-  constructor() {
+  constructor(
+      private loggingService: LoggingService) {
 
   }
 
@@ -35,7 +37,7 @@ export class ParametersComponent implements OnInit {
 
   handleSaveChanges() {
     // Your logic to handle save, e.g., save data or perform some action
-    console.log('Save Changes clicked for', this.selectedParam);
+    this.loggingService.log('Save Changes clicked for', this.selectedParam);
 
     if (this.selectedParam === 'VPN' && this.vpnParamsComponent) {
       this.vpnParamsComponent.onSaveChanges(); // Call save method on the VPN component

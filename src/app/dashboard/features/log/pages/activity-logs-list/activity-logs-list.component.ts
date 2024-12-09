@@ -8,6 +8,7 @@ import {NotificationService} from "../../../../../shared/services/notification.s
 import {Page} from "../../../../../shared/models/page";
 import { LineActivityList } from 'src/app/shared/models/line-activity';
 import { LineActivityService } from 'src/app/shared/services/line-activity.service';
+import {LoggingService} from "../../../../../services/logging.service";
 
 @Component({
     selector: 'app-activity-logs-list',
@@ -44,7 +45,8 @@ export class ActivityLogsListComponent implements OnInit, AfterViewInit {
 
     constructor(
         private activityService: LineActivityService,
-        private notificationService: NotificationService
+        private notificationService: NotificationService,
+        private loggingService: LoggingService
     ) {
         // this.loadStreams();
     }
@@ -81,7 +83,7 @@ export class ActivityLogsListComponent implements OnInit, AfterViewInit {
         this.loading = true; // Start loading
         this.activityService.getLineActivities<LineActivityList>('', page, size).pipe(
             catchError(error => {
-                console.error('Failed to load streams', error);
+                this.loggingService.error('Failed to load streams', error);
                 this.loading = false;
                 this.notificationService.error('Failed to load streams. Please try again.');
                 return of({content: [], totalElements: 0, totalPages: 0, size: 0, number: 0} as Page<LineActivityList>);
@@ -97,11 +99,11 @@ export class ActivityLogsListComponent implements OnInit, AfterViewInit {
         const start = new Date(startAt);
         const end = new Date(endAt);
         const duration = end.getTime() - start.getTime();
-    
+
         // Calculate duration in hours and minutes
         const hours = Math.floor(duration / (1000 * 60 * 60));
         const minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
-    
+
         return `${hours}h ${minutes}m`;
       }
 }

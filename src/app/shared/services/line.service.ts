@@ -9,6 +9,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {QuickM3uComponent} from '../components/quick-m3u/quick-m3u.component';
 import {environment} from "../../../environments/environment";
 import {Patch} from '../models/patch';
+import {LoggingService} from "../../services/logging.service";
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +19,8 @@ export class LineService extends CrudService<ILine> {
     constructor(
         httpClient: HttpClient,
         jwtService: JwtService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        private loggingService: LoggingService
     ) {
         super(httpClient, jwtService);
         this.endpoint = "lines";
@@ -125,7 +127,7 @@ export class LineService extends CrudService<ILine> {
 
     public banLine(id: number): Observable<String> {
         const url = `${this.apiBaseUrl}/api/v1/${this.endpoint}/${id}/ban-line`
-        console.log("banLine url:", url)
+        this.loggingService.log("banLine url:", url)
         return this.httpClient.post<String>(url, null, {headers: this.headers});
     }
 

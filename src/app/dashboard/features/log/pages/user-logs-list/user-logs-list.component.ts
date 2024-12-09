@@ -7,6 +7,7 @@ import {Page} from "../../../../../shared/models/page";
 import { UserLogList } from 'src/app/shared/models/user-log';
 import { CategoryList } from 'src/app/shared/models/category';
 import { UserLogService } from 'src/app/shared/services/user-log.service';
+import {LoggingService} from "../../../../../services/logging.service";
 
 @Component({
     selector: 'app-user-logs-list',
@@ -41,7 +42,8 @@ export class UserLogsListComponent implements OnInit, AfterViewInit {
 
     categories: CategoryList[] = [];
 
-    constructor(private logService:UserLogService) {
+    constructor(private logService:UserLogService,
+                private loggingService: LoggingService) {
         // this.loadStreams();
     }
 
@@ -80,7 +82,7 @@ export class UserLogsListComponent implements OnInit, AfterViewInit {
         this.loading = true; // Start loading
         this.logService.getUserLogs<UserLogList>('', page, size).pipe(
             catchError(error => {
-                console.error('Failed to load streams', error);
+                this.loggingService.error('Failed to load streams', error);
                 this.loading = false;
                 // this.notificationService.error('Failed to load streams. Please try again.');
                 return of({content: [], totalElements: 0, totalPages: 0, size: 0, number: 0} as Page<UserLogList>);

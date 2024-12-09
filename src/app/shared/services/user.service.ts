@@ -5,6 +5,7 @@ import {JwtService} from './jwt.service';
 import {IUser, IUserThemeOptions, IUserThemeOptionsRequest} from '../models/user';
 import {map, Observable} from 'rxjs';
 import {Page} from '../models/page';
+import {LoggingService} from "../../services/logging.service";
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +13,8 @@ import {Page} from '../models/page';
 export class UserService extends CrudService<IUser> {
     constructor(
         httpClient: HttpClient,
-        jwtService: JwtService
+        jwtService: JwtService,
+        private loggingService: LoggingService
     ) {
         super(httpClient, jwtService);
         this.endpoint = "users";
@@ -42,7 +44,7 @@ export class UserService extends CrudService<IUser> {
     }
 
     public updateUser(user: IUser): Observable<HttpResponse<IUser>> {
-        console.log("updateUser: ", user)
+        this.loggingService.log("updateUser: ", user)
         return this.update(user.id, user);
     }
 

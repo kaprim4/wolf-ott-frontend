@@ -1,6 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ToastrService} from 'ngx-toastr';
+import {LoggingService} from "../../../../../services/logging.service";
 
 interface Format {
     id: number;
@@ -37,12 +38,13 @@ export class M3UDialogComponent {
             username: string;
             password: string
         },
-        private toastr: ToastrService
+        private toastr: ToastrService,
+        private loggingService: LoggingService
     ) {
         this.username = data.username;
-        // console.log("Username :", this.username);
+        // this.loggingService.log("Username :", this.username);
         this.password = data.password;
-        // console.log("Password :", this.password);
+        // this.loggingService.log("Password :", this.password);
     }
 
     formatUrlWithParams(dns: string, format: any) {
@@ -83,11 +85,11 @@ export class M3UDialogComponent {
     copyToClipboard(url: string) {
         this.isDownloading = true; // Démarrer le chargement
         navigator.clipboard.writeText(url).then(() => {
-            console.log('Copied to clipboard: ', url);
+            this.loggingService.log('Copied to clipboard: ', url);
             this.toastr.success('Copied to clipboard.', 'Succès');
             this.isDownloading = false; // Fin du chargement
         }).catch(err => {
-            console.error('Could not copy: ', err);
+            this.loggingService.error('Could not copy: ', err);
             this.toastr.error('Could not copy.', 'Erreur');
             this.isDownloading = false; // Fin du chargement
         });
@@ -122,7 +124,7 @@ export class M3UDialogComponent {
             this.isDownloading = false; // Fin du chargement
             this.toastr.success('Download completed', 'Succès');
         }).catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
+            this.loggingService.error('There was a problem with the fetch operation:', error);
             this.isDownloading = false; // Fin du chargement même en cas d'erreur
             this.toastr.error('Download failed', 'Erreur');
         });

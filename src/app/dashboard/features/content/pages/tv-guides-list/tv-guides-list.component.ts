@@ -6,6 +6,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {TvGuideService} from "../../../../../shared/services/tv-guide.service";
 import {Page} from "../../../../../shared/models/page";
 import {TvGuideList} from "../../../../../shared/models/tv-guide";
+import {LoggingService} from "../../../../../services/logging.service";
 
 @Component({
   selector: 'app-tv-guides-list',
@@ -37,7 +38,8 @@ export class TvGuidesListComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    constructor(private tvGuideService: TvGuideService) {
+    constructor(private tvGuideService: TvGuideService,
+                private loggingService: LoggingService) {
         // this.loadTvGuides();
     }
 
@@ -72,7 +74,7 @@ export class TvGuidesListComponent implements OnInit, AfterViewInit {
         this.loading = true; // Start loading
         this.tvGuideService.getTvGuides<TvGuideList>('', page, size).pipe(
             catchError(error => {
-                console.error('Failed to load tvGuides', error);
+                this.loggingService.error('Failed to load tvGuides', error);
                 this.loading = false;
                 return of({ content: [], totalElements: 0, totalPages: 0, size: 0, number: 0 } as Page<TvGuideList>);
             })

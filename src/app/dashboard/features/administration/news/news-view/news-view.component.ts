@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {ArticleService} from "../../../../../shared/services/article.service";
 import {Article, ArticleCard} from "../../../../../shared/models/article";
+import {LoggingService} from "../../../../../services/logging.service";
 
 @Component({
     selector: 'app-news-view',
@@ -25,6 +26,7 @@ export class NewsViewComponent implements OnInit {
         public router: Router,
         public articleService: ArticleService,
         private activatedRouter: ActivatedRoute,
+        private loggingService: LoggingService
     ) {
         this.id = this.activatedRouter.snapshot.paramMap.get('id') as unknown as number;
     }
@@ -45,6 +47,6 @@ export class NewsViewComponent implements OnInit {
             this.imagePreview = this.article.thumbnail;
             this.loading = false;
         });
-        console.log(this.article);
+        this.loggingService.log(this.article);
     }
 }

@@ -13,6 +13,7 @@ import {RouterLink} from "@angular/router";
 import {NotificationService} from "../../../shared/services/notification.service";
 import { DashboardService } from 'src/app/shared/services/dashboard.service';
 import {HttpErrorResponse} from "@angular/common/http";
+import {LoggingService} from "../../../services/logging.service";
 
 interface stats {
     id: number;
@@ -45,7 +46,8 @@ export class AppCongratulateCardComponent implements OnInit {
         private userService: UserService,
         private tokenService: TokenService,
         protected notificationService: NotificationService,
-        private dashboardService: DashboardService
+        private dashboardService: DashboardService,
+        private loggingService: LoggingService
     ) {
     }
     currentIndex = 0;
@@ -64,7 +66,7 @@ export class AppCongratulateCardComponent implements OnInit {
         const rStart = Date.now();
         this.dashboardService.getGlobalStates().subscribe({
             next:(state) => {
-                console.log("Global State:", state);
+                this.loggingService.log("Global State:", state);
                 this.openConnections = state.onlineLines;
                 this.onlineUsers = state.onlineUsers;
                 this.activeAccounts = state.activeLines;
@@ -76,16 +78,16 @@ export class AppCongratulateCardComponent implements OnInit {
             },
             error: (err: HttpErrorResponse) => {
                 if (err.status === 403 || err.status === 404) {
-                    console.error(`${err.status} status code caught`);
+                    this.loggingService.error(`${err.status} status code caught`);
                     //setTimeout(() => this.getStats(), 1000);
                     this.notificationService.error('Error while Retrieving Stats');
-                    console.error("'Error while Retrieving Stats: '", err.message);
+                    this.loggingService.error("'Error while Retrieving Stats: '", err.message);
                 }
             },
                 complete: () => {
                     this.isStatLoading = false;
                     //this.notificationService.success('Retrieving Stats successfully');
-                    console.info("'Retrieving Stats successfully'");
+                    this.loggingService.info("'Retrieving Stats successfully'");
                 }
         });
     }

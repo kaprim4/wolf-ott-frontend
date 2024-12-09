@@ -11,13 +11,15 @@ import {
 import {Observable} from "rxjs";
 import {ITokenUser} from "../shared/models/user";
 import {TokenService} from "../shared/services/token.service";
+import {LoggingService} from "../services/logging.service";
 
 @Injectable({providedIn: 'root'})
 export class AuthGuard implements CanActivate {
 
     constructor(
         private router: Router,
-        private tokenService: TokenService
+        private tokenService: TokenService,
+        private loggingService: LoggingService
     ) {
     }
 
@@ -41,17 +43,17 @@ export class AuthGuard implements CanActivate {
         state: RouterStateSnapshot
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         if (this.tokenService.isLogged()) {
-            console.log("isLogged:", this.tokenService.isLogged());
+            this.loggingService.log("isLogged:", this.tokenService.isLogged());
             this.token = this.tokenService.getPayload();
-            console.log("token:", this.token);
-            console.log("tokenExpired:", this.tokenService.tokenExpired());
+            this.loggingService.log("token:", this.token);
+            this.loggingService.log("tokenExpired:", this.tokenService.tokenExpired());
             if (this.tokenService.tokenExpired()) {
-                console.log("expired");
+                this.loggingService.log("expired");
                 this.tokenService.clearToken();
                 this.router.navigate(['/auth/login']);
                 return false; // Rediriger et empêcher l'activation
             } else {
-                console.log("valide");
+                this.loggingService.log("valide");
                 return true;
             }
         } else {

@@ -9,6 +9,7 @@ import {NotificationService} from "../../../../../shared/services/notification.s
 import {Rank} from "../../../../../shared/models/rank";
 import {RankingService} from "../../../../../shared/services/ranking.service";
 import {LineService} from "../../../../../shared/services/line.service";
+import {LoggingService} from "../../../../../services/logging.service";
 
 @Component({
     selector: 'app-user-profile',
@@ -53,6 +54,7 @@ export class UserProfileComponent implements OnInit {
         private notificationService: NotificationService,
         private lineService: LineService,
         private rankingService: RankingService,
+        private loggingService: LoggingService
     ) {
         this.initializeForm(this.user)
     }
@@ -63,11 +65,11 @@ export class UserProfileComponent implements OnInit {
         this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe({
             next: (user) => {
                 this.user = user;
-                console.log('userService.getUser :', this.user);
+                this.loggingService.log('userService.getUser :', this.user);
                 this.registrationDate = user.dateRegistered
                 this.initializeForm(user);
                 this.userLoading = false;
-                console.log(this.user)
+                this.loggingService.log(this.user)
             },
             error: err => {
                 this.notificationService.error('Error while get User');
@@ -82,14 +84,14 @@ export class UserProfileComponent implements OnInit {
                         },
                         error: (err) => {
                             this.notificationService.error('Error while get All Lines With Member Id');
-                            console.error("'Error while get All Lines With Member Id'", err);
+                            this.loggingService.error("'Error while get All Lines With Member Id'", err);
                         },
                         complete: () => {
                             this.rankingService.getAllRanks<Rank>().subscribe(ranks => {
                                 ranks.forEach(r => {
-                                    //console.log(r)
+                                    //this.loggingService.log(r)
                                     if (r.minPoints <= this.credits && r.maxPoints >= this.credits) {
-                                        console.log("condiction Rank:", r)
+                                        this.loggingService.log("condiction Rank:", r)
                                         this.rank = r;
                                         this.badgePreview = this.rank.badgeImage;
                                     }
@@ -130,7 +132,7 @@ export class UserProfileComponent implements OnInit {
     }
 
     saveDetail(): void {
-        console.log("saveDetail clicked")
+        this.loggingService.log("saveDetail clicked")
         /*if(this.fb.control("current_password").value !== ""){
 
         }*/

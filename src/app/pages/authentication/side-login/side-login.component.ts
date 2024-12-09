@@ -13,6 +13,7 @@ import {UserService} from "../../../shared/services/user.service";
 import {AppSettings} from "../../../config";
 import {IUserThemeOptions, IUserThemeOptionsRequest} from "../../../shared/models/user";
 import {NotificationService} from "../../../shared/services/notification.service";
+import {LoggingService} from "../../../services/logging.service";
 
 @Component({
     selector: 'app-side-login',
@@ -47,17 +48,17 @@ export class AppSideLoginComponent implements OnInit, AfterViewInit {
     captchaHandler = (captchaObj: any) => {
         (window as any).captchaObj = captchaObj;
         captchaObj.appendTo("#captcha")
-            .onReady(function () {
-                console.log("ready");
+            .onReady(function (loggingService: LoggingService) {
+                loggingService.log("ready");
             })
-            .onNextReady(function () {
-                console.log("nextReady");
+            .onNextReady(function (loggingService: LoggingService) {
+                loggingService.log("nextReady");
             })
-            .onBoxShow(function () {
-                console.log("boxShow");
+            .onBoxShow(function (loggingService: LoggingService) {
+                loggingService.log("boxShow");
             })
-            .onError(function (e: any) {
-                console.log(e);
+            .onError(function (loggingService: LoggingService, e: any) {
+                loggingService.log(e);
             })
             .onSuccess(() => {
                 if (this.captchaConfig.config.product === "bind") {
@@ -84,6 +85,7 @@ export class AppSideLoginComponent implements OnInit, AfterViewInit {
         private httpClient: HttpClient,
         private userService: UserService,
         protected notificationService: NotificationService,
+        private loggingService: LoggingService
     ) {
     }
 
@@ -107,7 +109,7 @@ export class AppSideLoginComponent implements OnInit, AfterViewInit {
         videoElement.playsInline = true; // Important pour éviter le plein écran sur iOS
 
         videoElement.play().catch((err) => {
-            console.error('Erreur de lecture vidéo sur Safari:', err);
+            this.loggingService.error('Erreur de lecture vidéo sur Safari:', err);
         });
     }
 
@@ -143,27 +145,27 @@ export class AppSideLoginComponent implements OnInit, AfterViewInit {
         const params = Object.assign(result, {
             captcha_id: this.captchaConfig.config.captchaId
         });
-        console.log("captchaObj params", params);
+        this.loggingService.log("captchaObj params", params);
         this.httpClient.get(`${this.apiBaseUrl}/api/v1/auth/validate`, {params}).subscribe((result: any) => {
-            console.log("result: ", result);
+            this.loggingService.log("result: ", result);
             if (result.result) {
                 this.authService.login(this.formValues['username'].value, this.formValues['password'].value)?.subscribe(
                     (data: HttpResponse<any>) => {
                         if (data.status === 200 || data.status === 202) {
-                            console.log(`Got a successfull status code: ${data.status}`);
+                            this.loggingService.log(`Got a successfull status code: ${data.status}`);
                         }
                         if (data.body) {
-                            console.log("login token:", data.body.access_token)
+                            this.loggingService.log("login token:", data.body.access_token)
                             this.tokenService.saveToken(data.body.access_token)
                             this.getUserThemeConfig()
                         }
-                        console.log('This contains body: ', data.body);
+                        this.loggingService.log('This contains body: ', data.body);
                     },
                     (err: HttpErrorResponse) => {
                         if (err.status === 403 || err.status === 404) {
-                            console.error(`${err.status} status code caught`);
+                            this.loggingService.error(`${err.status} status code caught`);
                             this.error = err.message;
-                            console.log(err.message)
+                            this.loggingService.log(err.message)
                         }
                     }, ((): void => {
                         this.loading = false;
@@ -181,14 +183,14 @@ export class AppSideLoginComponent implements OnInit, AfterViewInit {
             userId: parseInt(this.tokenService.getPayload().sid)
         };
 
-        console.log("options:", this.options);
-        console.log("userThemeOptionsRequest:", this.userThemeOptionsRequest);
+        this.loggingService.log("options:", this.options);
+        this.loggingService.log("userThemeOptionsRequest:", this.userThemeOptionsRequest);
 
         this.userService.createUserThemeOptions(this.userThemeOptionsRequest).subscribe({
             next: (value) => {
                 if (value.status === 200 && value.body) {
                     this.userThemeOptions = value.body;
-                    console.log(this.userThemeOptions);
+                    this.loggingService.log(this.userThemeOptions);
                     this.options = {
                         activeTheme: value.body.activeTheme,
                         boxed: false,
@@ -201,13 +203,13 @@ export class AppSideLoginComponent implements OnInit, AfterViewInit {
                         sidenavOpened: false,
                         theme: value.body.theme
                     }
-                    console.info("this.options after create: {}", this.options);
+                    this.loggingService.info("this.options after create: {}", this.options);
                 }
             },
             error: (err) => {
                 // Handle error (show notification or alert)
                 this.notificationService.error('Error while creating user theme options');
-                console.error("'Error while creating user theme options'", err);
+                this.loggingService.error("'Error while creating user theme options'", err);
             },
             complete: () => {
                 this.optionsChange.emit(this.options);

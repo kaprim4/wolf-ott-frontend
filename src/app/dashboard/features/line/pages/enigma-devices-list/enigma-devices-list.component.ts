@@ -7,6 +7,7 @@ import { EnigmaList } from 'src/app/shared/models/enigma';
 import { Page } from 'src/app/shared/models/page';
 import { EnigmaService } from 'src/app/shared/services/enigma.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import {LoggingService} from "../../../../../services/logging.service";
 
 @Component({
   selector: 'app-enigma-devices-list',
@@ -41,7 +42,8 @@ export class EnigmaDevicesListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private enigmaService: EnigmaService, private notificationService: NotificationService) {
+  constructor(private enigmaService: EnigmaService,
+              private loggingService: LoggingService, private notificationService: NotificationService) {
     // this.loadEnigmas();
   }
   ngOnInit(): void {
@@ -83,7 +85,7 @@ ngAfterViewInit(): void {
 
     this.enigmaService.getEnigmas<EnigmaList>('', page, size).pipe(
       catchError(error => {
-        console.error('Failed to load lines', error);
+        this.loggingService.error('Failed to load lines', error);
         this.loading = false;
         this.notificationService.error('Failed to load enigma devices. Please try again.');
         return of({ content: [], totalPages: 0, totalElements: 0, size: 0, number:0 } as Page<EnigmaList>);

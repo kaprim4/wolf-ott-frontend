@@ -6,6 +6,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {Rank} from 'src/app/shared/models/rank';
 import {RankingService} from 'src/app/shared/services/ranking.service';
 import {NotificationService} from 'src/app/shared/services/notification.service';
+import {LoggingService} from "../../../../../services/logging.service";
 
 @Component({
     selector: 'app-rank-view',
@@ -32,6 +33,7 @@ export class RankViewComponent implements OnInit {
         public dialog: MatDialog,
         protected notificationService: NotificationService,
         private activatedRouter: ActivatedRoute,
+        private loggingService: LoggingService
     ) {
         this.id = this.activatedRouter.snapshot.paramMap.get('id') as unknown as number;
         this.editForm = this.fb.group({
@@ -82,7 +84,7 @@ export class RankViewComponent implements OnInit {
             error: (err) => {
                 // Handle error (show notification or alert)
                 this.notificationService.error('Error while saving rank');
-                console.error("'Error while saving rank'", err);
+                this.loggingService.error("'Error while saving rank'", err);
 
             }
         });

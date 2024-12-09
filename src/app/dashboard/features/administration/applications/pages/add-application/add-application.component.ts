@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Apps } from 'src/app/shared/models/apps';
 import { AppsService } from 'src/app/shared/services/apps.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import {LoggingService} from "../../../../../../services/logging.service";
 
 @Component({
   selector: 'app-add-application',
@@ -35,7 +36,8 @@ export class AddApplicationComponent implements OnInit, OnDestroy {
       private appsService: AppsService,
       private router: Router,
       public dialog: MatDialog,
-      protected notificationService: NotificationService
+      protected notificationService: NotificationService,
+      private loggingService: LoggingService
   ) {
       this.addForm = this.fb.group({
           title: new FormControl("", [Validators.required]),
@@ -70,7 +72,7 @@ export class AddApplicationComponent implements OnInit, OnDestroy {
           error: (err) => {
               // Handle error (show notification or alert)
               this.notificationService.error('Error while saving application');
-              console.error("'Error while saving application'", err);
+              this.loggingService.error("'Error while saving application'", err);
           },
           complete: () => {
               this.loading = false;

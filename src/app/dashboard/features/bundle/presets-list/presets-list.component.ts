@@ -8,6 +8,7 @@ import {PresetDetail, PresetList} from 'src/app/shared/models/preset';
 import {NotificationService} from 'src/app/shared/services/notification.service';
 import {PresetService} from 'src/app/shared/services/preset.service';
 import { TokenService } from 'src/app/shared/services/token.service';
+import {LoggingService} from "../../../../services/logging.service";
 
 @Component({
     selector: 'app-presets-list',
@@ -42,7 +43,8 @@ export class PresetsListComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    constructor(private presetService: PresetService, private notificationService: NotificationService, private tokenService: TokenService) {
+    constructor(private presetService: PresetService, private notificationService: NotificationService, private tokenService: TokenService,
+                private loggingService: LoggingService) {
         this.loadPresets();
         this.principal = this.tokenService.getPayload();
     }
@@ -86,14 +88,14 @@ export class PresetsListComponent implements OnInit, AfterViewInit {
 
         this.presetService.getPresets<PresetDetail>('', page, size).pipe(
             catchError(error => {
-                console.error('Failed to load presets', error);
+                this.loggingService.error('Failed to load presets', error);
                 this.loading = false;
                 this.notificationService.error('Failed to load presets. Please try again.');
                 return of({content: [], totalPages: 0, totalElements: 0, size: 0, number: 0} as Page<PresetDetail>);
             })
         ).subscribe(pageResponse => {
             this.dataSource.data = pageResponse.content;
-            console.log(pageResponse.content);
+            this.loggingService.log(pageResponse.content);
             this.totalElements = pageResponse.totalElements;
             this.loading = false;
         });
