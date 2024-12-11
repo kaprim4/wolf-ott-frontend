@@ -125,6 +125,24 @@ export class QuickSmartersProComponent implements OnInit {
         this.isLoading = true;
         const bouquets: number[] = this.selectedPackage.bouquets;
         const isTrial: boolean = this.selectedPackage.isTrial;
+
+        let expDate = 0;
+        switch (this.selectedPackage.officialDurationIn) {
+            case "days":
+                expDate = isTrial ? this.selectedPackage.trialDuration * 24 : this.selectedPackage.officialDuration * 24;
+                break;
+            case "hours":
+                expDate = isTrial ? this.selectedPackage.trialDuration : this.selectedPackage.officialDuration;
+                break;
+            default:
+                expDate = 1; // Par défaut, une heure
+                break;
+        }
+        const now = new Date(); // Date actuelle
+        const expDateInMilliseconds = now.getTime() + expDate * 60 * 60 * 1000; // Ajouter la durée en millisecondes
+        const expDateInEpoch = Math.floor(expDateInMilliseconds / 1000); // Conversion en Unix epoch time (secondes)
+        this.loggingService.log("ExpDate en Unix epoch time: ", expDateInEpoch);
+
         const line: CreateLine = {
             id: 0,
             username: this.username,
@@ -134,9 +152,25 @@ export class QuickSmartersProComponent implements OnInit {
             isTrial: isTrial,
             bouquets: bouquets,
             memberId: this.user.id,
-            createdAt: Date.now()
+            createdAt: Date.now(),
+
+            adminEnabled:true,
+            allowedIps: [],
+            allowedOutputs: [1,2,3],
+            allowedUa: [],
+            bypassUa: false,
+            enabled: true,
+            expDate: expDateInEpoch,
+            forceServerId: 0,
+            isE2: false,
+            isIsplock: false,
+            isMag: false,
+            isRestreamer: false,
+            isStalker: false,
+            maxConnections: 1,
         };
         this.loggingService.log("line:", line)
+
         this.lineService.addLine(line).pipe(
             tap(() => {
                 this.notificationService.success('Line Created Successfully');

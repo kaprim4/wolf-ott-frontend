@@ -12,9 +12,9 @@ import {ToastrService} from "ngx-toastr";
 import {UserDetail} from "../../models/user";
 import {UserService} from "../../services/user.service";
 import {TokenService} from "../../services/token.service";
-import { PresetList } from '../../models/preset';
-import { PresetService } from '../../services/preset.service';
-import { LineFactory } from '../../factories/line.factory';
+import {PresetList} from '../../models/preset';
+import {PresetService} from '../../services/preset.service';
+import {LineFactory} from '../../factories/line.factory';
 import {LoggingService} from "../../../services/logging.service";
 
 @Component({
@@ -37,14 +37,14 @@ export class QuickM3uComponent implements OnInit {
     loggedInUser: any;
     user: any;
 
-    panelOpened:boolean = false;
+    panelOpened: boolean = false;
 
     line: LineDetail = LineFactory.initLineDetail();
 
     presets: PresetList[];
     selectedBundleOption: string = 'packages';
-    selectedPresetId:number;
-    selectedPackageId:number;
+    selectedPresetId: number;
+    selectedPackageId: number;
 
     addForm: UntypedFormGroup;
     packageForm: UntypedFormGroup;
@@ -125,6 +125,23 @@ export class QuickM3uComponent implements OnInit {
         const password: string = this.packageForm.controls['password'].value;
         const useVPN: boolean = this.packageForm.controls['use_vpn'].value;
 
+        let expDate = 0;
+        switch (this.selectedPackage.officialDurationIn) {
+            case "days":
+                expDate = this.selectedPackage.isTrial ? this.selectedPackage.trialDuration * 24 : this.selectedPackage.officialDuration * 24;
+                break;
+            case "hours":
+                expDate = this.selectedPackage.isTrial ? this.selectedPackage.trialDuration : this.selectedPackage.officialDuration;
+                break;
+            default:
+                expDate = 1; // Par défaut, une heure
+                break;
+        }
+        const now = new Date(); // Date actuelle
+        const expDateInMilliseconds = now.getTime() + expDate * 60 * 60 * 1000; // Ajouter la durée en millisecondes
+        const expDateInEpoch = Math.floor(expDateInMilliseconds / 1000); // Conversion en Unix epoch time (secondes)
+        this.loggingService.log("ExpDate en Unix epoch time: ", expDateInEpoch);
+
         const line: CreateLine = {
             id: 0,
             username: username,
@@ -134,9 +151,24 @@ export class QuickM3uComponent implements OnInit {
             isTrial: isTrial,
             bouquets: bouquets,
             memberId: this.user.id,
-            createdAt: Date.now()
+            createdAt: Date.now(),
+            adminEnabled: true,
+            allowedIps: [],
+            allowedOutputs: [1, 2, 3],
+            allowedUa: [],
+            bypassUa: false,
+            enabled: true,
+            expDate: expDateInEpoch,
+            forceServerId: 0,
+            isE2: false,
+            isIsplock: false,
+            isMag: false,
+            isRestreamer: false,
+            isStalker: false,
+            maxConnections: 1,
         };
         this.loggingService.log("line:", line)
+
         this.lineService.addLine<LineDetail>(line).pipe(
             tap(() => {
                 // This will only run if the line creation is successful
@@ -250,7 +282,7 @@ export class QuickM3uComponent implements OnInit {
         return selectedPackagetObj ? selectedPackagetObj.packageName : 'Select Package';
     }
 
-    get selectedPreset():PresetList|undefined {
+    get selectedPreset(): PresetList | undefined {
         return this.presets.find(p => p.id == this.selectedPresetId);
     }
 
@@ -259,6 +291,7 @@ export class QuickM3uComponent implements OnInit {
         this.selectedPresetId = id;
 
     }
+
     getSelectedPresetName(): string {
         const selectedPresetObj = this.presets?.find(o => o.id === this.selectedPresetId);
         return selectedPresetObj ? selectedPresetObj.presetName : 'Select Package';
@@ -286,47 +319,46 @@ export class QuickM3uComponent implements OnInit {
     onSelectPackage($event: any) {
         // this.loggingService.log("Package Event", $event);
         const id = $event.value; // this.addForm.controls["package"].value;
-        this.loggingService.log("Selection:",$event.value);
+        this.loggingService.log("Selection:", $event.value);
 
         this.selectedPackageId = id;
-        if(id != this.addForm.controls["package"].value)
+        if (id != this.addForm.controls["package"].value)
             this.addForm.controls["package"].setValue(id);
-        if(id != this.packageForm.controls["package"].value)
+        if (id != this.packageForm.controls["package"].value)
             this.packageForm.controls["package"].setValue(id);
-        if(id != this.bundleForm.controls["package"].value)
+        if (id != this.bundleForm.controls["package"].value)
             this.bundleForm.controls["package"].setValue(id);
         const pkg = this.packages.find(o => o.id === id);
         this.loggingService.log("Selected Package:", pkg);
 
-        if(pkg){
+        if (pkg) {
             this.line.packageId = pkg.id;
             this.selectedPackage = pkg;
-            if(pkg.isOfficial){
+            if (pkg.isOfficial) {
                 this.addForm.controls["packageCost"].setValue(pkg.officialCredits);
                 this.addForm.controls["duration"].setValue(pkg.officialDuration);
                 const expiration = PackageService.getPackageExpirationDate(pkg.officialDuration, pkg.officialDurationIn);
                 // this.loggingService.log("Official Expiration :", expiration);
                 this.addForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
-            }else{
+            } else {
                 this.addForm.controls["packageCost"].setValue(pkg.trialCredits);
                 this.addForm.controls["duration"].setValue(pkg.trialDuration);
                 const expiration = PackageService.getPackageExpirationDate(pkg.trialDuration, pkg.trialDurationIn);
                 // this.loggingService.log("Trial Expiration :", expiration);
                 this.addForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
             }
-            if(this.selectedBundleOption === 'packages')
+            if (this.selectedBundleOption === 'packages')
                 this.line.bouquets = pkg.bouquets;
             this.line.isIsplock = pkg.isIsplock;
             this.line.isE2 = pkg.isE2;
             this.line.forcedCountry = pkg.forcedCountry;
-        }
-        else
+        } else
             this.loggingService.log(`Ops!! Package[${id}] not found`);
 
         // this.loggingService.log("Select Package", this.selectedPackage);
     }
 
-    formatDateTime(date:Date) {
+    formatDateTime(date: Date) {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');

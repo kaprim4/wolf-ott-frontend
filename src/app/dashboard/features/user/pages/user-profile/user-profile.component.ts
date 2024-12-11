@@ -10,6 +10,7 @@ import {Rank} from "../../../../../shared/models/rank";
 import {RankingService} from "../../../../../shared/services/ranking.service";
 import {LineService} from "../../../../../shared/services/line.service";
 import {LoggingService} from "../../../../../services/logging.service";
+import {AuthenticationService} from "../../../../../shared/services/auth.service";
 
 @Component({
     selector: 'app-user-profile',
@@ -29,6 +30,7 @@ export class UserProfileComponent implements OnInit {
         thumbnail: "",
         timezone: "",
         username: "",
+        password: "",
         apiKey: ""
     };
     userLoading: boolean;
@@ -54,6 +56,7 @@ export class UserProfileComponent implements OnInit {
         private notificationService: NotificationService,
         private lineService: LineService,
         private rankingService: RankingService,
+        private authenticationService:AuthenticationService,
         private loggingService: LoggingService
     ) {
         this.initializeForm(this.user)
@@ -122,9 +125,9 @@ export class UserProfileComponent implements OnInit {
             username: [user.username || '', Validators.required],
             email: [user.email || '', Validators.required], // Fix typo: eamil -> email
             timezone: [user.timezone || ''],
-            //current_password: [''],
-            //new_password: [''],
-            //confirm_password: [''],
+            current_password: [''],
+            new_password: [''],
+            confirm_password: [''],
             resellerDns: [user.resellerDns || ''],
             apiKey: [user.apiKey || ''],
             rows: this.fb.array([]) // Initialize rows here
@@ -133,9 +136,23 @@ export class UserProfileComponent implements OnInit {
 
     saveDetail(): void {
         this.loggingService.log("saveDetail clicked")
-        /*if(this.fb.control("current_password").value !== ""){
-
-        }*/
+        if(this.fb.control("current_password").value !== ""){
+            let currentPassword = this.fb.control("current_password").value;
+            this.authenticationService.validatePassword(this.user.username, currentPassword).subscribe({
+                next: (value) => {
+                    console.log("validate Password: ", value);
+                    if(value.status === 200 && value.body) {
+                        console.log(value)
+                    }
+                },
+                error: err => {
+                    this.notificationService.error("An error has occurred while checking password", err);
+                },
+                complete: () => {
+                    this.notificationService.success("Profile updated successfully.");
+                }
+            });
+        }
         if (this.userForm.valid) {
             const formValues = this.userForm.value;
             Object.assign(this.user, {
@@ -143,7 +160,8 @@ export class UserProfileComponent implements OnInit {
                 resellerDns: formValues.resellerDns,
                 apiKey: formValues.apiKey,
             });
-            this.userService.updateUser(this.user).subscribe({
+            this.loggingService.info("updateUser:", this.user);
+            /*this.userService.updateUser(this.user).subscribe({
                 next: value => {
                     this.router.navigate(['/apps/users/profile']);
                 },
@@ -153,7 +171,7 @@ export class UserProfileComponent implements OnInit {
                 complete: () => {
                     this.notificationService.success("Profile updated successfully.");
                 }
-            });
+            });*/
         } else {
             this.loggingService.error('Form is invalid', this.userForm.errors);
             this.notificationService.error('Form is invalid.');

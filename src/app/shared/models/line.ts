@@ -67,7 +67,22 @@ export interface CreateLine extends ILine {
     useVPN?:boolean;
     memberId: number;
     packageId: number;
-    isTrial: boolean;
     bouquets: number[];
+
+    expDate: number;
+    adminEnabled: boolean;
+    enabled: boolean;
+    allowedOutputs: number[];
+    maxConnections: number;
+    isRestreamer: boolean;
+    isTrial: boolean;
+    isMag: boolean;
+    isE2: boolean;
+    isStalker: boolean;
+    isIsplock: boolean;
+    allowedIps: string[]; // Consider parsing this if needed
+    allowedUa: string[];
     createdAt: number;
+    forceServerId: number;
+    bypassUa: boolean;
 }

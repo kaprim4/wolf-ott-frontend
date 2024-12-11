@@ -71,7 +71,8 @@ export class M3UDialogComponent {
 
 
     get downloadUrl(): string {
-        if (!this.selectedFormat) return '';
+        if (!this.selectedFormat)
+            return '';
         switch (this.selectedFormat?.type) {
             case 'm3u_plus':
                 return this.formatUrlWithParams(this.defaultDns, this.selectedFormat);
@@ -132,7 +133,9 @@ export class M3UDialogComponent {
 
     onFormatChange(event: any) {
         // Update the selected format
-        this.selectedFormat = this.formats.flatMap(group => group.options).find(option => option.value === event.value);
+        this.selectedFormat = this.formats
+            .flatMap(group => group.options)
+            .find(option => option.value === event.value);
     }
 
     trackByFn(index: number, item: any): number {
@@ -153,7 +156,7 @@ export class M3UDialogComponent {
                 {
                     label: "M3U Standard - MPEGTS",
                     type: "m3u",
-                    output: null,
+                    output: "m3u",
                     description: "M3U Standard - MPEGTS format",
                     value: "m3u"
                 },
@@ -179,7 +182,7 @@ export class M3UDialogComponent {
                 {
                     label: "M3U Plus - MPEGTS",
                     type: "m3u_plus",
-                    output: null,
+                    output: "mpegts",
                     description: "M3U Plus - MPEGTS format",
                     value: "m3u_plus"
                 },
@@ -205,7 +208,7 @@ export class M3UDialogComponent {
                 {
                     label: "Simple List - MPEGTS",
                     type: "simple",
-                    output: null,
+                    output: "simple",
                     description: "Simple List - MPEGTS format",
                     value: "simple"
                 },
@@ -231,7 +234,7 @@ export class M3UDialogComponent {
                 {
                     label: "Ariva - MPEGTS",
                     type: "ariva",
-                    output: null,
+                    output: "ariva",
                     description: "Ariva - MPEGTS format",
                     value: "ariva"
                 },
@@ -257,7 +260,7 @@ export class M3UDialogComponent {
                 {
                     label: "DreamBox OE 2.0 - MPEGTS",
                     type: "dreambox",
-                    output: null,
+                    output: "m3u",
                     description: "DreamBox OE 2.0 - MPEGTS format",
                     value: "dreambox"
                 },
@@ -283,7 +286,7 @@ export class M3UDialogComponent {
                 {
                     label: "Enigma 2 OE 1.6 - MPEGTS",
                     type: "enigma16",
-                    output: null,
+                    output: "m3u",
                     description: "Enigma 2 OE 1.6 - MPEGTS format",
                     value: "enigma16"
                 },
@@ -309,7 +312,7 @@ export class M3UDialogComponent {
                 {
                     label: "Enigma 2 OE 1.6 Auto Script - MPEGTS",
                     type: "enigma216_script",
-                    output: null,
+                    output: "m3u",
                     description: "Enigma 2 OE 1.6 Auto Script - MPEGTS format",
                     value: "enigma216_script"
                 },
@@ -335,7 +338,7 @@ export class M3UDialogComponent {
                 {
                     label: "Enigma 2 OE 2.0 Auto Script - MPEGTS",
                     type: "enigma22_script",
-                    output: null,
+                    output: "m3u",
                     description: "Enigma 2 OE 2.0 Auto Script - MPEGTS format",
                     value: "enigma22_script"
                 },
@@ -361,7 +364,7 @@ export class M3UDialogComponent {
                 {
                     label: "Fortec999/Prifix9400/Starport - MPEGTS",
                     type: "fps",
-                    output: null,
+                    output: "m3u",
                     description: "Fortec999/Prifix9400/Starport - MPEGTS format",
                     value: "fps"
                 },

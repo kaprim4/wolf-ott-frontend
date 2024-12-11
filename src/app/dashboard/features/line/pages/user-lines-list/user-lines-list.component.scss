@@ -1,4 +1,4 @@
-.mat-table th.mat-header-cell, 
+.mat-table th.mat-header-cell,
 .mat-table td.mat-cell {
   padding: 2px 4px; /* Adjust these values as needed */
 }
@@ -49,4 +49,9 @@
   position: absolute;
   left: 0;
   bottom: -3px;
+}
+.pulse {
+    position: absolute;
+    top: 3px;
+    right: -8px;
 }

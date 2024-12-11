@@ -22,6 +22,14 @@ export class AuthenticationService {
         this.header1 = this.header1.append('Content-Type', 'application/json');
     }
 
+    validatePassword(username: string, password: string): Observable<HttpResponse<boolean>> {
+        return this.http.post<boolean>(
+            `${this.apiServerUrl}/login`,
+            {username, password},
+            {headers: this.header1, observe: 'response'},
+        );
+    }
+
     login(username: string, password: string): Observable<HttpResponse<IToken>> {
         return this.http.post<IToken>(
             `${this.apiServerUrl}/login`,
