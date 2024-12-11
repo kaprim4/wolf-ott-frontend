@@ -24,6 +24,7 @@ type Formats = {
 export class M3UDialogComponent {
     username: string = '';
     password: string = '';
+    vpnDns: string = '';
     server: string = "http://r2u.tech:80/";
     defaultDns: string = 'r2u.tech';
     isDownloading: boolean = false;
@@ -35,16 +36,24 @@ export class M3UDialogComponent {
     constructor(
         public dialogRef: MatDialogRef<M3UDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: {
-            username: string;
-            password: string
+            username: string,
+            password: string,
+            vpnDns: string
         },
         private toastr: ToastrService,
         private loggingService: LoggingService
     ) {
         this.username = data.username;
-        // this.loggingService.log("Username :", this.username);
+        this.loggingService.log("Username :", this.username);
+
         this.password = data.password;
-        // this.loggingService.log("Password :", this.password);
+        this.loggingService.log("Password :", this.password);
+
+        this.vpnDns = data.vpnDns;
+        this.loggingService.log("vpnDns :", this.vpnDns);
+
+        this.server = this.vpnDns;
+        this.defaultDns = this.vpnDns;
     }
 
     formatUrlWithParams(dns: string, format: any) {

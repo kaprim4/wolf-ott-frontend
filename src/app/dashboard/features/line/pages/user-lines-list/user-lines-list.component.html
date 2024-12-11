@@ -164,7 +164,7 @@
                         <i-tabler name="eye" class="icon-18 d-flex align-items-center"></i-tabler>
                     </a>
                     <button title="open dialog" mat-icon-button color="primary"
-                            (click)="openDialog(element.username, element.password)" class="w-100">
+                            (click)="openDialog(element.username, element.password, element.vpnDns)" class="w-100">
                         <i-tabler name="download" class="icon-18 d-flex align-items-center"></i-tabler>
                     </button>
                     @if (principal.role === "Administrators") {

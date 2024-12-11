@@ -119,6 +119,7 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
     openDialog(
         username: string,
         password: string,
+        vpnDns: string,
         enterAnimationDuration: string = '0ms',
         exitAnimationDuration: string = '0ms'
     ): void {
@@ -126,7 +127,7 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
             width: '600px',
             enterAnimationDuration,
             exitAnimationDuration,
-            data: {username, password}
+            data: {username, password, vpnDns}
         });
         // dialogRef.componentInstance.username = username;
         // dialogRef.componentInstance.password = password;
