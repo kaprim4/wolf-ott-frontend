@@ -73,7 +73,7 @@ export class AppLatestReviewsComponent implements OnInit, AfterViewInit {
         const size = (this.paginator?.pageSize || this.pageSize);
 
         this.expiringLinesloading = true; // Start loading
-        this.logService.getUserLogs<UserLogList>('', page, size).pipe(
+        this.logService.getUserLogs<UserLogList>('id,desc', page, size).pipe(
             catchError(error => {
                 this.loggingService.error('Failed to load streams', error);
                 this.expiringLinesloading = false;

@@ -63,9 +63,9 @@
                                         </mat-card-subtitle>
                                         <div class="text-center m-t-24">
                                             @if (imagePreview != null) {
-                                                <img [src]="imagePreview" class="rounded-pill" width="200"/>
+                                                <img [src]="imagePreview" class="rounded-circle border-primary border" width="200"/>
                                             } @else {
-                                                <img src="/assets/images/profile/default.jpg" class="rounded-pill" width="200"/>
+                                                <img src="/assets/images/profile/default.jpg" class="rounded-circle border-primary border" width="200"/>
                                             }
                                             <div class="m-t-24">
                                                 <input mat-button color="primary" type="file" id="file"

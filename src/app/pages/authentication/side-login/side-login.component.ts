@@ -136,7 +136,8 @@ export class AppSideLoginComponent implements OnInit, AfterViewInit {
     }
 
     validate() {
-        var result = (window as any).captchaObj.getValidate();
+        const result = (window as any).captchaObj.getValidate();
+        console.log("validate:", result)
         if (!result) {
             alert("Please complete verification first!");
             this.loading = false;
@@ -147,7 +148,8 @@ export class AppSideLoginComponent implements OnInit, AfterViewInit {
         });
         this.loggingService.log("captchaObj params", params);
         this.httpClient.get(`${this.apiBaseUrl}/api/v1/auth/validate`, {params}).subscribe((result: any) => {
-            this.loggingService.log("result: ", result);
+            this.loggingService.log("captcha auth/validate result: ", result);
+
             if (result.result) {
                 this.authService.login(this.formValues['username'].value, this.formValues['password'].value)?.subscribe(
                     (data: HttpResponse<any>) => {

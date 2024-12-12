@@ -23,6 +23,8 @@ import {CustomizerComponent} from './shared/customizer/customizer.component';
 import {AuthenticationService} from "../../shared/services/auth.service";
 import {TokenService} from "../../shared/services/token.service";
 import {environment} from "../../../environments/environment";
+import {UserDetail} from "../../shared/models/user";
+import {UserService} from "../../shared/services/user.service";
 
 const MOBILE_VIEW = 'screen and (max-width: 768px)';
 const TABLET_VIEW = 'screen and (min-width: 769px) and (max-width: 1024px)';
@@ -104,6 +106,9 @@ export class FullComponent implements OnInit {
     no_profile_img = './assets/images/no_image.png';
     pageTitle: string = '';
     loggedInUser: any;
+    user: UserDetail = {
+        id: 0, username: ""
+    };
 
     // for mobile app sidebar
     apps: apps[] = [
@@ -210,6 +215,7 @@ export class FullComponent implements OnInit {
 
     constructor(
         private authService: AuthenticationService,
+        private userService: UserService,
         private tokenService: TokenService,
         private settings: CoreService,
         private mediaMatcher: MediaMatcher,
@@ -244,6 +250,9 @@ export class FullComponent implements OnInit {
 
     ngOnInit(): void {
         this.loggedInUser = this.tokenService.getPayload();
+        this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
+            this.user = user;
+        });
     }
 
     ngOnDestroy() {

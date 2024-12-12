@@ -1,104 +1,105 @@
 <mat-card class="cardWithShadow">
-  @if(loading){
-    <mat-progress-bar mode="query"></mat-progress-bar>
-  }
+    @if (loading) {
+        <mat-progress-bar mode="query"></mat-progress-bar>
+    }
     <mat-card-content>
-      <div class="row justify-content-between gap-16">
-        <div class="col-sm-4">
-          <mat-form-field appearance="outline" class="w-100 hide-hint">
-            <input
-              matInput
-              placeholder="Search Bouquet"
-              (keyup)="filter($any($event.target).value)"
-            />
-            <mat-icon matSuffix>
-              <i-tabler name="search" class="icon-20"></i-tabler>
-            </mat-icon>
-          </mat-form-field>
+        <div class="row justify-content-between gap-16">
+            <div class="col-sm-4">
+                <mat-form-field appearance="outline" class="w-100 hide-hint">
+                    <input
+                        matInput
+                        placeholder="Search Bouquet"
+                        (keyup)="filter($any($event.target).value)"
+                    />
+                    <mat-icon matSuffix>
+                        <i-tabler name="search" class="icon-20"></i-tabler>
+                    </mat-icon>
+                </mat-form-field>
+            </div>
+            <div class="col-sm-4 d-flex align-items-center justify-content-end">
+                @if (isAdmin) {
+                    <a
+                        mat-button
+                        [routerLink]="['/apps/bundles/bouquets/add']"
+                        mat-flat-button
+                        color="primary">Add Bouquet</a>
+                }
+            </div>
         </div>
-        <div class="col-sm-4 d-flex align-items-center justify-content-end">
-          @if (isAdmin) {
-            <a
-            mat-button
-            [routerLink]="['/apps/bundles/bouquets/add']"
-            mat-flat-button
-            color="primary">Add Bouquet</a>
-          }
-        </div>
-      </div>
     </mat-card-content>
-  </mat-card>
-  
-  <mat-card class="cardWithShadow">
-    <div class="table-responsive">
-      <table
-        mat-table
-        [dataSource]="dataSource"
-        matSort
-        class="no-wrap m-t-0 v-middle w-100"
-      >
-        <ng-container matColumnDef="chk">
-          <th mat-header-cell *matHeaderCellDef>
-            <mat-checkbox color="primary"></mat-checkbox>
-          </th>
-          <td mat-cell *matCellDef="let element" class="f-s-14">
-            <mat-checkbox [(ngModel)]="element.completed" color="primary"></mat-checkbox>
-          </td>
-        </ng-container>
-  
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Id</th>
-          <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.id }}</td>
-        </ng-container>
-  
-        <ng-container matColumnDef="bouquetName">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Bouquet Name</th>
-          <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.bouquetName }}</td>
-        </ng-container>
-  
-        <ng-container matColumnDef="streams">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Streams</th>
-          <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.streams }}</td>
-        </ng-container>
-  
-        <ng-container matColumnDef="movies">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Movies</th>
-          <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.movies }}</td>
-        </ng-container>
-  
-        <ng-container matColumnDef="series">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Series</th>
-          <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.series }}</td>
-        </ng-container>
+</mat-card>
 
-        <ng-container matColumnDef="stations">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Stations</th>
-            <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.stations }}</td>
-          </ng-container>
-  
-        <ng-container matColumnDef="action">
-          <th mat-header-cell *matHeaderCellDef class="f-w-600 f-s-15">Action</th>
-          <td mat-cell *matCellDef="let element" class="f-s-14 d-flex">
-            <a mat-icon-button [routerLink]="['/apps/bundles/bouquets/', element.id]" class="d-flex align-items-center justify-content-center">
-              <i-tabler name="eye" class="icon-18 d-flex align-items-center"></i-tabler>
-            </a>
+<mat-card class="cardWithShadow">
+    <div class="table-responsive">
+        <table
+            mat-table
+            [dataSource]="dataSource"
+            matSort
+            class="no-wrap m-t-0 v-middle w-100"
+        >
+            <ng-container matColumnDef="chk">
+                <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox color="primary"></mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let element" class="f-s-14">
+                    <mat-checkbox [(ngModel)]="element.completed" color="primary"></mat-checkbox>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Id</th>
+                <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.id }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="bouquetName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Bouquet Name</th>
+                <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.bouquetName }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="streams">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Streams</th>
+                <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.streams }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="movies">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Movies</th>
+                <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.movies }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="series">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Series</th>
+                <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.series }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="stations">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center f-w-600 f-s-15">Stations</th>
+                <td mat-cell *matCellDef="let element" class="text-center f-s-14">{{ element.stations }}</td>
+            </ng-container>
+
             @if (isAdmin) {
-              <button mat-icon-button (click)="deleteBouquet(element.id)" class="d-flex align-items-center justify-content-center" title="delete">
-                <i-tabler name="trash" class="icon-18 d-flex align-items-center"></i-tabler>
-              </button>
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 f-s-15">Action</th>
+                    <td mat-cell *matCellDef="let element" class="f-s-14 d-flex">
+                        <a mat-icon-button [routerLink]="['/apps/bundles/bouquets/', element.id]"
+                           class="d-flex align-items-center justify-content-center">
+                            <i-tabler name="eye" class="icon-18 d-flex align-items-center"></i-tabler>
+                        </a>
+                        <button mat-icon-button (click)="deleteBouquet(element.id)"
+                                class="d-flex align-items-center justify-content-center" title="delete">
+                            <i-tabler name="trash" class="icon-18 d-flex align-items-center"></i-tabler>
+                        </button>
+                    </td>
+                </ng-container>
             }
-          </td>
-        </ng-container>
-  
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
-      <mat-paginator  [length]="totalElements" 
-                      [pageSize]="pageSize" 
-                      [pageSizeOptions]="[5, 10, 25]" 
-                      (page)="loadBouquets()"
-                      showFirstLastButtons>
-      </mat-paginator>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        <mat-paginator [length]="totalElements"
+                       [pageSize]="pageSize"
+                       [pageSizeOptions]="[5, 10, 25]"
+                       (page)="loadBouquets()"
+                       showFirstLastButtons>
+        </mat-paginator>
     </div>
-  </mat-card>
-  
+</mat-card>

@@ -93,7 +93,11 @@ export class RankListComponent  implements OnInit {
                 return of({content: [], totalPages: 0, totalElements: 0, size: 0, number: 0} as Page<Rank>);
             })
         ).subscribe(pageResponse => {
-            this.dataSource.data = pageResponse.content;
+            this.dataSource.data = pageResponse.content.sort((a, b) => {
+                if (a.id < b.id) return 1;  // Replace 'id' with the desired property
+                if (a.id > b.id) return -1;
+                return 0;
+            });
             this.totalElements = pageResponse.totalElements;
             this.loading = false;
         });

@@ -80,7 +80,11 @@ export class EpisodesListComponent implements OnInit, AfterViewInit {
                 return of({content: [], totalElements: 0, totalPages: 0, size: 0, number: 0} as Page<EpisodeList>);
             })
         ).subscribe(pageResponse => {
-            this.dataSource.data = pageResponse.content;
+            this.dataSource.data = pageResponse.content.sort((a, b) => {
+                if (a.id < b.id) return 1;  // Replace 'id' with the desired property
+                if (a.id > b.id) return -1;
+                return 0;
+            });
             this.totalElements = pageResponse.totalElements;
             this.loading = false;
         });

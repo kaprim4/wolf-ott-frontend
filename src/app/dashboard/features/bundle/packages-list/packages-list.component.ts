@@ -23,7 +23,7 @@ export class PackagesListComponent implements OnInit, AfterViewInit {
         'trialDuration',
         'officialDuration',
         'isRestreamer',
-        'action',
+        //'action'
     ];
 
     dataSource = new MatTableDataSource<PackageList>([]);
