@@ -186,7 +186,7 @@ export class QuickM3uComponent implements OnInit {
             })
         ).subscribe(l => {
             if(l.useVPN && l.vpnDns){
-                if(l.vpnDns.includes('http')){
+                if(l.vpnDns.includes('https')){
                     this.server = `${l.vpnDns}/`;
                 }else{
                     this.server = `http://${l.vpnDns}:80/`;
