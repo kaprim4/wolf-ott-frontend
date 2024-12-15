@@ -78,7 +78,6 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
         // this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-
         this.sort?.sortChange.subscribe(() => this.loadLines());
         this.paginator?.page.subscribe(() => this.loadLines());
     }
@@ -108,11 +107,7 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
                 return of({content: [], totalPages: 0, totalElements: 0, size: 0, number: 0} as Page<LineList>);
             })
         ).subscribe(pageResponse => {
-            this.dataSource.data = pageResponse.content.sort((a, b) => {
-                if (a.id < b.id) return 1;  // Replace 'id' with the desired property
-                if (a.id > b.id) return -1;
-                return 0;
-            });
+            this.dataSource.data = pageResponse.content;
             this.loggingService.log(pageResponse.content)
             this.totalElements = pageResponse.totalElements;
             this.loading = false;

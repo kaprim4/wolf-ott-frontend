@@ -12,7 +12,7 @@ import {ToastrService} from "ngx-toastr";
 import {UserDetail} from "../../models/user";
 import {UserService} from "../../services/user.service";
 import {TokenService} from "../../services/token.service";
-import { PresetList } from '../../models/preset';
+import {PresetDetail, PresetList} from '../../models/preset';
 import { PresetService } from '../../services/preset.service';
 import { LineFactory } from '../../factories/line.factory';
 import {ParamsService} from "../../services/params.service";
@@ -123,7 +123,7 @@ export class QuickSmartersProComponent implements OnInit {
 
     createLine() {
         this.isLoading = true;
-        const bouquets: number[] = this.selectedPackage.bouquets;
+        const bouquets: number[] = this.line.bouquets;
         const isTrial: boolean = this.selectedPackage.isTrial;
 
         let expDate = 0;
@@ -234,7 +234,21 @@ export class QuickSmartersProComponent implements OnInit {
     onSelectPreset($event: any) {
         const id = $event.value;
         this.selectedPresetId = id;
-
+        console.log("selectedPresetId: ", this.selectedPresetId);
+        this.line.bouquets = [];
+        this.isLoading = true;
+        this.presetService.getPreset<PresetDetail>(this.selectedPresetId).subscribe({
+            next: (preset) => {
+                this.line.bouquets = preset.bouquets
+            },
+            error: (error) => {
+                this.loggingService.error("Error: ", error);
+            },
+            complete: () => {
+                this.isLoading = false;
+                console.log("this.line.bouquets: ", this.line.bouquets);
+            }
+        });
     }
     getSelectedPresetName(): string {
         const selectedPresetObj = this.presets?.find(o => o.id === this.selectedPresetId);
@@ -245,14 +259,14 @@ export class QuickSmartersProComponent implements OnInit {
         this.loggingService.log("Toggle to: ", $event.value);
         switch ($event.value) {
             case 'packages':
+                this.loggingService.log("packages Bundle selected");
                 const pkg = this.packages.find(p => p.id === this.addForm.controls['package'].value);
                 if (pkg) {
                     this.line.bouquets = pkg.bouquets;
                 }
                 break;
             case 'presets':
-                // Update line.bouquets with the IDs of preset bouquets
-                // this.line.bouquets = this.presetBouquets.map(bouquet => bouquet.id);
+                this.loggingService.log("presets Bundle selected");
                 break;
             default:
                 this.loggingService.log("Unknown Bundle");

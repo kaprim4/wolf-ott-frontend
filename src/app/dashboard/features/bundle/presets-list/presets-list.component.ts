@@ -7,7 +7,7 @@ import {Page} from 'src/app/shared/models/page';
 import {PresetDetail, PresetList} from 'src/app/shared/models/preset';
 import {NotificationService} from 'src/app/shared/services/notification.service';
 import {PresetService} from 'src/app/shared/services/preset.service';
-import { TokenService } from 'src/app/shared/services/token.service';
+import {TokenService} from 'src/app/shared/services/token.service';
 import {LoggingService} from "../../../../services/logging.service";
 
 @Component({
@@ -19,6 +19,7 @@ export class PresetsListComponent implements OnInit, AfterViewInit {
     displayedColumns: string[] = [
         'chk',
         'id',
+        'username',
         'presetName',
         'presetDescription',
         'bouquets',
@@ -43,8 +44,12 @@ export class PresetsListComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    constructor(private presetService: PresetService, private notificationService: NotificationService, private tokenService: TokenService,
-                private loggingService: LoggingService) {
+    constructor(
+        private presetService: PresetService,
+        private notificationService: NotificationService,
+        private tokenService: TokenService,
+        private loggingService: LoggingService
+    ) {
         this.loadPresets();
         this.principal = this.tokenService.getPayload();
     }
@@ -64,7 +69,6 @@ export class PresetsListComponent implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
         // this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-
         this.sort?.sortChange.subscribe(() => this.loadPresets());
         this.paginator?.page.subscribe(() => this.loadPresets());
     }
@@ -85,7 +89,6 @@ export class PresetsListComponent implements OnInit, AfterViewInit {
         const page = this.paginator?.pageIndex || this.pageIndex;
         const size = this.paginator?.pageSize || this.pageSize;
         this.loading = true;
-
         this.presetService.getPresets<PresetDetail>('', page, size).pipe(
             catchError(error => {
                 this.loggingService.error('Failed to load presets', error);
@@ -94,11 +97,7 @@ export class PresetsListComponent implements OnInit, AfterViewInit {
                 return of({content: [], totalPages: 0, totalElements: 0, size: 0, number: 0} as Page<PresetDetail>);
             })
         ).subscribe(pageResponse => {
-            this.dataSource.data = pageResponse.content.sort((a, b) => {
-                if (a.id < b.id) return 1;  // Replace 'id' with the desired property
-                if (a.id > b.id) return -1;
-                return 0;
-            });
+            this.dataSource.data = pageResponse.content;
             this.loggingService.log(pageResponse.content);
             this.totalElements = pageResponse.totalElements;
             this.loading = false;
@@ -106,11 +105,11 @@ export class PresetsListComponent implements OnInit, AfterViewInit {
     }
 
     extractBouquetCount(bouquetString: string): number {
-        try{
+        try {
             const regex = /PresetBouquet{presetId=\d+, bouquetId=\d+, positionOrder=\d+}/g;
             const matches = bouquetString.match(regex);
             return matches ? matches.length : 0; // Retourne le nombre de bouquets trouvés
-        }catch(ex){
+        } catch (ex) {
             return 0;
         }
     }

@@ -132,10 +132,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     constructor(
         private authService: AuthenticationService,
         private tokenService: TokenService,
+        private userService: UserService,
         private vsidenav: CoreService,
         public dialog: MatDialog,
         private translate: TranslateService,
-        private userService: UserService,
         private appsService: AppsService,
         private loggingService: LoggingService
     ) {

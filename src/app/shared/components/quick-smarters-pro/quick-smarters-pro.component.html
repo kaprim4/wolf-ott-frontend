@@ -56,12 +56,12 @@
                             </mat-radio-group>
                         </div>
 
-                        <ng-container [ngSwitch]="bundleForm.value.bundle">
+                        <ng-container [ngSwitch]="bundleForm.get('bundle')?.value">
                             <ng-container *ngSwitchCase="'packages'">
                                 <mat-form-field appearance="outline" class="w-100 m-r-24">
                                     <mat-select formControlName="package" (selectionChange)="onSelectPackage($event)">
                                         <mat-select-trigger>
-                                            {{ selectedPackage?.packageName || 'Select Package' }}
+                                            {{ selectedPackage ? selectedPackage.packageName : 'Select Package' }}
                                         </mat-select-trigger>
                                         <mat-option *ngFor="let pkg of packages" [value]="pkg.id"
                                                     (click)="$event.stopPropagation()">

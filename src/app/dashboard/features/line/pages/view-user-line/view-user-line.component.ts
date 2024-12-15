@@ -1,34 +1,34 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {
     FormControl,
     UntypedFormBuilder,
     UntypedFormGroup,
     Validators,
 } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MatChipInputEvent, MatChipEditedEvent } from '@angular/material/chips';
-import { MatTableDataSource } from '@angular/material/table';
-import { SelectionModel } from '@angular/cdk/collections';
-import { map, startWith, Observable, catchError, of, finalize } from 'rxjs';
-import { LineFactory } from 'src/app/shared/factories/line.factory';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { LineDetail } from 'src/app/shared/models/line';
-import { BouquetList, IBouquet } from 'src/app/shared/models/bouquet';
-import { IUser, UserDetail, UserList } from 'src/app/shared/models/user';
-import { IPackage, PackageList } from 'src/app/shared/models/package';
-import { LineService } from 'src/app/shared/services/line.service';
-import { PackageService } from 'src/app/shared/services/package.service';
-import { UserService } from 'src/app/shared/services/user.service';
-import { BouquetService } from 'src/app/shared/services/bouquet.service';
-import { PresetList } from 'src/app/shared/models/preset';
-import { Page } from 'src/app/shared/models/page';
-import { ToastrService } from 'ngx-toastr';
-import { NotificationService } from 'src/app/shared/services/notification.service';
-import { TokenService } from 'src/app/shared/services/token.service';
-import { PresetService } from 'src/app/shared/services/preset.service';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import {MatDialog} from '@angular/material/dialog';
+import {ActivatedRoute, Router} from '@angular/router';
+import {MatChipInputEvent, MatChipEditedEvent} from '@angular/material/chips';
+import {MatTableDataSource} from '@angular/material/table';
+import {SelectionModel} from '@angular/cdk/collections';
+import {map, startWith, Observable, catchError, of, finalize} from 'rxjs';
+import {LineFactory} from 'src/app/shared/factories/line.factory';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {LineDetail} from 'src/app/shared/models/line';
+import {BouquetList, IBouquet} from 'src/app/shared/models/bouquet';
+import {IUser, UserDetail, UserList} from 'src/app/shared/models/user';
+import {IPackage, PackageList} from 'src/app/shared/models/package';
+import {LineService} from 'src/app/shared/services/line.service';
+import {PackageService} from 'src/app/shared/services/package.service';
+import {UserService} from 'src/app/shared/services/user.service';
+import {BouquetService} from 'src/app/shared/services/bouquet.service';
+import {PresetDetail, PresetList} from 'src/app/shared/models/preset';
+import {Page} from 'src/app/shared/models/page';
+import {ToastrService} from 'ngx-toastr';
+import {NotificationService} from 'src/app/shared/services/notification.service';
+import {TokenService} from 'src/app/shared/services/token.service';
+import {PresetService} from 'src/app/shared/services/preset.service';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
 import {LoggingService} from "../../../../../services/logging.service";
 
 @Component({
@@ -36,9 +36,9 @@ import {LoggingService} from "../../../../../services/logging.service";
     templateUrl: './view-user-line.component.html',
     styleUrl: './view-user-line.component.scss',
 })
-export class ViewUserLineComponent implements OnInit{
+export class ViewUserLineComponent implements OnInit {
     id: number;
-    loading:boolean = false;
+    loading: boolean = false;
     bouquetsDisplayedColumns: string[] = [
         'chk',
         'id',
@@ -48,7 +48,7 @@ export class ViewUserLineComponent implements OnInit{
         'series',
         'stations',
         // 'action',
-      ];
+    ];
     editForm: UntypedFormGroup;
     line: LineDetail = LineFactory.initLineDetail();
     bouquetsDataSource = new MatTableDataSource<BouquetList>([]);
@@ -75,7 +75,7 @@ export class ViewUserLineComponent implements OnInit{
     presetBouquets: BouquetList[] = [];
     presetBouquetsDataSource = new MatTableDataSource<BouquetList>([]);
     presetBouquetsSelection = new SelectionModel<IBouquet>(true, []);
-    selectedPreset:number;
+    selectedPreset: number;
 
     user: UserDetail;
     selectedBundleOption: string = 'packages';
@@ -131,9 +131,9 @@ export class ViewUserLineComponent implements OnInit{
         this.editForm = this.fb.group({
             username: ['', Validators.required],
             password: ['', Validators.required],
-            owner: ['', Validators.required],
-            package: ['', Validators.required],
-            packageCost: [0],
+            owner: ['0', Validators.required],
+            package: ['0', Validators.required],
+            packageCost: [{ value: 0, disabled: true }],
             duration: [''],
             maxConnections: [1],
             expirationDate: [''],
@@ -160,6 +160,7 @@ export class ViewUserLineComponent implements OnInit{
         });
 
     }
+
     ngAfterViewInit(): void {
         this.bouquetsDataSource.sort = this.bouquetSort;
         this.bouquetSort?.sortChange.subscribe(() => this.loadBouquets());
@@ -170,61 +171,65 @@ export class ViewUserLineComponent implements OnInit{
     }
 
     ngOnInit(): void {
-
         this.loading = true;
-        this.lineService.getLine<LineDetail>(this.id)
-                        .pipe(catchError(error => {
-                            this.loggingService.error("Line Update Failed :", error);
-                            this.notificationService.error("Line Update Failed");
-                            throw new Error(error);
-                        }), finalize(() => this.loading = false))
-                        .subscribe((line:LineDetail) => {
-                            this.line = line;
-                            this.editForm.controls['username'].setValue(line.username);
-                            this.editForm.controls['password'].setValue(line.password);
-                            this.editForm.controls['owner'].setValue(line.memberId);
-                            this.selectedOwnerId = line.memberId;
-                            this.editForm.controls['package'].setValue(line.packageId);
-                            this.selectedPackageId = line.packageId || 0;
-                            // this.loggingService.log("Selected Package:", this.selectedPackageId);
-                            setTimeout(() => this.loggingService.log("Selected Package:", this.selectedPackage?.packageName), 5000);
 
-                            const expirationDate = new Date(line.expDate * 1000);
-                            this.editForm.controls['expirationDate'].setValue(this.formatDateTime(expirationDate));
-                            const duration = this.selectedPackage?.isOfficial ? this.selectedPackage?.officialDuration : this.selectedPackage?.trialDuration || 0;
-                            this.editForm.controls['duration'].setValue(duration);
-                            const packageCost = this.selectedPackage?.isOfficial ? this.selectedPackage?.officialCredits : this.selectedPackage?.trialCredits || 0;
-                            this.editForm.controls['packageCost'].setValue(packageCost);
-                            this.editForm.controls['maxConnections'].setValue(line.maxConnections);
-                            this.editForm.controls['contact'].setValue(line.contact);
-                            this.editForm.controls['resellerNotes'].setValue(line.resellerNotes);
-                            this.editForm.controls['isIsplock'].setValue(line.isIsplock);
-                            this.editForm.controls['bypassUa'].setValue(line.bypassUa);
-                            this.editForm.controls['ispDesc'].setValue(line.ispDesc);
-
-                            // this.loading = false;
-                        });
-
-        this.userService
-            .getAllUsers<UserList>()
-            .subscribe((users: UserList[]) => {
-                this.owners = users;
-                this.filteredOwners = this.owners;
-            });
-
-        this.packageService
-            .getAllPackages<PackageList>()
-            .subscribe((packages: PackageList[]) => {
+        this.packageService.getAllPackages<PackageList>().subscribe({
+            next: (packages: PackageList[]) => {
                 this.packages = packages;
                 this.filteredPackages = this.packages;
-            });
-
-        this.loadBouquets();
-
-        this.presetService.getAllPresets<PresetList>().subscribe((presets:any) => {
-            this.presets = presets;
+            },
+            error: (error: Error) => {
+                console.log("error: ", error);
+            },
+            complete: () => {
+                console.log("this.filteredPackages: ", this.filteredPackages);
+                this.editForm.controls['package'].setValue(this.selectedPackageId);
+            }
         });
 
+        this.lineService.getLine<LineDetail>(this.id).subscribe({
+            next: (line: LineDetail) => {
+                console.log("line:", line);
+
+                this.line = line;
+                this.selectedPackageId = line.packageId || 0;
+                this.selectedOwnerId = line.memberId;
+                const expirationDate = new Date(line.expDate * 1000);
+                const duration = this.selectedPackage?.isOfficial ? this.selectedPackage?.officialDuration : this.selectedPackage?.trialDuration || 0;
+                const packageCost = this.selectedPackage?.isOfficial ? this.selectedPackage?.officialCredits : this.selectedPackage?.trialCredits || 0;
+
+                this.editForm.controls['username'].setValue(line.username);
+                this.editForm.controls['password'].setValue(line.password);
+                this.editForm.controls['owner'].setValue(this.selectedOwnerId);
+                this.editForm.controls['package'].setValue(this.selectedPackageId);
+                this.editForm.controls['expirationDate'].setValue(this.formatDateTime(expirationDate));
+                this.editForm.controls['duration'].setValue(duration);
+                this.editForm.controls['packageCost'].setValue(packageCost);
+                this.editForm.controls['maxConnections'].setValue(line.maxConnections);
+                this.editForm.controls['contact'].setValue(line.contact);
+                this.editForm.controls['resellerNotes'].setValue(line.resellerNotes);
+                this.editForm.controls['isIsplock'].setValue(line.isIsplock);
+                this.editForm.controls['bypassUa'].setValue(line.bypassUa);
+                this.editForm.controls['ispDesc'].setValue(line.ispDesc);
+            },
+            error: (error) => {
+                this.loggingService.error("Error: ", error);
+            },
+            complete: () => {
+                this.loading = false;
+                console.log("this.line.bouquets: ", this.line.bouquets);
+                this.userService.getAllUsers<UserList>().subscribe((users: UserList[]) => {
+                    this.owners = users;
+                    this.filteredOwners = this.owners;
+                });
+
+                this.loadBouquets();
+
+                this.presetService.getAllPresets<PresetList>().subscribe((presets: any) => {
+                    this.presets = presets;
+                });
+            }
+        });
     }
 
     loadBouquets(): void {
@@ -234,10 +239,10 @@ export class ViewUserLineComponent implements OnInit{
 
         this.bouquetService.getBouquets<BouquetList>('', page, size).pipe(
             catchError(error => {
-            this.loggingService.error('Failed to load bouquets', error);
-            this.bouquetsLoading = false;
-            this.notificationService.error('Failed to load bouquets. Please try again.');
-            return of({ content: [], totalPages: 0, totalElements: 0, size: 0, number:0 } as Page<BouquetList>);
+                this.loggingService.error('Failed to load bouquets', error);
+                this.bouquetsLoading = false;
+                this.notificationService.error('Failed to load bouquets. Please try again.');
+                return of({content: [], totalPages: 0, totalElements: 0, size: 0, number: 0} as Page<BouquetList>);
             })
         ).subscribe(pageResponse => {
             this.bouquetsDataSource.data = pageResponse.content;
@@ -251,22 +256,25 @@ export class ViewUserLineComponent implements OnInit{
         const filterValue = value?.toLowerCase();
         return this.owners.filter(owner => owner?.username?.toLowerCase().includes(filterValue));
     }
+
     private filterPackages(value: string): any[] {
         const filterValue = value?.toLowerCase();
         return this.packages.filter(pkg => pkg?.packageName?.toLowerCase().includes(filterValue));
     }
+
     ownersFilterOptions() {
         const searchTermLower = this.ownerSearchTerm?.toLowerCase();
         this.filteredOwners = this.owners?.filter((owner) => owner?.username?.toLowerCase().includes(searchTermLower));
     }
+
     packagesFilterOptions() {
         const searchTermLower = this.packageSearchTerm?.toLowerCase();
         this.filteredPackages = this.packages?.filter((pkg) => pkg.packageName?.toLowerCase().includes(searchTermLower));
     }
 
     saveDetail(): void {
-       this.loggingService.log(`Form { valid: ${this.editForm.valid}, invalid: ${this.editForm.invalid} }`);
-       this.loading = true;
+        this.loggingService.log(`Form { valid: ${this.editForm.valid}, invalid: ${this.editForm.invalid} }`);
+        this.loading = true;
         if (this.editForm.valid) {
             const formValues = this.editForm.value;
             const expDate = new Date(formValues.expirationDate).getTime() / 1000;
@@ -285,26 +293,30 @@ export class ViewUserLineComponent implements OnInit{
                 createdAt: new Date(formValues.expirationDate).getTime() / 1000
             });
             this.lineService.updateLine(this.line)
-                            .pipe(catchError(error => {
-                                this.loggingService.error("Line Update Failed :", error);
-                                this.notificationService.error("Line Update Failed");
-                                throw new Error(error);
-                            }), finalize(() => this.loading = false))
-                            .subscribe(line => {
-                                // this.loading = false;
-                                this.loggingService.log("Created Line :", line);
-                                this.router.navigate(['/apps/lines/users/list']);
-                                this.toastr.success('Line updated successfully.', 'Succès');
-                            });
+                .pipe(catchError(error => {
+                    this.loggingService.error("Line Update Failed :", error);
+                    this.notificationService.error("Line Update Failed");
+                    throw new Error(error);
+                }), finalize(() => this.loading = false))
+                .subscribe(line => {
+                    // this.loading = false;
+                    this.loggingService.log("Created Line :", line);
+                    this.router.navigate(['/apps/lines/users/list']);
+                    this.toastr.success('Line updated successfully.', 'Succès');
+                });
             // this.dialog.open(UserDialogComponent)
 
         } else {
             for (const controlName in this.editForm.controls) {
                 const control = this.editForm.get(controlName);
-                if(control && control.valid)
+                if (control && control.valid)
                     continue;
-                if(control)
-                    this.loggingService.log(`Control: ${controlName}:`, {valid: control.valid, value: control.value, errors: control.errors});
+                if (control)
+                    this.loggingService.log(`Control: ${controlName}:`, {
+                        valid: control.valid,
+                        value: control.value,
+                        errors: control.errors
+                    });
                 else
                     this.loggingService.log(`Control[${controlName}] Not Found`);
 
@@ -317,13 +329,15 @@ export class ViewUserLineComponent implements OnInit{
     get allowedIps(): any[] {
         const allowedIps: string[] = this.line.allowedIps;
         return allowedIps ? allowedIps.map((ip) => {
-            return { value: ip }
+            return {value: ip}
         }) : [];
     }
+
     set allowedIps(ips: any[]) {
         ips = ips.map(ip => ip.value).filter(ip => ip);
         this.line.allowedIps = ips;
     }
+
     addAllowedIp(event: MatChipInputEvent): void {
         const value = (event.value || '').trim();
         if (value) {
@@ -333,6 +347,7 @@ export class ViewUserLineComponent implements OnInit{
         }
         event.chipInput!.clear();
     }
+
     removeAllowedIp(ip: string): void {
         const currentIps = this.allowedIps;
         const index = currentIps.findIndex((item) => item.value === ip);
@@ -341,6 +356,7 @@ export class ViewUserLineComponent implements OnInit{
             this.allowedIps = currentIps;
         }
     }
+
     editAllowedIp(ip: string, event: MatChipEditedEvent) {
         const value = event.value.trim();
         if (!value) {
@@ -361,10 +377,12 @@ export class ViewUserLineComponent implements OnInit{
             return {value: agent};
         }) : [];
     }
+
     set allowedAgents(agents: any[]) {
         agents = agents.map(agent => agent.value).filter(agent => agent);
         this.line.allowedUa = agents;
     }
+
     addAllowedAgent(event: MatChipInputEvent): void {
         const value = (event.value || '').trim();
         if (value) {
@@ -374,6 +392,7 @@ export class ViewUserLineComponent implements OnInit{
         }
         event.chipInput!.clear();
     }
+
     editAllowedAgent(agent: string, event: MatChipEditedEvent) {
         const value = event.value.trim();
         if (!value) {
@@ -385,6 +404,7 @@ export class ViewUserLineComponent implements OnInit{
             this.allowedAgents[index].value = value;
         }
     }
+
     removeAllowedAgent(agent: string): void {
         const index = this.allowedAgents.indexOf({value: agent});
         if (index >= 0) {
@@ -392,12 +412,14 @@ export class ViewUserLineComponent implements OnInit{
         }
     }
 
-    get selectedOwner():IUser|undefined{
+    get selectedOwner(): IUser | undefined {
         return this.owners.find(o => o.id === this.selectedOwnerId);
     }
-    set selectedOwner(owner:IUser) {
+
+    set selectedOwner(owner: IUser) {
         this.selectedOwnerId = owner.id;
     }
+
     onOwnersDropdownOpened(opened: boolean) {
         this.dropdownOpened = opened;
         if (opened) {
@@ -406,21 +428,38 @@ export class ViewUserLineComponent implements OnInit{
             this.ownersFilterOptions();
         }
     }
+
     onSelectOwner($event: any) {
-        const id = this.editForm.controls["owner"].value;
+        this.loggingService.log("Owner Event", $event);
+        const id = $event; //this.editForm.controls["owner"].value;
         const owner = this.owners.find(o => o.id === id);
-        if(owner)
+        if (owner)
             this.selectedOwnerId = id; // owner
         else
             this.loggingService.log(`Ops!! Owner[${id}] not found`);
     }
 
-    get selectedPackage():PackageList|undefined{
+    get selectedPackage(): PackageList | undefined {
         return this.packages.find(pkg => pkg.id == this.selectedPackageId);
     }
-    set selectedPackage(pkg:IPackage){
+
+    getSelectedPackageName(): string {
+        const selectedPackageObj = this.packages.find(pkg => pkg.id == this.selectedPackageId);
+        return selectedPackageObj ? selectedPackageObj.packageName : 'Select Package';
+    }
+
+    trackByOwnerId(index: number, o: any): number {
+        return o.id;
+    }
+
+    trackByPackageId(index: number, pkg: any): number {
+        return pkg.id;
+    }
+
+    set selectedPackage(pkg: IPackage) {
         this.selectedPackageId = pkg.id;
     }
+
     onPackagesDropdownOpened(opened: boolean) {
         this.dropdownOpened = opened;
         if (opened) {
@@ -429,43 +468,51 @@ export class ViewUserLineComponent implements OnInit{
             this.packagesFilterOptions();
         }
     }
-    onSelectPackage($event: any) {
-        // this.loggingService.log("Package Event", $event);
-        const id = $event; // this.addForm.controls["package"].value;
-        if(id != this.editForm.controls["package"].value)
-            this.editForm.controls["package"].setValue(id);
-        const pkg = this.packages.find(o => o.id === id);
-        if(pkg){
-            this.line.packageId = pkg.id;
-            this.selectedPackage = pkg;
-            if(pkg.isOfficial){
-                this.editForm.controls["packageCost"].setValue(pkg.officialCredits);
-                this.editForm.controls["duration"].setValue(pkg.officialDuration);
-                const expiration = PackageService.getPackageExpirationDate(pkg.officialDuration, pkg.officialDurationIn);
-                // this.loggingService.log("Official Expiration :", expiration);
-                this.editForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
-            }else{
-                this.editForm.controls["packageCost"].setValue(pkg.trialCredits);
-                this.editForm.controls["duration"].setValue(pkg.trialDuration);
-                const expiration = PackageService.getPackageExpirationDate(pkg.trialDuration, pkg.trialDurationIn);
-                // this.loggingService.log("Trial Expiration :", expiration);
-                this.editForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
-            }
-            if(this.selectedBundleOption === 'packages')
-                this.line.bouquets = pkg.bouquets;
-            this.updateSelection();
-            this.line.isIsplock = pkg.isIsplock;
-            this.line.isE2 = pkg.isE2;
-            this.line.forcedCountry = pkg.forcedCountry;
-            this.updateMatrix();
-        }
-        else
-            this.loggingService.log(`Ops!! Package[${id}] not found`);
 
-        // this.loggingService.log("Select Package", this.selectedPackage);
+    onSelectPackage($event: any) {
+        this.loggingService.log("Package Event", $event);
+        const id = $event;
+        if (id != this.editForm.controls["package"].value)
+            this.editForm.controls["package"].setValue(id);
+        if (id !== null) {
+            console.log("onSelectPackage this.packages : ", this.packages)
+            const pkg = this.packages.find(o => o.id === id);
+            if (pkg) {
+                this.line.packageId = pkg.id;
+                this.selectedPackage = pkg;
+                if (pkg.isOfficial) {
+                    this.editForm.controls["packageCost"].setValue(pkg.officialCredits);
+                    this.editForm.controls["duration"].setValue(pkg.officialDuration);
+                    const expiration = PackageService.getPackageExpirationDate(pkg.officialDuration, pkg.officialDurationIn);
+                    // this.loggingService.log("Official Expiration :", expiration);
+                    this.editForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
+                } else {
+                    this.editForm.controls["packageCost"].setValue(pkg.trialCredits);
+                    this.editForm.controls["duration"].setValue(pkg.trialDuration);
+                    const expiration = PackageService.getPackageExpirationDate(pkg.trialDuration, pkg.trialDurationIn);
+                    // this.loggingService.log("Trial Expiration :", expiration);
+                    this.editForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
+                }
+                if (this.selectedBundleOption === 'packages')
+                    this.line.bouquets = pkg.bouquets;
+                else {
+                    this.presetService.getPreset<PresetDetail>(this.selectedPreset).subscribe(preset => {
+                        this.line.bouquets = preset.bouquets
+                    });
+                }
+                this.updateSelection();
+                this.line.isIsplock = pkg.isIsplock;
+                this.line.isE2 = pkg.isE2;
+                this.line.forcedCountry = pkg.forcedCountry;
+                this.updateMatrix();
+            } else
+                this.loggingService.log(`Ops!! Package[${id}] not found`);
+
+            this.loggingService.log("Select Package", this.selectedPackage);
+        }
     }
 
-    formatDateTime(date:Date) {
+    formatDateTime(date: Date) {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
@@ -487,15 +534,18 @@ export class ViewUserLineComponent implements OnInit{
             this.line.bouquets = this.presetBouquets.map(bouquet => bouquet.id);
         })
     }
+
     getSelectedPresetName(): string {
         const selectedPresetObj = this.presets?.find(o => o.id === this.selectedPreset);
         return selectedPresetObj ? selectedPresetObj.presetName : 'Select Package';
     }
+
     isAllPresetBouquetsSelected(): boolean {
         const numSelected = this.presetBouquetsSelection.selected.length;
         const numRows = this.presetBouquetsDataSource.data.length;
         return numSelected === numRows;
     }
+
     presetBouquetsMasterToggle() {
         if (this.isAllPresetBouquetsSelected()) {
             const selectedIds = this.presetBouquetsSelection.selected.map(item => item.id);
@@ -515,12 +565,14 @@ export class ViewUserLineComponent implements OnInit{
             });
         }
     }
+
     presetCheckboxLabel(row?: BouquetList): string {
         if (!row) {
             return `${this.isAllPresetBouquetsSelected() ? 'select' : 'deselect'} all`;
         }
-        return `${ this.presetBouquetsSelection.isSelected(row) ? 'deselect' : 'select' } row ${row.bouquetOrder + 1}`;
+        return `${this.presetBouquetsSelection.isSelected(row) ? 'deselect' : 'select'} row ${row.bouquetOrder + 1}`;
     }
+
     updatePresetBouquetSelection(element: any) {
         if (this.presetBouquetsSelection.isSelected(element)) {
             this.line.bouquets.push(element.id);
@@ -533,6 +585,7 @@ export class ViewUserLineComponent implements OnInit{
         this.loggingService.log("Line Bouquets ", this.line.bouquets.length);
 
     }
+
     updatePresetSelection() {
         this.presetBouquetsSelection.clear();
         this.presetBouquetsDataSource.data.forEach(bouquet => {
@@ -545,6 +598,7 @@ export class ViewUserLineComponent implements OnInit{
         const numRows = this.bouquetsDataSource.data.length;
         return numSelected === numRows;
     }
+
     bouquetsMasterToggle() {
         if (this.isAllBouquetsSelected()) {
             const selectedIds = this.bouquetsSelection.selected.map(item => item.id);
@@ -564,12 +618,14 @@ export class ViewUserLineComponent implements OnInit{
             });
         }
     }
+
     checkboxLabel(row?: BouquetList): string {
         if (!row) {
             return `${this.isAllBouquetsSelected() ? 'select' : 'deselect'} all`;
         }
-        return `${ this.bouquetsSelection.isSelected(row) ? 'deselect' : 'select' } row ${row.bouquetOrder + 1}`;
+        return `${this.bouquetsSelection.isSelected(row) ? 'deselect' : 'select'} row ${row.bouquetOrder + 1}`;
     }
+
     updateBouquetSelection(element: any) {
         if (this.bouquetsSelection.isSelected(element)) {
             this.line.bouquets.push(element.id);
@@ -581,6 +637,7 @@ export class ViewUserLineComponent implements OnInit{
         }
         this.loggingService.log("Line Bouquets ", this.line.bouquets.length);
     }
+
     updateSelection() {
         this.bouquetsSelection.clear();
         this.bouquetsDataSource.data.forEach(bouquet => {
@@ -590,13 +647,13 @@ export class ViewUserLineComponent implements OnInit{
         });
     }
 
-    updateMatrix(){
+    updateMatrix() {
         const id = this.line.packageId;
         const credits = (this.user?.credits) || 0;
         const pkg = this.packages.find(p => p.id === id);
         const cost = (pkg?.isOfficial ? pkg.officialCredits : pkg?.trialCredits) || 0;
         this.financialMetrics.forEach(matrix => {
-            switch(matrix.id){
+            switch (matrix.id) {
                 case 'current_credits':
                     matrix.title = credits.toString();
                     break;

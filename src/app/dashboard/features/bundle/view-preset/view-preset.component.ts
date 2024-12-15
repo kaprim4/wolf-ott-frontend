@@ -13,10 +13,12 @@ import {NotificationService} from 'src/app/shared/services/notification.service'
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from '@angular/cdk/drag-drop';
-import { trigger, transition, style, animate } from '@angular/animations';
-import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { TokenService } from 'src/app/shared/services/token.service';
+import {trigger, transition, style, animate} from '@angular/animations';
+import {StepperSelectionEvent} from '@angular/cdk/stepper';
+import {TokenService} from 'src/app/shared/services/token.service';
 import {LoggingService} from "../../../../services/logging.service";
+import {UserService} from "../../../../shared/services/user.service";
+import {UserDetail} from "../../../../shared/models/user";
 
 @Component({
     selector: 'app-view-preset',
@@ -24,15 +26,15 @@ import {LoggingService} from "../../../../services/logging.service";
     styleUrl: './view-preset.component.scss',
     animations: [
         trigger('dragAnimation', [
-          transition(':enter', [
-            style({ opacity: 0 }),
-            animate('300ms', style({ opacity: 1 }))
-          ]),
-          transition(':leave', [
-            animate('300ms', style({ opacity: 0 }))
-          ])
+            transition(':enter', [
+                style({opacity: 0}),
+                animate('300ms', style({opacity: 1}))
+            ]),
+            transition(':leave', [
+                animate('300ms', style({opacity: 0}))
+            ])
         ])
-      ]
+    ]
 })
 export class ViewPresetComponent implements OnInit, AfterViewInit {
     isFinishStep: boolean = false;
@@ -87,7 +89,11 @@ export class ViewPresetComponent implements OnInit, AfterViewInit {
     editForm: UntypedFormGroup | any;
     preset: PresetDetail;
 
-    principal:any;
+    principal: any;
+    loggedInUser: any;
+    user: UserDetail = {
+        id: 0, username: ""
+    };
 
     constructor(
         private fb: UntypedFormBuilder,
@@ -98,7 +104,8 @@ export class ViewPresetComponent implements OnInit, AfterViewInit {
         private activatedRouter: ActivatedRoute,
         private notificationService: NotificationService,
         private tokenService: TokenService,
-        private loggingService: LoggingService
+        private loggingService: LoggingService,
+        private userService: UserService,
     ) {
         this.id = this.activatedRouter.snapshot.paramMap.get('id') as unknown as number;
         this.editForm = this.fb.group({
@@ -141,6 +148,9 @@ export class ViewPresetComponent implements OnInit, AfterViewInit {
                     true,
                     selectedBouquets
                 );
+                console.log("bouquetsSelection:", this.bouquetsSelection);
+
+
                 this.bouquetsLoading = false;
 
                 this.packageBouquetsDataSource = new MatTableDataSource(this.getPackageBouquets);
@@ -150,9 +160,13 @@ export class ViewPresetComponent implements OnInit, AfterViewInit {
                 this.vodBouquetsDataSource.paginator = this.vodPaginator;
 
             });
-        if(!this.isAdmin){
+        /*if (!this.isAdmin) {
             this.editForm.disable();
-        }
+        }*/
+        this.loggedInUser = this.tokenService.getPayload();
+        this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
+            this.user = user;
+        });
     }
 
     saveDetail(): void {
@@ -162,15 +176,21 @@ export class ViewPresetComponent implements OnInit, AfterViewInit {
         const bouquets: number[] = this.bouquetsSelection.selected.map(bouquet => bouquet.id);
 
         this.preset.id = this.id;
+        this.preset.user = {
+            id: this.user.id,
+            username: this.user.username
+        };
         this.preset.presetName = presetName;
         this.preset.presetDescription = presetDescription;
         this.preset.bouquets = bouquets;
+
+        console.log("bouquets: ", this.preset.bouquets);
 
         this.presetService.updatePreset(this.preset).subscribe(preset => {
             this.loading = false;
             this.notificationService.success(`Presset Updated Successfully`)
             this.router.navigate(['/apps/bundles/presets/list']);
-        })
+        });
 
     }
 

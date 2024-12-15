@@ -1,18 +1,16 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {AppDialogOverviewComponent} from 'src/app/pages/ui-components/dialog/dialog.component';
+import {Component, OnInit} from '@angular/core';
 import {PackageService} from '../../services/package.service';
 import {LineService} from '../../services/line.service';
 import {PackageList} from '../../models/package';
 import {FormBuilder, FormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import {CreateLine, ILine, LineDetail, LineList} from '../../models/line';
+import {CreateLine, LineDetail} from '../../models/line';
 import {NotificationService} from '../../services/notification.service';
 import {catchError, finalize, tap, throwError} from 'rxjs';
 import {ToastrService} from "ngx-toastr";
 import {UserDetail} from "../../models/user";
 import {UserService} from "../../services/user.service";
 import {TokenService} from "../../services/token.service";
-import {PresetList} from '../../models/preset';
+import {PresetDetail, PresetList} from '../../models/preset';
 import {PresetService} from '../../services/preset.service';
 import {LineFactory} from '../../factories/line.factory';
 import {LoggingService} from "../../../services/logging.service";
@@ -118,7 +116,7 @@ export class QuickM3uComponent implements OnInit {
 
     createLine() {
         this.isLoading = true;
-        const bouquets: number[] = this.selectedPackage.bouquets;
+        const bouquets: number[] = this.line.bouquets;
         const isTrial: boolean = this.selectedPackage.isTrial;
 
         const username: string = this.packageForm.controls['username'].value;
@@ -167,7 +165,7 @@ export class QuickM3uComponent implements OnInit {
             isStalker: false,
             maxConnections: 1,
         };
-        this.loggingService.log("line:", line)
+        this.loggingService.log("addLine:", line)
 
         this.lineService.addLine<LineDetail>(line).pipe(
             tap(() => {
@@ -185,10 +183,10 @@ export class QuickM3uComponent implements OnInit {
                 this.isLoading = false;
             })
         ).subscribe(l => {
-            if(l.useVPN && l.vpnDns){
-                if(l.vpnDns.includes('https')){
+            if (l.useVPN && l.vpnDns) {
+                if (l.vpnDns.includes('https')) {
                     this.server = `${l.vpnDns}/`;
-                }else{
+                } else {
                     this.server = `http://${l.vpnDns}:80/`;
                 }
 
@@ -289,7 +287,21 @@ export class QuickM3uComponent implements OnInit {
     onSelectPreset($event: any) {
         const id = $event.value;
         this.selectedPresetId = id;
-
+        console.log("selectedPresetId: ", this.selectedPresetId);
+        this.line.bouquets = [];
+        this.isLoading = true;
+        this.presetService.getPreset<PresetDetail>(this.selectedPresetId).subscribe({
+            next: (preset) => {
+                this.line.bouquets = preset.bouquets
+            },
+            error: (error) => {
+                this.loggingService.error("Error: ", error);
+            },
+            complete: () => {
+                this.isLoading = false;
+                console.log("this.line.bouquets: ", this.line.bouquets);
+            }
+        });
     }
 
     getSelectedPresetName(): string {
@@ -301,19 +313,18 @@ export class QuickM3uComponent implements OnInit {
         this.loggingService.log("Toggle to: ", $event.value);
         switch ($event.value) {
             case 'packages':
+                this.loggingService.log("packages Bundle selected");
                 const pkg = this.packages.find(p => p.id === this.addForm.controls['package'].value);
                 if (pkg) {
                     this.line.bouquets = pkg.bouquets;
                 }
                 break;
             case 'presets':
-                // Update line.bouquets with the IDs of preset bouquets
-                // this.line.bouquets = this.presetBouquets.map(bouquet => bouquet.id);
+                this.loggingService.log("presets Bundle selected");
                 break;
             default:
                 this.loggingService.log("Unknown Bundle");
         }
-
     }
 
     onSelectPackage($event: any) {
@@ -349,13 +360,12 @@ export class QuickM3uComponent implements OnInit {
             }
             if (this.selectedBundleOption === 'packages')
                 this.line.bouquets = pkg.bouquets;
+
             this.line.isIsplock = pkg.isIsplock;
             this.line.isE2 = pkg.isE2;
             this.line.forcedCountry = pkg.forcedCountry;
         } else
             this.loggingService.log(`Ops!! Package[${id}] not found`);
-
-        // this.loggingService.log("Select Package", this.selectedPackage);
     }
 
     formatDateTime(date: Date) {

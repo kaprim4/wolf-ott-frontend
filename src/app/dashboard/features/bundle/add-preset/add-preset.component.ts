@@ -15,6 +15,9 @@ import {MatPaginator} from '@angular/material/paginator';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {StepperSelectionEvent} from '@angular/cdk/stepper';
 import {LoggingService} from "../../../../services/logging.service";
+import {UserDetail} from "../../../../shared/models/user";
+import {TokenService} from "../../../../shared/services/token.service";
+import {UserService} from "../../../../shared/services/user.service";
 
 @Component({
     selector: 'app-add-preset',
@@ -74,6 +77,10 @@ export class AddPresetComponent implements OnInit, AfterViewInit {
 
     addForm: UntypedFormGroup | any;
     preset: PresetDetail;
+    loggedInUser: any;
+    user: UserDetail = {
+        id: 0, username: ""
+    };
 
     constructor(
         private fb: UntypedFormBuilder,
@@ -82,11 +89,11 @@ export class AddPresetComponent implements OnInit, AfterViewInit {
         private router: Router,
         // public dialog: MatDialog
         private notificationService: NotificationService,
-        private loggingService: LoggingService
+        private loggingService: LoggingService,
+        private tokenService: TokenService,
+        private userService: UserService,
     ) {
-
         this.preset = PresetFactory.initPresetDetail();
-
         this.addForm = this.fb.group({
             name: ['', Validators.required],
             description: ['']
@@ -132,6 +139,10 @@ export class AddPresetComponent implements OnInit, AfterViewInit {
                 this.vodBouquetsDataSource.paginator = this.vodPaginator;
 
             });
+        this.loggedInUser = this.tokenService.getPayload();
+        this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
+            this.user = user;
+        });
     }
 
     saveDetail(): void {
@@ -141,6 +152,10 @@ export class AddPresetComponent implements OnInit, AfterViewInit {
         const presetDescription: string = this.addForm.controls["description"].value;
         const bouquets: number[] = this.bouquetsSelection.selected.map(bouquet => bouquet.id);
 
+        this.preset.user = {
+            id: this.user.id,
+            username: this.user.username
+        };
         this.preset.presetName = presetName;
         this.preset.presetDescription = presetDescription;
         this.preset.bouquets = bouquets;
@@ -289,7 +304,7 @@ export class AddPresetComponent implements OnInit, AfterViewInit {
         return this.bouquetsSelection.selected.filter(bouquet => bouquet.series > 0).length;
     }
 
-// Total counts for Stations
+    // Total counts for Stations
     getTotalStations(): number {
         return this.bouquetsSelection.selected.reduce((total, bouquet) => total + (bouquet.stations || 0), 0);
     }

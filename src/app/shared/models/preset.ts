@@ -9,7 +9,13 @@ export interface PresetList extends IPreset {
     createdAt: Date
 }
 
+export interface UserDTO {
+    id: number,
+    username: string
+}
+
 export interface PresetDetail extends IPreset {
+    user: any,
     presetName: string,
     presetDescription: string,
     status: boolean,
