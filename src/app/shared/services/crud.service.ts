@@ -18,7 +18,7 @@ export abstract class CrudService<T> {
         protected httpClient: HttpClient,
         protected jwtService: JwtService
     ) {
-        
+
     }
 
     protected getAllAsList<Res>(search: string): Observable<Array<T | Res>> {
@@ -47,6 +47,7 @@ export abstract class CrudService<T> {
     }
 
     protected getAllAsPage<Res>(search: string, page: number, size: number): Observable<Page<T | Res>> {
+        console.log("getAllAsPage: ", `${this.apiBaseUrl}/api/v1/${this.endpoint}`)
         return this.httpClient.get<Page<T | Res>>(`${this.apiBaseUrl}/api/v1/${this.endpoint}`, {
             headers: this.headers,
             params: {

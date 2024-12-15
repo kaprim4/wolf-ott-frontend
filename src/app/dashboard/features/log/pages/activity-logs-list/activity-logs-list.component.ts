@@ -9,6 +9,9 @@ import {Page} from "../../../../../shared/models/page";
 import { LineActivityList } from 'src/app/shared/models/line-activity';
 import { LineActivityService } from 'src/app/shared/services/line-activity.service';
 import {LoggingService} from "../../../../../services/logging.service";
+import {UserDetail} from "../../../../../shared/models/user";
+import {TokenService} from "../../../../../shared/services/token.service";
+import {UserService} from "../../../../../shared/services/user.service";
 
 @Component({
     selector: 'app-activity-logs-list',
@@ -17,7 +20,7 @@ import {LoggingService} from "../../../../../services/logging.service";
 })
 export class ActivityLogsListComponent implements OnInit, AfterViewInit {
     displayedColumns: string[] = [
-        'quality',
+        //'quality',
         'line',
         'stream',
         'player',
@@ -42,21 +45,33 @@ export class ActivityLogsListComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
+    loggedInUser: any;
+    user: UserDetail = {
+        id: 0, username: ""
+    };
+
 
     constructor(
         private activityService: LineActivityService,
         private notificationService: NotificationService,
-        private loggingService: LoggingService
+        private loggingService: LoggingService,
+        private tokenService: TokenService,
+        private userService: UserService,
     ) {
         // this.loadStreams();
     }
 
     ngOnInit(): void {
+        this.loggedInUser = this.tokenService.getPayload();
+        this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
+            this.user = user;
+        });
+
         this.loadStreams();
         // Subscribe to search input changes
         this.searchSubject.pipe(
             debounceTime(300), // Wait for 300ms pause in events
-            switchMap(searchTerm => this.activityService.getLineActivities<LineActivityList>(searchTerm, this.pageIndex, this.pageSize))
+            switchMap(searchTerm => this.activityService.getLineActivitiesByUser<LineActivityList>(this.user.id, searchTerm, this.pageIndex, this.pageSize))
         ).subscribe(response => {
             this.dataSource.data = response.content;
             this.totalElements = response.totalElements;
@@ -81,7 +96,7 @@ export class ActivityLogsListComponent implements OnInit, AfterViewInit {
         const size = (this.paginator?.pageSize || this.pageSize);
 
         this.loading = true; // Start loading
-        this.activityService.getLineActivities<LineActivityList>('', page, size).pipe(
+        this.activityService.getLineActivitiesByUser<LineActivityList>(this.user.id, '', page, size).pipe(
             catchError(error => {
                 this.loggingService.error('Failed to load streams', error);
                 this.loading = false;
