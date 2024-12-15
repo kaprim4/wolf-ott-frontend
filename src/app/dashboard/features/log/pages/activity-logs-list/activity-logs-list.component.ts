@@ -65,24 +65,24 @@ export class ActivityLogsListComponent implements OnInit, AfterViewInit {
         this.loggedInUser = this.tokenService.getPayload();
         this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
             this.user = user;
-        });
 
-        this.loadStreams();
-        // Subscribe to search input changes
-        this.searchSubject.pipe(
-            debounceTime(300), // Wait for 300ms pause in events
-            switchMap(searchTerm => this.activityService.getLineActivitiesByUser<LineActivityList>(this.user.id, searchTerm, this.pageIndex, this.pageSize))
-        ).subscribe(response => {
-            this.dataSource.data = response.content;
-            this.totalElements = response.totalElements;
-        });
+            this.loadStreams();
 
+            // Subscribe to search input changes
+            this.searchSubject.pipe(
+                debounceTime(300), // Wait for 300ms pause in events
+                switchMap(searchTerm => this.activityService.getLineActivitiesByUser<LineActivityList>(this.user.id, searchTerm, this.pageIndex, this.pageSize))
+            ).subscribe(response => {
+                this.dataSource.data = response.content;
+                this.totalElements = response.totalElements;
+                this.loading = false;
+            });
+        });
     }
 
     ngAfterViewInit(): void {
         // this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-
         this.sort?.sortChange.subscribe(() => this.loadStreams());
         this.paginator?.page.subscribe(() => this.loadStreams());
     }
@@ -94,8 +94,6 @@ export class ActivityLogsListComponent implements OnInit, AfterViewInit {
     loadStreams(): void {
         const page = (this.paginator?.pageIndex || this.pageIndex);
         const size = (this.paginator?.pageSize || this.pageSize);
-
-        this.loading = true; // Start loading
         this.activityService.getLineActivitiesByUser<LineActivityList>(this.user.id, '', page, size).pipe(
             catchError(error => {
                 this.loggingService.error('Failed to load streams', error);
