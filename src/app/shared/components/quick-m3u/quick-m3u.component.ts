@@ -41,8 +41,8 @@ export class QuickM3uComponent implements OnInit {
 
     presets: PresetList[];
     selectedBundleOption: string = 'packages';
-    selectedPresetId: number;
-    selectedPackageId: number;
+    selectedPresetId: number = 0;
+    selectedPackageId: number = 0;
 
     addForm: UntypedFormGroup;
     packageForm: UntypedFormGroup;
@@ -164,6 +164,8 @@ export class QuickM3uComponent implements OnInit {
             isRestreamer: false,
             isStalker: false,
             maxConnections: 1,
+            presetId: this.selectedPresetId,
+            usePreset: this.selectedPresetId !== 0,
         };
         this.loggingService.log("addLine:", line)
 
@@ -317,6 +319,7 @@ export class QuickM3uComponent implements OnInit {
                 const pkg = this.packages.find(p => p.id === this.addForm.controls['package'].value);
                 if (pkg) {
                     this.line.bouquets = pkg.bouquets;
+                    this.selectedPresetId = 0;
                 }
                 break;
             case 'presets':
@@ -358,8 +361,10 @@ export class QuickM3uComponent implements OnInit {
                 // this.loggingService.log("Trial Expiration :", expiration);
                 this.addForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
             }
-            if (this.selectedBundleOption === 'packages')
+            if (this.selectedBundleOption === 'packages'){
                 this.line.bouquets = pkg.bouquets;
+                this.selectedPresetId = 0;
+            }
 
             this.line.isIsplock = pkg.isIsplock;
             this.line.isE2 = pkg.isE2;

@@ -64,7 +64,6 @@ export interface LineDetail extends ILine {
 export interface CreateLine extends ILine {
     username: string;
     password: string;
-    useVPN?:boolean;
     memberId: number;
     packageId: number;
     bouquets: number[];
@@ -85,4 +84,8 @@ export interface CreateLine extends ILine {
     createdAt: number;
     forceServerId: number;
     bypassUa: boolean;
+
+    useVPN?:boolean;
+    usePreset:boolean;
+    presetId:number;
 }

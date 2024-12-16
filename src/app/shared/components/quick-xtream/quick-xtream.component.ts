@@ -40,8 +40,8 @@ export class QuickXtreamComponent implements OnInit {
     line: LineDetail = LineFactory.initLineDetail();
     presets: PresetList[];
     selectedBundleOption: string = 'packages';
-    selectedPresetId:number;
-    selectedPackageId:number;
+    selectedPresetId:number = 0;
+    selectedPackageId:number = 0;
 
     addForm: UntypedFormGroup;
     packageForm: UntypedFormGroup;
@@ -156,6 +156,8 @@ export class QuickXtreamComponent implements OnInit {
             isRestreamer: false,
             isStalker: false,
             maxConnections: 1,
+            presetId: this.selectedPresetId,
+            usePreset: this.selectedPresetId !== 0,
         };
         this.loggingService.log("line:", line)
 
@@ -245,6 +247,7 @@ export class QuickXtreamComponent implements OnInit {
                 const pkg = this.packages.find(p => p.id === this.addForm.controls['package'].value);
                 if (pkg) {
                     this.line.bouquets = pkg.bouquets;
+                    this.selectedPresetId = 0;
                 }
                 break;
             case 'presets':
@@ -288,8 +291,10 @@ export class QuickXtreamComponent implements OnInit {
                 // this.loggingService.log("Trial Expiration :", expiration);
                 this.addForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
             }
-            if(this.selectedBundleOption === 'packages')
+            if(this.selectedBundleOption === 'packages') {
                 this.line.bouquets = pkg.bouquets;
+                this.selectedPresetId = 0;
+            }
             this.line.isIsplock = pkg.isIsplock;
             this.line.isE2 = pkg.isE2;
             this.line.forcedCountry = pkg.forcedCountry;

@@ -13,8 +13,8 @@ import {UserDetail} from "../../models/user";
 import {UserService} from "../../services/user.service";
 import {TokenService} from "../../services/token.service";
 import {PresetDetail, PresetList} from '../../models/preset';
-import { PresetService } from '../../services/preset.service';
-import { LineFactory } from '../../factories/line.factory';
+import {PresetService} from '../../services/preset.service';
+import {LineFactory} from '../../factories/line.factory';
 import {ParamsService} from "../../services/params.service";
 import {Params} from "../../models/params";
 import {LoggingService} from "../../../services/logging.service";
@@ -42,8 +42,8 @@ export class QuickSmartersProComponent implements OnInit {
     line: LineDetail = LineFactory.initLineDetail();
     presets: PresetList[];
     selectedBundleOption: string = 'packages';
-    selectedPresetId:number;
-    selectedPackageId:number;
+    selectedPresetId: number = 0;
+    selectedPackageId: number = 0;
     param: Params;
 
     addForm: UntypedFormGroup;
@@ -111,9 +111,9 @@ export class QuickSmartersProComponent implements OnInit {
         this.paramsService.getParamByKey('smarters_pro').pipe(finalize(() => this.isLoading = false)).subscribe(param => {
             this.loggingService.log("Fetched Smarters PRO Param", param);
             this.param = param;
-            if(this.param.value.length > 0){
+            if (this.param.value.length > 0) {
                 var value = this.param.value[0];
-                if(value.dns.length > 0){
+                if (value.dns.length > 0) {
                     this.loggingService.log("Fetched Param smarters pro HOST:", value.dns[0]);
                     this.server = `http://${value.dns[0]}`;
                 }
@@ -154,9 +154,9 @@ export class QuickSmartersProComponent implements OnInit {
             memberId: this.user.id,
             createdAt: Date.now(),
 
-            adminEnabled:true,
+            adminEnabled: true,
             allowedIps: [],
-            allowedOutputs: [1,2,3],
+            allowedOutputs: [1, 2, 3],
             allowedUa: [],
             bypassUa: false,
             enabled: true,
@@ -168,6 +168,8 @@ export class QuickSmartersProComponent implements OnInit {
             isRestreamer: false,
             isStalker: false,
             maxConnections: 1,
+            presetId: this.selectedPresetId,
+            usePreset: this.selectedPresetId !== 0,
         };
         this.loggingService.log("line:", line)
 
@@ -227,7 +229,7 @@ export class QuickSmartersProComponent implements OnInit {
         return selectedPackagetObj ? selectedPackagetObj.packageName : 'Select Package';
     }
 
-    get selectedPreset():PresetList|undefined {
+    get selectedPreset(): PresetList | undefined {
         return this.presets.find(p => p.id == this.selectedPresetId);
     }
 
@@ -250,6 +252,7 @@ export class QuickSmartersProComponent implements OnInit {
             }
         });
     }
+
     getSelectedPresetName(): string {
         const selectedPresetObj = this.presets?.find(o => o.id === this.selectedPresetId);
         return selectedPresetObj ? selectedPresetObj.presetName : 'Select Package';
@@ -263,6 +266,7 @@ export class QuickSmartersProComponent implements OnInit {
                 const pkg = this.packages.find(p => p.id === this.addForm.controls['package'].value);
                 if (pkg) {
                     this.line.bouquets = pkg.bouquets;
+                    this.selectedPresetId = 0;
                 }
                 break;
             case 'presets':
@@ -277,47 +281,48 @@ export class QuickSmartersProComponent implements OnInit {
     onSelectPackage($event: any) {
         // this.loggingService.log("Package Event", $event);
         const id = $event.value; // this.addForm.controls["package"].value;
-        this.loggingService.log("Selection:",$event.value);
+        this.loggingService.log("Selection:", $event.value);
 
         this.selectedPackageId = id;
-        if(id != this.addForm.controls["package"].value)
+        if (id != this.addForm.controls["package"].value)
             this.addForm.controls["package"].setValue(id);
-        if(id != this.packageForm.controls["package"].value)
+        if (id != this.packageForm.controls["package"].value)
             this.packageForm.controls["package"].setValue(id);
-        if(id != this.bundleForm.controls["package"].value)
+        if (id != this.bundleForm.controls["package"].value)
             this.bundleForm.controls["package"].setValue(id);
         const pkg = this.packages.find(o => o.id === id);
         this.loggingService.log("Selected Package:", pkg);
 
-        if(pkg){
+        if (pkg) {
             this.line.packageId = pkg.id;
             this.selectedPackage = pkg;
-            if(pkg.isOfficial){
+            if (pkg.isOfficial) {
                 this.addForm.controls["packageCost"].setValue(pkg.officialCredits);
                 this.addForm.controls["duration"].setValue(pkg.officialDuration);
                 const expiration = PackageService.getPackageExpirationDate(pkg.officialDuration, pkg.officialDurationIn);
                 // this.loggingService.log("Official Expiration :", expiration);
                 this.addForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
-            }else{
+            } else {
                 this.addForm.controls["packageCost"].setValue(pkg.trialCredits);
                 this.addForm.controls["duration"].setValue(pkg.trialDuration);
                 const expiration = PackageService.getPackageExpirationDate(pkg.trialDuration, pkg.trialDurationIn);
                 // this.loggingService.log("Trial Expiration :", expiration);
                 this.addForm.controls["expirationDate"].setValue(this.formatDateTime(expiration));
             }
-            if(this.selectedBundleOption === 'packages')
+            if (this.selectedBundleOption === 'packages') {
                 this.line.bouquets = pkg.bouquets;
+                this.selectedPresetId = 0;
+            }
             this.line.isIsplock = pkg.isIsplock;
             this.line.isE2 = pkg.isE2;
             this.line.forcedCountry = pkg.forcedCountry;
-        }
-        else
+        } else
             this.loggingService.log(`Ops!! Package[${id}] not found`);
 
         // this.loggingService.log("Select Package", this.selectedPackage);
     }
 
-    formatDateTime(date:Date) {
+    formatDateTime(date: Date) {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
