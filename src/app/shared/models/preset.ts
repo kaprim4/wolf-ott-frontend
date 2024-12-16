@@ -3,6 +3,7 @@ export interface IPreset {
 }
 
 export interface PresetList extends IPreset {
+    bouquets: number[]
     presetName: string,
     presetDescription: string,
     status: boolean,

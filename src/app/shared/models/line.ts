@@ -59,6 +59,9 @@ export interface LineDetail extends ILine {
 
     useVPN?:boolean;
     vpnDns?:string;
+
+    usePreset: boolean;
+    presetId?: number;
 }
 
 export interface CreateLine extends ILine {
@@ -87,5 +90,5 @@ export interface CreateLine extends ILine {
 
     useVPN?:boolean;
     usePreset:boolean;
-    presetId:number;
+    presetId?:number;
 }

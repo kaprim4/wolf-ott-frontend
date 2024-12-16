@@ -34,6 +34,7 @@ export class LineFactory {
             playToken: null,
             lastExpirationVideo: null,
             packageId: null,
+            usePreset: false,
             accessToken: null,
             contact: null,
             lastActivity: 0,
