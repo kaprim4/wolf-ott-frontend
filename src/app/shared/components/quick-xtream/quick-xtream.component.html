@@ -80,8 +80,7 @@
                             </ng-container>
                             <ng-container *ngSwitchCase="'presets'">
                                 <mat-form-field appearance="outline" class="w-100 m-r-24">
-                                    <mat-select [(ngModel)]="selectedPresetId"
-                                                (selectionChange)="onSelectPreset($event)">
+                                    <mat-select formControlName="preset" (selectionChange)="onSelectPreset($event)">
                                         <mat-select-trigger>
                                             {{ getSelectedPresetName() || 'Select Preset' }}
                                         </mat-select-trigger>
