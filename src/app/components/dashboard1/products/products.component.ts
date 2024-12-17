@@ -42,7 +42,6 @@ export class AppProductsComponent implements OnInit {
     loading: boolean = true;
 
     constructor(
-        private userService: UserService,
         private tokenService: TokenService,
         private rankingService: RankingService,
         private lineService: LineService,
@@ -55,43 +54,27 @@ export class AppProductsComponent implements OnInit {
     ngOnInit(): void {
         this.loading = true;
         this.loggedInUser = this.tokenService.getPayload();
-        this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe(
-            {
-                next: (user) => {
-                    this.user = user;
-                    this.registrationDate = user.dateRegistered
-                },
-                error: (err) => {
-                    this.notificationService.error('Error while get User');
-                    this.loggingService.error("'Error while get User'", err);
-                },
-                complete: () => {
-                    this.lineService.getAllLinesWithMemberId(this.user.id).subscribe(
-                        {
-                            next: (count) => {
-                                this.credits = count
-                            },
-                            error: (err) => {
-                                this.notificationService.error('Error while get All Lines With Member Id');
-                                this.loggingService.error("'Error while get All Lines With Member Id'", err);
-                            },
-                            complete: () => {
-                                this.rankingService.getAllRanks<Rank>().subscribe(ranks => {
-                                    ranks.forEach(r => {
-                                        this.loggingService.log("rank: ", r)
-                                        if (r.minPoints <= this.credits && r.maxPoints >= this.credits) {
-                                            this.loggingService.log("condiction Rank:", r)
-                                            this.rank = r;
-                                            this.imagePreview = this.rank.badgeImage;
-                                        }
-                                    });
-                                    this.loading = false;
-                                })
-                            }
+        this.lineService.getAllLinesWithMemberId(this.loggedInUser.sid).subscribe({
+            next: (count) => {
+                this.credits = count
+            },
+            error: (err) => {
+                this.notificationService.error('Error while get All Lines With Member Id');
+                this.loggingService.error("'Error while get All Lines With Member Id'", err);
+            },
+            complete: () => {
+                this.rankingService.getAllRanks<Rank>().subscribe(ranks => {
+                    ranks.forEach(r => {
+                        //this.loggingService.log("rank: ", r)
+                        if (r.minPoints <= this.credits && r.maxPoints >= this.credits) {
+                            this.loggingService.log("condiction Rank:", r)
+                            this.rank = r;
+                            this.imagePreview = this.rank.badgeImage;
                         }
-                    );
-                }
+                    });
+                    this.loading = false;
+                })
             }
-        );
+        });
     }
 }

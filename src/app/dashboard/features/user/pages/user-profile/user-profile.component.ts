@@ -136,23 +136,7 @@ export class UserProfileComponent implements OnInit {
 
     saveDetail(): void {
         this.loggingService.log("saveDetail clicked")
-        if(this.fb.control("current_password").value !== ""){
-            let currentPassword = this.fb.control("current_password").value;
-            this.authenticationService.validatePassword(this.user.username, currentPassword).subscribe({
-                next: (value) => {
-                    console.log("validate Password: ", value);
-                    if(value.status === 200 && value.body) {
-                        console.log(value)
-                    }
-                },
-                error: err => {
-                    this.notificationService.error("An error has occurred while checking password", err);
-                },
-                complete: () => {
-                    this.notificationService.success("Profile updated successfully.");
-                }
-            });
-        }
+
         if (this.userForm.valid) {
             const formValues = this.userForm.value;
             Object.assign(this.user, {
@@ -161,17 +145,36 @@ export class UserProfileComponent implements OnInit {
                 apiKey: formValues.apiKey,
             });
             this.loggingService.info("updateUser:", this.user);
-            /*this.userService.updateUser(this.user).subscribe({
-                next: value => {
-                    this.router.navigate(['/apps/users/profile']);
-                },
-                error: err => {
-                    this.notificationService.error("An error has occurred", err);
-                },
-                complete: () => {
-                    this.notificationService.success("Profile updated successfully.");
-                }
-            });*/
+
+            if(this.fb.control("current_password").value !== ""){
+                let currentPassword = this.fb.control("current_password").value;
+                this.authenticationService.validatePassword(this.user.username, currentPassword).subscribe({
+                    next: (value) => {
+                        console.log("validate Password: ", value);
+                        if(value.status === 200 && value.body) {
+                            console.log(value)
+                        }
+                    },
+                    error: err => {
+                        this.notificationService.error("An error has occurred while checking password", err);
+                    },
+                    complete: () => {
+                        this.userService.updateUser(this.user).subscribe({
+                            next: value => {
+                                this.router.navigate(['/apps/users/profile']);
+                            },
+                            error: err => {
+                                this.notificationService.error("An error has occurred", err);
+                            },
+                            complete: () => {
+                                this.notificationService.success("Profile updated successfully.");
+                            }
+                        });
+                    }
+                });
+            }else{
+                console.log("current_password empty");
+            }
         } else {
             this.loggingService.error('Form is invalid', this.userForm.errors);
             this.notificationService.error('Form is invalid.');

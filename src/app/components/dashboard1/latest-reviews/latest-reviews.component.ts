@@ -12,6 +12,9 @@ import {UserLogService} from "../../../shared/services/user-log.service";
 import {catchError, of} from "rxjs";
 import {Page} from "../../../shared/models/page";
 import {LoggingService} from "../../../services/logging.service";
+import {TokenService} from "../../../shared/services/token.service";
+import {LineService} from "../../../shared/services/line.service";
+import {LineList} from "../../../shared/models/line";
 
 @Component({
     selector: 'app-latest-reviews',
@@ -34,55 +37,58 @@ export class AppLatestReviewsComponent implements OnInit, AfterViewInit {
         'date'
     ];
 
-    dataSource = new MatTableDataSource<UserLogList>([]);
+    dataSource = new MatTableDataSource<LineList>([]);
     totalElements = 0;
-    pageSize = 10;
-    pageIndex = 0;
+    pageSize = 20;
     sortDirection = 'asc';
     sortActive = 'id';
     expiringLinesloading: boolean = true;
+
+    loggedInUser: any;
 
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
     constructor(
-        private logService:UserLogService,
-        private loggingService: LoggingService
+        private lineService: LineService,
+        private loggingService: LoggingService,
+        private tokenService: TokenService,
     ) {
         // this.loadStreams();
     }
 
     ngOnInit(): void {
-        this.loadLogs();
+        this.loggedInUser = this.tokenService.getPayload();
+        this.loadExpiredLines();
     }
 
     ngAfterViewInit(): void {
         // this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-
-        this.sort?.sortChange.subscribe(() => this.loadLogs());
-        this.paginator?.page.subscribe(() => this.loadLogs());
+        this.sort?.sortChange.subscribe(() => this.loadExpiredLines());
+        this.paginator?.page.subscribe(() => this.loadExpiredLines());
     }
 
     filter(filterValue: string): void {
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
-    loadLogs(): void {
-        const page = (this.paginator?.pageIndex || this.pageIndex);
-        const size = (this.paginator?.pageSize || this.pageSize);
-
-        this.expiringLinesloading = true; // Start loading
-        this.logService.getUserLogs<UserLogList>('id,desc', page, size).pipe(
-            catchError(error => {
+    loadExpiredLines(): void {
+        this.expiringLinesloading = true;
+        this.lineService.getExpiredLine(this.pageSize).subscribe({
+            next: pageResponse => {
+                this.dataSource.data = pageResponse;
+                this.totalElements = pageResponse.length;
+                this.expiringLinesloading = false;
+            },
+            error: error => {
                 this.loggingService.error('Failed to load streams', error);
                 this.expiringLinesloading = false;
-                return of({content: [], totalElements: 0, totalPages: 0, size: 0, number: 0} as Page<UserLogList>);
-            })
-        ).subscribe(pageResponse => {
-            this.dataSource.data = pageResponse.content;
-            this.totalElements = pageResponse.totalElements;
-            this.expiringLinesloading = false;
+                this.dataSource.data = [];
+            },
+            complete: () => {
+                this.expiringLinesloading = false;
+            }
         });
     }
 }

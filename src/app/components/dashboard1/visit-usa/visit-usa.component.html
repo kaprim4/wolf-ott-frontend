@@ -1,29 +1,26 @@
 <mat-card class="cardWithShadow">
-    <ng-container *ngIf="logsLoading; else chartContent">
+    @if (loading) {
         <mat-progress-bar mode="query"></mat-progress-bar>
-    </ng-container>
-
-    <ng-template #chartContent>
-        <mat-card-content class="p-24">
-            <mat-card-title>
-                Top 10 Countries
-            </mat-card-title>
-            <mat-card-subtitle class="mat-body-1">per location</mat-card-subtitle>
-        </mat-card-content>
-        <mat-card-content class="p-24">
-            <ng-container *ngFor="let country of topCountries">
-                <div class="d-flex align-items-center justify-content-between gap-16 m-t-20">
+    }
+    <mat-card-header class="p-24">
+        <mat-card-title>
+            Top 10 Countries
+        </mat-card-title>
+        <mat-card-subtitle class="mat-body-1">In last 3 months</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="p-24">
+        <ng-container *ngFor="let lineChart of lineChartList">
+            <div class="d-flex align-items-center justify-content-between gap-16 m-t-20">
                     <span class="f-w-600 f-s-14">
-                        <span [ngClass]="['fi', 'fi-'+country.name.toLowerCase()]"></span>
+                        <span [ngClass]="['fi', 'fi-'+lineChart.country.toLowerCase()]"></span>
                     </span>
-                    <mat-progress-bar
-                        mode="determinate"
-                        [value]="country.value"
-                        [color]="getColor(country.value)">
-                    </mat-progress-bar>
-                    <span class="f-w-600 f-s-14">{{ country.value | number: '1.0-0' }}%</span>
-                </div>
-            </ng-container>
-        </mat-card-content>
-    </ng-template>
+                <mat-progress-bar
+                    mode="determinate"
+                    [value]="lineChart.percentage"
+                    [color]="getColor(lineChart.percentage)">
+                </mat-progress-bar>
+                <span class="f-w-600 f-s-14">{{ lineChart.percentage | number: '1.0-0' }}%</span>
+            </div>
+        </ng-container>
+    </mat-card-content>
 </mat-card>

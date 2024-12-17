@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {CrudService} from './crud.service';
-import {ILineActivity, LineActivityList} from '../models/line-activity';
+import {ILineActivity, LineActivityList, LineChartResponse} from '../models/line-activity';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {JwtService} from './jwt.service';
 import {Page} from '../models/page';
@@ -48,6 +48,13 @@ export class LineActivityService extends CrudService<ILineActivity> {
             .pipe(map((response: Page<LineActivityList>) => {
                 return response;
             }));
+    }
+
+    public getLineChart(limit: number): Observable<LineChartResponse[]> {
+        return this.httpClient.get<LineChartResponse[]>(
+            `${this.apiBaseUrl}/api/v1/${this.endpoint}/chart/${limit}`,
+            { headers: this.headers }
+        );
     }
 
     public getLineActivity<T extends ILineActivity>(id_line: number): Observable<T> {

@@ -32,8 +32,7 @@ export class AppTopProjectsComponent implements OnInit, AfterViewInit {
         'reseller',
         'line',
         'action_package',
-        'date',
-        'type'
+        'date'
     ];
 
     dataSource = new MatTableDataSource<UserLogList>([]);
@@ -48,7 +47,7 @@ export class AppTopProjectsComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
     constructor(
-        private logService:UserLogService,
+        private logService: UserLogService,
         private loggingService: LoggingService
     ) {
         // this.loadStreams();

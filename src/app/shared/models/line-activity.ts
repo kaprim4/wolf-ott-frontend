@@ -15,3 +15,9 @@ export interface LineActivityList extends ILineActivity {
     endAt: Date,
     output: string
 }
+
+export interface LineChartResponse {
+    country: string,
+    count: number,
+    percentage: string,
+}

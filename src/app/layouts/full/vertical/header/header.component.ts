@@ -176,38 +176,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         if(this.$clock) this.$clock.unsubscribe();
     }
 
-    notifications: notifications[] = [
-        {
-            id: 1,
-            img: '/assets/images/profile/user-1.jpg',
-            title: 'Roman Joined the Team!',
-            subtitle: 'Congratulate him',
-        },
-        {
-            id: 2,
-            img: '/assets/images/profile/user-2.jpg',
-            title: 'New message received',
-            subtitle: 'Salma sent you new message',
-        },
-        {
-            id: 3,
-            img: '/assets/images/profile/user-3.jpg',
-            title: 'New Payment received',
-            subtitle: 'Check your earnings',
-        },
-        {
-            id: 4,
-            img: '/assets/images/profile/user-4.jpg',
-            title: 'Jolly completed tasks',
-            subtitle: 'Assign her new tasks',
-        },
-        {
-            id: 5,
-            img: '/assets/images/profile/user-5.jpg',
-            title: 'Roman Joined the Team!',
-            subtitle: 'Congratulate him',
-        },
-    ];
     profiledd: profiledd[] = [
         {
             id: 1,
@@ -290,48 +258,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
             title: 'Courses',
             subtitle: 'Create new course',
             link: '/apps/courses',
-        },
-    ];
-    quicklinks: quicklinks[] = [
-        {
-            id: 1,
-            title: 'Pricing Page',
-            link: '/theme-pages/pricing',
-        },
-        {
-            id: 2,
-            title: 'Authentication Design',
-            link: '/authentication/login',
-        },
-        {
-            id: 3,
-            title: 'Register Now',
-            link: '/authentication/side-register',
-        },
-        {
-            id: 4,
-            title: '404 Error Page',
-            link: '/authentication/error',
-        },
-        {
-            id: 5,
-            title: 'Notes App',
-            link: '/apps/notes',
-        },
-        {
-            id: 6,
-            title: 'Employee App',
-            link: '/apps/employee',
-        },
-        {
-            id: 7,
-            title: 'Todo Application',
-            link: '/apps/todo',
-        },
-        {
-            id: 8,
-            title: 'Treeview',
-            link: '/theme-pages/treeview',
         },
     ];
 }

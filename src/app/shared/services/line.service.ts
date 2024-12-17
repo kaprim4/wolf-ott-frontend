@@ -10,6 +10,7 @@ import {QuickM3uComponent} from '../components/quick-m3u/quick-m3u.component';
 import {environment} from "../../../environments/environment";
 import {Patch} from '../models/patch';
 import {LoggingService} from "../../services/logging.service";
+import {LineChartResponse} from "../models/line-activity";
 
 @Injectable({
     providedIn: 'root'
@@ -142,5 +143,12 @@ export class LineService extends CrudService<ILine> {
     public killLiveLine(id: number): Observable<String> {
         const url = `${this.apiBaseUrl}/api/v1/${this.endpoint}/${id}/kill-live-line`
         return this.httpClient.post<String>(url, null, {headers: this.headers});
+    }
+
+    public getExpiredLine(limit: number): Observable<LineList[]> {
+        return this.httpClient.get<LineList[]>(
+            `${this.apiBaseUrl}/api/v1/${this.endpoint}/expired/${limit}`,
+            { headers: this.headers }
+        );
     }
 }
