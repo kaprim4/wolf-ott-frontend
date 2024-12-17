@@ -67,6 +67,7 @@ export class QuickXtreamComponent implements OnInit {
             use_vpn: [false, Validators.required],
             owner: ['', Validators.required],
             package: ['', Validators.required],
+            preset: ['', Validators.required],
             packageCost: [0],
             duration: [''],
             maxConnections: [1],
@@ -156,8 +157,8 @@ export class QuickXtreamComponent implements OnInit {
             isRestreamer: false,
             isStalker: false,
             maxConnections: 1,
-            presetId: this.selectedPresetId,
-            usePreset: this.selectedPresetId !== 0,
+            presetId: this.line.presetId,
+            usePreset: this.line.usePreset,
         };
         this.loggingService.log("line:", line)
 
@@ -249,10 +250,15 @@ export class QuickXtreamComponent implements OnInit {
                     this.line.bouquets = pkg.bouquets;
                     this.selectedPresetId = 0;
                 }
+                this.line.usePreset = false;
                 break;
             case 'presets':
-                // Update line.bouquets with the IDs of preset bouquets
-                // this.line.bouquets = this.presetBouquets.map(bouquet => bouquet.id);
+                const preset = this.presets.find(p => p.id === this.addForm.controls['preset'].value);
+                if (preset) {
+                    this.line.bouquets = preset.bouquets;
+                    this.selectedPresetId = 0;
+                }
+                this.line.usePreset = true;
                 break;
             default:
                 this.loggingService.log("Unknown Bundle");
