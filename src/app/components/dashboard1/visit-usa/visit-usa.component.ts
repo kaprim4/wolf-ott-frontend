@@ -12,6 +12,9 @@ import {Page} from "../../../shared/models/page";
 import {NotificationService} from "../../../shared/services/notification.service";
 import {DecimalPipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {LoggingService} from "../../../services/logging.service";
+import {UserDetail} from "../../../shared/models/user";
+import {TokenService} from "../../../shared/services/token.service";
+import {UserService} from "../../../shared/services/user.service";
 
 @Component({
     selector: 'app-visit-usa',
@@ -28,37 +31,53 @@ import {LoggingService} from "../../../services/logging.service";
     providers: [provideEcharts()],
     templateUrl: './visit-usa.component.html',
 })
-export class AppVisitUsaComponent implements OnInit
-{
+export class AppVisitUsaComponent implements OnInit {
     logsLoading: boolean = true;
     lineActivityList: any[] = [];
     topCountries: { name: string; value: number }[] = [];
-    totalElements:number = 0;
-    page:number = 0;
-    size:number = 5000;
+    totalElements: number = 0;
+    page: number = 0;
+    size: number = 5000;
+
+    loggedInUser: any;
+    user: UserDetail = {
+        id: 0, username: ""
+    };
 
     constructor(
-        private activityService:LineActivityService,
-        private notificationService:NotificationService,
-        private loggingService: LoggingService
+        private activityService: LineActivityService,
+        private notificationService: NotificationService,
+        private loggingService: LoggingService,
+        private tokenService: TokenService,
+        private userService: UserService,
     ) {
     }
 
     ngOnInit() {
-        this.topCountries = this.processData(this.lineActivityList);
-        this.activityService.getLineActivities<LineActivityList>('', this.page, this.size).pipe(
-            catchError(error => {
-                this.loggingService.error('Failed to load streams', error);
-                this.logsLoading = false;
-                this.notificationService.error('Failed to load streams. Please try again.');
-                return of({content: [], totalElements: 0, totalPages: 0, size: 0, number: 0} as Page<LineActivityList>);
-            })
-        ).subscribe(pageResponse => {
-            this.lineActivityList = pageResponse.content;
-            this.loggingService.log("lineActivityList: ", this.lineActivityList)
-            this.totalElements = pageResponse.totalElements;
-            this.logsLoading = false;
+        this.loggedInUser = this.tokenService.getPayload();
+        this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
+            this.user = user;
             this.topCountries = this.processData(this.lineActivityList);
+            this.activityService.getLineActivitiesByUser<LineActivityList>(this.user.id, '', this.page, this.size).pipe(
+                catchError(error => {
+                    this.loggingService.error('Failed to load streams', error);
+                    this.logsLoading = false;
+                    this.notificationService.error('Failed to load streams. Please try again.');
+                    return of({
+                        content: [],
+                        totalElements: 0,
+                        totalPages: 0,
+                        size: 0,
+                        number: 0
+                    } as Page<LineActivityList>);
+                })
+            ).subscribe(pageResponse => {
+                this.lineActivityList = pageResponse.content;
+                this.loggingService.log("lineActivityList: ", this.lineActivityList)
+                this.totalElements = pageResponse.totalElements;
+                this.logsLoading = false;
+                this.topCountries = this.processData(this.lineActivityList);
+            });
         });
     }
 
@@ -73,7 +92,7 @@ export class AppVisitUsaComponent implements OnInit
         });
         const total = data.length;
         return Object.entries(countryCounts)
-            .map(([name, count]) => ({ name, value: (count / total) * 100 }))
+            .map(([name, count]) => ({name, value: (count / total) * 100}))
             .sort((a, b) => b.value - a.value)
             .slice(0, 10);
     }
