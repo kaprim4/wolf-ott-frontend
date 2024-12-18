@@ -27,7 +27,7 @@ export class MoviesListComponent implements OnInit, AfterViewInit {
 
     dataSource = new MatTableDataSource<MovieList>([]);
     totalElements = 0;
-    pageSize = 10;
+    pageSize = 25;
     pageIndex = 0;
     sortDirection = 'asc';
     sortActive = 'id';

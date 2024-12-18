@@ -22,7 +22,8 @@ export interface PackageList extends IPackage {
     isRestreamer: boolean,
     isIsplock: boolean,
     outputFormats: number[],
-    forcedCountry: string
+    forcedCountry: string,
+    maxConnections: number,
 }
 
 export interface PackageDetail extends IPackage {

@@ -33,7 +33,7 @@ export class ActivityLogsListComponent implements OnInit, AfterViewInit {
 
     dataSource = new MatTableDataSource<LineActivityList>([]);
     totalElements = 0;
-    pageSize = 10;
+    pageSize = 25;
     pageIndex = 0;
     sortDirection = 'asc';
     sortActive = 'id';

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {CrudService} from './crud.service';
-import {IPackage} from '../models/package';
+import {IPackage, PackageList} from '../models/package';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {JwtService} from './jwt.service';
 import {Page} from '../models/page';
@@ -33,6 +33,34 @@ export class PackageService extends CrudService<IPackage> {
         );
     }
 
+    public getPackageListByUserId<PackageList>(user_id: number): Observable<PackageList[]> {
+        return this.httpClient.get<PackageList[]>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/list/user/${user_id}`, {
+            headers: this.headers,
+            params: {},
+            observe: 'response'
+        }).pipe(
+            map((response: HttpResponse<PackageList[]>) => {
+                return response.body as PackageList[];
+            })
+        );
+    }
+
+    public getPackagesByUserId<PackageList>(user_id: number, search: string, page: number, size: number): Observable<Page<PackageList>> {
+        return this.httpClient.get<Page<PackageList>>(`${this.apiBaseUrl}/api/v1/${this.endpoint}/user/${user_id}`, {
+            headers: this.headers,
+            params: {
+                search: search,
+                page: page.toString(),
+                size: size.toString(),
+            },
+            observe: 'response'
+        }).pipe(
+            map((response: HttpResponse<Page<PackageList>>) => {
+                return response.body as Page<PackageList>;
+            })
+        );
+    }
+
     public getPackage<T extends IPackage>(id_package: number): Observable<T> {
         return this.getOneById(id_package).pipe(
             map(pkg => pkg.body as T)
@@ -51,9 +79,9 @@ export class PackageService extends CrudService<IPackage> {
         return this.delete<void>(id);
     }
 
-    public static getPackageExpirationDate(duration:number, durationIn:string) {
+    public static getPackageExpirationDate(duration: number, durationIn: string) {
         const now = new Date(); // Get the current date and time
-    
+
         switch (durationIn) {
             case "days":
                 now.setDate(now.getDate() + duration); // Add days
@@ -76,7 +104,7 @@ export class PackageService extends CrudService<IPackage> {
             default:
                 throw new Error("Invalid durationIn value. It must be 'days', 'hours', 'minutes', 'weeks', 'months', or 'years'.");
         }
-    
+
         return now; // Return the calculated expiration date
     }
 }

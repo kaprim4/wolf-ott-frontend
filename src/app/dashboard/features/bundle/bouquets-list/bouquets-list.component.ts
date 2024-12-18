@@ -29,7 +29,7 @@ export class BouquetsListComponent implements OnInit, AfterViewInit {
 
     dataSource = new MatTableDataSource<BouquetList>([]);
     totalElements = 0;
-    pageSize = 10;
+    pageSize = 25;
     pageIndex = 0;
     sortDirection = 'asc';
     sortActive = 'id';

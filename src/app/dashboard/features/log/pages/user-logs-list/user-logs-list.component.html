@@ -1,5 +1,5 @@
 <mat-card class="cardWithShadow">
-    @if(loading){
+    @if (loading) {
         <mat-progress-bar mode="query"></mat-progress-bar>
     }
     <mat-card-content>
@@ -51,7 +51,9 @@
 
             <ng-container matColumnDef="line">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="f-w-600 f-s-15">Line / User</th>
-                <td mat-cell *matCellDef="let element" class="f-s-14">{{ element.type == 'line' ? element.line_username : element.user_username }}</td>
+                <td mat-cell *matCellDef="let element"
+                    class="f-s-14">{{ element.type == 'line' ? element.line_username : element.user_username }}
+                </td>
             </ng-container>
 
             <ng-container matColumnDef="action_package">
@@ -131,7 +133,7 @@
         </table>
         <mat-paginator [length]="totalElements"
                        [pageSize]="pageSize"
-                       [pageSizeOptions]="[5, 10, 25]"
+                       [pageSizeOptions]="[10,25,50,100,250,500]"
                        (page)="loadLogs()"
                        showFirstLastButtons>
         </mat-paginator>

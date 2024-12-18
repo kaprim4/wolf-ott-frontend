@@ -101,10 +101,6 @@ export class QuickM3uComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.packageService.getAllPackages<PackageList>().subscribe(list => {
-            this.packages = list;
-            this.filteredPackages = this.packages;
-        })
         this.loggedInUser = this.tokenService.getPayload();
         this.userService.getUser<UserDetail>(this.loggedInUser.sid).subscribe((user) => {
             this.user = user;
@@ -112,6 +108,18 @@ export class QuickM3uComponent implements OnInit {
             this.server = `http://${this.user.resellerDns}:80/`;
         });
 
+        this.packageService.getPackageListByUserId<PackageList>(this.loggedInUser.sid).subscribe({
+            next: list => {
+                this.packages = list;
+                this.filteredPackages = this.packages;
+            },
+            error: err => {
+                this.loggingService.log("An error had occured: ", err);
+            },
+            complete: () => {
+
+            }
+        });
         this.presetService.getAllPresets<PresetList>().subscribe(presets => {
             this.presets = presets;
         });

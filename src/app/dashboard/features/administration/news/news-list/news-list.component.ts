@@ -28,7 +28,7 @@ export class NewsListComponent implements OnInit {
 
     dataSource = new MatTableDataSource<Article>([]);
     totalElements = 0;
-    pageSize = 10;
+    pageSize = 25;
     pageIndex = 0;
     sortDirection = 'asc';
     sortActive = 'id';

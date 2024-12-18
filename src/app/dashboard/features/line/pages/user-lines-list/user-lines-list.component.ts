@@ -38,7 +38,7 @@ export class UserLinesListComponent implements OnInit, AfterViewInit {
 
     dataSource = new MatTableDataSource<LineList>([]);
     totalElements = 0;
-    pageSize = 10;
+    pageSize = 25;
     pageIndex = 0;
     sortDirection = 'asc';
     sortActive = 'id';

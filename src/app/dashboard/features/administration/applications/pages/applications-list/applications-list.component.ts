@@ -28,7 +28,7 @@ export class ApplicationsListComponent implements OnInit {
 
   dataSource = new MatTableDataSource<Apps>([]);
   totalElements = 0;
-  pageSize = 10;
+  pageSize = 25;
   pageIndex = 0;
   sortDirection = 'asc';
   sortActive = 'id';

@@ -7,7 +7,7 @@ import {PackageList} from 'src/app/shared/models/package';
 import {Page} from 'src/app/shared/models/page';
 import {NotificationService} from 'src/app/shared/services/notification.service';
 import {PackageService} from 'src/app/shared/services/package.service';
-import { TokenService } from 'src/app/shared/services/token.service';
+import {TokenService} from 'src/app/shared/services/token.service';
 import {LoggingService} from "../../../../services/logging.service";
 
 @Component({
@@ -28,7 +28,7 @@ export class PackagesListComponent implements OnInit, AfterViewInit {
 
     dataSource = new MatTableDataSource<PackageList>([]);
     totalElements = 0;
-    pageSize = 10;
+    pageSize = 25;
     pageIndex = 0;
     sortDirection = 'asc';
     sortActive = 'id';
@@ -37,23 +37,28 @@ export class PackagesListComponent implements OnInit, AfterViewInit {
     private searchSubject = new Subject<string>();
     searchValue = '';
 
-    principal:any;
+    principal: any;
 
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    constructor(private packageService: PackageService, private notificationService: NotificationService, private tokenService: TokenService,
-                private loggingService: LoggingService) {
-        this.loadPackages();
-        this.principal = this.tokenService.getPayload();
+    constructor(
+        private packageService: PackageService,
+        private notificationService: NotificationService,
+        private tokenService: TokenService,
+        private loggingService: LoggingService
+    ) {
+
     }
 
     ngOnInit(): void {
+        this.principal = this.tokenService.getPayload();
+
         this.loadPackages();
         // Subscribe to search input changes
         this.searchSubject.pipe(
             debounceTime(300), // Wait for 300ms pause in events
-            switchMap(searchTerm => this.packageService.getPackages<PackageList>(searchTerm, this.pageIndex, this.pageSize))
+            switchMap(searchTerm => this.packageService.getPackagesByUserId<PackageList>(this.principal.sid, searchTerm, this.pageIndex, this.pageSize))
         ).subscribe(response => {
             this.dataSource.data = response.content;
             this.totalElements = response.totalElements;
@@ -86,7 +91,7 @@ export class PackagesListComponent implements OnInit, AfterViewInit {
         const size = this.paginator?.pageSize || this.pageSize;
         this.loading = true;
 
-        this.packageService.getPackages<PackageList>('', page, size).pipe(
+        this.packageService.getPackagesByUserId<PackageList>(this.principal.sid, '', page, size).pipe(
             catchError(error => {
                 this.loggingService.error('Failed to load packages', error);
                 this.loading = false;
