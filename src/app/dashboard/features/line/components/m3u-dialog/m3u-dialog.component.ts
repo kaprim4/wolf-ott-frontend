@@ -53,7 +53,7 @@ export class M3UDialogComponent {
         this.loggingService.log("vpnDns :", this.vpnDns);
 
         this.server = this.vpnDns;
-        this.defaultDns = this.vpnDns;
+        this.defaultDns = this.vpnDns || this.defaultDns;
     }
 
     formatUrlWithParams(dns: string, format: any) {
