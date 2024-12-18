@@ -50,6 +50,8 @@ export class QuickSmartersProComponent implements OnInit {
     packageForm: UntypedFormGroup;
     bundleForm: UntypedFormGroup;
 
+    isCreated: boolean = false;
+
     constructor(
         private lineService: LineService,
         private packageService: PackageService,
@@ -187,7 +189,9 @@ export class QuickSmartersProComponent implements OnInit {
             finalize(() => {
                 this.isLoading = false;
             })
-        ).subscribe();
+        ).subscribe(l => {
+            this.isCreated = true;
+        });
     }
 
     copyToClipboard() {

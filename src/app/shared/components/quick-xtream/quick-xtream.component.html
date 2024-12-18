@@ -41,7 +41,7 @@
                                 <mat-slide-toggle formControlName="use_vpn" color="primary"></mat-slide-toggle>
                             </div>
                         </div>
-                        <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center justify-content-between" *ngIf="!isCreated">
                             <button mat-flat-button color="warn" matStepperPrevious>Back</button>
                             <button mat-flat-button color="primary" matStepperNext>Next</button>
                         </div>
@@ -93,7 +93,7 @@
                             </ng-container>
                         </ng-container>
                     </div>
-                    <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center justify-content-between" *ngIf="!isCreated">
                         <button mat-flat-button color="warn" matStepperPrevious>Back</button>
                         <button mat-flat-button color="primary" matStepperNext (click)="createLine()">
                             Create Line

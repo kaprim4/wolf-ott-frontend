@@ -49,6 +49,8 @@ export class QuickM3uComponent implements OnInit {
     bundleForm: UntypedFormGroup;
     m3uForm: UntypedFormGroup;
 
+    isCreated: boolean = false;
+
     constructor(
         private lineService: LineService,
         private packageService: PackageService,
@@ -192,8 +194,8 @@ export class QuickM3uComponent implements OnInit {
                 } else {
                     this.server = `http://${l.vpnDns}:80/`;
                 }
-
             }
+            this.isCreated = true;
         });
     }
 

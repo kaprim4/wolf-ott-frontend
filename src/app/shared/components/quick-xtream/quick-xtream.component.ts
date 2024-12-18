@@ -47,6 +47,8 @@ export class QuickXtreamComponent implements OnInit {
     packageForm: UntypedFormGroup;
     bundleForm: UntypedFormGroup;
 
+    isCreated: boolean = false;
+
     constructor(
         private lineService: LineService,
         private packageService: PackageService,
@@ -182,8 +184,8 @@ export class QuickXtreamComponent implements OnInit {
                 }else{
                     this.server = `http://${l.vpnDns}:80/`;
                 }
-
             }
+            this.isCreated = true;
         });
     }
 
