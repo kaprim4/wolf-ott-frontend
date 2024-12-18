@@ -20,13 +20,13 @@
                                 <mat-select-trigger>
                                     {{ getSelectedPackageName() }}
                                 </mat-select-trigger>
-                                <mat-option>
+                                <!-- <mat-option>
                                     <ngx-mat-select-search
                                         [formControl]="packageSearchCtrl"
                                         placeholderLabel="Search"
                                         noEntriesFoundLabel="No options found">
                                     </ngx-mat-select-search>
-                                </mat-option>
+                                </mat-option> -->
                                 <mat-option *ngFor="let pkg of filteredPackages" [value]="pkg.id"
                                             (click)="$event.stopPropagation()">
                                     {{ pkg.packageName }}
