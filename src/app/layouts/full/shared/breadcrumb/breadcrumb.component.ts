@@ -39,7 +39,7 @@ export class AppBreadcrumbComponent {
             // tslint:disable-next-line - Disables all
             .subscribe((event) => {
                 // tslint:disable-next-line - Disables all
-                this.titleService.setTitle(event['title'] + ' - Angular 18');
+                this.titleService.setTitle(event['title'] + ' - WolfOTT');
                 this.pageInfo = event;
             });
     }
