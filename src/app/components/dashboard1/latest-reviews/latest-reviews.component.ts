@@ -39,7 +39,7 @@ export class AppLatestReviewsComponent implements OnInit, AfterViewInit {
 
     dataSource = new MatTableDataSource<LineList>([]);
     totalElements = 0;
-    pageSize = 20;
+    pageSize = 25;
     sortDirection = 'asc';
     sortActive = 'id';
     expiringLinesloading: boolean = true;
