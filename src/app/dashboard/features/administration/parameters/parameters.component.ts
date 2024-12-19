@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { VpnParamsComponent } from './components/vpn-params/vpn-params.component';
 import { SmartersProParamsComponent } from './components/smarters-pro-params/smarters-pro-params.component';
 import {LoggingService} from "../../../../services/logging.service";
+import { WolfguardParamsComponent } from './components/wolfguard-params/wolfguard-params.component';
 
 @Component({
   selector: 'app-parameters',
@@ -10,12 +11,13 @@ import {LoggingService} from "../../../../services/logging.service";
 })
 export class ParametersComponent implements OnInit {
 
-  params: any[] = ['VPN', 'Smarters PRO']
+  params: any[] = ['VPN', 'Smarters PRO', 'Wolf Guard']
   sidePanelOpened:boolean = true;
   selectedParam:string = 'VPN';
 
   @ViewChild(VpnParamsComponent, { static: false }) vpnParamsComponent: VpnParamsComponent;
   @ViewChild(SmartersProParamsComponent, { static: false }) smartersProParamsComponent: SmartersProParamsComponent;
+  @ViewChild(WolfguardParamsComponent, { static: false }) worlfGuardParamsComponent: WolfguardParamsComponent;
 
 
   constructor(
@@ -43,6 +45,8 @@ export class ParametersComponent implements OnInit {
       this.vpnParamsComponent.onSaveChanges(); // Call save method on the VPN component
     } else if (this.selectedParam === 'Smarters PRO' && this.smartersProParamsComponent) {
       this.smartersProParamsComponent.onSaveChanges(); // Call save method on the Smarters PRO component
+    } else if (this.selectedParam === 'Wolf Guard' && this.worlfGuardParamsComponent) {
+      this.worlfGuardParamsComponent.onSaveChanges(); // Call save method on the WolfGuard component
     }
   }
 

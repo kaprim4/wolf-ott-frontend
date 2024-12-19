@@ -1,0 +1,12 @@
+  <mat-card>
+    @if (loading) {
+        <mat-progress-bar mode="query"></mat-progress-bar>
+    }
+    <mat-divider></mat-divider>
+    <div class="todo-item p-y-12 p-x-8 b-b-1" s>
+        <mat-form-field appearance="fill" class="full-width w-100">
+          <mat-label>Message</mat-label>
+          <textarea matInput [(ngModel)]="description"></textarea>
+        </mat-form-field>
+      </div>
+  </mat-card>

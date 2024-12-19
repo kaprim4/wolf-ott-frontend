@@ -5,6 +5,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { VpnParamsComponent } from './components/vpn-params/vpn-params.component';
 import { SmartersProParamsComponent } from './components/smarters-pro-params/smarters-pro-params.component';
 import {RichTextEditorComponent} from "./components/rich-text-editor/rich-text-editor.component";
+import { WolfguardParamsComponent } from './components/wolfguard-params/wolfguard-params.component';
 
 
 
@@ -13,7 +14,8 @@ import {RichTextEditorComponent} from "./components/rich-text-editor/rich-text-e
         ParametersComponent,
         VpnParamsComponent,
         SmartersProParamsComponent,
-        RichTextEditorComponent
+        RichTextEditorComponent,
+        WolfguardParamsComponent
     ],
     exports: [
         RichTextEditorComponent
